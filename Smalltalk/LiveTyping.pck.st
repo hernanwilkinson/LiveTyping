@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3562] on 2 January 2019 at 5:52:53 pm'!
-'Description Typo fixed'!
-!provides: 'LiveTyping' 1 1!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3562] on 16 January 2019 at 1:12:10 am'!
+'Description Add support for MetaTypes, currently SelfType and ClassType. Minor fixes'!
+!provides: 'LiveTyping' 1 2!
 SystemOrganization addCategory: #LiveTyping!
 
 
@@ -12,6 +12,16 @@ ParseNodeVisitor subclass: #TypedMessageSendsCollector
 	category: 'LiveTyping'!
 !classDefinition: 'TypedMessageSendsCollector class' category: #LiveTyping!
 TypedMessageSendsCollector class
+	instanceVariableNames: ''!
+
+!classDefinition: #ClosureVariablesTest category: #LiveTyping!
+TestCase subclass: #ClosureVariablesTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'ClosureVariablesTest class' category: #LiveTyping!
+ClosureVariablesTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #CustomerTest category: #LiveTyping!
@@ -52,6 +62,16 @@ TestCase subclass: #ReturnTypeInfoTest
 	category: 'LiveTyping'!
 !classDefinition: 'ReturnTypeInfoTest class' category: #LiveTyping!
 ReturnTypeInfoTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #ReturnTypeInfoTestSubclass category: #LiveTyping!
+ReturnTypeInfoTest subclass: #ReturnTypeInfoTestSubclass
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'ReturnTypeInfoTestSubclass class' category: #LiveTyping!
+ReturnTypeInfoTestSubclass class
 	instanceVariableNames: ''!
 
 !classDefinition: #TypedImplementorsTest category: #LiveTyping!
@@ -162,6 +182,36 @@ Object subclass: #LiveTyping
 	category: 'LiveTyping'!
 !classDefinition: 'LiveTyping class' category: #LiveTyping!
 LiveTyping class
+	instanceVariableNames: ''!
+
+!classDefinition: #MetaType category: #LiveTyping!
+Object subclass: #MetaType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'MetaType class' category: #LiveTyping!
+MetaType class
+	instanceVariableNames: ''!
+
+!classDefinition: #ClassType category: #LiveTyping!
+MetaType subclass: #ClassType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'ClassType class' category: #LiveTyping!
+ClassType class
+	instanceVariableNames: ''!
+
+!classDefinition: #SelfType category: #LiveTyping!
+MetaType subclass: #SelfType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'SelfType class' category: #LiveTyping!
+SelfType class
 	instanceVariableNames: ''!
 
 !classDefinition: #NotCompiledYetMethod category: #LiveTyping!
@@ -378,6 +428,23 @@ in: toAnalizeCompiledMethod of: aSentCompiledMethod
 	
 	^self new initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod 
 ! !
+
+!ClosureVariablesTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 17:58:04'!
+methodWithoutClosure: p1
+
+	| t1 t2 |
+	
+	t1 := p1.
+	t2 := t1 + 1.
+	
+	^t2! !
+
+!ClosureVariablesTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 18:00:09'!
+testOneArrayForTypesIsCreatedWhenAMethodHasNoClosures
+
+	| method |
+	method := self class>>#methodWithoutClosure:.
+	method initializeTypeInformation! !
 
 !CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 17:52:11'!
 test01
@@ -784,11 +851,21 @@ quickReturnZero
 
 	^0! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:40:11'!
+!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 01:01:26'!
 test01QuickReturnSelfMethodsReturnSelfAsReturnType
 
 	self assertReturnTypeOf: #quickReturnSelf is: self class.
-	! !
+	"| method methodReturnTypeInfo |
+	
+	method := self class >> #quickReturnSelf.
+	method initializeTypeInformation.
+	methodReturnTypeInfo := method returnTypeInfo.
+	
+	self assert: methodReturnTypeInfo typesSize equals: 1.
+	self assert: methodReturnTypeInfo types anyOne class equals: SelfType 
+	
+	
+	"! !
 
 !ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:39:17'!
 test02QuickReturnTrueMethodsReturnTrueReturnType
@@ -850,6 +927,20 @@ test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsRet
 	
 	self assertReturnTypeOf: #quickReturnSecondInstanceVariable are: (Array with: 1.0 class with: 1 class)! !
 
+!ReturnTypeInfoTestSubclass methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 01:09:16'!
+m1
+"
+self new m1
+"
+	^self quickReturnSelf ! !
+
+!ReturnTypeInfoTestSubclass methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 01:09:51'!
+m2
+"
+self new m1
+"
+	^self  ! !
+
 !TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
 test01WhenIsImplementedOnlyInRootReturnsThatImplementorOnly
 
@@ -908,12 +999,6 @@ test06DoesNotIncludeImplementorsOfSiblingsWhenNotDefinedInSuperclass
 	
 	self assert: implementors size equals: 1.
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling1TestClass selector: #implementedOnSibling1AndSibling2))! !
-
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 00:21:22'!
-assert: expected isIdenticalTo: actual
-	
-	^ self assert: (expected == actual) description: 'Objects are not identical'
-! !
 
 !TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 01:32:19'!
 m1
@@ -1875,6 +1960,28 @@ showBrowseTypedAnywayLabel
 	
 	^'Show typed senders anyway' ! !
 
+!Customer methodsFor: 'xx' stamp: 'HAW 1/15/2019 22:59:13'!
+m0
+
+	1 yourself class.
+	$a yourself ! !
+
+!Customer methodsFor: 'xx' stamp: 'HAW 1/16/2019 00:11:15'!
+m0: p1
+
+	| c |
+"
+self new m0: 1.
+self new m0: 1.0
+self new m0: String
+"
+	1 yourself class.
+	$a class.
+	
+	p1 class class class class class. 
+	c := p1 class.
+	c class! !
+
 !Customer methodsFor: 'xx' stamp: 'HAW 12/21/2018 11:09:30'!
 m11
 "self new m11" 
@@ -2121,7 +2228,7 @@ defineInstVarNamed: anInstVarName in: aClass
 
 	(aClass definesInstanceVariableNamed: anInstVarName ) ifFalse: [ aClass addInstVarName: anInstVarName ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:57:49'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/7/2019 11:14:56'!
 doneCompilingSourceCode
 
 	^'doneCompiling
@@ -2129,7 +2236,7 @@ doneCompilingSourceCode
 	This message is a notification for a class that needs to do some
 	cleanup / reinitialization after it has been recompiled."
 	
-	self initializeInstanceVariablesRawTypes '
+	self withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes ]'
 	
 ! !
 
@@ -2195,6 +2302,31 @@ smalltalkEditorMenuOptions
 
 		}`
 ! !
+
+!MetaType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 00:38:10'!
+TO_DO
+
+"
+should it be used only as message return type? it looks like...
+Should I call it MetaReturnType?
+
+"! !
+
+!MetaType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 00:26:07'!
+asTypeFor: aReceiverType
+
+	self subclassResponsibility ! !
+
+!ClassType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 00:24:48'!
+asTypeFor: aReceiverType
+
+	^aReceiverType class
+	! !
+
+!SelfType methodsFor: 'as yet unclassified' stamp: 'HAW 1/15/2019 22:56:59'!
+asTypeFor: aReceiverType
+
+	^aReceiverType ! !
 
 !NotCompiledYetMethod methodsFor: 'initialization' stamp: 'HAW 10/24/2018 20:08:07'!
 initializeClass: aClass selector: aSelector 
@@ -3639,11 +3771,11 @@ printTypesInfoHeaderOn: aStream
 		newLine.	
 		! !
 
-!Object class methodsFor: '*LiveTyping' stamp: 'HAW 10/30/2018 21:40:43'!
+!Object class methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 00:20:10'!
 createReturnTypeInfoOf: aCompiledMethod
 
 	(aCompiledMethod selector = #class and: [ aCompiledMethod methodClass = Object ]) 
-		ifTrue: [ ^ReturnTypeInfo of: aCompiledMethod are: { Behavior } ].
+		ifTrue: [ ^ReturnTypeInfo of: aCompiledMethod are: { ClassType new } ].
 	aCompiledMethod isReturnField 
 		ifTrue: [ ^ReturnTypeInfo of: aCompiledMethod are: (aCompiledMethod methodClass typesOfInstanceVariableAt: aCompiledMethod returnField + 1) asArray ].
 	
@@ -3938,6 +4070,11 @@ createInstanceVariableTypeInfoInHierarchyOf: anInstVarName with: types
 
 	! !
 
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 1/15/2019 22:58:40'!
+asTypeFor: aReceiverType
+
+	^self! !
+
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/20/2018 22:34:28'!
 commonSelectorsOfInstanceVariableNamed: anInstVarName
 
@@ -4019,10 +4156,10 @@ createInstanceVariablesRawTypes
 	^ Array new: self instSize.
 	! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 11/21/2018 19:53:13'!
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 1/15/2019 22:44:15'!
 createMethodReturnRawTypesOf: aMethod
 		
-	aMethod isQuickReturnSelf ifTrue: [ ^Array with: aMethod methodClass ].
+	aMethod isQuickReturnSelf ifTrue: [ ^Array with: SelfType new ].
 	aMethod isReturnSpecial ifTrue: [ ^`{{true class}. {false class}. {nil class}. {-1 class}. {0 class}. {1 class}. {2 class}}` at: aMethod primitive - 256 ].
 	
 	^self createRawTypesOfSize: (self methodReturnRawTypesSizeOf: aMethod) ! !
@@ -4302,19 +4439,15 @@ doesSurelyTypedSend: aCompiledMethod
 	
 	^typedMessageSendsCollector doesTypedSendSafely! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'NPM 10/10/2018 14:05:31'!
-hasDynamicTypeInformation
-	
-	^ self penultimateLiteral isKindOf: AdditionalMethodState! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/20/2018 18:42:05'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/3/2019 06:54:52'!
 initializeTypeInformation
 	
-	| additionalMethodState |
+	| properties |
 	
-	additionalMethodState := AdditionalMethodState forMethod: self selector: self selector.
-	self penultimateLiteral: additionalMethodState.
-	additionalMethodState initializeTypeInformation ! !
+	properties := self properties.
+	"I have to set it because #properties creates a new AdditionaMethodState but does not set it - Hernan"
+	self penultimateLiteral: properties.
+	properties initializeTypeInformation ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 21:35:23'!
 isQuickReturnSelf
@@ -4343,12 +4476,10 @@ printTypeInfoOn: aStream
 	aStream newLine.
 	variablesTypes printTypesInfoFooterOn: aStream! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:35:23'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/3/2019 07:06:51'!
 returnRawTypes
 	
-	^(self penultimateLiteral isKindOf: AdditionalMethodState)
-		ifTrue: [ self penultimateLiteral returnRawTypes ]
-		ifFalse: [ nil ]! !
+	^self withPropertiesDo: [ :properties | properties returnRawTypes ] ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/20/2018 17:15:27'!
 returnTypeInfo
@@ -4400,12 +4531,11 @@ typesOfVariableNamed: aVarName ifAbsent: aBlock
 
 	^self methodVariablesTypes typesOf: aVarName ifAbsent: aBlock! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:35:36'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/3/2019 07:06:51'!
 variablesRawTypes
 	
-	^(self penultimateLiteral isKindOf: AdditionalMethodState)
-		ifTrue: [ self penultimateLiteral variablesRawTypes ]
-		ifFalse: [ nil ]! !
+	^self withPropertiesDo: [ :properties | properties variablesRawTypes ]
+	! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 21:20:38'!
 allTypedCallsOn: aSentCompiledMethod 
@@ -4697,13 +4827,16 @@ receiverOrCascadeReceiver
 	
 	^receiver ifNil: [ originalReceiver ]! !
 
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 12/6/2018 17:46:37'!
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 00:23:23'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
-	| types sentSelector |
+	| types sentSelector receiverTypes receiverOrCascadeReceiver |
 
 	sentSelector := self selectorSymbol.
-	types := (self receiverOrCascadeReceiver typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons)
+	receiverOrCascadeReceiver := self receiverOrCascadeReceiver.
+	receiverTypes := receiverOrCascadeReceiver typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
+	
+	types := receiverTypes
 		inject: Set new
 		into: [ :messageReturnTypes :aReceiverType | 								
 			(aReceiverType lookupSelector: sentSelector) 
@@ -4717,7 +4850,7 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 						ifTrue: [ incompleteTypeInfoReasons add: (IncompleteTypeInfo 
 							of: implementor methodReference
 							describedAs: 'There is no return type info for ', implementor classAndSelector) ]
-						ifFalse: [ messageReturnTypes addAll: returnTypes ]].
+						ifFalse: [ messageReturnTypes addAll: (returnTypes collect: [ :aType | aType asTypeFor: aReceiverType])]].
 			messageReturnTypes ].
 		
 	^types! !
@@ -4770,7 +4903,7 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	^aCompiledMethod returnTypes
 ! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2018 14:16:44'!
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 01:10:39'!
 showSelectionTypeInfo
 
 	self 
@@ -4780,7 +4913,7 @@ showSelectionTypeInfo
 				withParseNodeIncluding: cursorPosition 
 				do: [ :aNodeUnderCursor | self showTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class ]
 				ifAbsent: [ 
-					cursorPosition < methodNode selectorLastPosition 
+					cursorPosition <= methodNode selectorLastPosition 
 						ifTrue: [ self showTypeInfoOf: methodNode in: methodNode definedAt: class ]
 						ifFalse: [ morph flash ]]]
 		ifErrorsParsing: [ :anError | morph flash ].
