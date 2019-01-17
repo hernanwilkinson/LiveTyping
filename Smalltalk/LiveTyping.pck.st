@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3562] on 16 January 2019 at 1:12:10 am'!
-'Description Add support for MetaTypes, currently SelfType and ClassType. Minor fixes'!
-!provides: 'LiveTyping' 1 2!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3562] on 17 January 2019 at 12:15:44 am'!
+'Description MetaTypes printOn: - Can not browse metatypes  '!
+!provides: 'LiveTyping' 1 3!
 SystemOrganization addCategory: #LiveTyping!
 
 
@@ -62,16 +62,6 @@ TestCase subclass: #ReturnTypeInfoTest
 	category: 'LiveTyping'!
 !classDefinition: 'ReturnTypeInfoTest class' category: #LiveTyping!
 ReturnTypeInfoTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #ReturnTypeInfoTestSubclass category: #LiveTyping!
-ReturnTypeInfoTest subclass: #ReturnTypeInfoTestSubclass
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'ReturnTypeInfoTestSubclass class' category: #LiveTyping!
-ReturnTypeInfoTestSubclass class
 	instanceVariableNames: ''!
 
 !classDefinition: #TypedImplementorsTest category: #LiveTyping!
@@ -851,11 +841,10 @@ quickReturnZero
 
 	^0! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 01:01:26'!
+!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/17/2019 00:13:03'!
 test01QuickReturnSelfMethodsReturnSelfAsReturnType
 
-	self assertReturnTypeOf: #quickReturnSelf is: self class.
-	"| method methodReturnTypeInfo |
+	| method methodReturnTypeInfo |
 	
 	method := self class >> #quickReturnSelf.
 	method initializeTypeInformation.
@@ -863,9 +852,7 @@ test01QuickReturnSelfMethodsReturnSelfAsReturnType
 	
 	self assert: methodReturnTypeInfo typesSize equals: 1.
 	self assert: methodReturnTypeInfo types anyOne class equals: SelfType 
-	
-	
-	"! !
+! !
 
 !ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:39:17'!
 test02QuickReturnTrueMethodsReturnTrueReturnType
@@ -926,20 +913,6 @@ test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsRet
 	iv2 := 1.
 	
 	self assertReturnTypeOf: #quickReturnSecondInstanceVariable are: (Array with: 1.0 class with: 1 class)! !
-
-!ReturnTypeInfoTestSubclass methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 01:09:16'!
-m1
-"
-self new m1
-"
-	^self quickReturnSelf ! !
-
-!ReturnTypeInfoTestSubclass methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 01:09:51'!
-m2
-"
-self new m1
-"
-	^self  ! !
 
 !TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
 test01WhenIsImplementedOnlyInRootReturnsThatImplementorOnly
@@ -2323,10 +2296,26 @@ asTypeFor: aReceiverType
 	^aReceiverType class
 	! !
 
+!ClassType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 19:53:45'!
+printOn: aStream
+
+	aStream 
+		nextPut: $<;
+		nextPutAll: 'class';
+		nextPut: $>.! !
+
 !SelfType methodsFor: 'as yet unclassified' stamp: 'HAW 1/15/2019 22:56:59'!
 asTypeFor: aReceiverType
 
 	^aReceiverType ! !
+
+!SelfType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 19:52:44'!
+printOn: aStream
+
+	aStream 
+		nextPut: $<;
+		nextPutAll: 'self';
+		nextPut: $>! !
 
 !NotCompiledYetMethod methodsFor: 'initialization' stamp: 'HAW 10/24/2018 20:08:07'!
 initializeClass: aClass selector: aSelector 
@@ -2574,10 +2563,12 @@ addTypesLabels
 			icons add: typeIcon ]].
 ! !
 
-!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 11/30/2018 12:10:33'!
+!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 1/16/2019 20:01:02'!
 browseClassNamed: aName
 
-	BrowserWindow fullOnClass: (Smalltalk classNamed: aName) selector: nil ! !
+	(Smalltalk classNamed: aName)
+		ifNil: [ self inform: 'Can not browse ', aName ]
+		ifNotNil: [ :aClass | BrowserWindow fullOnClass: aClass selector: nil ]! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 12/3/2018 12:13:22'!
 browseIncompleteTypeInfo
@@ -3771,20 +3762,17 @@ printTypesInfoHeaderOn: aStream
 		newLine.	
 		! !
 
-!Object class methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 00:20:10'!
+!Object class methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 21:24:28'!
 createReturnTypeInfoOf: aCompiledMethod
 
-	(aCompiledMethod selector = #class and: [ aCompiledMethod methodClass = Object ]) 
-		ifTrue: [ ^ReturnTypeInfo of: aCompiledMethod are: { ClassType new } ].
 	aCompiledMethod isReturnField 
 		ifTrue: [ ^ReturnTypeInfo of: aCompiledMethod are: (aCompiledMethod methodClass typesOfInstanceVariableAt: aCompiledMethod returnField + 1) asArray ].
 	
 	^super createReturnTypeInfoOf: aCompiledMethod! !
 
-!Object class methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 22:02:52'!
+!Object class methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 21:04:32'!
 methodReturnRawTypesSizeOf: aCompiledMethod
 
-	(aCompiledMethod selector = #class and: [ aCompiledMethod methodClass = Object ]) ifTrue: [ ^0 ].
 	aCompiledMethod isReturnField ifTrue: [ ^0 ].
 	
 	^super methodReturnRawTypesSizeOf: aCompiledMethod! !
@@ -4156,11 +4144,12 @@ createInstanceVariablesRawTypes
 	^ Array new: self instSize.
 	! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 1/15/2019 22:44:15'!
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 1/16/2019 21:06:03'!
 createMethodReturnRawTypesOf: aMethod
 		
-	aMethod isQuickReturnSelf ifTrue: [ ^Array with: SelfType new ].
+	aMethod isQuickReturnSelf ifTrue: [ ^`{ SelfType new }` ].
 	aMethod isReturnSpecial ifTrue: [ ^`{{true class}. {false class}. {nil class}. {-1 class}. {0 class}. {1 class}. {2 class}}` at: aMethod primitive - 256 ].
+	(aMethod selector = #class and: [ aMethod methodClass = Object ]) ifTrue: [ ^`{ ClassType new }` ].
 	
 	^self createRawTypesOfSize: (self methodReturnRawTypesSizeOf: aMethod) ! !
 
@@ -4751,10 +4740,10 @@ isTruePseudoVariable
 	
 	^ key = 'true'! !
 
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 12/17/2018 16:41:12'!
+!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:05:06'!
 nodeTypePrintString
 
-	^'pseudo-var.'! !
+	^'pseudo var'! !
 
 !VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 12/3/2018 11:40:40'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
@@ -4768,10 +4757,10 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
 	self error: 'Unsupported variable node'! !
 
-!InstanceVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 12/14/2018 06:36:53'!
+!InstanceVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:03:18'!
 nodeTypePrintString
 
-	^'inst. var.'! !
+	^'inst var'! !
 
 !InstanceVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 12/3/2018 11:40:40'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
@@ -4783,10 +4772,10 @@ isLiteralVariableNode
 
 	^true! !
 
-!LiteralVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 12/17/2018 16:41:53'!
+!LiteralVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:03:23'!
 nodeTypePrintString
 
-	^'literal var.'! !
+	^'literal var'! !
 
 !LiteralVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 12/3/2018 11:40:40'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
