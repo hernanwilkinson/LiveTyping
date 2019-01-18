@@ -1,12 +1,15 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3562] on 17 January 2019 at 12:15:44 am'!
-'Description MetaTypes printOn: - Can not browse metatypes  '!
-!provides: 'LiveTyping' 1 3!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3562] on 18 January 2019 at 9:07:16 am'!
+'Description Package reorganization - Types for cascade messages - Tests renames - MetaTypes tests - InstanceVariableTypeInfoInClass renamed to LocalInstanceVariableTypeInfo'!
+!provides: 'LiveTyping' 1 4!
 SystemOrganization addCategory: #LiveTyping!
+SystemOrganization addCategory: #'LiveTyping-Tests'!
+SystemOrganization addCategory: #'LiveTyping-Playground'!
+SystemOrganization addCategory: #'LiveTyping-Refactoring'!
 
 
 !classDefinition: #TypedMessageSendsCollector category: #LiveTyping!
 ParseNodeVisitor subclass: #TypedMessageSendsCollector
-	instanceVariableNames: 'sent toAnalize sentSelector sentMethodClass sureSenders unsureSenders'
+	instanceVariableNames: 'sent toAnalize sentSelector sentMethodClass sureSenders possibleSenders'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
@@ -14,93 +17,103 @@ ParseNodeVisitor subclass: #TypedMessageSendsCollector
 TypedMessageSendsCollector class
 	instanceVariableNames: ''!
 
-!classDefinition: #ClosureVariablesTest category: #LiveTyping!
+!classDefinition: #ClosureVariablesTest category: #'LiveTyping-Tests'!
 TestCase subclass: #ClosureVariablesTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'ClosureVariablesTest class' category: #LiveTyping!
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'ClosureVariablesTest class' category: #'LiveTyping-Tests'!
 ClosureVariablesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #CustomerTest category: #LiveTyping!
-TestCase subclass: #CustomerTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'CustomerTest class' category: #LiveTyping!
-CustomerTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #InstanceVariableTypeInfoTest category: #LiveTyping!
+!classDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests'!
 TestCase subclass: #InstanceVariableTypeInfoTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariableTypeInfoTest class' category: #LiveTyping!
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'InstanceVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
 InstanceVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariablesTypesTest category: #LiveTyping!
+!classDefinition: #InstanceVariablesTypesTest category: #'LiveTyping-Tests'!
 TestCase subclass: #InstanceVariablesTypesTest
 	instanceVariableNames: 'instVar1 instVar2 instVar3 instVar4'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariablesTypesTest class' category: #LiveTyping!
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'InstanceVariablesTypesTest class' category: #'LiveTyping-Tests'!
 InstanceVariablesTypesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #ReturnTypeInfoTest category: #LiveTyping!
+!classDefinition: #MetaTypesTest category: #'LiveTyping-Tests'!
+TestCase subclass: #MetaTypesTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'MetaTypesTest class' category: #'LiveTyping-Tests'!
+MetaTypesTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests'!
 TestCase subclass: #ReturnTypeInfoTest
 	instanceVariableNames: 'iv1 iv2'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'ReturnTypeInfoTest class' category: #LiveTyping!
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'ReturnTypeInfoTest class' category: #'LiveTyping-Tests'!
 ReturnTypeInfoTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypedImplementorsTest category: #LiveTyping!
+!classDefinition: #TypedImplementorsTest category: #'LiveTyping-Tests'!
 TestCase subclass: #TypedImplementorsTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'TypedImplementorsTest class' category: #LiveTyping!
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'TypedImplementorsTest class' category: #'LiveTyping-Tests'!
 TypedImplementorsTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypedSendersOfTest category: #LiveTyping!
-TestCase subclass: #TypedSendersOfTest
+!classDefinition: #TypedSendersTest category: #'LiveTyping-Tests'!
+TestCase subclass: #TypedSendersTest
 	instanceVariableNames: 'v1'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'TypedSendersOfTest class' category: #LiveTyping!
-TypedSendersOfTest class
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'TypedSendersTest class' category: #'LiveTyping-Tests'!
+TypedSendersTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #VariableTypeInfoTest category: #LiveTyping!
+!classDefinition: #VariableTypeInfoTest category: #'LiveTyping-Tests'!
 TestCase subclass: #VariableTypeInfoTest
 	instanceVariableNames: 'instVar1 instVar2 instVar3 instVar4'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'VariableTypeInfoTest class' category: #LiveTyping!
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'VariableTypeInfoTest class' category: #'LiveTyping-Tests'!
 VariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypedRenameSelector category: #LiveTyping!
+!classDefinition: #CustomerTest category: #'LiveTyping-Playground'!
+TestCase subclass: #CustomerTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Playground'!
+!classDefinition: 'CustomerTest class' category: #'LiveTyping-Playground'!
+CustomerTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypedRenameSelector category: #'LiveTyping-Refactoring'!
 RenameSelector subclass: #TypedRenameSelector
 	instanceVariableNames: 'implementor'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'TypedRenameSelector class' category: #LiveTyping!
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'TypedRenameSelector class' category: #'LiveTyping-Refactoring'!
 TypedRenameSelector class
 	instanceVariableNames: ''!
 
@@ -132,26 +145,6 @@ BrowseTypedSelector subclass: #BrowseTypedSenders
 	category: 'LiveTyping'!
 !classDefinition: 'BrowseTypedSenders class' category: #LiveTyping!
 BrowseTypedSenders class
-	instanceVariableNames: ''!
-
-!classDefinition: #Customer category: #LiveTyping!
-Object subclass: #Customer
-	instanceVariableNames: 'firstName lastName dateOfBirth'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'Customer class' category: #LiveTyping!
-Customer class
-	instanceVariableNames: ''!
-
-!classDefinition: #Customer22 category: #LiveTyping!
-Object subclass: #Customer22
-	instanceVariableNames: 'lastName dateOfBirth x firstName'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'Customer22 class' category: #LiveTyping!
-Customer22 class
 	instanceVariableNames: ''!
 
 !classDefinition: #IncompleteTypeInfo category: #LiveTyping!
@@ -234,46 +227,6 @@ Object subclass: #ParseNodeTypesDisplay
 ParseNodeTypesDisplay class
 	instanceVariableNames: ''!
 
-!classDefinition: #PerfomanceTest category: #LiveTyping!
-Object subclass: #PerfomanceTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'PerfomanceTest class' category: #LiveTyping!
-PerfomanceTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeInfoRootTestClass category: #LiveTyping!
-Object subclass: #TypeInfoRootTestClass
-	instanceVariableNames: 'ivroot'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'TypeInfoRootTestClass class' category: #LiveTyping!
-TypeInfoRootTestClass class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeInfoSibling1TestClass category: #LiveTyping!
-TypeInfoRootTestClass subclass: #TypeInfoSibling1TestClass
-	instanceVariableNames: 'ivsibling1'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'TypeInfoSibling1TestClass class' category: #LiveTyping!
-TypeInfoSibling1TestClass class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeInfoSibling2TestClass category: #LiveTyping!
-TypeInfoRootTestClass subclass: #TypeInfoSibling2TestClass
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'TypeInfoSibling2TestClass class' category: #LiveTyping!
-TypeInfoSibling2TestClass class
-	instanceVariableNames: ''!
-
 !classDefinition: #VariableTypeInfo category: #LiveTyping!
 Object subclass: #VariableTypeInfo
 	instanceVariableNames: 'rawTypes'
@@ -294,24 +247,24 @@ VariableTypeInfo subclass: #InstanceVariableTypeInfo
 InstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypeInfoInClass category: #LiveTyping!
-InstanceVariableTypeInfo subclass: #InstanceVariableTypeInfoInClass
+!classDefinition: #HierarchyInstanceVariableTypeInfo category: #LiveTyping!
+InstanceVariableTypeInfo subclass: #HierarchyInstanceVariableTypeInfo
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariableTypeInfoInClass class' category: #LiveTyping!
-InstanceVariableTypeInfoInClass class
+!classDefinition: 'HierarchyInstanceVariableTypeInfo class' category: #LiveTyping!
+HierarchyInstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypeInfoInHierarchy category: #LiveTyping!
-InstanceVariableTypeInfo subclass: #InstanceVariableTypeInfoInHierarchy
+!classDefinition: #LocalInstanceVariableTypeInfo category: #LiveTyping!
+InstanceVariableTypeInfo subclass: #LocalInstanceVariableTypeInfo
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariableTypeInfoInHierarchy class' category: #LiveTyping!
-InstanceVariableTypeInfoInHierarchy class
+!classDefinition: 'LocalInstanceVariableTypeInfo class' category: #LiveTyping!
+LocalInstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
 !classDefinition: #MethodVariableTypeInfo category: #LiveTyping!
@@ -364,39 +317,78 @@ VariablesTypes subclass: #MethodVariablesTypes
 MethodVariablesTypes class
 	instanceVariableNames: ''!
 
+!classDefinition: #PerfomanceTest category: #'LiveTyping-Tests'!
+Object subclass: #PerfomanceTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'PerfomanceTest class' category: #'LiveTyping-Tests'!
+PerfomanceTest class
+	instanceVariableNames: ''!
 
-!TypedMessageSendsCollector methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:16:48'!
-doesTypedSendSafely
+!classDefinition: #TypeInfoRootTestClass category: #'LiveTyping-Tests'!
+Object subclass: #TypeInfoRootTestClass
+	instanceVariableNames: 'ivroot'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'TypeInfoRootTestClass class' category: #'LiveTyping-Tests'!
+TypeInfoRootTestClass class
+	instanceVariableNames: ''!
 
-	^sureSenders notEmpty and: [ unsureSenders isEmpty ]! !
+!classDefinition: #TypeInfoSibling1TestClass category: #'LiveTyping-Tests'!
+TypeInfoRootTestClass subclass: #TypeInfoSibling1TestClass
+	instanceVariableNames: 'ivsibling1'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'TypeInfoSibling1TestClass class' category: #'LiveTyping-Tests'!
+TypeInfoSibling1TestClass class
+	instanceVariableNames: ''!
 
-!TypedMessageSendsCollector methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:16:48'!
-doesTypedSendUnsafely
+!classDefinition: #TypeInfoSibling2TestClass category: #'LiveTyping-Tests'!
+TypeInfoRootTestClass subclass: #TypeInfoSibling2TestClass
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'TypeInfoSibling2TestClass class' category: #'LiveTyping-Tests'!
+TypeInfoSibling2TestClass class
+	instanceVariableNames: ''!
 
-	^ unsureSenders notEmpty! !
+!classDefinition: #Customer category: #'LiveTyping-Playground'!
+Object subclass: #Customer
+	instanceVariableNames: 'firstName lastName dateOfBirth'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Playground'!
+!classDefinition: 'Customer class' category: #'LiveTyping-Playground'!
+Customer class
+	instanceVariableNames: ''!
 
-!TypedMessageSendsCollector methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:16:48'!
-initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod 
+!classDefinition: #Customer22 category: #'LiveTyping-Playground'!
+Object subclass: #Customer22
+	instanceVariableNames: 'lastName dateOfBirth x firstName'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Playground'!
+!classDefinition: 'Customer22 class' category: #'LiveTyping-Playground'!
+Customer22 class
+	instanceVariableNames: ''!
 
-	toAnalize := toAnalizeCompiledMethod.
-	sent := aSentCompiledMethod.
-	sentSelector := sent selector.
-	sentMethodClass := sent methodClass.
+
+!TypedMessageSendsCollector methodsFor: 'accessing' stamp: 'HAW 1/17/2019 10:28:46'!
+possibleSenders
 	
-	sureSenders := OrderedCollection new.
-	unsureSenders := OrderedCollection new.! !
+	^possibleSenders ! !
 
-!TypedMessageSendsCollector methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:16:29'!
+!TypedMessageSendsCollector methodsFor: 'accessing' stamp: 'HAW 10/29/2018 21:16:29'!
 sureSenders
 	
 	^sureSenders! !
 
-!TypedMessageSendsCollector methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:16:48'!
-unsureSenders
-	
-	^unsureSenders ! !
-
-!TypedMessageSendsCollector methodsFor: 'as yet unclassified' stamp: 'HAW 12/3/2018 11:56:10'!
+!TypedMessageSendsCollector methodsFor: 'visiting' stamp: 'HAW 1/17/2019 10:28:29'!
 visitMessageNode: aMessageNode
 	
 	(aMessageNode selector named: sentSelector) ifTrue: [ | receiverTypes incompleteTypeInfo incompleteTypeInfoReasons |
@@ -405,15 +397,41 @@ visitMessageNode: aMessageNode
 		receiverTypes := aMessageNode receiver typesIn: toAnalize addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.			
 		
 		receiverTypes isEmpty
-			ifTrue: [ unsureSenders add: aMessageNode->(Array with: 'Could not get receiver''s type info') ]
+			ifTrue: [ possibleSenders add: aMessageNode->(Array with: 'Could not get receiver''s type info') ]
 			ifFalse: [ (receiverTypes anySatisfy: [ :aReceiverType | aReceiverType includesBehavior: sentMethodClass]) 
 				ifTrue: [ sureSenders add: aMessageNode ]
-				ifFalse: [ incompleteTypeInfo ifTrue: [ unsureSenders add: aMessageNode->incompleteTypeInfoReasons ]]]].
+				ifFalse: [ incompleteTypeInfo ifTrue: [ possibleSenders add: aMessageNode->incompleteTypeInfoReasons ]]]].
 		
 	^super visitMessageNode: aMessageNode 
 	! !
 
-!TypedMessageSendsCollector class methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 00:00:50'!
+!TypedMessageSendsCollector methodsFor: 'initialization' stamp: 'HAW 1/17/2019 10:28:29'!
+initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod 
+
+	toAnalize := toAnalizeCompiledMethod.
+	sent := aSentCompiledMethod.
+	sentSelector := sent selector.
+	sentMethodClass := sent methodClass.
+	
+	sureSenders := OrderedCollection new.
+	possibleSenders := OrderedCollection new.! !
+
+!TypedMessageSendsCollector methodsFor: 'testing' stamp: 'HAW 1/17/2019 10:45:24'!
+hasOnlySureSenders
+
+	^sureSenders notEmpty and: [ possibleSenders isEmpty ]! !
+
+!TypedMessageSendsCollector methodsFor: 'testing' stamp: 'HAW 1/17/2019 10:28:29'!
+hasPossibleSenders
+
+	^ possibleSenders notEmpty! !
+
+!TypedMessageSendsCollector methodsFor: 'testing' stamp: 'HAW 1/17/2019 10:46:54'!
+hasSureSenders
+
+	^sureSenders notEmpty! !
+
+!TypedMessageSendsCollector class methodsFor: 'instance creation' stamp: 'HAW 10/21/2018 00:00:50'!
 in: toAnalizeCompiledMethod of: aSentCompiledMethod 
 	
 	^self new initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod 
@@ -436,31 +454,30 @@ testOneArrayForTypesIsCreatedWhenAMethodHasNoClosures
 	method := self class>>#methodWithoutClosure:.
 	method initializeTypeInformation! !
 
-!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 17:52:11'!
-test01
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:27:10'!
+assertTypesAreCollectedCorrectlyFor: anInstVarTypeInfoCreator
 
-	Customer named: 'Juan' with: 'Perez' bornOn: Date today.
-	Customer named: 1 with: 2 bornOn: DateAndTime now.! !
-
-!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/27/2018 16:44:12'!
-test02
-
-	(TestCase allSubclasses select: [:aTestCase | aTestCase category = 'Chronology-Tests']) 
-		do: [:aTestCase | aTestCase suite run ].! !
-
-!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/27/2018 16:44:16'!
-test03
-
-	(TestCase allSubclasses select: [:aTestCase | aTestCase category =  'Regex-Tests-Core']) 
-		do: [:aTestCase | aTestCase suite run ].! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:04:54'!
-initializeHierarchyForTestingInstanceVariablesTypes
+	| root sibling1 sibling2 ivrootTypeInfo |
 	
-	TypeInfoRootTestClass withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+	sibling2 := TypeInfoSibling2TestClass new.
+	
+	root ivroot: 1/2.
+	sibling1 ivroot: 1.
+	sibling2 ivroot: 1.0.
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:05:59'!
-test01
+	ivrootTypeInfo := anInstVarTypeInfoCreator value.
+	
+	self assert: 3 equals: ivrootTypeInfo typesSize.
+	self assert: (ivrootTypeInfo typesIncludes: (1/2) class).
+	self assert: (ivrootTypeInfo typesIncludes: 1 class).
+	self assert: (ivrootTypeInfo typesIncludes: 1.0 class)! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:32:03'!
+test01TypeCollectionOfInstanceVariableDefinedInLeafClassDoesNotTraverseHierarchy
 
 	| sibling1 ivsibling1TypeInfo |
 	
@@ -473,55 +490,25 @@ test01
 	self assert: 1 equals: ivsibling1TypeInfo typesSize.
 	self assert: (ivsibling1TypeInfo typesIncludes: 1 class)! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:06:15'!
-test02
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:29:15'!
+test02TypeCollectionIncludesSubclassesWhenAskedToDefiningClass
 
-	| root sibling1 sibling2 ivrootTypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-	sibling2 := TypeInfoSibling2TestClass new.
-	
-	root ivroot: 1/2.
-	sibling1 ivroot: 1.
-	sibling2 ivroot: 1.0.
-	
-	self assert: 3 equals: ivrootTypeInfo typesSize.
-	self assert: (ivrootTypeInfo typesIncludes: (1/2) class).
-	self assert: (ivrootTypeInfo typesIncludes: 1 class).
-	self assert: (ivrootTypeInfo typesIncludes: 1 class)! !
+	self assertTypesAreCollectedCorrectlyFor: [ TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot' ]
+	! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:06:15'!
-test03
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:30:25'!
+test03TypeCollectionIncludesSuperclassesAndSiblingsWhenAskedToSubclassOfDefiningClass
 
-	| root sibling1 sibling2 ivrootTypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootTypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-	sibling2 := TypeInfoSibling2TestClass new.
-	
-	root ivroot: 1/2.
-	sibling1 ivroot: 1.
-	sibling2 ivroot: 1.0.
-	
-	self assert: 3 equals: ivrootTypeInfo typesSize.
-	self assert: (ivrootTypeInfo typesIncludes: (1/2) class).
-	self assert: (ivrootTypeInfo typesIncludes: 1 class).
-	self assert: (ivrootTypeInfo typesIncludes: 1 class)! !
+	self assertTypesAreCollectedCorrectlyFor: [ TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'. ]
+	! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:06:15'!
-test04
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:33:33'!
+test04CollectedTypesAreEqualNoMatterIfAskedToDefiningClassOrSubclassOfDefiningClass
 
 	| root sibling1 sibling2 ivrootInRootTypeInfo ivrootInSiblint1TypeInfo |
 	
 	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
 	ivrootInSiblint1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
 	
 	root := TypeInfoRootTestClass new.
@@ -534,8 +521,8 @@ test04
 	
 	self assert: ivrootInRootTypeInfo types equals: ivrootInSiblint1TypeInfo types! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:06:15'!
-test05
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:34:47'!
+test05TypeCollectionIncludesAllSubclasses
 
 	| root sibling1 sibling2 ivrootInRootTypeInfo |
 	
@@ -556,10 +543,10 @@ test05
 	self assert: 3 equals: ivrootInRootTypeInfo typesSize.
 	self assert: (ivrootInRootTypeInfo typesIncludes: (1/2) class).
 	self assert: (ivrootInRootTypeInfo typesIncludes: 1 class).
-	self assert: (ivrootInRootTypeInfo typesIncludes: 1 class)! !
+	self assert: (ivrootInRootTypeInfo typesIncludes: 1.0 class)! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:04:54'!
-test06
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:41:56'!
+test06IsNotMegamorphicIfTypesSizeIsLessToTheMaxOfWithAllSubclassesRawTypesSize
 
 	| root ivrootInRootTypeInfo |
 	
@@ -573,8 +560,8 @@ test06
 	
 	self deny: ivrootInRootTypeInfo isMegamorphic ! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:05:59'!
-test07
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:42:16'!
+test07IsMegamorphicIfTypesSizeIsEqualToTheMaxOfWithAllSubclassesRawTypesSize
 
 	| sibling1 ivrootInRootTypeInfo |
 
@@ -589,14 +576,14 @@ test07
 	
 	self assert: ivrootInRootTypeInfo isMegamorphic.! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:05:59'!
-test08
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:49:21'!
+test08IsNotMegamorphicIfDoesNotFillRawTypesForLocalTypeInfo
 
 	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
 
 	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoInClassOf: 'ivroot'.
-	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoInClassOf: 'ivroot'.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
 	
 	root := TypeInfoRootTestClass new.
 	sibling1 := TypeInfoSibling1TestClass new.
@@ -608,8 +595,48 @@ test08
 	self deny: ivrootInRootTypeInfo isMegamorphic.
 	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:05:59'!
-test09
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:53:03'!
+test09IsMegamorphicIfFillsRawTypesOfDefiningClassForLocalTypeInfo
+
+	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+
+	root ivroot: 1.0.	
+	root ivroot: 1.	
+	sibling1 ivroot: 1/2.
+	sibling1 ivroot: 1.
+	
+	self assert: ivrootInRootTypeInfo isMegamorphic.
+	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:53:31'!
+test10IsMegamorphicIfFillsRawTypesOfNotDefiningClassForLocalTypeInfo
+
+	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+
+	root ivroot: 1.0.	
+	sibling1 ivroot: 1/2.
+	sibling1 ivroot: 1.
+	sibling1 ivroot: 1.0.
+	
+	self deny: ivrootInRootTypeInfo isMegamorphic.
+	self assert: ivrootInSibling1TypeInfo isMegamorphic.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:56:40'!
+test11IsTypesEmptyOfNonLocalTypeInfoTakesCareOfHierarchy
 
 	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
 
@@ -624,14 +651,14 @@ test09
 	self deny: ivrootInRootTypeInfo isTypesEmpty.
 	self deny: ivrootInSibling1TypeInfo isTypesEmpty.! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:05:59'!
-test10
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:57:28'!
+test12IsTypesEmptyForLocalTypeInfoOnlyCheckOnLocalRawTypes
 
 	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
 
 	self initializeHierarchyForTestingInstanceVariablesTypes.
 	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoInClassOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
 	
 	root := TypeInfoRootTestClass new.
 
@@ -639,6 +666,11 @@ test10
 	
 	self deny: ivrootInRootTypeInfo isTypesEmpty.
 	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 11/27/2018 15:04:54'!
+initializeHierarchyForTestingInstanceVariablesTypes
+	
+	TypeInfoRootTestClass withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
 
 !InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
 test01InstanceVariablesTypesIsInitializedWithAnArrayOfClassInstSize
@@ -774,129 +806,97 @@ instanceVariableRawTypesSizeFor: anInstVarName
 	
 	^super instanceVariableRawTypesSizeFor: anInstVarName! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:57:51'!
-assertReturnTypeOf: aSelector are: types
+!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:10:40'!
+test01TypeConvertionForAClassReturnsSameClass
 
-	| method methodReturnTypeInfo |
+	self assert: (Object asTypeFor: Array) equals: Object! !
+
+!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:11:14'!
+test02TypeConvertionForSelfTypeReturnsReceiversType
+
+	self assert: (SelfType new asTypeFor: Array) equals: Array! !
+
+!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:11:52'!
+test03TypeConvertionForClassTypeReturnsReceiversTypeClass
+
+	self assert: (ClassType new asTypeFor: Array) equals: Array class! !
+
+!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 15:38:19'!
+test04ClassMessageSendChainsClassType
+
+	|  method types |
 	
-	method := self class >> aSelector.
-	method initializeTypeInformation.
-	methodReturnTypeInfo := method returnTypeInfo.
+	"To be sure that collects the return type - Hernan"
+	self twoClassMessageSend.
 	
-	self assert: types size equals: methodReturnTypeInfo typesSize.
-	self assert: (methodReturnTypeInfo typesIncludesAllOf: types)! !
+	method := self class>>#twoClassMessageSend.
+	types := method methodNode block statements first typesIn: method addingIncompleteTypeInfoTo: Set new.
+	
+	self assert: types size equals: 1.
+	self assert: types anyOne equals: Metaclass.
+	self assert: method returnTypes equals: types
+	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:58:16'!
-assertReturnTypeOf: aSelector is: aType
+!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 15:36:25'!
+twoClassMessageSend
 
-	self assertReturnTypeOf: aSelector are: (Array with: aType)! !
+	^self class class! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:40:21'!
-quickReturnFalse
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:48:50'!
+test01QuickReturnSelfMethodsReturnSelfTypeAsReturnType
 
-	^false! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:51:45'!
-quickReturnFirstInstanceVariable
-
-	^iv1! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:43:30'!
-quickReturnMinusOne
-
-	^-1! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:42:16'!
-quickReturnNil
-
-	^nil! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:44:40'!
-quickReturnOne
-
-	^1! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 22:12:20'!
-quickReturnSecondInstanceVariable
-
-	^iv2! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:24:29'!
-quickReturnSelf
-
-	^self! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:36:02'!
-quickReturnTrue
-
-	^true! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:50:11'!
-quickReturnTwo
-
-	^2! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:49:22'!
-quickReturnZero
-
-	^0! !
-
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/17/2019 00:13:03'!
-test01QuickReturnSelfMethodsReturnSelfAsReturnType
-
-	| method methodReturnTypeInfo |
+	| method returnTypes |
 	
 	method := self class >> #quickReturnSelf.
-	method initializeTypeInformation.
-	methodReturnTypeInfo := method returnTypeInfo.
+	returnTypes := method returnTypes.
 	
-	self assert: methodReturnTypeInfo typesSize equals: 1.
-	self assert: methodReturnTypeInfo types anyOne class equals: SelfType 
+	self assert: returnTypes size equals: 1.
+	self assert: returnTypes anyOne class equals: SelfType 
 ! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:39:17'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:39:17'!
 test02QuickReturnTrueMethodsReturnTrueReturnType
 
 	self assertReturnTypeOf: #quickReturnTrue is: true class.
 	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:40:42'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:40:42'!
 test03QuickReturnFalseMethodsReturnFalseAsReturnType
 
 	self assertReturnTypeOf: #quickReturnFalse is: false class.
 	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:42:36'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:42:36'!
 test04QuickReturnNilMethodsReturnUndefinedObjectAsReturnType
 
 	self assertReturnTypeOf: #quickReturnNil is: nil class.
 	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:44:02'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:44:02'!
 test05QuickReturnMinusOneMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnMinusOne is: -1 class.
 	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:45:51'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:45:51'!
 test06QuickReturnZeroMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnZero is: 0 class.
 	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:45:38'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:45:38'!
 test07QuickReturnOneMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnOne is: 1 class.
 	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:51:55'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:51:55'!
 test08QuickReturnTwoMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnTwo is: 2 class.
 	! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 22:00:09'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 22:00:09'!
 test09QuickReturnOfFirstInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
 
 	self class initializeInstanceVariablesRawTypes.
@@ -905,7 +905,7 @@ test09QuickReturnOfFirstInstanceVariableMethodsReturnInstanceVariableTypesAsRetu
 	
 	self assertReturnTypeOf: #quickReturnFirstInstanceVariable are: (Array with: 'hello' class with: 1 class)! !
 
-!ReturnTypeInfoTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 22:13:24'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 22:13:24'!
 test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
 
 	self class initializeInstanceVariablesRawTypes.
@@ -914,7 +914,85 @@ test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsRet
 	
 	self assertReturnTypeOf: #quickReturnSecondInstanceVariable are: (Array with: 1.0 class with: 1 class)! !
 
-!TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:51:25'!
+test11ClassMethodReturnsClassTypeAsReturnType
+
+	| method returnTypes |
+	
+	method := Object >> #class.
+	returnTypes := method returnTypes.
+	
+	self assert: returnTypes size equals: 1.
+	self assert: returnTypes anyOne class equals: ClassType 
+! !
+
+!ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 1/17/2019 11:46:48'!
+assertReturnTypeOf: aSelector are: types
+
+	| method methodReturnTypeInfo |
+	
+	method := self class >> aSelector.
+	methodReturnTypeInfo := method returnTypeInfo.
+	
+	self assert: types size equals: methodReturnTypeInfo typesSize.
+	self assert: (methodReturnTypeInfo typesIncludesAllOf: types)! !
+
+!ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 10/29/2018 21:58:16'!
+assertReturnTypeOf: aSelector is: aType
+
+	self assertReturnTypeOf: aSelector are: (Array with: aType)! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:40:21'!
+quickReturnFalse
+
+	^false! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:51:45'!
+quickReturnFirstInstanceVariable
+
+	^iv1! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:43:30'!
+quickReturnMinusOne
+
+	^-1! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:42:16'!
+quickReturnNil
+
+	^nil! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:44:40'!
+quickReturnOne
+
+	^1! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 22:12:20'!
+quickReturnSecondInstanceVariable
+
+	^iv2! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:24:29'!
+quickReturnSelf
+
+	^self! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:36:02'!
+quickReturnTrue
+
+	^true! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:50:11'!
+quickReturnTwo
+
+	^2! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:49:22'!
+quickReturnZero
+
+	^0! !
+
+!TypedImplementorsTest methodsFor: 'tests' stamp: 'HAW 11/27/2018 15:29:26'!
 test01WhenIsImplementedOnlyInRootReturnsThatImplementorOnly
 
 	| implementors  |
@@ -924,7 +1002,7 @@ test01WhenIsImplementedOnlyInRootReturnsThatImplementorOnly
 	self assert: implementors size equals: 1.
 	self assert: (implementors includes: (MethodReference method: TypeInfoRootTestClass >> #implementedOnRootOnly))! !
 
-!TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
+!TypedImplementorsTest methodsFor: 'tests' stamp: 'HAW 11/27/2018 15:29:26'!
 test02ReturnsImplementorsOfSuperclasses
 
 	| implementors  |
@@ -934,7 +1012,7 @@ test02ReturnsImplementorsOfSuperclasses
 	self assert: implementors size equals: 1.
 	self assert: (implementors includes: (MethodReference method: TypeInfoRootTestClass >> #implementedOnRootOnly))! !
 
-!TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
+!TypedImplementorsTest methodsFor: 'tests' stamp: 'HAW 11/27/2018 15:29:26'!
 test03IfNotImplementedInRootOrSuperclassesDoesNotIncludeSubclassesImplementations
 
 	| implementors  |
@@ -943,7 +1021,7 @@ test03IfNotImplementedInRootOrSuperclassesDoesNotIncludeSubclassesImplementation
 	
 	self assert: implementors isEmpty! !
 
-!TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
+!TypedImplementorsTest methodsFor: 'tests' stamp: 'HAW 11/27/2018 15:29:26'!
 test04IncludesSubclassesImplementations
 
 	| implementors  |
@@ -954,7 +1032,7 @@ test04IncludesSubclassesImplementations
 	self assert: (implementors includes: (MethodReference class: TypeInfoRootTestClass selector: #implementedOnRootAndSibling1)).
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling1TestClass selector: #implementedOnRootAndSibling1)).! !
 
-!TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
+!TypedImplementorsTest methodsFor: 'tests' stamp: 'HAW 11/27/2018 15:29:26'!
 test05DoesNotIncludeImplementorsOfSubclassesNotDefinedInSuperclass
 
 	| implementors  |
@@ -963,7 +1041,7 @@ test05DoesNotIncludeImplementorsOfSubclassesNotDefinedInSuperclass
 	
 	self assert: implementors isEmpty! !
 
-!TypedImplementorsTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:29:26'!
+!TypedImplementorsTest methodsFor: 'tests' stamp: 'HAW 11/27/2018 15:29:26'!
 test06DoesNotIncludeImplementorsOfSiblingsWhenNotDefinedInSuperclass
 
 	| implementors  |
@@ -973,51 +1051,17 @@ test06DoesNotIncludeImplementorsOfSiblingsWhenNotDefinedInSuperclass
 	self assert: implementors size equals: 1.
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling1TestClass selector: #implementedOnSibling1AndSibling2))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 01:32:19'!
-m1
-
-	"
-	self initializeMethodsTypeInformation.
-	self new m1.
-	self returnTypesAt: #m1
-	"
-
-	^1+2! !
-
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 01:34:06'!
-m2
-
-	"
-	self initializeMethodsTypeInformation.
-	self new m2.
-	self returnTypesAt: #m2
-	"
-
-	1 + 1.
-	^self! !
-
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 01:35:56'!
-m3: anObject
-
-	"
-	self initializeMethodsTypeInformation.
-	self new m3: 1.
-	self returnTypesAt: #m3:
-	"
-
-	^anObject + 2! !
-
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test01
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 10:46:27'!
+test01SurelyRecognizeTypeSenderWhenSentToInstanceVariable
 
 	v1 := self.
 	
 	v1 m1.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: self class>>#m1)! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: self class>>#m1)! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test02
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 10:48:27'!
+test02SurelyRecognizeTypeSenderWhenSentToTemporaryVariable
 
 	| t1 |
 		
@@ -1025,58 +1069,58 @@ test02
 	
 	t1 m1.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: self class>>#m1)! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: self class>>#m1)! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test03
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 10:49:30'!
+test03SurelyRecognizeTypeSenderInACollaboration
 	
 	1 + 2.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (1 class>>#+))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class>>#+))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test04
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 10:58:59'!
+test04RecognizeTypeSendersToInstancesOfSubClasses
 	
 	1 factorial.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (1 class lookupSelector: #factorial))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #factorial))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test05
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:14:06'!
+test05RecognizeTypeSendersToLiteralTrue
 	
 	true & true.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (true class lookupSelector: #&))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (true class lookupSelector: #&))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test06
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 10:59:37'!
+test06RecognizeTypeSendersToLiteralFalse
 	
 	false & true.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (false class lookupSelector: #&))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (false class lookupSelector: #&))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test07
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:14:36'!
+test07RecognizeTypeSendersToThisContext
 	
 	thisContext selector.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (thisContext class lookupSelector: #selector))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (thisContext class lookupSelector: #selector))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test08
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:14:58'!
+test08RecognizeTypeSendersToSelf
 	
 	self m1.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (self class lookupSelector: #m1))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #m1))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test09
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:15:17'!
+test09RecognizeTypeSendersToSuper
 	
 	super selector.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (self class lookupSelector: #selector))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #selector))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 01:16:33'!
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 10/21/2018 01:16:33'!
 test09_01
 	
 	"
@@ -1087,37 +1131,29 @@ test09_01
 	
 	when receiver is super?"! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test10
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:17:13'!
+test10RecognizeTypeSendersToSelfOfMessageImplementedInSuperclass
 	
 	self selector.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (self class lookupSelector: #selector))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #selector))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test11
-	
-	"
-	self class initializeMethodsTypeInformation.
-	"
-	
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:18:17'!
+test11RecognizeTypeSendersToReturnsOfMessageSend
+		
 	self m1 + 2.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (1 class lookupSelector: #+))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #+))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test12
-	
-	"
-	self class initializeMethodsTypeInformation.
-	"
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:20:33'!
+test12RecognizeTypeSendersOfChainedMessageSends
 	
 	self m2 m1 + 2.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (1 class lookupSelector: #+))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #+))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test13
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:21:33'!
+test13RecognizeTypeSendersToReturnOfMessageSendNoMatterThePrecedence
 	
 	"
 	self class initializeMethodsTypeInformation.
@@ -1125,43 +1161,121 @@ test13
 	
 	(self m3: 1) + 2.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (1 class lookupSelector: #+))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #+))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test14
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:54:59'!
+test14RecognizeTypeSendersToClasses
 	
-	"
-	self class initializeMethodsTypeInformation.
-	"
+	TypedSendersTest m1.
 	
-	TypedSendersOfTest m1.
-	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (self class class lookupSelector: #m1))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class class lookupSelector: #m1))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test15
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:54:59'!
+test15RecognizeTypeSendersToVariablesReferencingClasses
 	
-	"
-	self class initializeMethodsTypeInformation.
-	"
 	| t1 |
 	
-	t1 := TypedSendersOfTest.
+	t1 := TypedSendersTest.
 	t1 m1.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: (self class class lookupSelector: #m1))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class class lookupSelector: #m1))! !
 
-!TypedSendersOfTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/31/2018 08:17:53'!
-test16
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:24:59'!
+test16RecognizeTypeSendersToAnyLiteral
 	
 	"
 	self class initializeMethodsTypeInformation.
 	"
 	$a asCharacter.
 	
-	self assert: (self class>>thisContext selector doesSurelyTypedSend: ($a class lookupSelector: #asCharacter))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: ($a class lookupSelector: #asCharacter))! !
 
-!TypedSendersOfTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 10:40:36'!
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:13:51'!
+test17CanRecognizePossibleTypeSenders
+	
+	| t1 sendersCollector sureSender possibleSender |
+	
+	true & false.
+	"This code never executes but it is here to get possible senders.
+	Because it never executes there is no type info of t1 - Hernan"
+	true ifFalse: [ 
+		"This assigment is to avoid compilation warning - Hernan"
+		t1 := 1. 
+		t1 & true ].
+	
+	sendersCollector := self class>>thisContext selector typedMessageSendersOf: (true class lookupSelector: #&).
+	
+	self assert: sendersCollector hasSureSenders.
+	self assert: sendersCollector sureSenders size equals: 1.
+	sureSender := sendersCollector sureSenders anyOne.
+	
+	self assert: sureSender isMessageNode.
+	self assert: sureSender receiver isTruePseudoVariable.
+	self assert: sureSender arguments anyOne isFalsePseudoVariable.
+	
+	self assert: sendersCollector hasPossibleSenders.
+	self assert: sendersCollector possibleSenders size equals: 1.
+	possibleSender := sendersCollector possibleSenders anyOne key.
+	
+	self assert: possibleSender isMessageNode.
+	self assert: possibleSender receiver key equals: 't1'.
+	self assert: possibleSender arguments anyOne isTruePseudoVariable.
+	! !
+
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:27:34'!
+test18RecognizeTypeSendersWhenReturnTypeIsSelfType
+	
+	1 yourself + 2.
+	
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #+)).
+! !
+
+!TypedSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:29:11'!
+test19RecognizeTypeSendersWhenReturnTypeIsClassType
+	
+	self class m1.
+	
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class class lookupSelector: #m1)).
+	self deny: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #m1)).
+! !
+
+!TypedSendersTest methodsFor: 'test data' stamp: 'HAW 10/21/2018 01:32:19'!
+m1
+
+	"
+	self initializeMethodsTypeInformation.
+	self new m1.
+	self returnTypesAt: #m1
+	"
+
+	^1+2! !
+
+!TypedSendersTest methodsFor: 'test data' stamp: 'HAW 1/17/2019 11:19:41'!
+m2
+
+	"
+	self initializeMethodsTypeInformation.
+	self new m2.
+	self returnTypesAt: #m2
+	"
+
+	"This collaboraion is to avoid a quick self return - Hernan"
+	1 + 1.
+	
+	^self! !
+
+!TypedSendersTest methodsFor: 'test data' stamp: 'HAW 10/21/2018 01:35:56'!
+m3: anObject
+
+	"
+	self initializeMethodsTypeInformation.
+	self new m3: 1.
+	self returnTypesAt: #m3:
+	"
+
+	^anObject + 2! !
+
+!TypedSendersTest class methodsFor: 'test data' stamp: 'HAW 10/21/2018 10:40:36'!
 m1
 
 	^1+1! !
@@ -1688,6 +1802,24 @@ createInstanceVariableRawTypesFor: anInstVarName
 
 	^super createInstanceVariableRawTypesFor: anInstVarName! !
 
+!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 17:52:11'!
+test01
+
+	Customer named: 'Juan' with: 'Perez' bornOn: Date today.
+	Customer named: 1 with: 2 bornOn: DateAndTime now.! !
+
+!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/27/2018 16:44:12'!
+test02
+
+	(TestCase allSubclasses select: [:aTestCase | aTestCase category = 'Chronology-Tests']) 
+		do: [:aTestCase | aTestCase suite run ].! !
+
+!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/27/2018 16:44:16'!
+test03
+
+	(TestCase allSubclasses select: [:aTestCase | aTestCase category =  'Regex-Tests-Core']) 
+		do: [:aTestCase | aTestCase suite run ].! !
+
 !TypedRenameSelector methodsFor: 'initialization' stamp: 'HAW 10/31/2018 08:14:01'!
 initializeImplementingClass: anImplementingClass 
 
@@ -1933,174 +2065,6 @@ showBrowseTypedAnywayLabel
 	
 	^'Show typed senders anyway' ! !
 
-!Customer methodsFor: 'xx' stamp: 'HAW 1/15/2019 22:59:13'!
-m0
-
-	1 yourself class.
-	$a yourself ! !
-
-!Customer methodsFor: 'xx' stamp: 'HAW 1/16/2019 00:11:15'!
-m0: p1
-
-	| c |
-"
-self new m0: 1.
-self new m0: 1.0
-self new m0: String
-"
-	1 yourself class.
-	$a class.
-	
-	p1 class class class class class. 
-	c := p1 class.
-	c class! !
-
-!Customer methodsFor: 'xx' stamp: 'HAW 12/21/2018 11:09:30'!
-m11
-"self new m11" 
-	| q1 t2 t3 t4 t5 t6 t7 t8 t9 t10 |
-	 
-	q1 := nil.
-	q1 := 1.
-	q1 := q1 + (1/3).
-	t2 := 2.0.
-	t3 := 3.
-	t4 := 4.
-	t5 := 5.
-	t6 := 6.
-	t7 := 7.
-	t8 := 8.
-	t9 := t2+t3+t4+t5+t6+t7+t8.
-	t10 := 'hola'.
-	q1 := 'x'.
-	t9 := t9+1.
-	
-	^t10! !
-
-!Customer methodsFor: 'initialization' stamp: 'HAW 12/24/2018 10:38:48'!
-initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth
-	
-	firstName := aFirstName. 
-	lastName := aLastName.
-	dateOfBirth := aDateOfBirth! !
-
-!Customer methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:22:52'!
-m2
-
-	self m1.
-	^nil! !
-
-!Customer methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:23:29'!
-m5
-
-	[ ^10 factorial ] value! !
-
-!Customer methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:23:36'!
-m6
-
-	^false or: [ false ]! !
-
-!Customer methodsFor: 'ppp' stamp: 'HAW 10/29/2018 05:46:50'!
-m7
-
-	^self! !
-
-!Customer methodsFor: 'ppp' stamp: 'HAW 10/29/2018 06:03:40'!
-m8: a
-
-	^a! !
-
-!Customer methodsFor: 'ppp' stamp: 'HAW 12/21/2018 11:07:25'!
-m8a
-
-	^true! !
-
-!Customer methodsFor: 'ppp' stamp: 'HAW 12/21/2018 11:01:40'!
-metodoClosure: p1
-
-	| t1 t2 |
-	
-	t2 := { 1. 2. 3. }.
-	t1 := t2 at: 1.
-	
-	^t1 + p1! !
-
-!Customer methodsFor: 'qqq' stamp: 'HAW 11/30/2018 14:46:58'!
-m1
-"self new m1"
-	| t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 |
-	 
-	t1 := nil.
-	t1 := 1.
-	t1 := t1 + (1/3).
-	t2 := 2.0.
-	t3 := 3.
-	t4 := 4.
-	t5 := 5.
-	t6 := 6.
-	t7 := 7.
-	t8 := 8.
-	t9 := t2+t3+t4+t5+t6+t7+t8.
-	t10 := 'hola'.
-	t1 := 'x'.
-	t9 := t9+1.
-	^t10! !
-
-!Customer methodsFor: 'apply primitives' stamp: 'HAW 10/4/2018 16:23:12'!
-m3
-
-	^true and: [ false ]
-	! !
-
-!Customer methodsFor: 'debugging' stamp: 'HAW 10/5/2018 18:00:31'!
-m4
-
-	[ :a | a factorial ] value: 10.
-	[ :a | a factorial ] value: 10.! !
-
-!Customer methodsFor: 'comparing' stamp: 'HAW 10/29/2018 05:50:07'!
-m8
-
-	^true! !
-
-!Customer class methodsFor: 'instance creation' stamp: 'HAW 9/17/2018 12:09'!
-named: aFirstName with: aLastName bornOn: aDateOfBirth	^self new initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth	! !
-
-!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 10/30/2018 16:23:18'!
-initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth
-	
-	firstName := aFirstName.
-	lastName := aLastName.
-	dateOfBirth := aDateOfBirth.
-	! !
-
-!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 12/7/2018 16:33:03'!
-m1
-
-	| t1 t2 |
-	
-	t2 := [ t1 := 1. t1 * 2 ].
-	
-	^t2 value! !
-
-!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 12/7/2018 16:34:28'!
-m2
-
-	| t1 t2 |
-	
-	t1 := 1.
-	t2 := 2 + t1.
-	
-	^t2 value! !
-
-!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 12/7/2018 16:40:37'!
-m3
-
-
-	^ #( 1 2 3) select: [ :a | | t1 | t1 := a odd. t1 ].
-	
-	! !
-
 !IncompleteTypeInfo methodsFor: 'initialization' stamp: 'HAW 12/3/2018 11:53:42'!
 initializeOf: aMethodReference describedAs: aReasonDescription
 	
@@ -2276,7 +2240,7 @@ smalltalkEditorMenuOptions
 		}`
 ! !
 
-!MetaType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 00:38:10'!
+!MetaType methodsFor: 'to do' stamp: 'HAW 1/16/2019 00:38:10'!
 TO_DO
 
 "
@@ -2285,18 +2249,18 @@ Should I call it MetaReturnType?
 
 "! !
 
-!MetaType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 00:26:07'!
+!MetaType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:26:07'!
 asTypeFor: aReceiverType
 
 	self subclassResponsibility ! !
 
-!ClassType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 00:24:48'!
+!ClassType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:24:48'!
 asTypeFor: aReceiverType
 
 	^aReceiverType class
 	! !
 
-!ClassType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 19:53:45'!
+!ClassType methodsFor: 'printing' stamp: 'HAW 1/16/2019 19:53:45'!
 printOn: aStream
 
 	aStream 
@@ -2304,12 +2268,12 @@ printOn: aStream
 		nextPutAll: 'class';
 		nextPut: $>.! !
 
-!SelfType methodsFor: 'as yet unclassified' stamp: 'HAW 1/15/2019 22:56:59'!
+!SelfType methodsFor: 'type convertion' stamp: 'HAW 1/15/2019 22:56:59'!
 asTypeFor: aReceiverType
 
 	^aReceiverType ! !
 
-!SelfType methodsFor: 'as yet unclassified' stamp: 'HAW 1/16/2019 19:52:44'!
+!SelfType methodsFor: 'printing' stamp: 'HAW 1/16/2019 19:52:44'!
 printOn: aStream
 
 	aStream 
@@ -2328,12 +2292,12 @@ methodClass
 	
 	^class ! !
 
-!NotCompiledYetMethod methodsFor: 'as yet unclassified' stamp: 'HAW 10/28/2018 22:13:48'!
+!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/28/2018 22:13:48'!
 classAndSelector
 
 	^String streamContents: [:stream | self printClassAndSelectorOn: stream ]! !
 
-!NotCompiledYetMethod methodsFor: 'as yet unclassified' stamp: 'HAW 10/28/2018 22:14:21'!
+!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/28/2018 22:14:21'!
 printClassAndSelectorOn: aStream 
 	
 	aStream 
@@ -2341,22 +2305,22 @@ printClassAndSelectorOn: aStream
 		nextPutAll: '>>'; 
 		nextPutAll: self selector storeString! !
 
-!NotCompiledYetMethod methodsFor: 'as yet unclassified' stamp: 'HAW 10/24/2018 20:12:40'!
+!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/24/2018 20:12:40'!
 returnTypes
 	
 	^#()! !
 
-!NotCompiledYetMethod methodsFor: 'as yet unclassified' stamp: 'HAW 10/28/2018 22:12:33'!
+!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/28/2018 22:12:33'!
 selector
 	
 	^selector! !
 
-!NotCompiledYetMethod methodsFor: 'as yet unclassified' stamp: 'HAW 12/19/2018 16:16:55'!
+!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 12/19/2018 16:16:55'!
 typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^class typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
 
-!NotCompiledYetMethod methodsFor: 'as yet unclassified' stamp: 'HAW 10/24/2018 20:09:43'!
+!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/24/2018 20:09:43'!
 typesOfVariableNamed: aVarName ifAbsent: aBlockClosure 
 	
 	"I have not been compiled yet, so there is no info about parameters or temps - Hernan"
@@ -2446,18 +2410,12 @@ visitVariableNode: aVariableNode
 
 ! !
 
-!ParseNodeTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 12/6/2018 17:10:24'!
-initializeOf: aParseNode in: aCompiledMethod 
-
-	parseNodeToAnalize := aParseNode.
-	method := aCompiledMethod ! !
-
-!ParseNodeTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 12/6/2018 18:05:52'!
+!ParseNodeTypeInfo methodsFor: 'type info' stamp: 'HAW 12/6/2018 18:05:52'!
 resetTypeInfo
 
 	typeInfo := nil! !
 
-!ParseNodeTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 12/6/2018 18:16:42'!
+!ParseNodeTypeInfo methodsFor: 'type info' stamp: 'HAW 12/6/2018 18:16:42'!
 withTypeInfoDo: aBlock ifNone: aNoneBlock
 
 	self resetTypeInfo.
@@ -2467,7 +2425,13 @@ withTypeInfoDo: aBlock ifNone: aNoneBlock
 	
 	! !
 
-!ParseNodeTypeInfo class methodsFor: 'as yet unclassified' stamp: 'HAW 12/6/2018 17:09:42'!
+!ParseNodeTypeInfo methodsFor: 'initialization' stamp: 'HAW 12/6/2018 17:10:24'!
+initializeOf: aParseNode in: aCompiledMethod 
+
+	parseNodeToAnalize := aParseNode.
+	method := aCompiledMethod ! !
+
+!ParseNodeTypeInfo class methodsFor: 'instance creation' stamp: 'HAW 12/6/2018 17:09:42'!
 of: aParseNode in: aCompiledMethod 
 
 	^self new initializeOf: aParseNode in: aCompiledMethod 
@@ -2727,117 +2691,6 @@ of: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 	^self new initliazeOf: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 ! !
 
-!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:24:48'!
-aconcaguaTime
-
-	"
-	self aconcaguaTime
-	"
-	
-	^ self timeToRunTestsOf: 'Aconcagua' ! !
-
-!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 9/22/2018 21:53:02'!
-chaltenTime
-
-	"
-	self chaltenTime
-	"
-	
-	^ self timeToRunTestsOf: 'Chalten'! !
-
-!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:35:04'!
-kernelTestsTime
-
-	"
-	self kernelTestsTime
-	"
-	
-	^#('Tests-Exceptions' "'Tests-Kernel-Numbers'" "'Tests-Kernel'" 'Tests-Kernel-Chronology' 'Tests-Collections' "'Tests-System'" 'Tests-Kernel-Classes' 'Tests-Collections-Arrayed') 
-		sum: [ :aCategory |  self timeToRunTestsOf: aCategory ].
-	! !
-
-!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:36:38'!
-refactoringTime
-
-	"
-	self refactoringTime
-	"
-	
-	^self timeToRunTestsOf: 'Refactoring'.
-	! !
-
-!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:26:02'!
-ticTacToeTime
-
-	"
-	self ticTacToeTime
-	"
-	
-	^ self timeToRunTestsOf: 'TicTacToe'! !
-
-!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 9/22/2018 21:51:11'!
-timeToRunTestsOf: aCategoryBeginName
-
-	| suite testCases |
-	
-	testCases := TestCase allSubclasses select: [:aTestCase | aTestCase category beginsWith: aCategoryBeginName ].
-	suite := TestSuite forTestCaseClasses: testCases named: ' tests'.
-	
-	^[ suite run ] timeToRun.
-! !
-
-!TypeInfoRootTestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 06:44:18'!
-implementedOnAll! !
-
-!TypeInfoRootTestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:12:05'!
-implementedOnRootAndSibling1! !
-
-!TypeInfoRootTestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:13:16'!
-implementedOnRootOnly! !
-
-!TypeInfoRootTestClass methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 23:17:17'!
-ivroot: anObject
-
-	ivroot := anObject ! !
-
-!TypeInfoRootTestClass class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 2! !
-
-!TypeInfoSibling1TestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 06:44:25'!
-implementedOnAll! !
-
-!TypeInfoSibling1TestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:12:05'!
-implementedOnRootAndSibling1! !
-
-!TypeInfoSibling1TestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:13:35'!
-implementedOnSibling1AndSibling2! !
-
-!TypeInfoSibling1TestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/2/2018 08:31:27'!
-ivsibling1: anObject
-	"
-	IVTISibling1 initializeInstanceVariablesRawTypes.
-	self new ivsibling1: 1.0 
-	"
-	ivsibling1 := anObject ! !
-
-!TypeInfoSibling1TestClass class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 3! !
-
-!TypeInfoSibling2TestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 06:44:29'!
-implementedOnAll! !
-
-!TypeInfoSibling2TestClass methodsFor: 'as yet unclassified' stamp: 'HAW 11/27/2018 15:13:35'!
-implementedOnSibling1AndSibling2! !
-
-!TypeInfoSibling2TestClass class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 3! !
-
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 17:55:32'!
 addType: aType
 
@@ -2901,6 +2754,11 @@ typesDo: aBlock
 typesIncludes: aType
 
 	^self types includes: aType ! !
+
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/29/2018 21:58:58'!
+typesIncludesAllOf: aTypesCollection
+	
+	^self types includesAllOf: aTypesCollection ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 11/30/2018 11:58:27'!
 typesNames
@@ -3001,6 +2859,15 @@ withSelectorsOf: aStartingType previousTo: aSupertypeToExclude do: aBlock ifInva
 	
 ! !
 
+!VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 10/17/2018 19:41:50'!
+addIfNoCommonSupertypeTo: allWithNoCommonSupertype 
+	
+	| commonSupertype |
+	
+	commonSupertype := self commonSupertypeIfNoTypes: [ ^self ].
+	
+	(commonSupertype = Object or: [ commonSupertype = ProtoObject ]) ifTrue: [  allWithNoCommonSupertype add: (self identifier->self types)]! !
+
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 10/16/2018 15:18:22'!
 allSupertypesOf: types
 	
@@ -3098,27 +2965,17 @@ signalTypeNotFound
 	
 	self error: self class typeNotFoundErrorDescription! !
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/17/2018 19:41:50'!
-addIfNoCommonSupertypeTo: allWithNoCommonSupertype 
-	
-	| commonSupertype |
-	
-	commonSupertype := self commonSupertypeIfNoTypes: [ ^self ].
-	
-	(commonSupertype = Object or: [ commonSupertype = ProtoObject ]) ifTrue: [  allWithNoCommonSupertype add: (self identifier->self types)]! !
-
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/17/2018 19:41:58'!
+!VariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/17/2018 19:41:58'!
 identifier
 
 	self subclassResponsibility ! !
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/17/2018 19:52:50'!
-ifMegamorphicAddTo: allMegamorphicVariables
+!VariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:21:04'!
+variableName
 
-	self isMegamorphic ifTrue: [ allMegamorphicVariables add: (self identifier -> self typesSize) ]
-! !
+	self subclassResponsibility ! !
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 16:11:19'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:11:19'!
 printAsCommentedTypesOn: aStream
 
 	aStream nextPut: $".
@@ -3126,7 +2983,7 @@ printAsCommentedTypesOn: aStream
 	aStream nextPut: $".
 	! !
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 16:08:24'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:08:24'!
 printOn: aStream
 
 	aStream 
@@ -3136,7 +2993,7 @@ printOn: aStream
 	self printTypesOn: aStream
 	! !
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/27/2018 19:30:17'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/27/2018 19:30:17'!
 printTextAsCommentedTypes: incompleteTypeInfoReasons 
 
 	^ Text streamContents: [:aStream| 
@@ -3151,7 +3008,7 @@ printTextAsCommentedTypes: incompleteTypeInfoReasons
 		aStream nextPut: $".]
 ! !
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 16:09:17'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:09:17'!
 printTypesOn: aStream
 
 	aStream nextPut: $<.
@@ -3168,15 +3025,11 @@ printTypesOn: aStream
 			nextPutAll: self commonSupertype name ].
 	! !
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/29/2018 21:58:58'!
-typesIncludesAllOf: aTypesCollection
-	
-	^self types includesAllOf: aTypesCollection ! !
+!VariableTypeInfo methodsFor: 'megamorphic' stamp: 'HAW 10/17/2018 19:52:50'!
+ifMegamorphicAddTo: allMegamorphicVariables
 
-!VariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 11:21:04'!
-variableName
-
-	self subclassResponsibility ! !
+	self isMegamorphic ifTrue: [ allMegamorphicVariables add: (self identifier -> self typesSize) ]
+! !
 
 !VariableTypeInfo class methodsFor: 'error descriptions' stamp: 'HAW 10/10/2018 20:37:07'!
 errorDescriptionFor: aClass isNotInSuperclassesOf: anotherClass
@@ -3193,7 +3046,17 @@ typeNotFoundErrorDescription
 	
 	^'Type not found'! !
 
-!InstanceVariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 12/6/2018 17:53:21'!
+!InstanceVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:22:19'!
+identifier
+
+	^class->self variableName ! !
+
+!InstanceVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:21:20'!
+variableName
+
+	^varName ! !
+
+!InstanceVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 12/6/2018 17:53:21'!
 addTypeFrom: anInstance
 
 	| instVarType |
@@ -3201,22 +3064,12 @@ addTypeFrom: anInstance
 	instVarType := (anInstance instVarNamed: varName) class.
 	self addType: instVarType ifFull: []! !
 
-!InstanceVariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 11:22:19'!
-identifier
-
-	^class->self variableName ! !
-
-!InstanceVariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:09:46'!
+!InstanceVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 10/20/2018 17:09:46'!
 initializeOf: anInstVarName in: aClass are: aRawTypes
 
 	varName := anInstVarName.
 	class := aClass.
 	self initializeRawTypes: aRawTypes ! !
-
-!InstanceVariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 11:21:20'!
-variableName
-
-	^varName ! !
 
 !InstanceVariableTypeInfo class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 16:36:20'!
 of: anInstVarName in: aClass are: rawTypes
@@ -3224,7 +3077,12 @@ of: anInstVarName in: aClass are: rawTypes
 	^self new initializeOf: anInstVarName in: aClass are: rawTypes
 ! !
 
-!InstanceVariableTypeInfoInHierarchy methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:13:21'!
+!HierarchyInstanceVariableTypeInfo methodsFor: 'testing' stamp: 'HAW 10/17/2018 20:39:45'!
+isMegamorphic
+	
+	^ self types size >= self maxRawTypesSize! !
+
+!HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 1/17/2019 12:49:21'!
 allSubclassesTypesPlus: thisClassTypes
 
 	| typesWithAllSubclasses |
@@ -3232,27 +3090,22 @@ allSubclassesTypesPlus: thisClassTypes
 	typesWithAllSubclasses := Set withAll: thisClassTypes.
 	
 	class allSubclassesDo: [ :aSubclass | | subclassTypes |
-		subclassTypes := (aSubclass instanceVariablesTypes typeInfoInClassOf: varName) types.
+		subclassTypes := (aSubclass instanceVariablesTypes localTypeInfoOf: varName) types.
 		typesWithAllSubclasses addAll: subclassTypes ].
 	
 	^typesWithAllSubclasses! !
 
-!InstanceVariableTypeInfoInHierarchy methodsFor: 'as yet unclassified' stamp: 'HAW 10/17/2018 20:39:45'!
-isMegamorphic
-	
-	^ self types size >= self maxRawTypesSize! !
-
-!InstanceVariableTypeInfoInHierarchy methodsFor: 'as yet unclassified' stamp: 'HAW 10/17/2018 20:41:28'!
+!HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/17/2018 20:41:28'!
 isTypesEmpty
 	
 	^self types isEmpty! !
 
-!InstanceVariableTypeInfoInHierarchy methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:09:46'!
+!HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/20/2018 17:09:46'!
 maxRawTypesSize
 	
 	^(class withAllSubclasses collect: [ :aSubclass | aSubclass instanceVariableRawTypesSizeFor: varName ]) max! !
 
-!InstanceVariableTypeInfoInHierarchy methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:13:03'!
+!HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/20/2018 17:13:03'!
 types
 	
 	| thisClassTypes |
@@ -3263,17 +3116,22 @@ types
 		ifTrue: [ thisClassTypes ]
 		ifFalse: [ self allSubclassesTypesPlus: thisClassTypes ]! !
 
-!InstanceVariableTypeInfoInHierarchy methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 16:12:18'!
+!HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/20/2018 16:12:18'!
 typesSize
 	
 	^self types size! !
 
-!MethodVariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 11:22:07'!
+!MethodVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:22:07'!
 identifier
 
 	^method -> self variableName ! !
 
-!MethodVariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/10/2018 09:48:40'!
+!MethodVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:21:41'!
+variableName
+
+	^varName ! !
+
+!MethodVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 10/10/2018 09:48:40'!
 initializeOf: aVarName at: anIndex in: aCompiledMethod are: aRawTypes
 
 	varName := aVarName.
@@ -3281,32 +3139,27 @@ initializeOf: aVarName at: anIndex in: aCompiledMethod are: aRawTypes
 	method := aCompiledMethod.
 	self initializeRawTypes: aRawTypes ! !
 
-!MethodVariableTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 11:21:41'!
-variableName
-
-	^varName ! !
-
 !MethodVariableTypeInfo class methodsFor: 'as yet unclassified' stamp: 'HAW 10/5/2018 16:56:37'!
 of: aVarName at: anIndex in: aCompiledMethod are: rawTypes
 
 	^self new initializeOf: aVarName at: anIndex in: aCompiledMethod are: rawTypes
 ! !
 
-!ReturnTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 11:22:00'!
+!ReturnTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:22:00'!
 identifier
 
 	^method -> self variableName ! !
 
-!ReturnTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/10/2018 09:52:35'!
+!ReturnTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:21:53'!
+variableName
+
+	^'^'! !
+
+!ReturnTypeInfo methodsFor: 'initialization' stamp: 'HAW 10/10/2018 09:52:35'!
 initializeOf: aCompiledMethod are: aRawTypes  
 	
 	method := aCompiledMethod.
 	self initializeRawTypes: aRawTypes ! !
-
-!ReturnTypeInfo methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 11:21:53'!
-variableName
-
-	^'^'! !
 
 !ReturnTypeInfo class methodsFor: 'as yet unclassified' stamp: 'HAW 11/28/2018 14:35:23'!
 of: aCompiledMethod 
@@ -3318,79 +3171,47 @@ of: aCompiledMethod are: aRawTypes
 	
 	^self new initializeOf: aCompiledMethod are: aRawTypes ! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 12:21:44'!
+!VariablesTypes methodsFor: 'collect info' stamp: 'HAW 10/23/2018 12:21:44'!
 addMegamorphicVariablesTo: allMegamorphicVariables
 	
 	self typesInfoDo: [ :aVarTypeInfo | aVarTypeInfo ifMegamorphicAddTo: allMegamorphicVariables ]
 		! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 12:21:50'!
+!VariablesTypes methodsFor: 'collect info' stamp: 'HAW 10/23/2018 12:21:50'!
 addTypesSizesTo: aBagCollector
 
 	self typesInfoDo: [ :aVarTypeInfo | aBagCollector add: aVarTypeInfo typesSize ]! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 12:21:56'!
+!VariablesTypes methodsFor: 'collect info' stamp: 'HAW 10/23/2018 12:21:56'!
 addWithNoCommonSupertypeTo: allWithNoCommonSupertype
 
 	self typesInfoDo: [ :aVarTypeInfo | aVarTypeInfo addIfNoCommonSupertypeTo: allWithNoCommonSupertype ]! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 22:37:35'!
-commonSelectorsOf: aVarName
-
-	"
-	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'unit'.
-	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'amount'.
-	"
-	^ (self typeInfoOf: aVarName) commonSelectors ! !
-
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 22:37:35'!
-commonSelectorsOf: aVarName previoustTo:  aSuperclass
-
-	"
-	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'unit' previousTo: Object
-	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'amount' previousTo: Number
-	"
-	^ (self typeInfoOf: aVarName) commonSelectorsPreviousTo: aSuperclass ! !
-
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 22:37:35'!
-commonSupertypeOf: aVarName
-
-	"
-	SimpleMeasure instanceVariablesTypes commonSupertypeOf: 'unit'.
-	SimpleMeasure instanceVariablesTypes commonSupertypeOf: 'amount'.
-	"
-	^ (self typeInfoOf: aVarName) commonSupertype ! !
-
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 22:37:35'!
-commonSupertypeOf: aVarName ifNoTypes: aBlock
-
-	^ (self typeInfoOf: aVarName) commonSupertypeIfNoTypes: aBlock! !
-
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 14:17:36'!
+!VariablesTypes methodsFor: 'printing' stamp: 'HAW 10/23/2018 14:17:36'!
 printTypeInfo: typeInfo on: aStream
 	
 	aStream 
 		print: typeInfo;
 		newLine! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 14:18:04'!
+!VariablesTypes methodsFor: 'printing' stamp: 'HAW 10/23/2018 14:18:04'!
 printTypesInfoFooterOn: aStream 
 
 	aStream nextPut: $" ! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:28:33'!
+!VariablesTypes methodsFor: 'printing' stamp: 'HAW 10/23/2018 15:28:33'!
 printTypesInfoHeaderOn: aStream
 	
 	self class printTypesInfoHeaderOn: aStream
 	! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 14:17:21'!
+!VariablesTypes methodsFor: 'printing' stamp: 'HAW 10/23/2018 14:17:21'!
 printTypesInfoOn: aStream
 	
 	self typesInfoDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
 	! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 14:17:56'!
+!VariablesTypes methodsFor: 'printing' stamp: 'HAW 10/23/2018 14:17:56'!
 printVariablesTypesOn: aStream
 
 	self typesInfoNotEmpty ifTrue: [
@@ -3398,43 +3219,43 @@ printVariablesTypesOn: aStream
 		self printTypesInfoOn: aStream.
 		self printTypesInfoFooterOn: aStream ]! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 20:10:39'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/20/2018 20:10:39'!
 typeInfoOf: aVarName
 
 	^self typeInfoOf: aVarName ifAbsent: [ self error: 'Invalid variable name' ].
 	! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 22:57:59'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/15/2018 22:57:59'!
 typeInfoOf: aVarName ifAbsent: anAbsentBlock
 
 	self subclassResponsibility ! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 12:21:14'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 12:21:14'!
 typesInfoDo: aBlock
 	
 	self variablesNames do: [ :variableName | aBlock value: (self typeInfoOf: variableName) ]! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 12:34:19'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 12:34:19'!
 typesInfoIsEmpty
 	
 	^self typesInfoSize = 0! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 12:34:00'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 12:34:00'!
 typesInfoNotEmpty
 	
 	^self typesInfoIsEmpty not! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 12:22:15'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 12:22:15'!
 typesInfoSize
 	
 	^self variablesNames size! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 00:26:50'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/21/2018 00:26:50'!
 typesOf: aVarName
 
 	^(self typeInfoOf: aVarName) types! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/21/2018 02:14:31'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/21/2018 02:14:31'!
 typesOf: aVarName ifAbsent: aBlock
 
 	| varTypeInfo |
@@ -3443,7 +3264,39 @@ typesOf: aVarName ifAbsent: aBlock
 	
 	^varTypeInfo types! !
 
-!VariablesTypes methodsFor: 'as yet unclassified' stamp: 'NPM 10/10/2018 20:21:52'!
+!VariablesTypes methodsFor: 'common selectors' stamp: 'HAW 10/15/2018 22:37:35'!
+commonSelectorsOf: aVarName
+
+	"
+	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'unit'.
+	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'amount'.
+	"
+	^ (self typeInfoOf: aVarName) commonSelectors ! !
+
+!VariablesTypes methodsFor: 'common selectors' stamp: 'HAW 10/15/2018 22:37:35'!
+commonSelectorsOf: aVarName previoustTo:  aSuperclass
+
+	"
+	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'unit' previousTo: Object
+	SimpleMeasure instanceVariablesTypes commonSelectorsOf: 'amount' previousTo: Number
+	"
+	^ (self typeInfoOf: aVarName) commonSelectorsPreviousTo: aSuperclass ! !
+
+!VariablesTypes methodsFor: 'common supertype' stamp: 'HAW 10/15/2018 22:37:35'!
+commonSupertypeOf: aVarName
+
+	"
+	SimpleMeasure instanceVariablesTypes commonSupertypeOf: 'unit'.
+	SimpleMeasure instanceVariablesTypes commonSupertypeOf: 'amount'.
+	"
+	^ (self typeInfoOf: aVarName) commonSupertype ! !
+
+!VariablesTypes methodsFor: 'common supertype' stamp: 'HAW 10/15/2018 22:37:35'!
+commonSupertypeOf: aVarName ifNoTypes: aBlock
+
+	^ (self typeInfoOf: aVarName) commonSupertypeIfNoTypes: aBlock! !
+
+!VariablesTypes methodsFor: 'variable names' stamp: 'NPM 10/10/2018 20:21:52'!
 variablesNames
 	
 	self subclassResponsibility.! !
@@ -3510,41 +3363,27 @@ typesInfoHeader
 		
 	^String streamContents: [ :stream | self printTypesInfoHeaderOn: stream ]! !
 
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:39:51'!
+!InstanceVariablesTypes methodsFor: 'collect info' stamp: 'HAW 1/17/2019 12:49:21'!
 addNumberOfRawTypesTo: aBagCollector
 
-	rawTypes ifNotNil: [ class allInstVarNames do: [ :anInstVarName | aBagCollector add: (self typeInfoInClassOf: anInstVarName) typesSize ]]! !
+	rawTypes ifNotNil: [ class allInstVarNames do: [ :anInstVarName | aBagCollector add: (self localTypeInfoOf: anInstVarName) typesSize ]]! !
 
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 11/6/2018 07:05:39'!
+!InstanceVariablesTypes methodsFor: 'collect info' stamp: 'HAW 11/6/2018 07:05:39'!
 addTypeInformationOf: anInstance using: instVarTypes
 
 	instVarTypes do: [ :anInstVarTypeInfo | anInstVarTypeInfo addTypeFrom: anInstance ]
 	! !
 
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 20:36:57'!
-doesStoreTypes
+!InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 1/17/2019 12:50:20'!
+localTypeInfoOf: anInstVarName
+
+	| instVarRawTypes |
 	
-	^rawTypes notNil ! !
+	instVarRawTypes := self rawTypesOf: anInstVarName.
+		
+	^ class createLocalInstanceVariableTypeInfoOf: anInstVarName with: instVarRawTypes ! !
 
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:43:30'!
-initializeEachInstanceVariableRawTypes
-
-	rawTypes ifNotNil: [ 
-		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
-
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 06:43:18'!
-initializeOf: aClass rawTypes: aRawTypes
-	
-	class := aClass.
-	rawTypes := aRawTypes.
-	! !
-
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 22:37:35'!
-megamorphicInstanceVariables
-
-	^ class allInstVarNames select: [ :anInstVarName | (self typeInfoOf: anInstVarName) isMegamorphic]! !
-
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 16:39:45'!
+!InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 10/20/2018 16:39:45'!
 rawTypesOf: anInstVarName
 
 	| instVarIndex |
@@ -3556,36 +3395,16 @@ rawTypesOf: anInstVarName
 		ifFalse: [ rawTypes at: instVarIndex ].
 	! !
 
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 20:32:11'!
-storeAllInstancesCurrentTypes
-
-	| instVarTypes |
-	
-	rawTypes isNil ifTrue: [ ^self ].
-	
-	instVarTypes := class allInstVarNames collect: [ :anInstVarName | self typeInfoInClassOf: anInstVarName ].
-	class allInstancesDo: [ :anInstance | self addTypeInformationOf: anInstance using: instVarTypes ] 
-	! !
-
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 16:39:15'!
-typeInfoInClassOf: anInstVarName
-
-	| instVarRawTypes |
-	
-	instVarRawTypes := self rawTypesOf: anInstVarName.
-		
-	^ class createInstanceVariableTypeInfoInClassOf: anInstVarName with: instVarRawTypes ! !
-
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 16:39:27'!
+!InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 1/17/2019 13:00:35'!
 typeInfoInHierarchyOf: anInstVarName
 
 	| instVarRawTypes |
 	
 	instVarRawTypes := self rawTypesOf: anInstVarName.
 		
-	^ class createInstanceVariableTypeInfoInHierarchyOf: anInstVarName with: instVarRawTypes ! !
+	^ class createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: instVarRawTypes ! !
 
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 16:22:26'!
+!InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 10/20/2018 16:22:26'!
 typeInfoOf: anInstVarName ifAbsent: anAbsentBlock
 
 	| definingClass | 
@@ -3597,10 +3416,44 @@ typeInfoOf: anInstVarName ifAbsent: anAbsentBlock
 		ifFalse: [ definingClass instanceVariablesTypes typeInfoInHierarchyOf: anInstVarName ]
 ! !
 
-!InstanceVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:00:06'!
+!InstanceVariablesTypes methodsFor: 'variable names' stamp: 'HAW 10/20/2018 17:00:06'!
 variablesNames
 
 	^class instVarNames ! !
+
+!InstanceVariablesTypes methodsFor: 'testing' stamp: 'HAW 10/20/2018 20:36:57'!
+doesStoreTypes
+	
+	^rawTypes notNil ! !
+
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 08:43:30'!
+initializeEachInstanceVariableRawTypes
+
+	rawTypes ifNotNil: [ 
+		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
+
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 06:43:18'!
+initializeOf: aClass rawTypes: aRawTypes
+	
+	class := aClass.
+	rawTypes := aRawTypes.
+	! !
+
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 1/17/2019 12:49:21'!
+storeAllInstancesCurrentTypes
+
+	| instVarTypes |
+	
+	rawTypes isNil ifTrue: [ ^self ].
+	
+	instVarTypes := class allInstVarNames collect: [ :anInstVarName | self localTypeInfoOf: anInstVarName ].
+	class allInstancesDo: [ :anInstance | self addTypeInformationOf: anInstance using: instVarTypes ] 
+	! !
+
+!InstanceVariablesTypes methodsFor: 'megamorphic' stamp: 'HAW 10/15/2018 22:37:35'!
+megamorphicInstanceVariables
+
+	^ class allInstVarNames select: [ :anInstVarName | (self typeInfoOf: anInstVarName) isMegamorphic]! !
 
 !InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
 initializeForAllClasses
@@ -3658,12 +3511,54 @@ printTypesInfoHeaderOn: aStream
 		newLine.	
 		! !
 
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:02:12'!
+!MethodVariablesTypes methodsFor: 'enumerating' stamp: 'HAW 10/23/2018 15:02:12'!
 do: aBlock withIndices: indices
 
 	indices do: [ :index | aBlock value: (self typeInfoAt: index named: (variablesNames at: index)) ]! !
 
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 18:16:07'!
+!MethodVariablesTypes methodsFor: 'enumerating' stamp: 'HAW 10/23/2018 15:01:48'!
+parametersDo: aBlock
+
+	self do: aBlock withIndices: (paramentersSize to: 1 by: -1)! !
+
+!MethodVariablesTypes methodsFor: 'enumerating' stamp: 'HAW 10/23/2018 15:07:43'!
+temporariesDo: aBlock
+
+	self do: aBlock withIndices: (paramentersSize + 1 to: variablesNames size)
+	
+	! !
+
+!MethodVariablesTypes methodsFor: 'printing' stamp: 'HAW 10/23/2018 15:03:21'!
+printTypesInfoOn: aStream
+	
+	self parametersDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
+	self temporariesDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
+	! !
+
+!MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 15:00:19'!
+typeInfoAt: index named: aVarName
+	
+	| types |
+	
+	types := rawTypes isNil ifTrue: [ nil ] ifFalse: [ rawTypes at: index ifAbsent: [ nil ] ].
+	
+ 	 ^ method methodClass createMethodVariableTypeInfoOf: aVarName at: index in: method are: types ! !
+
+!MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 15:00:03'!
+typeInfoOf: aVarName ifAbsent: anAbsentBlock
+
+	| index |
+	
+	index := variablesNames indexOf: aVarName ifAbsent: [ ^anAbsentBlock value ].
+	^self typeInfoAt: index named: aVarName
+	! !
+
+!MethodVariablesTypes methodsFor: 'variable names' stamp: 'NPM 10/10/2018 20:22:02'!
+variablesNames
+
+	^ variablesNames! !
+
+!MethodVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/20/2018 18:16:07'!
 initializeEachMethodVariableRawTypes
 	
 	| methodClass |
@@ -3674,7 +3569,7 @@ initializeEachMethodVariableRawTypes
 		variablesNames withIndexDo: [ :varName :varIndex | 
 			rawTypes at: varIndex put: (methodClass createMethodVariableRawTypesFor: varName in: method) ]]! !
 
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:37:40'!
+!MethodVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/23/2018 15:37:40'!
 initializeOf: aCompiledMethod rawTypes: aRawTypes  
 	
 	| methodNode |
@@ -3687,48 +3582,6 @@ initializeOf: aCompiledMethod rawTypes: aRawTypes
 	paramentersSize := variablesNames size.
 	
 	variablesNames := variablesNames, (methodNode temporaries collect: [ :variableNode | variableNode name ])! !
-
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:01:48'!
-parametersDo: aBlock
-
-	self do: aBlock withIndices: (paramentersSize to: 1 by: -1)! !
-
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:03:21'!
-printTypesInfoOn: aStream
-	
-	self parametersDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
-	self temporariesDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
-	! !
-
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:07:43'!
-temporariesDo: aBlock
-
-	self do: aBlock withIndices: (paramentersSize + 1 to: variablesNames size)
-	
-	! !
-
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:00:19'!
-typeInfoAt: index named: aVarName
-	
-	| types |
-	
-	types := rawTypes isNil ifTrue: [ nil ] ifFalse: [ rawTypes at: index ifAbsent: [ nil ] ].
-	
- 	 ^ method methodClass createMethodVariableTypeInfoOf: aVarName at: index in: method are: types ! !
-
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:00:03'!
-typeInfoOf: aVarName ifAbsent: anAbsentBlock
-
-	| index |
-	
-	index := variablesNames indexOf: aVarName ifAbsent: [ ^anAbsentBlock value ].
-	^self typeInfoAt: index named: aVarName
-	! !
-
-!MethodVariablesTypes methodsFor: 'as yet unclassified' stamp: 'NPM 10/10/2018 20:22:02'!
-variablesNames
-
-	^ variablesNames! !
 
 !MethodVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 18:30:48'!
 initializeForAllClasses
@@ -3761,6 +3614,285 @@ printTypesInfoHeaderOn: aStream
 		nextPutAll: '"Type info:';
 		newLine.	
 		! !
+
+!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:24:48'!
+aconcaguaTime
+
+	"
+	self aconcaguaTime
+	"
+	
+	^ self timeToRunTestsOf: 'Aconcagua' ! !
+
+!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 9/22/2018 21:53:02'!
+chaltenTime
+
+	"
+	self chaltenTime
+	"
+	
+	^ self timeToRunTestsOf: 'Chalten'! !
+
+!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:35:04'!
+kernelTestsTime
+
+	"
+	self kernelTestsTime
+	"
+	
+	^#('Tests-Exceptions' "'Tests-Kernel-Numbers'" "'Tests-Kernel'" 'Tests-Kernel-Chronology' 'Tests-Collections' "'Tests-System'" 'Tests-Kernel-Classes' 'Tests-Collections-Arrayed') 
+		sum: [ :aCategory |  self timeToRunTestsOf: aCategory ].
+	! !
+
+!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:36:38'!
+refactoringTime
+
+	"
+	self refactoringTime
+	"
+	
+	^self timeToRunTestsOf: 'Refactoring'.
+	! !
+
+!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:26:02'!
+ticTacToeTime
+
+	"
+	self ticTacToeTime
+	"
+	
+	^ self timeToRunTestsOf: 'TicTacToe'! !
+
+!PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 9/22/2018 21:51:11'!
+timeToRunTestsOf: aCategoryBeginName
+
+	| suite testCases |
+	
+	testCases := TestCase allSubclasses select: [:aTestCase | aTestCase category beginsWith: aCategoryBeginName ].
+	suite := TestSuite forTestCaseClasses: testCases named: ' tests'.
+	
+	^[ suite run ] timeToRun.
+! !
+
+!TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 06:44:18'!
+implementedOnAll! !
+
+!TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 15:12:05'!
+implementedOnRootAndSibling1! !
+
+!TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 15:13:16'!
+implementedOnRootOnly! !
+
+!TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 10/15/2018 23:17:17'!
+ivroot: anObject
+
+	ivroot := anObject ! !
+
+!TypeInfoRootTestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 2! !
+
+!TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 06:44:25'!
+implementedOnAll! !
+
+!TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 15:12:05'!
+implementedOnRootAndSibling1! !
+
+!TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 15:13:35'!
+implementedOnSibling1AndSibling2! !
+
+!TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 11/2/2018 08:31:27'!
+ivsibling1: anObject
+	"
+	IVTISibling1 initializeInstanceVariablesRawTypes.
+	self new ivsibling1: 1.0 
+	"
+	ivsibling1 := anObject ! !
+
+!TypeInfoSibling1TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 3! !
+
+!TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 06:44:29'!
+implementedOnAll! !
+
+!TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 11/27/2018 15:13:35'!
+implementedOnSibling1AndSibling2! !
+
+!TypeInfoSibling2TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 3! !
+
+!Customer methodsFor: 'xx' stamp: 'HAW 1/15/2019 22:59:13'!
+m0
+
+	1 yourself class.
+	$a yourself ! !
+
+!Customer methodsFor: 'xx' stamp: 'HAW 1/16/2019 00:11:15'!
+m0: p1
+
+	| c |
+"
+self new m0: 1.
+self new m0: 1.0
+self new m0: String
+"
+	1 yourself class.
+	$a class.
+	
+	p1 class class class class class. 
+	c := p1 class.
+	c class! !
+
+!Customer methodsFor: 'xx' stamp: 'HAW 12/21/2018 11:09:30'!
+m11
+"self new m11" 
+	| q1 t2 t3 t4 t5 t6 t7 t8 t9 t10 |
+	 
+	q1 := nil.
+	q1 := 1.
+	q1 := q1 + (1/3).
+	t2 := 2.0.
+	t3 := 3.
+	t4 := 4.
+	t5 := 5.
+	t6 := 6.
+	t7 := 7.
+	t8 := 8.
+	t9 := t2+t3+t4+t5+t6+t7+t8.
+	t10 := 'hola'.
+	q1 := 'x'.
+	t9 := t9+1.
+	
+	^t10! !
+
+!Customer methodsFor: 'initialization' stamp: 'HAW 12/24/2018 10:38:48'!
+initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth
+	
+	firstName := aFirstName. 
+	lastName := aLastName.
+	dateOfBirth := aDateOfBirth! !
+
+!Customer methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:22:52'!
+m2
+
+	self m1.
+	^nil! !
+
+!Customer methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:23:29'!
+m5
+
+	[ ^10 factorial ] value! !
+
+!Customer methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:23:36'!
+m6
+
+	^false or: [ false ]! !
+
+!Customer methodsFor: 'ppp' stamp: 'HAW 10/29/2018 05:46:50'!
+m7
+
+	^self! !
+
+!Customer methodsFor: 'ppp' stamp: 'HAW 10/29/2018 06:03:40'!
+m8: a
+
+	^a! !
+
+!Customer methodsFor: 'ppp' stamp: 'HAW 12/21/2018 11:07:25'!
+m8a
+
+	^true! !
+
+!Customer methodsFor: 'ppp' stamp: 'HAW 12/21/2018 11:01:40'!
+metodoClosure: p1
+
+	| t1 t2 |
+	
+	t2 := { 1. 2. 3. }.
+	t1 := t2 at: 1.
+	
+	^t1 + p1! !
+
+!Customer methodsFor: 'qqq' stamp: 'HAW 11/30/2018 14:46:58'!
+m1
+"self new m1"
+	| t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 |
+	 
+	t1 := nil.
+	t1 := 1.
+	t1 := t1 + (1/3).
+	t2 := 2.0.
+	t3 := 3.
+	t4 := 4.
+	t5 := 5.
+	t6 := 6.
+	t7 := 7.
+	t8 := 8.
+	t9 := t2+t3+t4+t5+t6+t7+t8.
+	t10 := 'hola'.
+	t1 := 'x'.
+	t9 := t9+1.
+	^t10! !
+
+!Customer methodsFor: 'apply primitives' stamp: 'HAW 10/4/2018 16:23:12'!
+m3
+
+	^true and: [ false ]
+	! !
+
+!Customer methodsFor: 'debugging' stamp: 'HAW 10/5/2018 18:00:31'!
+m4
+
+	[ :a | a factorial ] value: 10.
+	[ :a | a factorial ] value: 10.! !
+
+!Customer methodsFor: 'comparing' stamp: 'HAW 10/29/2018 05:50:07'!
+m8
+
+	^true! !
+
+!Customer class methodsFor: 'instance creation' stamp: 'HAW 9/17/2018 12:09'!
+named: aFirstName with: aLastName bornOn: aDateOfBirth	^self new initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth	! !
+
+!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 10/30/2018 16:23:18'!
+initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth
+	
+	firstName := aFirstName.
+	lastName := aLastName.
+	dateOfBirth := aDateOfBirth.
+	! !
+
+!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 12/7/2018 16:33:03'!
+m1
+
+	| t1 t2 |
+	
+	t2 := [ t1 := 1. t1 * 2 ].
+	
+	^t2 value! !
+
+!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 12/7/2018 16:34:28'!
+m2
+
+	| t1 t2 |
+	
+	t1 := 1.
+	t2 := 2 + t1.
+	
+	^t2 value! !
+
+!Customer22 methodsFor: 'as yet unclassified' stamp: 'HAW 12/7/2018 16:40:37'!
+m3
+
+
+	^ #( 1 2 3) select: [ :a | | t1 | t1 := a odd. t1 ].
+	
+	! !
 
 !Object class methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 21:24:28'!
 createReturnTypeInfoOf: aCompiledMethod
@@ -4042,19 +4174,19 @@ methodVariablesTypesOf: aMethod
 
 	^MethodVariablesTypes of: aMethod ! !
 
-!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 11/30/2018 15:00:52'!
-createInstanceVariableTypeInfoInClassOf: anInstVarName with: types
+!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 13:00:35'!
+createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
 
-	anInstVarName = 'superclass' ifTrue: [^InstanceVariableTypeInfoInClass of: anInstVarName in: self are: {Metaclass. UndefinedObject}].
-	^super createInstanceVariableTypeInfoInClassOf: anInstVarName with: types
+	anInstVarName = 'superclass' ifTrue: [^LocalInstanceVariableTypeInfo of: anInstVarName in: self are: {Metaclass. UndefinedObject }].
+	^super createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	! !
 
-!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 11/30/2018 15:00:45'!
-createInstanceVariableTypeInfoInHierarchyOf: anInstVarName with: types
+!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 12:50:45'!
+createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 
-	anInstVarName = 'superclass' ifTrue: [^InstanceVariableTypeInfoInClass of: anInstVarName in: self are: {Metaclass. UndefinedObject }].
-	^super createInstanceVariableTypeInfoInHierarchyOf: anInstVarName with: types
+	anInstVarName = 'superclass' ifTrue: [^LocalInstanceVariableTypeInfo of: anInstVarName in: self are: {Metaclass. UndefinedObject}].
+	^super createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	! !
 
@@ -4121,6 +4253,11 @@ commonSupertypeOfMethodVariableNamed: aVarName at: aSelector ifNoTypes: aBlock
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) commonSupertypeIfNoTypes: aBlock 	
 	! !
 
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 1/17/2019 13:00:35'!
+createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
+
+	^HierarchyInstanceVariableTypeInfo of: anInstVarName in: self are: types! !
+
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 11/21/2018 19:53:13'!
 createInstanceVariableRawTypesFor: anInstVarName
 
@@ -4128,21 +4265,16 @@ createInstanceVariableRawTypesFor: anInstVarName
 	
 	! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/20/2018 16:37:06'!
-createInstanceVariableTypeInfoInClassOf: anInstVarName with: types
-
-	^InstanceVariableTypeInfoInClass of: anInstVarName in: self are: types! !
-
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/20/2018 16:37:30'!
-createInstanceVariableTypeInfoInHierarchyOf: anInstVarName with: types
-
-	^InstanceVariableTypeInfoInHierarchy of: anInstVarName in: self are: types! !
-
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/16/2018 08:41:00'!
 createInstanceVariablesRawTypes
 
 	^ Array new: self instSize.
 	! !
+
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 1/17/2019 12:50:46'!
+createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
+
+	^LocalInstanceVariableTypeInfo of: anInstVarName in: self are: types! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 1/16/2019 21:06:03'!
 createMethodReturnRawTypesOf: aMethod
@@ -4419,14 +4551,21 @@ variablesRawTypes
 	
 	^variablesRawTypes ! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/31/2018 08:17:39'!
-doesSurelyTypedSend: aCompiledMethod 
+!ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 16:01:21'!
+createMethodReturnRawTypesOf: aCompiledMethod
+
+	aCompiledMethod selector == #size ifTrue: [ ^Array with: Integer ].
+	
+	^super createMethodReturnRawTypesOf: aCompiledMethod ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 10:46:27'!
+doesOnlySurelySend: aCompiledMethod 
 	
 	| typedMessageSendsCollector |
 	
 	typedMessageSendsCollector := self typedMessageSendersOf: aCompiledMethod.
 	
-	^typedMessageSendsCollector doesTypedSendSafely! !
+	^typedMessageSendsCollector hasOnlySureSenders! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/3/2019 06:54:52'!
 initializeTypeInformation
@@ -4526,44 +4665,44 @@ variablesRawTypes
 	^self withPropertiesDo: [ :properties | properties variablesRawTypes ]
 	! !
 
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 21:20:38'!
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 10:46:59'!
 allTypedCallsOn: aSentCompiledMethod 
 	
-	| allSenders sureTypedSenders unsureTypedSenders |
+	| allSenders sureSenders possibleSenders |
 	
 	allSenders := self allCallsOn: aSentCompiledMethod selector.
 	
-	sureTypedSenders := OrderedCollection new.
-	unsureTypedSenders := OrderedCollection new.
+	sureSenders := OrderedCollection new.
+	possibleSenders := OrderedCollection new.
 	
 	allSenders do: [ :aSender | | typedMessageSendersCollector | 
 		typedMessageSendersCollector := aSender typedMessageSendersOf: aSentCompiledMethod.
-		typedMessageSendersCollector doesTypedSendSafely ifTrue: [ sureTypedSenders add: aSender ].
-		typedMessageSendersCollector doesTypedSendUnsafely ifTrue: [ unsureTypedSenders add: aSender ]].
+		typedMessageSendersCollector hasSureSenders ifTrue: [ sureSenders add: aSender ].
+		typedMessageSendersCollector hasPossibleSenders ifTrue: [ possibleSenders add: aSender ]].
 		
-	^Array with: sureTypedSenders with: unsureTypedSenders ! !
+	^Array with: sureSenders with: possibleSenders ! !
 
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 11/26/2018 15:02:47'!
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 10:22:16'!
 browseAllTypedCallsOn: aSentCompiledMethod 
 	
-	| unsureTypedSenders sureTypedSenders typedSenders |
+	| possibleSenders sureSenders typedSenders |
 	
 	typedSenders := self allTypedCallsOn: aSentCompiledMethod.
-	sureTypedSenders := typedSenders first asArray sort.
-	unsureTypedSenders := typedSenders second asArray sort.
-	unsureTypedSenders do: [ :aSender | aSender prefixStringVersionWith: '(Posible) - ' ].
+	sureSenders := typedSenders first asArray sort.
+	possibleSenders := typedSenders second asArray sort.
+	possibleSenders do: [ :aSender | aSender prefixStringVersionWith: '(Posible) - ' ].
 	
 	self 			
-		browseMessageList: sureTypedSenders, unsureTypedSenders 
+		browseMessageList: sureSenders, possibleSenders 
 		name: 'Typed Senders of ' , aSentCompiledMethod classAndSelector
 		autoSelect: aSentCompiledMethod selector ! !
 
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 21:21:22'!
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 10:23:31'!
 browseAllTypedCallsOn: sentSelector forAll: types  
 	"
 	Smalltalk browseAllTypedCallsOn: #digitLength forAll: (Array with: LargePositiveInteger with: SmallInteger)
 	"
-	| unsureTypedSenders sureTypedSenders sentImplementors notImplemented |
+	| possibleSenders sureSenders sentImplementors notImplemented |
 	
 	notImplemented := Set new.
 	sentImplementors := types inject: Set new into: [ :sentCompiledMethods :type | 
@@ -4575,19 +4714,19 @@ browseAllTypedCallsOn: sentSelector forAll: types
 	
 	sentImplementors ifEmpty: [ ^self inform: 'There are no implementors of ', sentSelector , ' to look typed senders of' ].
 	
-	sureTypedSenders := Set new. 
-	unsureTypedSenders := Set new. 	
+	sureSenders := Set new. 
+	possibleSenders := Set new. 	
 	sentImplementors do: [ :aSentImplementor | | typedSenders | 
 		typedSenders := self allTypedCallsOn: aSentImplementor.
 		typedSenders first do: [ :aMethodReference | aMethodReference prefixStringVersionWith: '<', aSentImplementor methodClass name, '> - ' ].
-		typedSenders second do: [ :aMethodReference | aMethodReference prefixStringVersionWith: '(Unsure) - <', aSentImplementor methodClass name , '> - ' ].
-		sureTypedSenders addAll: typedSenders first.
-		unsureTypedSenders addAll: typedSenders second ].
+		typedSenders second do: [ :aMethodReference | aMethodReference prefixStringVersionWith: '(Possible) - <', aSentImplementor methodClass name , '> - ' ].
+		sureSenders addAll: typedSenders first.
+		possibleSenders addAll: typedSenders second ].
 		
 	self 			
 		browseMessageList: 
-			(sureTypedSenders asArray sort: [ :left :right | left stringVersion < right stringVersion ]), 
-			(unsureTypedSenders asArray sort: [ :left :right | left stringVersion < right stringVersion ])
+			(sureSenders asArray sort: [ :left :right | left stringVersion < right stringVersion ]), 
+			(possibleSenders asArray sort: [ :left :right | left stringVersion < right stringVersion ])
 		name: 'Typed Senders of ' , sentSelector, ' of ', (sentImplementors collect: [:aSentImplementor | aSentImplementor methodClass name ]) asCommaStringAnd 
 		autoSelect: sentSelector  ! !
 
@@ -4998,10 +5137,10 @@ classAndSelector
 
 	^String streamContents: [:stream | self printClassAndSelectorOn: stream ]! !
 
-!MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 10/31/2018 08:17:53'!
-doesSurelyTypedSend: aCompiledMethod 
+!MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 10:46:27'!
+doesOnlySurelySend: aCompiledMethod 
 	
-	^self compiledMethod doesSurelyTypedSend: aCompiledMethod ! !
+	^self compiledMethod doesOnlySurelySend: aCompiledMethod ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 10/28/2018 10:54:27'!
 prefixStringVersionWith: aString
@@ -5029,8 +5168,8 @@ typedMessageSendersOf: aCompiledMethod
 	
 	^self compiledMethod typedMessageSendersOf: aCompiledMethod ! !
 
-!SmalltalkCompleter methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 17:04:45'!
-returnTypeOf: aNodeUnderCursor in: aMethodNode  
+!SmalltalkCompleter methodsFor: '*LiveTyping' stamp: 'HAW 1/18/2019 09:04:34'!
+commonSupertypeOrSelectorsOf: aNodeUnderCursor in: aMethodNode  
 	
 	| methodToAnalyze typeInfo types methodClass |
 	
@@ -5045,21 +5184,30 @@ returnTypeOf: aNodeUnderCursor in: aMethodNode
 		ifGeneric: [ :genericType | typeInfo commonSelectorsPreviousToObject ]
 ! !
 
-!SmalltalkCompleter methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 16:52:50'!
+!SmalltalkCompleter methodsFor: '*LiveTyping' stamp: 'HAW 1/18/2019 00:34:26'!
 returnTypeOfEnclosedExpresionIn: methodNode at: aPosition
 
 	^ methodNode  
 		withTopParseNodeIncluding: aPosition
 		do: [ :aNodeUnderCursor | | nodeToAnalyze |
 			nodeToAnalyze := aNodeUnderCursor isReturn ifTrue: [ aNodeUnderCursor expr ] ifFalse: [ aNodeUnderCursor ].
-			self returnTypeOf: nodeToAnalyze in: methodNode ]
+			self commonSupertypeOrSelectorsOf: nodeToAnalyze in: methodNode ]
 		ifAbsent: [ nil ]! !
 
-!SmalltalkCompleter methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 16:58:53'!
+!SmalltalkCompleter methodsFor: '*LiveTyping' stamp: 'HAW 1/18/2019 00:34:26'!
 returnTypeOfNodeUnderCursorIn: methodNode at: aPosition
 
 	^methodNode
 		withParseNodeIncluding: aPosition 
-		do: [ :aNodeUnderCursor | self returnTypeOf: aNodeUnderCursor in: methodNode ]
+		do: [ :aNodeUnderCursor | self commonSupertypeOrSelectorsOf: aNodeUnderCursor in: methodNode ]
 		ifAbsent: [ nil ]! !
+
+!SmalltalkCompleter methodsFor: '*LiveTyping' stamp: 'HAW 1/18/2019 00:34:26'!
+typeOfCascadeReceiverIn: methodNode at: aPosition 
+
+	^methodNode 
+		withTopParseNodeIncluding: aPosition 
+		do: [ :aNodeUnderCursor | self commonSupertypeOrSelectorsOf: aNodeUnderCursor receiverOrCascadeReceiver in: methodNode ]
+		ifAbsent: [ nil ].
+		! !
 LiveTyping initialize!
