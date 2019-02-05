@@ -13,5 +13,6 @@ Live typing is currently implemented for Smalltalk, in particular using the Stac
 After having a complete implementation for Smalltalk we will implemented for Ruby and Python
 
 # Media
-See [Videos]/Videos for videos, demos and presentations in conferences.
-See [Tweets]/Tweets for links to tweets
+See ![Videos](/Videos) for videos, demos and presentations in conferences.
+
+See ![Tweets](/Tweets) for links to tweets
