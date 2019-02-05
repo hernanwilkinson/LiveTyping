@@ -1,0 +1,4 @@
+# Links to videos
+- Youtube list: https://www.youtube.com/playlist?list=PLMkq_h36PcLBCSqEvEXf9V03fNEf_nqjO 
+- Live typing for Cuis Smalltalk Demo: https://youtu.be/1b3RRE9a8NA
+- Smalltalks 2018 presentation: https://www.youtube.com/watch?v=bozTnos8d9U
