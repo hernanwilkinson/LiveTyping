@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3590] on 20 February 2019 at 6:42:43 pm'!
-'Description New autocompleter that shows types in selector documentation. Renamed TypedSenders to ActualSenders. Idem for TypedImplementors. Manual annotations for messages in Boolean, Object, etc'!
-!provides: 'LiveTyping' 1 5!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3620] on 21 February 2019 at 7:50:43 am'!
+'Description some renames. Overriden methods verify that current source code is the same as the one to override'!
+!provides: 'LiveTyping' 1 6!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -407,6 +407,116 @@ Object subclass: #Customer
 Customer class
 	instanceVariableNames: ''!
 
+
+!InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:45:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	anInstVarName = 'instVar3' ifTrue: [ ^ 1 ].
+	anInstVarName = 'instVar4' ifTrue: [ ^ 0 ].
+	
+	^super instanceVariableRawTypesSizeFor: anInstVarName! !
+
+!VariableTypeInfoTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 00:07:49'!
+createInstanceVariableRawTypesFor: anInstVarName
+
+	anInstVarName = 'instVar3' ifTrue: [ ^ Array new: 1 ].
+	anInstVarName = 'instVar4' ifTrue: [ ^ nil ].
+
+	^super createInstanceVariableRawTypesFor: anInstVarName! !
+
+!MetaType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:03'!
+typeName
+
+	self subclassResponsibility ! !
+
+!MetaType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:26:07'!
+asTypeFor: aReceiverType
+
+	self subclassResponsibility ! !
+
+!MetaType methodsFor: 'printing' stamp: 'HAW 2/19/2019 18:03:09'!
+printOn: aStream
+
+	aStream nextPutAll: self typeName ! !
+
+!ClassType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:24:48'!
+asTypeFor: aReceiverType
+
+	^aReceiverType class
+	! !
+
+!ClassType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:23'!
+typeName
+
+	^'class'! !
+
+!InstanceType methodsFor: 'type convertion' stamp: 'HAW 1/18/2019 10:00:29'!
+asTypeFor: aReceiverType
+
+	^aReceiverType soleInstance 
+	! !
+
+!InstanceType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:48'!
+typeName
+
+	^'instance'! !
+
+!SelfType methodsFor: 'type convertion' stamp: 'HAW 1/15/2019 22:56:59'!
+asTypeFor: aReceiverType
+
+	^aReceiverType ! !
+
+!SelfType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:02:15'!
+typeName
+
+	^'self'! !
+
+!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 12/19/2018 16:16:55'!
+typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
+
+	^class typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
+
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:08:24'!
+printOn: aStream
+
+	aStream 
+		nextPutAll: self variableName;
+		nextPutAll: ' : '.
+		
+	self printTypesOn: aStream
+	! !
+
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 08:43:30'!
+initializeEachInstanceVariableRawTypes
+
+	rawTypes ifNotNil: [ 
+		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
+
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 1/17/2019 12:49:21'!
+storeAllInstancesCurrentTypes
+
+	| instVarTypes |
+	
+	rawTypes isNil ifTrue: [ ^self ].
+	
+	instVarTypes := class allInstVarNames collect: [ :anInstVarName | self localTypeInfoOf: anInstVarName ].
+	class allInstancesDo: [ :anInstance | self addTypeInformationOf: anInstance using: instVarTypes ] 
+	! !
+
+!TypeInfoRootTestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 2! !
+
+!TypeInfoSibling1TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 3! !
+
+!TypeInfoSibling2TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 3! !
 
 !TypedMessageSendsCollector methodsFor: 'accessing' stamp: 'HAW 1/17/2019 10:28:46'!
 possibleSenders
@@ -1127,14 +1237,6 @@ test09EvaluatesIfAbsentBlockWhenAskTypeInfoForNonExistingInstVar
 
 	self class instanceVariablesTypes typeInfoOf: 'xyz' ifAbsent: [ ^self ].
 	self fail! !
-
-!InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:45:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	anInstVarName = 'instVar3' ifTrue: [ ^ 1 ].
-	anInstVarName = 'instVar4' ifTrue: [ ^ 0 ].
-	
-	^super instanceVariableRawTypesSizeFor: anInstVarName! !
 
 !MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:10:40'!
 test01TypeConvertionForAClassReturnsSameClass
@@ -1884,14 +1986,6 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: (types includes: 1 class).
 	self assert: (types includes: 1.0 class)! !
 
-!VariableTypeInfoTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 00:07:49'!
-createInstanceVariableRawTypesFor: anInstVarName
-
-	anInstVarName = 'instVar3' ifTrue: [ ^ Array new: 1 ].
-	anInstVarName = 'instVar4' ifTrue: [ ^ nil ].
-
-	^super createInstanceVariableRawTypesFor: anInstVarName! !
-
 !AutocompleteExample methodsFor: 'examples' stamp: 'HAW 2/14/2019 19:02:39'!
 testExampleMessagesOfDifferentSubclasses
 
@@ -2194,7 +2288,7 @@ initializeOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 	cursorPosition := aPosition.
 	morph := aMorph ! !
 
-!BrowseActualSelectors methodsFor: 'browsing' stamp: 'HAW 12/1/2018 11:14:44'!
+!BrowseActualSelectors methodsFor: 'browsing' stamp: 'HAW 2/20/2019 23:34:12'!
 browse
 	
 	| methodSelector |
@@ -2208,10 +2302,72 @@ browse
 	methodNode 
 		withParseNodeIncluding: cursorPosition 
 		do: [ :aNodeUnderCursor | aNodeUnderCursor isMessageNode 
-			ifTrue: [ ^self browseTypedMessageNode: aNodeUnderCursor ] ]
+			ifTrue: [ ^self browseActualMessageNode: aNodeUnderCursor ] ]
 		ifAbsent: [].
 		
 	 morph flash 
+! !
+
+!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 2/20/2019 23:35:03'!
+browseActualMessageNode: messageNode 
+
+	sentSelector := messageNode selector key.
+	incompleteTypeInfoReasons := Set new.
+	types := messageNode receiverOrCascadeReceiver typesIn: methodToLookUp addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
+
+	types isEmpty 
+		ifTrue: [ self browseActualWithNoTypeInfoSendTo: messageNode receiver ]
+		ifFalse: [ self browseActualWithTypeInfo ].
+		
+		
+! !
+
+!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 2/20/2019 23:36:28'!
+browseActualWithNoTypeInfoSendTo: receiver
+
+	(self confirm: 'There is no type info for ', receiver nodeTypeAndIdentifierPrintString, '
+Do you want to see all ', self browseActualLabel, '?') ifTrue: [ self browseAll ]
+		
+! !
+
+!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 2/20/2019 23:35:48'!
+browseActualWithTypeInfo
+	
+	incompleteTypeInfoReasons isEmpty 
+		ifTrue: [ self browseActualWithTypeInfoNoMatterIncompleteTypeInfo ]
+		ifFalse: [ self browseActualWithTypeInfoAndIncompleteTypeInfo ]
+		
+! !
+
+!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 2/20/2019 23:37:03'!
+browseActualWithTypeInfoAndIncompleteTypeInfo
+	
+	| menu labels icons selectionIndex |
+	
+	labels := OrderedCollection with: self showBrowseActualAnywayLabel with: self seeAllLabel.
+	icons := OrderedCollection with: Theme current acceptIcon with: Theme current acceptIcon.
+	incompleteTypeInfoReasons := incompleteTypeInfoReasons asArray.
+	incompleteTypeInfoReasons do: [ :anIncompleteTypeInfo | 
+		labels add: anIncompleteTypeInfo reasonDescription.
+		icons add: Theme current closeIcon ].
+	
+	menu := PopUpMenu labelArray: labels lines: #(2) icons: icons.
+	selectionIndex := menu startUpWithCaption: self incompleteTypeInfoQuestionTitle.
+	selectionIndex = 1 ifTrue: [ ^self browseActualWithTypeInfoNoMatterIncompleteTypeInfo ].
+	selectionIndex = 2 ifTrue: [ ^self browseAll ].
+	selectionIndex > 2 ifTrue: [ ^(incompleteTypeInfoReasons at: selectionIndex - 2) browse ]
+! !
+
+!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 2/20/2019 23:35:48'!
+browseActualWithTypeInfoNoMatterIncompleteTypeInfo
+
+	| receiverTypeInfo |
+
+	receiverTypeInfo := VariableTypeInfo new initializeRawTypes: types asArray.
+	receiverTypeInfo 
+		withCommonSupertypeDo: [ :aCommonSupertype | self browseForCommonSupertype: aCommonSupertype ]	
+		 ifGeneric: [ :aGenericType | self browseForAllTypes ].
+		
 ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 11/30/2018 18:28:10'!
@@ -2229,92 +2385,30 @@ browseForCommonSupertype: aCommonSupertype
 	
 	self subclassResponsibility ! !
 
-!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 12/6/2018 17:48:56'!
-browseTypedMessageNode: messageNode 
-
-	sentSelector := messageNode selector key.
-	incompleteTypeInfoReasons := Set new.
-	types := messageNode receiverOrCascadeReceiver typesIn: methodToLookUp addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
-
-	types isEmpty 
-		ifTrue: [ self browseTypedWithNoTypeInfoSendTo: messageNode receiver ]
-		ifFalse: [ self browseTypedWithTypeInfo ].
-		
-		
-! !
-
-!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 12/14/2018 06:35:52'!
-browseTypedWithNoTypeInfoSendTo: receiver
-
-	(self confirm: 'There is no type info for ', receiver nodeTypeAndIdentifierPrintString, '
-Do you want to see all ', self browseTypeLabel, '?') ifTrue: [ self browseAll ]
-		
-! !
-
-!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 12/19/2018 17:32:40'!
-browseTypedWithTypeInfo
-	
-	incompleteTypeInfoReasons isEmpty 
-		ifTrue: [ self browseTypedWithTypeInfoNoMatterIncompleteTypeInfo ]
-		ifFalse: [ self browseTypedWithTypeInfoAndIncompleteTypeInfo ]
-		
-! !
-
-!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 12/19/2018 17:51:35'!
-browseTypedWithTypeInfoAndIncompleteTypeInfo
-	
-	| menu labels icons selectionIndex |
-	
-	labels := OrderedCollection with: self showBrowseTypedAnywayLabel with: self seeAllLabel.
-	icons := OrderedCollection with: Theme current acceptIcon with: Theme current acceptIcon.
-	incompleteTypeInfoReasons := incompleteTypeInfoReasons asArray.
-	incompleteTypeInfoReasons do: [ :anIncompleteTypeInfo | 
-		labels add: anIncompleteTypeInfo reasonDescription.
-		icons add: Theme current closeIcon ].
-	
-	menu := PopUpMenu labelArray: labels lines: #(2) icons: icons.
-	selectionIndex := menu startUpWithCaption: self incompleteTypeInfoQuestionTitle.
-	selectionIndex = 1 ifTrue: [ ^self browseTypedWithTypeInfoNoMatterIncompleteTypeInfo ].
-	selectionIndex = 2 ifTrue: [ ^self browseAll ].
-	selectionIndex > 2 ifTrue: [ ^(incompleteTypeInfoReasons at: selectionIndex - 2) browse ]
-! !
-
-!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 12/19/2018 17:33:02'!
-browseTypedWithTypeInfoNoMatterIncompleteTypeInfo
-
-	| receiverTypeInfo |
-
-	receiverTypeInfo := VariableTypeInfo new initializeRawTypes: types asArray.
-	receiverTypeInfo 
-		withCommonSupertypeDo: [ :aCommonSupertype | self browseForCommonSupertype: aCommonSupertype ]	
-		 ifGeneric: [ :aGenericType | self browseForAllTypes ].
-		
-! !
-
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 11/30/2018 18:22:11'!
 browseWhenAtMethodSelector
 	
 	self subclassResponsibility ! !
 
-!BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 12/1/2018 11:06:22'!
-browseTypeLabel
+!BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 2/20/2019 23:36:28'!
+browseActualLabel
 
 	self subclassResponsibility ! !
 
-!BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 12/1/2018 11:06:22'!
-seeAllLabel
-	
-	^'See all ', self browseTypeLabel! !
-
-!BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 12/1/2018 11:07:34'!
-showBrowseTypedAnywayLabel
-	
-	self subclassResponsibility ! !
-
-!BrowseActualSelectors methodsFor: 'as yet unclassified' stamp: 'HAW 12/19/2018 17:51:35'!
+!BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 12/19/2018 17:51:35'!
 incompleteTypeInfoQuestionTitle
 	
 	^'Incomplete type info. What do you want to do?'! !
+
+!BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 2/20/2019 23:36:28'!
+seeAllLabel
+	
+	^'See all ', self browseActualLabel! !
+
+!BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 2/20/2019 23:37:03'!
+showBrowseActualAnywayLabel
+	
+	self subclassResponsibility ! !
 
 !BrowseActualSelectors class methodsFor: 'instance creation' stamp: 'HAW 11/30/2018 18:41:34'!
 browseOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
@@ -2327,47 +2421,47 @@ of: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 	^self new initializeOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 ! !
 
-!BrowseActualImplementors methodsFor: 'as yet unclassified' stamp: 'HAW 11/30/2018 18:36:09'!
+!BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 11/30/2018 18:36:09'!
 browseAll
 
 	Smalltalk browseAllImplementorsOf: sentSelector 	! !
 
-!BrowseActualImplementors methodsFor: 'as yet unclassified' stamp: 'HAW 2/19/2019 14:04:31'!
+!BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 2/19/2019 14:04:31'!
 browseForAllTypes
 
 	Smalltalk browseAllActualImplementorsOf: sentSelector forAll: types ! !
 
-!BrowseActualImplementors methodsFor: 'as yet unclassified' stamp: 'HAW 2/19/2019 14:03:55'!
+!BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 2/19/2019 14:03:55'!
 browseForCommonSupertype: aCommonSupertype
 
 	Smalltalk browseAllActualImplementorsOf: sentSelector for: aCommonSupertype ! !
 
-!BrowseActualImplementors methodsFor: 'as yet unclassified' stamp: 'HAW 12/1/2018 11:06:22'!
-browseTypeLabel
-
-	^'implementors'! !
-
-!BrowseActualImplementors methodsFor: 'as yet unclassified' stamp: 'HAW 2/19/2019 14:03:35'!
+!BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 2/19/2019 14:03:35'!
 browseWhenAtMethodSelector
 
 	Smalltalk browseAllActualmplementorsOf: methodToLookUp ! !
 
-!BrowseActualImplementors methodsFor: 'as yet unclassified' stamp: 'HAW 2/18/2019 19:04:53'!
-showBrowseTypedAnywayLabel
+!BrowseActualImplementors methodsFor: 'browsing-labels-private' stamp: 'HAW 2/20/2019 23:36:27'!
+browseActualLabel
+
+	^'implementors'! !
+
+!BrowseActualImplementors methodsFor: 'browsing-labels-private' stamp: 'HAW 2/20/2019 23:37:03'!
+showBrowseActualAnywayLabel
 	
 	^'Show actual implementors anyway' ! !
 
-!BrowseActualSenders methodsFor: 'as yet unclassified' stamp: 'HAW 12/1/2018 10:56:12'!
+!BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 12/1/2018 10:56:12'!
 browseAll
 
 	Smalltalk browseAllCallsOn: sentSelector ! !
 
-!BrowseActualSenders methodsFor: 'as yet unclassified' stamp: 'HAW 2/19/2019 14:03:11'!
+!BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 2/19/2019 14:03:11'!
 browseForAllTypes
 
 	 Smalltalk browseAllActualSendersOn: sentSelector forAll: types ! !
 
-!BrowseActualSenders methodsFor: 'as yet unclassified' stamp: 'HAW 2/19/2019 12:21:28'!
+!BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 2/19/2019 12:21:28'!
 browseForCommonSupertype: aCommonSupertype
 
 	| implementor |
@@ -2378,18 +2472,18 @@ browseForCommonSupertype: aCommonSupertype
 		ifFalse: [ Smalltalk browseAllActualSendersOn: implementor ]
 ! !
 
-!BrowseActualSenders methodsFor: 'as yet unclassified' stamp: 'HAW 12/1/2018 11:06:22'!
-browseTypeLabel
-
-	^'senders'! !
-
-!BrowseActualSenders methodsFor: 'as yet unclassified' stamp: 'HAW 2/19/2019 12:21:28'!
+!BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 2/19/2019 12:21:28'!
 browseWhenAtMethodSelector
 
 	Smalltalk browseAllActualSendersOn: methodToLookUp ! !
 
-!BrowseActualSenders methodsFor: 'as yet unclassified' stamp: 'HAW 2/18/2019 19:05:04'!
-showBrowseTypedAnywayLabel
+!BrowseActualSenders methodsFor: 'browsing-labels-private' stamp: 'HAW 2/20/2019 23:36:28'!
+browseActualLabel
+
+	^'senders'! !
+
+!BrowseActualSenders methodsFor: 'browsing-labels-private' stamp: 'HAW 2/20/2019 23:37:03'!
+showBrowseActualAnywayLabel
 	
 	^'Show actual senders anyway' ! !
 
@@ -2480,13 +2574,25 @@ addAndClassifySelectorSourceCode
 					to: category
 					inClass: self ]]'! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:57:11'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:07:37'!
+compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
+	
+	| newSourceCodeMethodNode originalSourceMethodNode |
+	
+	newSourceCodeMethodNode := aClass methodNodeFor: aNewSourceCode.
+	originalSourceMethodNode := aClass methodNodeFor: anOriginalSourceCode.
+	
+	newSourceCodeMethodNode selector = originalSourceMethodNode selector ifFalse: [ self error: 'New source code selector is not equal to original source code selector' ].
+	(aClass sourceCodeAt: originalSourceMethodNode selector) = anOriginalSourceCode ifFalse: [ self error: 'Current source code of ', aClass name, '>>', originalSourceMethodNode selector, ' is not equal to the expected one' ].
+	
+	aClass compile: aNewSourceCode ! !
+
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 22:56:51'!
 compileAfterInstallMethods.
 
-	ClassDescription compile: self addAndClassifySelectorSourceCode.
-	ClassDescription compile: self doneCompilingSourceCode.
-	
-! !
+	self compile: self addAndClassifySelectorSourceCode in: ClassDescription ifOriginalSourceCodeIs: self originalAddAndClassifySelectorSourceCode.
+	self compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self originalDoneCompilingSourceCode.
+	self compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self originalMessageListKeyFromSourceCode.! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
 defineInstVarNamed: anInstVarName in: aClass
@@ -2512,6 +2618,44 @@ initializeTypeInformation
 	MethodVariablesTypes initializeForAllClasses.
 ! !
 
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 22:56:51'!
+messageListKeyFromSourceCode
+
+	^'messageListKey: aChar from: view
+	"Respond to a Command key.  I am a model with a code pane, and I also
+	have a listView that has a list of methods.  The view knows how to get
+	the list and selection."
+
+	| sel class |
+	aChar == $D ifTrue: [^ model toggleDiffing].
+
+	sel _ model selectedMessageName.
+	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
+	aChar == $n ifTrue: [
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
+
+	aChar == $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
+	aChar == $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
+
+	"The following require a class selection"
+	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
+	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar == $N ifTrue: [^ self browseClassRefs].
+	aChar == $i ifTrue: [^ self methodHierarchy].
+	aChar == $h ifTrue: [^ self browseHierarchy].
+	aChar == $p ifTrue: [^ self browseFullProtocol].
+
+	"The following require a method selection"
+	sel ifNotNil: [
+		aChar == $o ifTrue: [^ model fileOutMessage].
+		aChar == $c ifTrue: [^ model copySelector].
+		aChar == $v ifTrue: [^ self browseVersions].
+		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
+		aChar == $x ifTrue: [^ model removeMessage].
+		aChar == $t ifTrue: [^ model runMethodTest].
+		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
+
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 18:35:38'!
 modifyAdditionalMethodStateShape
 
@@ -2527,16 +2671,99 @@ modifyClassDescriptionShape
 		on: Error do: [ :anError | anError return: nil ]
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 10/21/2018 01:40:46'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:06:17'!
+originalAddAndClassifySelectorSourceCode
+
+	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category notifying: requestor
+	| priorMethodOrNil priorProtocolOrNil |
+	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
+	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
+	self addSelectorSilently: selector withMethod: compiledMethod.
+	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
+	priorMethodOrNil
+		ifNil: [
+			SystemChangeNotifier uniqueInstance 
+				methodAdded: compiledMethod 
+				selector: selector 
+				inProtocol: category 
+				class: self 
+				requestor: requestor ]
+		ifNotNil: [
+			SystemChangeNotifier uniqueInstance 
+				methodChangedFrom: priorMethodOrNil 
+				to: compiledMethod 
+				selector: selector 
+				inClass: self 
+				requestor: requestor.
+			category = priorProtocolOrNil ifFalse: [
+				SystemChangeNotifier uniqueInstance
+					selectorRecategorized: selector
+					from: priorProtocolOrNil
+					to: category
+					inClass: self ]]'! !
+
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:28:52'!
+originalDoneCompilingSourceCode
+
+	^'doneCompiling
+	"A ClassBuilder has finished the compilation of the receiver.
+	This message is a notification for a class that needs to do some
+	cleanup / reinitialization after it has been recompiled."'
+	
+! !
+
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:30:45'!
+originalMessageListKeyFromSourceCode
+
+	^'messageListKey: aChar from: view
+	"Respond to a Command key.  I am a model with a code pane, and I also
+	have a listView that has a list of methods.  The view knows how to get
+	the list and selection."
+
+	| sel class |
+	aChar == $D ifTrue: [^ model toggleDiffing].
+
+	sel _ model selectedMessageName.
+	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
+	aChar == $n ifTrue: [
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
+
+	"The following require a class selection"
+	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
+	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar == $N ifTrue: [^ self browseClassRefs].
+	aChar == $i ifTrue: [^ self methodHierarchy].
+	aChar == $h ifTrue: [^ self browseHierarchy].
+	aChar == $p ifTrue: [^ self browseFullProtocol].
+
+	"The following require a method selection"
+	sel ifNotNil: [
+		aChar == $o ifTrue: [^ model fileOutMessage].
+		aChar == $c ifTrue: [^ model copySelector].
+		aChar == $v ifTrue: [^ self browseVersions].
+		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
+		aChar == $x ifTrue: [^ model removeMessage].
+		aChar == $t ifTrue: [^ model runMethodTest].
+		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 2/20/2019 22:37:13'!
 messageListMenuOptions
 
 	^`{{
 				#itemGroup 		-> 		40.
 				#itemOrder 		-> 		15.
-				#label 			-> 		'typed senders of...'.
-				#selector 		-> 		#browseTypedSendersOfMessages.
+				#label 			-> 		'actual senders of it'.
+				#selector 		-> 		#browseActualSendersOfSelectedMethod.
 				#icon 			-> 		#mailForwardIcon
-			} asDictionary}`
+		} asDictionary.
+		{
+				#itemGroup 		-> 		40.
+				#itemOrder 		-> 		25.
+				#label 			-> 		'actual implementors of it'.
+				#selector 		-> 		#browseActualImplementorsOfSelectedMethod.
+				#icon 			-> 		#developmentIcon
+		} asDictionary}`
 ! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 2/20/2019 18:39:17'!
@@ -2586,53 +2813,6 @@ Should I call it MetaReturnType?
 
 "! !
 
-!MetaType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:03'!
-typeName
-
-	self subclassResponsibility ! !
-
-!MetaType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:26:07'!
-asTypeFor: aReceiverType
-
-	self subclassResponsibility ! !
-
-!MetaType methodsFor: 'printing' stamp: 'HAW 2/19/2019 18:03:09'!
-printOn: aStream
-
-	aStream nextPutAll: self typeName ! !
-
-!ClassType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:24:48'!
-asTypeFor: aReceiverType
-
-	^aReceiverType class
-	! !
-
-!ClassType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:23'!
-typeName
-
-	^'class'! !
-
-!InstanceType methodsFor: 'type convertion' stamp: 'HAW 1/18/2019 10:00:29'!
-asTypeFor: aReceiverType
-
-	^aReceiverType soleInstance 
-	! !
-
-!InstanceType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:48'!
-typeName
-
-	^'instance'! !
-
-!SelfType methodsFor: 'type convertion' stamp: 'HAW 1/15/2019 22:56:59'!
-asTypeFor: aReceiverType
-
-	^aReceiverType ! !
-
-!SelfType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:02:15'!
-typeName
-
-	^'self'! !
-
 !NotCompiledYetMethod methodsFor: 'initialization' stamp: 'HAW 10/24/2018 20:08:07'!
 initializeClass: aClass selector: aSelector 
 
@@ -2666,11 +2846,6 @@ returnTypes
 selector
 	
 	^selector! !
-
-!NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 12/19/2018 16:16:55'!
-typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
-
-	^class typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
 
 !NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/24/2018 20:09:43'!
 typesOfVariableNamed: aVarName ifAbsent: aBlockClosure 
@@ -3332,16 +3507,6 @@ variableName
 
 	self subclassResponsibility ! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:08:24'!
-printOn: aStream
-
-	aStream 
-		nextPutAll: self variableName;
-		nextPutAll: ' : '.
-		
-	self printTypesOn: aStream
-	! !
-
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 1/20/2019 20:06:40'!
 printReducedTypes
 	
@@ -3805,28 +3970,11 @@ doesStoreTypes
 	
 	^rawTypes notNil ! !
 
-!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 08:43:30'!
-initializeEachInstanceVariableRawTypes
-
-	rawTypes ifNotNil: [ 
-		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
-
 !InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 06:43:18'!
 initializeOf: aClass rawTypes: aRawTypes
 	
 	class := aClass.
 	rawTypes := aRawTypes.
-	! !
-
-!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 1/17/2019 12:49:21'!
-storeAllInstancesCurrentTypes
-
-	| instVarTypes |
-	
-	rawTypes isNil ifTrue: [ ^self ].
-	
-	instVarTypes := class allInstVarNames collect: [ :anInstVarName | self localTypeInfoOf: anInstVarName ].
-	class allInstancesDo: [ :anInstance | self addTypeInformationOf: anInstance using: instVarTypes ] 
 	! !
 
 !InstanceVariablesTypes methodsFor: 'megamorphic' stamp: 'HAW 10/15/2018 22:37:35'!
@@ -4071,11 +4219,6 @@ ivroot: anObject
 
 	ivroot := anObject ! !
 
-!TypeInfoRootTestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 2! !
-
 !TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 2/19/2019 14:52:40'!
 implementedOnAll: p1
 
@@ -4095,11 +4238,6 @@ ivsibling1: anObject
 	"
 	ivsibling1 := anObject ! !
 
-!TypeInfoSibling1TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 3! !
-
 !TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 2/19/2019 14:53:01'!
 implementedOnAll: p1
 
@@ -4107,11 +4245,6 @@ implementedOnAll: p1
 
 !TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 2/19/2019 14:51:11'!
 implementedOnSibling1AndSibling2: p1! !
-
-!TypeInfoSibling2TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 3! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 12/31/2018 15:36:06'!
 inject: thisValue into: binaryBlock 
@@ -5692,6 +5825,18 @@ showTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
 
 	(ParseNodeTypesDisplay of: aNodeUnderCursor in: methodNode definedAt: class) show
 ! !
+
+!CodeWindow methodsFor: '*LiveTyping' stamp: 'HAW 2/20/2019 22:38:29'!
+browseActualImplementorsOfSelectedMethod
+	
+	self model currentCompiledMethod ifNotNil: [ :aSentCompileMethod |
+		Smalltalk browseAllActualmplementorsOf: aSentCompileMethod ]! !
+
+!CodeWindow methodsFor: '*LiveTyping' stamp: 'HAW 2/20/2019 22:34:30'!
+browseActualSendersOfSelectedMethod
+	
+	self model currentCompiledMethod ifNotNil: [ :aSentCompileMethod |
+		Smalltalk browseAllActualSendersOn: aSentCompileMethod ]! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 12/1/2018 12:04:16'!
 classAndSelector
