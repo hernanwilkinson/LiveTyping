@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3620] on 21 February 2019 at 7:50:43 am'!
-'Description some renames. Overriden methods verify that current source code is the same as the one to override'!
-!provides: 'LiveTyping' 1 6!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3622] on 21 February 2019 at 10:16:47 pm'!
+'Description Autocompleter shows All Prefixed Selectors when no message of receiver''s type starts with prefix'!
+!provides: 'LiveTyping' 1 7!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -2078,7 +2078,7 @@ computeEntriesOfUnaryMessageReturnNamed: aSelector at: aRange
 		ifError: [ :anError | nil ].
 	self computeMessageEntriesForTypeInfoOrNil: typeInfo! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 2/15/2019 15:21:26'!
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 2/21/2019 22:05:10'!
 computeMessageEntriesForCommonSupertype: commonSupertype of: aVariableTypeInfo
 	
 	| selectorsCollector |
@@ -2091,9 +2091,12 @@ computeMessageEntriesForCommonSupertype: commonSupertype of: aVariableTypeInfo
 		addSelectorsOf: Object;
 		entriesToShow.
 		
-	possibleInvalidSelectors := selectorsCollector possibleInvalidSelectors.! !
+	possibleInvalidSelectors := selectorsCollector possibleInvalidSelectors.
+	
+	self ifEmptyEntriesShowAllPrefixedSelectors
+! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 2/18/2019 18:14:47'!
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 2/21/2019 22:03:19'!
 computeMessageEntriesForGenericSupertypeOf: aVariableTypeInfo
 			
 	 | prefixedSelectors selectorsCollector | 
@@ -2117,6 +2120,8 @@ computeMessageEntriesForGenericSupertypeOf: aVariableTypeInfo
 	 ].
 		
 	possibleInvalidSelectors := selectorsCollector possibleInvalidSelectors.
+	
+	self ifEmptyEntriesShowAllPrefixedSelectors
 		
 	! !
 
@@ -2288,10 +2293,10 @@ initializeOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 	cursorPosition := aPosition.
 	morph := aMorph ! !
 
-!BrowseActualSelectors methodsFor: 'browsing' stamp: 'HAW 2/20/2019 23:34:12'!
+!BrowseActualSelectors methodsFor: 'browsing' stamp: 'HAW 2/21/2019 12:27:06'!
 browse
 	
-	| methodSelector |
+	| methodSelector | 
 
 	methodSelector := methodNode selector.
 	methodToLookUp := class 
@@ -2813,17 +2818,6 @@ Should I call it MetaReturnType?
 
 "! !
 
-!NotCompiledYetMethod methodsFor: 'initialization' stamp: 'HAW 10/24/2018 20:08:07'!
-initializeClass: aClass selector: aSelector 
-
-	class := aClass.
-	selector := aSelector ! !
-
-!NotCompiledYetMethod methodsFor: 'accessing' stamp: 'HAW 10/24/2018 20:08:30'!
-methodClass
-	
-	^class ! !
-
 !NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/28/2018 22:13:48'!
 classAndSelector
 
@@ -2852,6 +2846,17 @@ typesOfVariableNamed: aVarName ifAbsent: aBlockClosure
 	
 	"I have not been compiled yet, so there is no info about parameters or temps - Hernan"
 	^aBlockClosure value! !
+
+!NotCompiledYetMethod methodsFor: 'initialization' stamp: 'HAW 10/24/2018 20:08:07'!
+initializeClass: aClass selector: aSelector 
+
+	class := aClass.
+	selector := aSelector ! !
+
+!NotCompiledYetMethod methodsFor: 'accessing' stamp: 'HAW 10/24/2018 20:08:30'!
+methodClass
+	
+	^class ! !
 
 !NotCompiledYetMethod class methodsFor: 'instance creation' stamp: 'HAW 10/24/2018 20:07:45'!
 class: aClass selector: aSelector
@@ -3218,6 +3223,59 @@ of: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 	^self new initliazeOf: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 ! !
 
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 1/20/2019 20:06:40'!
+printReducedTypes
+	
+	^String streamContents: [ :stream | self printReducedTypesOn: stream ]! !
+
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 2/19/2019 17:53:31'!
+printReducedTypesOn: aStream
+
+	aStream nextPut: $<.
+	
+	self isTypesEmpty  
+		ifTrue: [ aStream nextPut: $? ]
+		ifFalse: [
+			self 
+				withCommonSupertypeDo: [ :aCommonSupertype | 
+					aStream nextPutAll: aCommonSupertype typeName.
+					self typesSize > 1 ifTrue: [ aStream nextPutAll: ' # ... ' ]]
+				ifGeneric: [ :genericType | 
+					aStream nextPutAll: 'any # '.
+					self 
+						typesDo: [:aType | aStream nextPutAll: aType typeName ]
+						separatedBy: [ aStream nextPutAll: ' | ' ]]].
+			
+	aStream nextPut: $>.
+! !
+
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 1/19/2019 07:35:54'!
+printTypes
+	
+	^String streamContents: [ :stream | self printTypesOn: stream ]! !
+
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 2/19/2019 17:54:03'!
+printTypesOn: aStream
+
+	| types |
+	
+	aStream nextPut: $<.
+	
+	types := self types.
+	types isEmpty 
+		ifTrue: [ aStream nextPut: $? ]
+		ifFalse: [
+			types size > 1 ifTrue: [
+				self withCommonSupertypeDo: [ :aCommonSupertype | aStream nextPutAll: aCommonSupertype typeName ] ifGeneric: [ :aGenericType | aStream nextPutAll: 'any' ].
+				aStream nextPutAll: ' # ' ].
+			types
+				do: [:aType | aStream nextPutAll: aType typeName ]
+				separatedBy: [ aStream nextPutAll: ' | ' ]].
+			
+	aStream nextPut: $>.
+	
+	! !
+
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 17:55:32'!
 addType: aType
 
@@ -3506,59 +3564,6 @@ identifier
 variableName
 
 	self subclassResponsibility ! !
-
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 1/20/2019 20:06:40'!
-printReducedTypes
-	
-	^String streamContents: [ :stream | self printReducedTypesOn: stream ]! !
-
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 2/19/2019 17:53:31'!
-printReducedTypesOn: aStream
-
-	aStream nextPut: $<.
-	
-	self isTypesEmpty  
-		ifTrue: [ aStream nextPut: $? ]
-		ifFalse: [
-			self 
-				withCommonSupertypeDo: [ :aCommonSupertype | 
-					aStream nextPutAll: aCommonSupertype typeName.
-					self typesSize > 1 ifTrue: [ aStream nextPutAll: ' # ... ' ]]
-				ifGeneric: [ :genericType | 
-					aStream nextPutAll: 'any # '.
-					self 
-						typesDo: [:aType | aStream nextPutAll: aType typeName ]
-						separatedBy: [ aStream nextPutAll: ' | ' ]]].
-			
-	aStream nextPut: $>.
-! !
-
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 1/19/2019 07:35:54'!
-printTypes
-	
-	^String streamContents: [ :stream | self printTypesOn: stream ]! !
-
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 2/19/2019 17:54:03'!
-printTypesOn: aStream
-
-	| types |
-	
-	aStream nextPut: $<.
-	
-	types := self types.
-	types isEmpty 
-		ifTrue: [ aStream nextPut: $? ]
-		ifFalse: [
-			types size > 1 ifTrue: [
-				self withCommonSupertypeDo: [ :aCommonSupertype | aStream nextPutAll: aCommonSupertype typeName ] ifGeneric: [ :aGenericType | aStream nextPutAll: 'any' ].
-				aStream nextPutAll: ' # ' ].
-			types
-				do: [:aType | aStream nextPutAll: aType typeName ]
-				separatedBy: [ aStream nextPutAll: ' | ' ]].
-			
-	aStream nextPut: $>.
-	
-	! !
 
 !VariableTypeInfo methodsFor: 'megamorphic' stamp: 'HAW 10/17/2018 19:52:50'!
 ifMegamorphicAddTo: allMegamorphicVariables
@@ -3907,6 +3912,13 @@ typesInfoHeader
 		
 	^String streamContents: [ :stream | self printTypesInfoHeaderOn: stream ]! !
 
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 06:43:18'!
+initializeOf: aClass rawTypes: aRawTypes
+	
+	class := aClass.
+	rawTypes := aRawTypes.
+	! !
+
 !InstanceVariablesTypes methodsFor: 'collect info' stamp: 'HAW 1/17/2019 12:49:21'!
 addNumberOfRawTypesTo: aBagCollector
 
@@ -3969,13 +3981,6 @@ variablesNames
 doesStoreTypes
 	
 	^rawTypes notNil ! !
-
-!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 06:43:18'!
-initializeOf: aClass rawTypes: aRawTypes
-	
-	class := aClass.
-	rawTypes := aRawTypes.
-	! !
 
 !InstanceVariablesTypes methodsFor: 'megamorphic' stamp: 'HAW 10/15/2018 22:37:35'!
 megamorphicInstanceVariables
@@ -4473,13 +4478,14 @@ m8a
 
 	^true! !
 
-!Customer methodsFor: 'ppp' stamp: 'HAW 12/21/2018 11:01:40'!
+!Customer methodsFor: 'ppp' stamp: 'HAW 2/21/2019 12:04:39'!
 metodoClosure: p1
 
 	| t1 t2 |
 	
 	t2 := { 1. 2. 3. }.
 	t1 := t2 at: 1.
+	[ | qq | qq _ 2 ] value.
 	
 	^t1 + p1! !
 
