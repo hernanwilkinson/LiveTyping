@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3622] on 21 February 2019 at 10:16:47 pm'!
-'Description Autocompleter shows All Prefixed Selectors when no message of receiver''s type starts with prefix'!
-!provides: 'LiveTyping' 1 7!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3622] on 22 February 2019 at 11:50:36 pm'!
+'Description Removes a removed class from all raw types arrays'!
+!provides: 'LiveTyping' 1 8!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -47,9 +47,19 @@ TestCase subclass: #ClosureVariablesTest
 ClosureVariablesTest class
 	instanceVariableNames: ''!
 
+!classDefinition: #DynamicTypesTest category: #'LiveTyping-Tests'!
+TestCase subclass: #DynamicTypesTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'DynamicTypesTest class' category: #'LiveTyping-Tests'!
+DynamicTypesTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests'!
 TestCase subclass: #InstanceVariableTypeInfoTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'iv1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
@@ -67,14 +77,14 @@ TestCase subclass: #InstanceVariablesTypesTest
 InstanceVariablesTypesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #MetaTypesTest category: #'LiveTyping-Tests'!
-TestCase subclass: #MetaTypesTest
+!classDefinition: #MethodVariableTypeInfoTest category: #'LiveTyping-Tests'!
+TestCase subclass: #MethodVariableTypeInfoTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'MetaTypesTest class' category: #'LiveTyping-Tests'!
-MetaTypesTest class
+!classDefinition: 'MethodVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
+MethodVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests'!
@@ -167,6 +177,46 @@ BrowseActualSelectors subclass: #BrowseActualSenders
 BrowseActualSenders class
 	instanceVariableNames: ''!
 
+!classDefinition: #DynamicType category: #LiveTyping!
+Object subclass: #DynamicType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'DynamicType class' category: #LiveTyping!
+DynamicType class
+	instanceVariableNames: ''!
+
+!classDefinition: #ClassType category: #LiveTyping!
+DynamicType subclass: #ClassType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'ClassType class' category: #LiveTyping!
+ClassType class
+	instanceVariableNames: ''!
+
+!classDefinition: #InstanceType category: #LiveTyping!
+DynamicType subclass: #InstanceType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'InstanceType class' category: #LiveTyping!
+InstanceType class
+	instanceVariableNames: ''!
+
+!classDefinition: #SelfType category: #LiveTyping!
+DynamicType subclass: #SelfType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'SelfType class' category: #LiveTyping!
+SelfType class
+	instanceVariableNames: ''!
+
 !classDefinition: #IncompleteTypeInfo category: #LiveTyping!
 Object subclass: #IncompleteTypeInfo
 	instanceVariableNames: 'methodReference reasonDescription'
@@ -185,46 +235,6 @@ Object subclass: #LiveTyping
 	category: 'LiveTyping'!
 !classDefinition: 'LiveTyping class' category: #LiveTyping!
 LiveTyping class
-	instanceVariableNames: ''!
-
-!classDefinition: #MetaType category: #LiveTyping!
-Object subclass: #MetaType
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'MetaType class' category: #LiveTyping!
-MetaType class
-	instanceVariableNames: ''!
-
-!classDefinition: #ClassType category: #LiveTyping!
-MetaType subclass: #ClassType
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'ClassType class' category: #LiveTyping!
-ClassType class
-	instanceVariableNames: ''!
-
-!classDefinition: #InstanceType category: #LiveTyping!
-MetaType subclass: #InstanceType
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'InstanceType class' category: #LiveTyping!
-InstanceType class
-	instanceVariableNames: ''!
-
-!classDefinition: #SelfType category: #LiveTyping!
-MetaType subclass: #SelfType
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'SelfType class' category: #LiveTyping!
-SelfType class
 	instanceVariableNames: ''!
 
 !classDefinition: #NotCompiledYetMethod category: #LiveTyping!
@@ -347,6 +357,16 @@ VariablesTypes subclass: #MethodVariablesTypes
 MethodVariablesTypes class
 	instanceVariableNames: ''!
 
+!classDefinition: #LiveTypingTestFactory category: #'LiveTyping-Tests'!
+Object subclass: #LiveTypingTestFactory
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'LiveTypingTestFactory class' category: #'LiveTyping-Tests'!
+LiveTypingTestFactory class
+	instanceVariableNames: ''!
+
 !classDefinition: #PerfomanceTest category: #'LiveTyping-Tests'!
 Object subclass: #PerfomanceTest
 	instanceVariableNames: ''
@@ -424,17 +444,17 @@ createInstanceVariableRawTypesFor: anInstVarName
 
 	^super createInstanceVariableRawTypesFor: anInstVarName! !
 
-!MetaType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:03'!
+!DynamicType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:03'!
 typeName
 
 	self subclassResponsibility ! !
 
-!MetaType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:26:07'!
+!DynamicType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:26:07'!
 asTypeFor: aReceiverType
 
 	self subclassResponsibility ! !
 
-!MetaType methodsFor: 'printing' stamp: 'HAW 2/19/2019 18:03:09'!
+!DynamicType methodsFor: 'printing' stamp: 'HAW 2/19/2019 18:03:09'!
 printOn: aStream
 
 	aStream nextPutAll: self typeName ! !
@@ -894,6 +914,68 @@ testOneArrayForTypesIsCreatedWhenAMethodHasNoClosures
 	method := self class>>#methodWithoutClosure:.
 	method initializeTypeInformation! !
 
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:10:40'!
+test01TypeConvertionForAClassReturnsSameClass
+
+	self assert: (Object asTypeFor: Array) equals: Object! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:11:14'!
+test02TypeConvertionForSelfTypeReturnsReceiversType
+
+	self assert: (SelfType new asTypeFor: Array) equals: Array! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:11:52'!
+test03TypeConvertionForClassTypeReturnsReceiversTypeClass
+
+	self assert: (ClassType new asTypeFor: Array) equals: Array class! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:23:19'!
+test04ClassMessageSendChainsClassType
+
+	|  method types |
+	
+	"To be sure that collects the return type - Hernan"
+	self twoClassMessageSend.
+	
+	method := self class>>#twoClassMessageSend.
+	types := method methodNode block statements first expr typesIn: method addingIncompleteTypeInfoTo: Set new.
+	
+	self assert: types size equals: 1.
+	self assert: types anyOne equals: Metaclass.
+	self assert: method returnTypes asSet equals: types
+	! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:08:27'!
+test05TypeConvertionForInstanceTypeReturnsMetaclassSoleInstance
+
+	self assert: (InstanceType new asTypeFor: Array class) equals: Array ! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:23:35'!
+test06newTypeIsMetaclassSoleInstance
+
+	| method types |
+	
+	"To be sure that collects the return type - Hernan"
+	self createNewInstance.
+
+	method := self class>>#createNewInstance.
+	types := method methodNode block statements first expr typesIn: method addingIncompleteTypeInfoTo: Set new.
+	
+	self assert: types size equals: 1.
+	self assert: types anyOne equals: self class.
+	self assert: method returnTypes asSet equals: types
+! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 15:36:25'!
+twoClassMessageSend
+
+	^self class class! !
+
+!DynamicTypesTest methodsFor: 'test data' stamp: 'HAW 1/18/2019 10:19:57'!
+createNewInstance
+	
+	^self class new! !
+
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:27:10'!
 assertTypesAreCollectedCorrectlyFor: anInstVarTypeInfoCreator
 
@@ -1107,12 +1189,48 @@ test12IsTypesEmptyForLocalTypeInfoOnlyCheckOnLocalRawTypes
 	self deny: ivrootInRootTypeInfo isTypesEmpty.
 	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
 
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 20:23:04'!
+test13RemovingAClassRemovesItFromInstanceVariableRawTypes
+
+	| classToRemove typeInfo |
+
+	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
+		classToRemove := testFactory createClassToBeRemoved.
+		iv1 := classToRemove new.
+	
+		typeInfo := self class typeInfoOfInstanceVariableNamed: 'iv1'.
+		
+		self assert: typeInfo typesSize equals: 1.
+		self assert: (typeInfo typesIncludes: classToRemove).
+		
+		classToRemove removeFromSystem.
+		
+		self assert: typeInfo isTypesEmpty ]! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 20:23:50'!
+test14RemovingAClassRemovesItsClassFromInstanceVariableRawTypes
+
+	| classToRemove typeInfo |
+
+	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
+		classToRemove := testFactory createClassToBeRemoved.
+		iv1 := classToRemove.
+	
+		typeInfo := self class typeInfoOfInstanceVariableNamed: 'iv1'.
+		
+		self assert: typeInfo typesSize equals: 1.
+		self assert: (typeInfo typesIncludes: classToRemove class).
+		
+		classToRemove removeFromSystem.
+		
+		self assert: typeInfo isTypesEmpty ]! !
+
 !InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 11/27/2018 15:04:54'!
 initializeHierarchyForTestingInstanceVariablesTypes
 	
 	TypeInfoRootTestClass withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
 test01InstanceVariablesTypesIsInitializedWithAnArrayOfClassInstSize
 
 	self class initializeInstanceVariablesRawTypes.
@@ -1122,7 +1240,7 @@ test01InstanceVariablesTypesIsInitializedWithAnArrayOfClassInstSize
 		self assert: (instVarTypes allSatisfy: [ :aType | aType isNil ])].
 	self assert: self class instanceVariablesRawTypes last isNil! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:06:09'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:06:09'!
 test02InitializeInstanceVariablesTypesWithAllInstancesStoreCurrentClassInstancesTypes
 
 	| testSelectorTypes |
@@ -1134,7 +1252,7 @@ test02InitializeInstanceVariablesTypesWithAllInstancesStoreCurrentClassInstances
 	self assert: 1 equals: testSelectorTypes typesSize.
 	self assert: (testSelectorTypes typesIncludes: Symbol)! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
 test03TypesOfDifferentInstVarsAreStoredCorrectly
 
 	| instVar1Types instVar2Types |
@@ -1153,7 +1271,7 @@ test03TypesOfDifferentInstVarsAreStoredCorrectly
 	self assert: (instVar2Types typesIncludes: instVar2 class).
 	! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
 test04MoreThanOneTypeAreStoredCorrectlyInDifferentInstVars
 
 	| instVar1Types instVar2Types |
@@ -1176,7 +1294,7 @@ test04MoreThanOneTypeAreStoredCorrectlyInDifferentInstVars
 	self assert: (instVar2Types typesIncludes: (1/2) class).
 	! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
 test05TypesAreStoredUpToInstVarTypesSize
 
 	| instVar3Types |
@@ -1193,7 +1311,7 @@ test05TypesAreStoredUpToInstVarTypesSize
 	
 		! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
 test06NoTypesAreStoredWhenInstVarTypesIsNil
 
 	| instVar4Types |
@@ -1209,7 +1327,7 @@ test06NoTypesAreStoredWhenInstVarTypesIsNil
 	
 		! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
 test07CommonSupertypeOfReturnsSupertypeOfStoredTypes
 
 	| commonSupertype |
@@ -1222,7 +1340,7 @@ test07CommonSupertypeOfReturnsSupertypeOfStoredTypes
 	commonSupertype := self class instanceVariablesTypes commonSupertypeOf: 'instVar2'.
 	self assert: commonSupertype equals: Number! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
 test08CommonSupertypeIfNoTypesEvaluatesAlternativeBlockWhenNoTypeHasBeenStore
 
 	| commonSupertype |
@@ -1232,73 +1350,52 @@ test08CommonSupertypeIfNoTypesEvaluatesAlternativeBlockWhenNoTypeHasBeenStore
 	commonSupertype := self class instanceVariablesTypes commonSupertypeOf: 'instVar4' ifNoTypes: [ Array ].
 	self assert: commonSupertype equals: Array! !
 
-!InstanceVariablesTypesTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/15/2018 23:01:03'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/15/2018 23:01:03'!
 test09EvaluatesIfAbsentBlockWhenAskTypeInfoForNonExistingInstVar
 
 	self class instanceVariablesTypes typeInfoOf: 'xyz' ifAbsent: [ ^self ].
 	self fail! !
 
-!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:10:40'!
-test01TypeConvertionForAClassReturnsSameClass
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 23:35:54'!
+test01RemovingAClassRemovesItFromMethodVariableRawTypesForParameter
 
-	self assert: (Object asTypeFor: Array) equals: Object! !
+	| classToRemove typeInfo |
 
-!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:11:14'!
-test02TypeConvertionForSelfTypeReturnsReceiversType
-
-	self assert: (SelfType new asTypeFor: Array) equals: Array! !
-
-!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 13:11:52'!
-test03TypeConvertionForClassTypeReturnsReceiversTypeClass
-
-	self assert: (ClassType new asTypeFor: Array) equals: Array class! !
-
-!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:23:19'!
-test04ClassMessageSendChainsClassType
-
-	|  method types |
+	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
+		classToRemove := testFactory createClassToBeRemoved.
+		self methodWithParameterOfClassToRemove: classToRemove new.
 	
-	"To be sure that collects the return type - Hernan"
-	self twoClassMessageSend.
+		typeInfo := (self class compiledMethodAt: #methodWithParameterOfClassToRemove:) typeInfoOfVariableNamed: 'p1'.
+		
+		self assert: typeInfo typesSize equals: 1.
+		self assert: (typeInfo typesIncludes: classToRemove).
+		
+		classToRemove removeFromSystem.
+		
+		self assert: typeInfo isTypesEmpty ]! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 20:28:09'!
+test02RemovingAClassRemovesItsClassFromMethodVariableRawTypesForParameter
+
+	| classToRemove typeInfo |
+
+	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
+		classToRemove := testFactory createClassToBeRemoved.
+		self methodWithParameterOfClassToRemove: classToRemove.
 	
-	method := self class>>#twoClassMessageSend.
-	types := method methodNode block statements first expr typesIn: method addingIncompleteTypeInfoTo: Set new.
-	
-	self assert: types size equals: 1.
-	self assert: types anyOne equals: Metaclass.
-	self assert: method returnTypes asSet equals: types
-	! !
+		typeInfo := (self class compiledMethodAt: #methodWithParameterOfClassToRemove:) typeInfoOfVariableNamed: 'p1'.
+		
+		self assert: typeInfo typesSize equals: 1.
+		self assert: (typeInfo typesIncludes: classToRemove class).
+		
+		classToRemove removeFromSystem.
+		
+		self assert: typeInfo isTypesEmpty ]! !
 
-!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:08:27'!
-test05TypeConvertionForInstanceTypeReturnsMetaclassSoleInstance
+!MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/22/2019 09:04:11'!
+methodWithParameterOfClassToRemove: p1
 
-	self assert: (InstanceType new asTypeFor: Array class) equals: Array ! !
-
-!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:23:35'!
-test06newTypeIsMetaclassSoleInstance
-
-	| method types |
-	
-	"To be sure that collects the return type - Hernan"
-	self createNewInstance.
-
-	method := self class>>#createNewInstance.
-	types := method methodNode block statements first expr typesIn: method addingIncompleteTypeInfoTo: Set new.
-	
-	self assert: types size equals: 1.
-	self assert: types anyOne equals: self class.
-	self assert: method returnTypes asSet equals: types
-! !
-
-!MetaTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 15:36:25'!
-twoClassMessageSend
-
-	^self class class! !
-
-!MetaTypesTest methodsFor: 'test data' stamp: 'HAW 1/18/2019 10:19:57'!
-createNewInstance
-	
-	^self class new! !
+	^10! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:48:50'!
 test01QuickReturnSelfMethodsReturnSelfTypeAsReturnType
@@ -1406,6 +1503,42 @@ test13yourselfMethodReturnsSelfTypeAsReturnType
 	self assert: returnTypes size equals: 1.
 	self assert: returnTypes anyOne class equals: SelfType ! !
 
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 21:58:24'!
+test14RemovingAClassRemovesItFromMethodReturnType
+
+	| classToRemove typeInfo |
+
+	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
+		classToRemove := testFactory createClassToBeRemoved.
+		self methodReturningInstanceOfClassToRemove: classToRemove new.
+	
+		typeInfo := (self class compiledMethodAt: #methodReturningInstanceOfClassToRemove:) returnTypeInfo.
+		
+		self assert: typeInfo typesSize equals: 1.
+		self assert: (typeInfo typesIncludes: classToRemove).
+		
+		classToRemove removeFromSystem.
+		
+		self assert: typeInfo isTypesEmpty ]! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 21:58:47'!
+test15RemovingAClassRemovesItsClassFromMethodReturnType
+
+	| classToRemove typeInfo |
+
+	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
+		classToRemove := testFactory createClassToBeRemoved.
+		self methodReturningInstanceOfClassToRemove: classToRemove.
+	
+		typeInfo := (self class compiledMethodAt: #methodReturningInstanceOfClassToRemove:) returnTypeInfo.
+		
+		self assert: typeInfo typesSize equals: 1.
+		self assert: (typeInfo typesIncludes: classToRemove class).
+		
+		classToRemove removeFromSystem.
+		
+		self assert: typeInfo isTypesEmpty ]! !
+
 !ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 1/17/2019 11:46:48'!
 assertReturnTypeOf: aSelector are: types
 
@@ -1421,6 +1554,11 @@ assertReturnTypeOf: aSelector are: types
 assertReturnTypeOf: aSelector is: aType
 
 	self assertReturnTypeOf: aSelector are: (Array with: aType)! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/22/2019 21:57:58'!
+methodReturningInstanceOfClassToRemove: aClassToRemoveInstance
+
+	^aClassToRemoveInstance! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:40:21'!
 quickReturnFalse
@@ -1986,6 +2124,15 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: (types includes: 1 class).
 	self assert: (types includes: 1.0 class)! !
 
+!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 2/22/2019 16:01:34'!
+test
+
+	| x y |
+	
+	x := Array with: 1.
+	
+	y := x first! !
+
 !AutocompleteExample methodsFor: 'examples' stamp: 'HAW 2/14/2019 19:02:39'!
 testExampleMessagesOfDifferentSubclasses
 
@@ -1996,25 +2143,6 @@ testExampleMessagesOfDifferentSubclasses
 	
 	aCollection addAllFirst: #(1 2 3).
 	! !
-
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 1/21/2019 02:10:52'!
-testExampleWithKnownTypesAndCommonSupertype
-
-	| game |
-	
-	game := TicTacToe newGameStartingX.
-	
-	self assert: game isOver not.
-	self assert: game isPlayingX.
-	
-	game
-		markAt: 1@1;
-		markAt: 2@1;
-		markAll: { 1@2. 3@1. 1@3. }.
-		
-	self 
-		assert: game isOver;
-		assert: game hasPlayerXWon ! !
 
 !AutocompleteExample methodsFor: 'examples' stamp: 'HAW 2/8/2019 13:53:45'!
 testExampleWithNoCommonSupertype
@@ -2049,6 +2177,25 @@ testExampleWithNoCommonSupertype
 	
 	
 	! !
+
+!AutocompleteExample methodsFor: 'as yet unclassified' stamp: 'HAW 2/22/2019 16:00:34'!
+atestExampleWithKnownTypesAndCommonSupertype
+
+	| game |
+	
+	game := TicTacToe newGameStartingX.
+	
+	self assert: game isOver not.
+	self assert: game isPlayingX.
+	
+	game
+		markAt: 1@1;
+		markAt: 2@1;
+		markAll: { 1@2. 3@1. 1@3. }.
+		
+	self 
+		assert: game isOver;
+		assert: game hasPlayerXWon ! !
 
 !CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 17:52:11'!
 test01
@@ -2492,6 +2639,15 @@ showBrowseActualAnywayLabel
 	
 	^'Show actual senders anyway' ! !
 
+!DynamicType methodsFor: 'to do' stamp: 'HAW 1/16/2019 00:38:10'!
+TO_DO
+
+"
+should it be used only as message return type? it looks like...
+Should I call it MetaReturnType?
+
+"! !
+
 !IncompleteTypeInfo methodsFor: 'initialization' stamp: 'HAW 12/3/2018 11:53:42'!
 initializeOf: aMethodReference describedAs: aReasonDescription
 	
@@ -2543,42 +2699,6 @@ initializeLiveTyping
 	
 	self initializeTypeInformation! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 14:00:01'!
-addAndClassifySelectorSourceCode
-
-	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category notifying: requestor
-
-	| priorMethodOrNil priorProtocolOrNil |
-
-	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
-	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
-	self addSelectorSilently: selector withMethod: compiledMethod.
-	compiledMethod initializeTypeInformation.
-	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
-
-	priorMethodOrNil
-		ifNil: [
-			SystemChangeNotifier uniqueInstance 
-				methodAdded: compiledMethod 
-				selector: selector 
-				inProtocol: category 
-				class: self 
-				requestor: requestor ]
-		ifNotNil: [
-			
-			SystemChangeNotifier uniqueInstance 
-				methodChangedFrom: priorMethodOrNil 
-				to: compiledMethod 
-				selector: selector 
-				inClass: self 
-				requestor: requestor.
-			category = priorProtocolOrNil ifFalse: [
-				SystemChangeNotifier uniqueInstance
-					selectorRecategorized: selector
-					from: priorProtocolOrNil
-					to: category
-					inClass: self ]]'! !
-
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:07:37'!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
@@ -2592,29 +2712,19 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 22:56:51'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/22/2019 22:12:48'!
 compileAfterInstallMethods.
 
-	self compile: self addAndClassifySelectorSourceCode in: ClassDescription ifOriginalSourceCodeIs: self originalAddAndClassifySelectorSourceCode.
-	self compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self originalDoneCompilingSourceCode.
-	self compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self originalMessageListKeyFromSourceCode.! !
+	self compile: self addAndClassifySelectorSourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode.
+	self compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode.
+	self compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode.
+	self compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode.
+! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
 defineInstVarNamed: anInstVarName in: aClass
 
 	(aClass definesInstanceVariableNamed: anInstVarName ) ifFalse: [ aClass addInstVarName: anInstVarName ]! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/7/2019 11:14:56'!
-doneCompilingSourceCode
-
-	^'doneCompiling
-	"A ClassBuilder has finished the compilation of the receiver.
-	This message is a notification for a class that needs to do some
-	cleanup / reinitialization after it has been recompiled."
-	
-	self withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes ]'
-	
-! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 14:01:28'!
 initializeTypeInformation
@@ -2622,44 +2732,6 @@ initializeTypeInformation
 	InstanceVariablesTypes initializeForAllClassesWithAllInstances.    
 	MethodVariablesTypes initializeForAllClasses.
 ! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 22:56:51'!
-messageListKeyFromSourceCode
-
-	^'messageListKey: aChar from: view
-	"Respond to a Command key.  I am a model with a code pane, and I also
-	have a listView that has a list of methods.  The view knows how to get
-	the list and selection."
-
-	| sel class |
-	aChar == $D ifTrue: [^ model toggleDiffing].
-
-	sel _ model selectedMessageName.
-	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
-	aChar == $n ifTrue: [
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
-
-	aChar == $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
-	aChar == $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
-
-	"The following require a class selection"
-	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
-	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
-	aChar == $N ifTrue: [^ self browseClassRefs].
-	aChar == $i ifTrue: [^ self methodHierarchy].
-	aChar == $h ifTrue: [^ self browseHierarchy].
-	aChar == $p ifTrue: [^ self browseFullProtocol].
-
-	"The following require a method selection"
-	sel ifNotNil: [
-		aChar == $o ifTrue: [^ model fileOutMessage].
-		aChar == $c ifTrue: [^ model copySelector].
-		aChar == $v ifTrue: [^ self browseVersions].
-		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
-		aChar == $x ifTrue: [^ model removeMessage].
-		aChar == $t ifTrue: [^ model runMethodTest].
-		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 18:35:38'!
 modifyAdditionalMethodStateShape
@@ -2675,82 +2747,6 @@ modifyClassDescriptionShape
 		on: Warning do: [ :aWarning | aWarning resume ]]
 		on: Error do: [ :anError | anError return: nil ]
 ! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:06:17'!
-originalAddAndClassifySelectorSourceCode
-
-	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category notifying: requestor
-	| priorMethodOrNil priorProtocolOrNil |
-	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
-	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
-	self addSelectorSilently: selector withMethod: compiledMethod.
-	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
-	priorMethodOrNil
-		ifNil: [
-			SystemChangeNotifier uniqueInstance 
-				methodAdded: compiledMethod 
-				selector: selector 
-				inProtocol: category 
-				class: self 
-				requestor: requestor ]
-		ifNotNil: [
-			SystemChangeNotifier uniqueInstance 
-				methodChangedFrom: priorMethodOrNil 
-				to: compiledMethod 
-				selector: selector 
-				inClass: self 
-				requestor: requestor.
-			category = priorProtocolOrNil ifFalse: [
-				SystemChangeNotifier uniqueInstance
-					selectorRecategorized: selector
-					from: priorProtocolOrNil
-					to: category
-					inClass: self ]]'! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:28:52'!
-originalDoneCompilingSourceCode
-
-	^'doneCompiling
-	"A ClassBuilder has finished the compilation of the receiver.
-	This message is a notification for a class that needs to do some
-	cleanup / reinitialization after it has been recompiled."'
-	
-! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:30:45'!
-originalMessageListKeyFromSourceCode
-
-	^'messageListKey: aChar from: view
-	"Respond to a Command key.  I am a model with a code pane, and I also
-	have a listView that has a list of methods.  The view knows how to get
-	the list and selection."
-
-	| sel class |
-	aChar == $D ifTrue: [^ model toggleDiffing].
-
-	sel _ model selectedMessageName.
-	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
-	aChar == $n ifTrue: [
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
-
-	"The following require a class selection"
-	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
-	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
-	aChar == $N ifTrue: [^ self browseClassRefs].
-	aChar == $i ifTrue: [^ self methodHierarchy].
-	aChar == $h ifTrue: [^ self browseHierarchy].
-	aChar == $p ifTrue: [^ self browseFullProtocol].
-
-	"The following require a method selection"
-	sel ifNotNil: [
-		aChar == $o ifTrue: [^ model fileOutMessage].
-		aChar == $c ifTrue: [^ model copySelector].
-		aChar == $v ifTrue: [^ self browseVersions].
-		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
-		aChar == $x ifTrue: [^ model removeMessage].
-		aChar == $t ifTrue: [^ model runMethodTest].
-		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 2/20/2019 22:37:13'!
 messageListMenuOptions
@@ -2809,14 +2805,183 @@ smalltalkEditorMenuOptions
 		}`
 ! !
 
-!MetaType methodsFor: 'to do' stamp: 'HAW 1/16/2019 00:38:10'!
-TO_DO
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:11:53'!
+addAndClassifySelectorOriginalSourceCode
 
-"
-should it be used only as message return type? it looks like...
-Should I call it MetaReturnType?
+	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category notifying: requestor
+	| priorMethodOrNil priorProtocolOrNil |
+	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
+	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
+	self addSelectorSilently: selector withMethod: compiledMethod.
+	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
+	priorMethodOrNil
+		ifNil: [
+			SystemChangeNotifier uniqueInstance 
+				methodAdded: compiledMethod 
+				selector: selector 
+				inProtocol: category 
+				class: self 
+				requestor: requestor ]
+		ifNotNil: [
+			SystemChangeNotifier uniqueInstance 
+				methodChangedFrom: priorMethodOrNil 
+				to: compiledMethod 
+				selector: selector 
+				inClass: self 
+				requestor: requestor.
+			category = priorProtocolOrNil ifFalse: [
+				SystemChangeNotifier uniqueInstance
+					selectorRecategorized: selector
+					from: priorProtocolOrNil
+					to: category
+					inClass: self ]]'! !
 
-"! !
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 11/28/2018 14:00:01'!
+addAndClassifySelectorSourceCode
+
+	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category notifying: requestor
+
+	| priorMethodOrNil priorProtocolOrNil |
+
+	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
+	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
+	self addSelectorSilently: selector withMethod: compiledMethod.
+	compiledMethod initializeTypeInformation.
+	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
+
+	priorMethodOrNil
+		ifNil: [
+			SystemChangeNotifier uniqueInstance 
+				methodAdded: compiledMethod 
+				selector: selector 
+				inProtocol: category 
+				class: self 
+				requestor: requestor ]
+		ifNotNil: [
+			
+			SystemChangeNotifier uniqueInstance 
+				methodChangedFrom: priorMethodOrNil 
+				to: compiledMethod 
+				selector: selector 
+				inClass: self 
+				requestor: requestor.
+			category = priorProtocolOrNil ifFalse: [
+				SystemChangeNotifier uniqueInstance
+					selectorRecategorized: selector
+					from: priorProtocolOrNil
+					to: category
+					inClass: self ]]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:10'!
+doneCompilingOriginalSourceCode
+
+	^'doneCompiling
+	"A ClassBuilder has finished the compilation of the receiver.
+	This message is a notification for a class that needs to do some
+	cleanup / reinitialization after it has been recompiled."'
+	
+! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/7/2019 11:14:56'!
+doneCompilingSourceCode
+
+	^'doneCompiling
+	"A ClassBuilder has finished the compilation of the receiver.
+	This message is a notification for a class that needs to do some
+	cleanup / reinitialization after it has been recompiled."
+	
+	self withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes ]'
+	
+! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:47'!
+messageListKeyFromOriginalSourceCode
+
+	^'messageListKey: aChar from: view
+	"Respond to a Command key.  I am a model with a code pane, and I also
+	have a listView that has a list of methods.  The view knows how to get
+	the list and selection."
+
+	| sel class |
+	aChar == $D ifTrue: [^ model toggleDiffing].
+
+	sel _ model selectedMessageName.
+	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
+	aChar == $n ifTrue: [
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
+
+	"The following require a class selection"
+	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
+	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar == $N ifTrue: [^ self browseClassRefs].
+	aChar == $i ifTrue: [^ self methodHierarchy].
+	aChar == $h ifTrue: [^ self browseHierarchy].
+	aChar == $p ifTrue: [^ self browseFullProtocol].
+
+	"The following require a method selection"
+	sel ifNotNil: [
+		aChar == $o ifTrue: [^ model fileOutMessage].
+		aChar == $c ifTrue: [^ model copySelector].
+		aChar == $v ifTrue: [^ self browseVersions].
+		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
+		aChar == $x ifTrue: [^ model removeMessage].
+		aChar == $t ifTrue: [^ model runMethodTest].
+		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/20/2019 22:56:51'!
+messageListKeyFromSourceCode
+
+	^'messageListKey: aChar from: view
+	"Respond to a Command key.  I am a model with a code pane, and I also
+	have a listView that has a list of methods.  The view knows how to get
+	the list and selection."
+
+	| sel class |
+	aChar == $D ifTrue: [^ model toggleDiffing].
+
+	sel _ model selectedMessageName.
+	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
+	aChar == $n ifTrue: [
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
+
+	aChar == $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
+	aChar == $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
+
+	"The following require a class selection"
+	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
+	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar == $N ifTrue: [^ self browseClassRefs].
+	aChar == $i ifTrue: [^ self methodHierarchy].
+	aChar == $h ifTrue: [^ self browseHierarchy].
+	aChar == $p ifTrue: [^ self browseFullProtocol].
+
+	"The following require a method selection"
+	sel ifNotNil: [
+		aChar == $o ifTrue: [^ model fileOutMessage].
+		aChar == $c ifTrue: [^ model copySelector].
+		aChar == $v ifTrue: [^ self browseVersions].
+		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
+		aChar == $x ifTrue: [^ model removeMessage].
+		aChar == $t ifTrue: [^ model runMethodTest].
+		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:30'!
+unloadOriginalSourceCode
+
+	^'unload
+	"Sent when a the class is removed.  Does nothing, but may be overridden by (class-side) subclasses."
+	""
+'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:22:31'!
+unloadSourceCode
+
+	^'unload
+	"Sent when a the class is removed.  Does nothing, but may be overridden by (class-side) subclasses."
+
+	self unloadFromAllRawTypes'! !
 
 !NotCompiledYetMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/28/2018 22:13:48'!
 classAndSelector
@@ -3308,16 +3473,10 @@ removeType: aType
 
 	^self removeType: aType ifAbsent: [ self signalTypeNotFound]! !
 
-!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 16:02:14'!
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 2/22/2019 23:49:35'!
 removeType: aType ifAbsent: anAbsentBlock
 
-	| typeIndex |
-	
-	rawTypes ifNil: [ ^anAbsentBlock value ].
-	typeIndex := rawTypes indexOf: aType ifAbsent: [ ^anAbsentBlock value ].
-	
-	rawTypes replaceFrom: typeIndex to: rawTypes size - 1 with: rawTypes startingAt: typeIndex + 1.
-	rawTypes at: rawTypes size put: nil! !
+	^self class removeType: aType from: rawTypes ifAbsent: anAbsentBlock ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/20/2018 20:06:47'!
 types
@@ -3586,6 +3745,24 @@ typeNotFoundErrorDescription
 	
 	^'Type not found'! !
 
+!VariableTypeInfo class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:49:35'!
+removeType: aType from: rawTypes ifAbsent: anAbsentBlock
+
+	| typeIndex |
+	
+	rawTypes ifNil: [ ^anAbsentBlock value ].
+	typeIndex := rawTypes indexOf: aType ifAbsent: [ ^anAbsentBlock value ].
+	
+	rawTypes replaceFrom: typeIndex to: rawTypes size - 1 with: rawTypes startingAt: typeIndex + 1.
+	rawTypes at: rawTypes size put: nil! !
+
+!VariableTypeInfo class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:49:35'!
+unload: aClassToUnload from: rawTypes 
+
+	self
+		removeType: aClassToUnload from: rawTypes ifAbsent: [];
+		removeType: aClassToUnload class from: rawTypes ifAbsent: []! !
+
 !InstanceVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:22:19'!
 identifier
 
@@ -3768,6 +3945,11 @@ printVariablesTypesOn: aStream
 		self printTypesInfoOn: aStream.
 		self printTypesInfoFooterOn: aStream ]! !
 
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 2/22/2019 19:16:51'!
+localTypesInfoDo: aBlock
+
+	self subclassResponsibility ! !
+
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 10/20/2018 20:10:39'!
 typeInfoOf: aVarName
 
@@ -3850,7 +4032,7 @@ variablesNames
 	
 	self subclassResponsibility.! !
 
-!VariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:34:10'!
+!VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 10/20/2018 17:34:10'!
 allMegamorphicVariables
 
 	"
@@ -3865,7 +4047,7 @@ allMegamorphicVariables
 	
 	^allMegamorphicVariables ! !
 
-!VariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:36:44'!
+!VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 10/20/2018 17:36:44'!
 allWithNoCommonSupertype
 
 	"
@@ -3882,7 +4064,7 @@ allWithNoCommonSupertype
 	
 ! !
 
-!VariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:45:10'!
+!VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 10/20/2018 17:45:10'!
 numberOfTypesForAll
 
 	"
@@ -3897,20 +4079,32 @@ numberOfTypesForAll
 	
 	^numberOfTypes contents! !
 
-!VariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:34:16'!
-of: aClass do: aBlock
+!VariablesTypes class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:04:39'!
+unload: aClassToUnload from: aRawTypes 
 
 	self subclassResponsibility ! !
 
-!VariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:41:51'!
+!VariablesTypes class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:04:39'!
+unload: aClassToUnload fromAllRawTypesOf: aVariablesRawTypes
+
+	aVariablesRawTypes ifNotNil: [ 
+		aVariablesRawTypes do: [ :aRawTypes | self unload: aClassToUnload from: aRawTypes ]]
+	! !
+
+!VariablesTypes class methodsFor: 'printing' stamp: 'HAW 10/23/2018 15:41:51'!
 printTypesInfoHeaderOn: aStream
 
 	self subclassResponsibility ! !
 
-!VariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:29:39'!
+!VariablesTypes class methodsFor: 'printing' stamp: 'HAW 10/23/2018 15:29:39'!
 typesInfoHeader
 		
 	^String streamContents: [ :stream | self printTypesInfoHeaderOn: stream ]! !
+
+!VariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 10/20/2018 17:34:16'!
+of: aClass do: aBlock
+
+	self subclassResponsibility ! !
 
 !InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 06:43:18'!
 initializeOf: aClass rawTypes: aRawTypes
@@ -3938,6 +4132,11 @@ localTypeInfoOf: anInstVarName
 	instVarRawTypes := self rawTypesOf: anInstVarName.
 		
 	^ class createLocalInstanceVariableTypeInfoOf: anInstVarName with: instVarRawTypes ! !
+
+!InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 2/22/2019 07:20:38'!
+localTypesInfoDo: aBlock
+	
+	self variablesNames do: [ :variableName | aBlock value: (self localTypeInfoOf: variableName) ]! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 10/20/2018 16:39:45'!
 rawTypesOf: anInstVarName
@@ -3987,7 +4186,22 @@ megamorphicInstanceVariables
 
 	^ class allInstVarNames select: [ :anInstVarName | (self typeInfoOf: anInstVarName) isMegamorphic]! !
 
-!InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 10/16/2018 01:03:43'!
+of: aClass
+
+	^self of: aClass rawTypes: aClass instanceVariablesRawTypes! !
+
+!InstanceVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 10/4/2018 21:09:31'!
+of: aClass rawTypes: rawTypes
+
+	^self new initializeOf: aClass rawTypes: rawTypes! !
+
+!InstanceVariablesTypes class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:04:39'!
+unload: aClassToUnload from: aRawTypes 
+
+	InstanceVariableTypeInfo unload: aClassToUnload from: aRawTypes ! !
+
+!InstanceVariablesTypes class methodsFor: 'initialization' stamp: 'HAW 10/16/2018 01:05:51'!
 initializeForAllClasses
 
 	"
@@ -3996,7 +4210,7 @@ initializeForAllClasses
 
 	ProtoObject withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
 
-!InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:06:09'!
+!InstanceVariablesTypes class methodsFor: 'initialization' stamp: 'HAW 10/16/2018 01:06:09'!
 initializeForAllClassesWithAllInstances
 
 	"
@@ -4005,7 +4219,21 @@ initializeForAllClassesWithAllInstances
 
 	ProtoObject withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypesWithAllInstances]! !
 
-!InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:48:53'!
+!InstanceVariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 10/20/2018 17:34:41'!
+of: aClass do: aBlock
+
+	aBlock value: aClass instanceVariablesTypes ! !
+
+!InstanceVariablesTypes class methodsFor: 'printing' stamp: 'HAW 10/23/2018 15:41:25'!
+printTypesInfoHeaderOn: aStream
+
+	aStream 
+		newLine;
+		nextPut: $";
+		newLine.	
+		! !
+
+!InstanceVariablesTypes class methodsFor: 'statistics' stamp: 'HAW 10/20/2018 17:48:53'!
 numberOfRawTypesForAll
 
 	"
@@ -4018,30 +4246,6 @@ numberOfRawTypesForAll
 	ProtoObject withAllSubclassesDo: [ :aClass | self of: aClass do: [ :aVariablesTypes | aVariablesTypes addNumberOfRawTypesTo: numberOfTypes ]].
 	
 	^numberOfTypes contents! !
-
-!InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 01:03:43'!
-of: aClass
-
-	^self of: aClass rawTypes: aClass instanceVariablesRawTypes! !
-
-!InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:34:41'!
-of: aClass do: aBlock
-
-	aBlock value: aClass instanceVariablesTypes ! !
-
-!InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/4/2018 21:09:31'!
-of: aClass rawTypes: rawTypes
-
-	^self new initializeOf: aClass rawTypes: rawTypes! !
-
-!InstanceVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:41:25'!
-printTypesInfoHeaderOn: aStream
-
-	aStream 
-		newLine;
-		nextPut: $";
-		newLine.	
-		! !
 
 !MethodVariablesTypes methodsFor: 'enumerating' stamp: 'HAW 10/23/2018 15:02:12'!
 do: aBlock withIndices: indices
@@ -4115,7 +4319,22 @@ initializeOf: aCompiledMethod rawTypes: aRawTypes
 	
 	variablesNames := variablesNames, (methodNode temporaries collect: [ :variableNode | variableNode name ])! !
 
-!MethodVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 18:30:48'!
+!MethodVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 11/28/2018 14:35:36'!
+of: aCompiledMethod
+
+	^self of: aCompiledMethod rawTypes: aCompiledMethod variablesRawTypes! !
+
+!MethodVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 10/20/2018 18:34:55'!
+of: aCompiledMethod rawTypes: aRawTypes
+
+	^self new initializeOf: aCompiledMethod rawTypes: aRawTypes ! !
+
+!MethodVariablesTypes class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:04:39'!
+unload: aClassToUnload from: aRawTypes 
+
+	MethodVariableTypeInfo unload: aClassToUnload from: aRawTypes ! !
+
+!MethodVariablesTypes class methodsFor: 'initialization' stamp: 'HAW 10/20/2018 18:30:48'!
 initializeForAllClasses
 
 	"
@@ -4123,22 +4342,12 @@ initializeForAllClasses
 	"
 	ProtoObject withAllSubclassesDo: [ :aClass | aClass initializeMethodsTypeInformation ]! !
 
-!MethodVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 11/28/2018 14:35:36'!
-of: aCompiledMethod
-
-	^self of: aCompiledMethod rawTypes: aCompiledMethod variablesRawTypes! !
-
-!MethodVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 17:35:34'!
+!MethodVariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 10/20/2018 17:35:34'!
 of: aClass do: aBlock
 
 	aClass methodsDo: [ :aCompiledMethod | aBlock value: aCompiledMethod methodVariablesTypes ]! !
 
-!MethodVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/20/2018 18:34:55'!
-of: aCompiledMethod rawTypes: aRawTypes
-
-	^self new initializeOf: aCompiledMethod rawTypes: aRawTypes ! !
-
-!MethodVariablesTypes class methodsFor: 'as yet unclassified' stamp: 'HAW 10/23/2018 15:43:23'!
+!MethodVariablesTypes class methodsFor: 'printing' stamp: 'HAW 10/23/2018 15:43:23'!
 printTypesInfoHeaderOn: aStream
 
 	aStream 
@@ -4146,6 +4355,44 @@ printTypesInfoHeaderOn: aStream
 		nextPutAll: '"Type info:';
 		newLine.	
 		! !
+
+!LiveTypingTestFactory methodsFor: 'classes' stamp: 'HAW 2/22/2019 08:55:07'!
+createClassToBeRemoved
+	
+	^ Object 
+		subclass: self nameOfClassToBeRemoved
+		instanceVariableNames: ''  
+		classVariableNames: '' 
+		poolDictionaries: '' 
+		category: self testDataClassCategoryName
+		! !
+
+!LiveTypingTestFactory methodsFor: 'classes' stamp: 'HAW 2/22/2019 08:54:44'!
+nameOfClassToBeRemoved
+	
+	^#LiveTypingClassToBeRemoved! !
+
+!LiveTypingTestFactory methodsFor: 'class categories' stamp: 'HAW 2/22/2019 08:56:27'!
+removeTestDataClassCategory
+	
+	SystemOrganization removeSystemCategory: self testDataClassCategoryName.
+	Browser allInstancesDo: [:aBrowser | aBrowser changed: #systemCategoryList ]! !
+
+!LiveTypingTestFactory methodsFor: 'class categories' stamp: 'HAW 2/22/2019 08:55:25'!
+testDataClassCategoryName
+	
+	^'__LiveTyping-TestData__'.! !
+
+!LiveTypingTestFactory class methodsFor: 'class category' stamp: 'HAW 2/22/2019 08:59:10'!
+removeTestDataClassCategoryAfter: aBlock
+	
+	| factory |
+	
+	factory := self new.
+	[ aBlock value: factory ] ensure: [ factory removeTestDataClassCategory ]
+
+	
+	! !
 
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:24:48'!
 aconcaguaTime
@@ -4888,6 +5135,14 @@ createMethodReturnRawTypesOf: aMethod
 
 	! !
 
+!ClassDescription methodsFor: '*LiveTyping-unload-private' stamp: 'HAW 2/22/2019 23:09:13'!
+allRawTypesUnload: aClassToUnload 
+	
+	self
+		instanceVariablesRawTypesUnload: aClassToUnload;
+		methodsAllRawTypesUnload: aClassToUnload 
+! !
+
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 1/15/2019 22:58:40'!
 asTypeFor: aReceiverType
 
@@ -5064,6 +5319,12 @@ instanceVariablesRawTypes
 	
 	^ instanceVariablesRawTypes ! !
 
+!ClassDescription methodsFor: '*LiveTyping-unload-private' stamp: 'HAW 2/22/2019 23:01:56'!
+instanceVariablesRawTypesUnload: aClassToUnload 
+	
+	InstanceVariablesTypes unload: aClassToUnload fromAllRawTypesOf: instanceVariablesRawTypes
+	! !
+
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/4/2018 20:06:00'!
 instanceVariablesTypes
 
@@ -5085,6 +5346,11 @@ methodVariableRawTypesSizeFor: varName in: method
 methodVariablesTypesAt: aSelector
 
 	^(self compiledMethodAt: aSelector) methodVariablesTypes ! !
+
+!ClassDescription methodsFor: '*LiveTyping-unload-private' stamp: 'HAW 2/22/2019 23:10:03'!
+methodsAllRawTypesUnload: aClassToUnload 
+	
+	self methodsDo: [ :aCompiledMethod | aCompiledMethod allRawTypesUnload: aClassToUnload ]! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/23/2018 12:25:45'!
 printInstanceVariablesTypesOn: aStream
@@ -5193,6 +5459,17 @@ isSubclassesEmpty
 
 	^subclasses isNil ! !
 
+!Class methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 22:58:55'!
+unloadFromAllRawTypes
+
+	ProtoObject withAllSubclassesDo: [ :aClass | self unloadFromAllRawTypesOf: aClass ] 
+! !
+
+!Class methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 22:58:55'!
+unloadFromAllRawTypesOf: aClass
+
+	aClass allRawTypesUnload: self! !
+
 !Metaclass methodsFor: '*LiveTyping' stamp: 'HAW 10/17/2018 20:31:37'!
 isSubclassesEmpty
 
@@ -5205,6 +5482,13 @@ createMethodReturnRawTypesOf: aMethod
 	^(aMethod selector = #@ and: [ aMethod methodClass = Number ]) 
 		ifTrue: [ { Point } ]
 		ifFalse: [ super createMethodReturnRawTypesOf: aMethod ]! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:11:56'!
+allRawTypesUnload: aClassToUnload
+
+	self 
+		variablesRawTypesUnload: aClassToUnload;
+		returnRawTypesUnload: aClassToUnload ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:34:14'!
 initializeReturnRawTypes
@@ -5235,6 +5519,11 @@ returnRawTypes
 	
 	^returnRawTypes ! !
 
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:11:56'!
+returnRawTypesUnload: aClassToUnload
+
+	ReturnTypeInfo unload: aClassToUnload from: returnRawTypes ! !
+
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 10/20/2018 18:42:17'!
 setMethod: aMethod
 
@@ -5258,12 +5547,23 @@ variablesRawTypes
 	
 	^variablesRawTypes ! !
 
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:11:36'!
+variablesRawTypesUnload: aClassToUnload
+
+	MethodVariablesTypes unload: aClassToUnload fromAllRawTypesOf: variablesRawTypes! !
+
 !ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 16:01:21'!
 createMethodReturnRawTypesOf: aCompiledMethod
 
 	aCompiledMethod selector == #size ifTrue: [ ^Array with: Integer ].
 	
 	^super createMethodReturnRawTypesOf: aCompiledMethod ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:10:48'!
+allRawTypesUnload: aClassToUnload 
+	
+	self withPropertiesDo: [ :properties | properties allRawTypesUnload: aClassToUnload ]
+	! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:32:23'!
 caretAutoCompleterDocumentation
