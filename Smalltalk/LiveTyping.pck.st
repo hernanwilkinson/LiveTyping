@@ -1,8 +1,8 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3634] on 28 February 2019 at 10:16:52 pm'!
-'Description Support to annotate types for variables in remote vector. Initialization fixes. New dependencies. Runs all tests. Depends on Refactoring'!
-!provides: 'LiveTyping' 1 14!
-!requires: 'BaseImageTests' 1 127 nil!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3636] on 1 March 2019 at 5:35:49 pm'!
+'Description Remove implementors and senders from annotation pane'!
+!provides: 'LiveTyping' 1 15!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
+!requires: 'BaseImageTests' 1 127 nil!
 !requires: 'Refactoring' 1 72 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
@@ -2872,15 +2872,15 @@ initialize
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
 	! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 2/28/2019 22:12:42'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 3/1/2019 16:39:07'!
 initializeLiveTyping
 
-	self modifyClassDescriptionShape.
-	self modifyAdditionalMethodStateShape.
-	
-	self compileAfterInstallMethods.
-	
-	self initializeTypeInformation.! !
+	self 
+		modifyClassDescriptionShape;
+		modifyAdditionalMethodStateShape;
+		compileAfterInstallMethods;
+		initializeTypeInformation;
+		setAnnotationInfoForLiveTyping! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:07:37'!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
@@ -2931,6 +2931,11 @@ modifyClassDescriptionShape
 		on: Warning do: [ :aWarning | aWarning resume ]]
 		on: Error do: [ :anError | anError return: nil ]
 ! !
+
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 3/1/2019 16:38:17'!
+setAnnotationInfoForLiveTyping
+
+	^ Preferences parameters at: #MethodAnnotations put: #(timeStamp messageCategory packages changeSets)! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 2/20/2019 22:37:13'!
 messageListMenuOptions
