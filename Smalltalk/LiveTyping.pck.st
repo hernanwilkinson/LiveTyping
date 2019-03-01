@@ -1,6 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3622] on 22 February 2019 at 11:50:36 pm'!
-'Description Removes a removed class from all raw types arrays'!
-!provides: 'LiveTyping' 1 8!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3634] on 28 February 2019 at 10:16:52 pm'!
+'Description Support to annotate types for variables in remote vector. Initialization fixes. New dependencies. Runs all tests. Depends on Refactoring'!
+!provides: 'LiveTyping' 1 14!
+!requires: 'BaseImageTests' 1 127 nil!
+!requires: '__LiveTyping-TestData__' 1 0 nil!
+!requires: 'Refactoring' 1 72 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -35,6 +38,16 @@ TestCase subclass: #ActualSendersTest
 	category: 'LiveTyping-Tests'!
 !classDefinition: 'ActualSendersTest class' category: #'LiveTyping-Tests'!
 ActualSendersTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #AdditionalMethodStateTest category: #'LiveTyping-Tests'!
+TestCase subclass: #AdditionalMethodStateTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'AdditionalMethodStateTest class' category: #'LiveTyping-Tests'!
+AdditionalMethodStateTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #ClosureVariablesTest category: #'LiveTyping-Tests'!
@@ -309,7 +322,7 @@ LocalInstanceVariableTypeInfo class
 
 !classDefinition: #MethodVariableTypeInfo category: #LiveTyping!
 VariableTypeInfo subclass: #MethodVariableTypeInfo
-	instanceVariableNames: 'varIndex method variableName'
+	instanceVariableNames: 'method variableName'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
@@ -349,7 +362,7 @@ InstanceVariablesTypes class
 
 !classDefinition: #MethodVariablesTypes category: #LiveTyping!
 VariablesTypes subclass: #MethodVariablesTypes
-	instanceVariableNames: 'method rawTypes variablesNames paramentersSize'
+	instanceVariableNames: 'method methodProperties'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
@@ -897,6 +910,179 @@ m1
 
 	^1+1! !
 
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/27/2019 18:02:46'!
+test01topBlockTempsMapReturnsTheTempsMapOfTheMethod
+
+	| thisMethodNode topContextTempsMap topContextTempsMapKey |
+	
+	thisMethodNode := thisContext methodNode.
+	
+	topContextTempsMap := thisMethodNode topBlockTempsMap.
+	topContextTempsMapKey := thisMethodNode blockExtentsToTempsMap keys detect: [ :anInterval | anInterval first = 0 ].
+	
+	self assert: topContextTempsMap equals: (thisMethodNode blockExtentsToTempsMap at: topContextTempsMapKey)! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:42:21'!
+test02MethodWithNoParametersNoTemporariesAreInitializedCorrectly
+
+	| methodUnderTest methodState |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m01_no_arguments_no_temporaries.
+	self m01_no_arguments_no_temporaries.
+	methodState := methodUnderTest properties.
+	
+	"This assertions are questionables becuase I'm testing implementation but
+	I do it becuase I want to see if the AdditionalMethodState is initialzed correctly - Hernan"
+	self assert: methodState variablesRawTypes isNil.
+	self assert: methodState remoteVectorRawTypes isNil.
+	
+	self assert: (methodState rawTypesOf: 'var1' ifAbsent: [ 1 ]) equals: 1.
+	! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:47:16'!
+test03MethodWithOnlyOneArgumentAreInitializedCorrectly
+
+	| methodUnderTest |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m02_one_argument:.
+	self m02_one_argument: 1.
+	
+	self assertRawTypesOf: 'arg1' in: methodUnderTest includesOnly: 1 class.! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:44:58'!
+test04rawTypesOfInvalidVariableNameEvaluatesIfAbsentBlock
+
+	| methodUnderTest |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m02_one_argument:.
+	self m02_one_argument: 1.
+	
+	self assert: (methodUnderTest properties rawTypesOf: 'x' ifAbsent: [ nil ]) isNil! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:47:41'!
+test05MethodWithOnlyOneTempTwoArgumentsAreInitializedCorrectly
+
+	| methodUnderTest |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m03_one_temp_two_arguments:arg2:.
+	self m03_one_temp_two_arguments: 'hello' arg2: 1.0.
+	
+	self assertRawTypesOf: 'arg1' in: methodUnderTest includesOnly: 'hello' class.
+	self assertRawTypesOf: 'arg2' in: methodUnderTest includesOnly: 1.0 class.
+	self assertRawTypesOf: 't1' in: methodUnderTest includesOnly: 1 class.
+
+	! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:46:36'!
+test06MethodWithRemoveVectorVariablesAreInitializedCorrectly
+
+	| methodUnderTest tempInRemoteVectorName tempNotInRemoveVectorName |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m04_two_temps_one_temp_in_remote_vector.
+	self m04_two_temps_one_temp_in_remote_vector.
+	tempNotInRemoveVectorName := 't1'.
+	tempInRemoteVectorName := 't2'.
+	
+	self assertRawTypesOf: tempInRemoteVectorName in: methodUnderTest includesOnly: 1.0 class.
+	self assertRawTypesOf: tempNotInRemoveVectorName in: methodUnderTest includesOnly: 1 class.
+
+	self assert: methodUnderTest properties remoteVectorRawTypes size equals: 1.
+	self assert: methodUnderTest properties variablesRawTypes size equals: 1.	! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:48:25'!
+test07RemoteVectorRawTypesIsNilWhenMethodHasNoVariableInRemoteVector
+
+	| methodUnderTest |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m02_one_argument:.
+	
+	self assert: methodUnderTest properties remoteVectorRawTypes isNil.
+	self assert: methodUnderTest properties variableNameToRemoteVectorTypeIndex isNil.! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:48:49'!
+test08VariableRawTypesIsNilWhenMethodHasNoVariableButHasInRemoteVector
+
+	| methodUnderTest |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m05_only_temp_in_remote_vector.
+	
+	self assert: methodUnderTest properties variablesRawTypes isNil.
+	self assert: methodUnderTest properties variableNameToTypeIndex isNil.! !
+
+!AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 17:49:27'!
+test09CanGetRawTypesWhenMethodHasNoVariableButHasInRemoteVector
+
+	| methodUnderTest |
+	
+	methodUnderTest := self initializeTypeInfoFor: #m05_only_temp_in_remote_vector.
+	
+	self assert: (methodUnderTest properties rawTypesOf: 't1' ifAbsent: [ nil ]) notNil! !
+
+!AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 2/28/2019 17:42:05'!
+initializeTypeInfoFor: aSelector
+
+	| methodUnderTest |
+
+	methodUnderTest := self class >> aSelector.
+	methodUnderTest initializeTypeInformation.
+	
+	^methodUnderTest! !
+
+!AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 2/28/2019 17:16:11'!
+m01_no_arguments_no_temporaries! !
+
+!AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 2/27/2019 18:26:31'!
+m02_one_argument: arg1! !
+
+!AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 2/27/2019 18:50:09'!
+m03_one_temp_two_arguments: arg1 arg2: arg2
+
+	| t1 |
+	
+	t1 := 1.
+	
+	^t1! !
+
+!AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 2/28/2019 16:26:38'!
+m04_two_temps_one_temp_in_remote_vector
+
+	| t1 t2 |
+	
+	t1 := 1.
+	[ t2 := t1 +  1.0 ] value.
+	
+	^t2! !
+
+!AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 2/28/2019 17:27:28'!
+m05_only_temp_in_remote_vector
+
+	| t1 |
+	
+	[ t1 := 10 ] value.
+	
+	^t1! !
+
+!AdditionalMethodStateTest methodsFor: 'assertions' stamp: 'HAW 2/28/2019 17:46:52'!
+assertRawTypesOf: aVariableName in: method includesOnly: aType
+
+	| types |
+	
+	types := (method properties rawTypesOf: aVariableName ifAbsent: [ self error: 'not found' ]) reject: [ :type | type isNil ].
+	
+	self assert: types size equals: 1.
+	self assert: (types includes: aType).
+! !
+
+!AdditionalMethodStateTest class methodsFor: 'as yet unclassified' stamp: 'HAW 2/28/2019 17:27:35'!
+acreateMethodVariableRawTypesFor: variableName in: method
+
+	(variableName = 'arg1' and: [ method selector = #m02_one_argument: ]) ifTrue: [ ^{ Integer } ].
+	(variableName = 'arg1' and: [ method selector = #m03_one_temp_two_arguments:arg2: ]) ifTrue: [ ^{ SmallInteger } ].
+	(variableName = 'arg2' and: [ method selector = #m03_one_temp_two_arguments:arg2: ]) ifTrue: [ ^{ LargeNegativeInteger } ].
+	(variableName = 't1' and: [ method selector = #m03_one_temp_two_arguments:arg2: ]) ifTrue: [ ^{ LargePositiveInteger } ].
+	
+	! !
+
 !ClosureVariablesTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 17:58:04'!
 methodWithoutClosure: p1
 
@@ -1189,36 +1375,21 @@ test12IsTypesEmptyForLocalTypeInfoOnlyCheckOnLocalRawTypes
 	self deny: ivrootInRootTypeInfo isTypesEmpty.
 	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 20:23:04'!
-test13RemovingAClassRemovesItFromInstanceVariableRawTypes
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:31:47'!
+test13RemovingAClassRemovesItAndItsClassFromInstanceVariableRawTypes
 
 	| classToRemove typeInfo |
 
 	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
 		classToRemove := testFactory createClassToBeRemoved.
+		self class initializeInstanceVariablesRawTypes.
 		iv1 := classToRemove new.
-	
-		typeInfo := self class typeInfoOfInstanceVariableNamed: 'iv1'.
-		
-		self assert: typeInfo typesSize equals: 1.
-		self assert: (typeInfo typesIncludes: classToRemove).
-		
-		classToRemove removeFromSystem.
-		
-		self assert: typeInfo isTypesEmpty ]! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 20:23:50'!
-test14RemovingAClassRemovesItsClassFromInstanceVariableRawTypes
-
-	| classToRemove typeInfo |
-
-	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
-		classToRemove := testFactory createClassToBeRemoved.
 		iv1 := classToRemove.
 	
 		typeInfo := self class typeInfoOfInstanceVariableNamed: 'iv1'.
 		
-		self assert: typeInfo typesSize equals: 1.
+		self assert: typeInfo typesSize equals: 2.
+		self assert: (typeInfo typesIncludes: classToRemove).
 		self assert: (typeInfo typesIncludes: classToRemove class).
 		
 		classToRemove removeFromSystem.
@@ -1356,23 +1527,32 @@ test09EvaluatesIfAbsentBlockWhenAskTypeInfoForNonExistingInstVar
 	self class instanceVariablesTypes typeInfoOf: 'xyz' ifAbsent: [ ^self ].
 	self fail! !
 
-!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 23:35:54'!
-test01RemovingAClassRemovesItFromMethodVariableRawTypesForParameter
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:25:09'!
+assertTypeIsRemovedFor: aVariableName
 
-	| classToRemove typeInfo |
+	| classToRemove typeInfo methodUnderTest |
 
 	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
 		classToRemove := testFactory createClassToBeRemoved.
+		methodUnderTest := self class >> #methodWithParameterOfClassToRemove:.
+		methodUnderTest initializeTypeInformation.
 		self methodWithParameterOfClassToRemove: classToRemove new.
+		self methodWithParameterOfClassToRemove: classToRemove.
 	
-		typeInfo := (self class compiledMethodAt: #methodWithParameterOfClassToRemove:) typeInfoOfVariableNamed: 'p1'.
+		typeInfo := methodUnderTest typeInfoOfVariableNamed: aVariableName.
 		
-		self assert: typeInfo typesSize equals: 1.
+		self assert: typeInfo typesSize equals: 2.
 		self assert: (typeInfo typesIncludes: classToRemove).
+		self assert: (typeInfo typesIncludes: classToRemove class).
 		
 		classToRemove removeFromSystem.
 		
 		self assert: typeInfo isTypesEmpty ]! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:21:54'!
+test01RemovingAClassRemovesItFromMethodVariableRawTypesForParameter
+
+	self assertTypeIsRemovedFor: 'p1'! !
 
 !MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 20:28:09'!
 test02RemovingAClassRemovesItsClassFromMethodVariableRawTypesForParameter
@@ -1392,9 +1572,24 @@ test02RemovingAClassRemovesItsClassFromMethodVariableRawTypesForParameter
 		
 		self assert: typeInfo isTypesEmpty ]! !
 
-!MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/22/2019 09:04:11'!
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:23:53'!
+test03RemovingAClassRemovesItFromMethodVariablesRawTypes
+
+	self assertTypeIsRemovedFor: 'tempNotInRemoteVector'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:24:09'!
+test04RemovingAClassRemovesItFromMethodVariableRemoteVectorRawTypes
+
+	self assertTypeIsRemovedFor: 'tempInRemoteVector'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/28/2019 18:23:21'!
 methodWithParameterOfClassToRemove: p1
 
+	| tempNotInRemoteVector tempInRemoteVector |
+	
+	tempNotInRemoteVector := p1.
+	[ tempInRemoteVector := p1 ] value.
+	
 	^10! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:48:50'!
@@ -1503,36 +1698,23 @@ test13yourselfMethodReturnsSelfTypeAsReturnType
 	self assert: returnTypes size equals: 1.
 	self assert: returnTypes anyOne class equals: SelfType ! !
 
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 21:58:24'!
-test14RemovingAClassRemovesItFromMethodReturnType
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:29:48'!
+test14RemovingAClassRemovesItAndItsClassFromMethodReturnType
 
-	| classToRemove typeInfo |
+	| classToRemove typeInfo methodUnderTest |
 
 	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
 		classToRemove := testFactory createClassToBeRemoved.
+		methodUnderTest := self class compiledMethodAt: #methodReturningInstanceOfClassToRemove:.
+		methodUnderTest initializeTypeInformation.
+		
 		self methodReturningInstanceOfClassToRemove: classToRemove new.
-	
-		typeInfo := (self class compiledMethodAt: #methodReturningInstanceOfClassToRemove:) returnTypeInfo.
-		
-		self assert: typeInfo typesSize equals: 1.
-		self assert: (typeInfo typesIncludes: classToRemove).
-		
-		classToRemove removeFromSystem.
-		
-		self assert: typeInfo isTypesEmpty ]! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 21:58:47'!
-test15RemovingAClassRemovesItsClassFromMethodReturnType
-
-	| classToRemove typeInfo |
-
-	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
-		classToRemove := testFactory createClassToBeRemoved.
 		self methodReturningInstanceOfClassToRemove: classToRemove.
 	
-		typeInfo := (self class compiledMethodAt: #methodReturningInstanceOfClassToRemove:) returnTypeInfo.
+		typeInfo := methodUnderTest returnTypeInfo.
 		
-		self assert: typeInfo typesSize equals: 1.
+		self assert: typeInfo typesSize equals: 2.
+		self assert: (typeInfo typesIncludes: classToRemove).
 		self assert: (typeInfo typesIncludes: classToRemove class).
 		
 		classToRemove removeFromSystem.
@@ -2684,12 +2866,13 @@ of: aMethodReference describedAs: aReasonDescription
 	
 	^self new initializeOf: aMethodReference describedAs: aReasonDescription! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 12/28/2018 17:36:05'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 2/28/2019 22:12:26'!
 initialize
 
-	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ]! !
+	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
+	! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 12/28/2018 12:09:04'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 2/28/2019 22:12:42'!
 initializeLiveTyping
 
 	self modifyClassDescriptionShape.
@@ -2697,7 +2880,7 @@ initializeLiveTyping
 	
 	self compileAfterInstallMethods.
 	
-	self initializeTypeInformation! !
+	self initializeTypeInformation.! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:07:37'!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
@@ -2712,10 +2895,12 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/22/2019 22:12:48'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/27/2019 20:28:30'!
 compileAfterInstallMethods.
 
-	self compile: self addAndClassifySelectorSourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode.
+	self compile: self addAndClassifySelectorStep1SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode.
+	self compile: self compileClassifiedWithStampNotifyingLogSourceSourceCode in: ClassDescription ifOriginalSourceCodeIs: self compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode.
+	self compile: self addAndClassifySelectorStep2SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorStep1SourceCode.
 	self compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode.
 	self compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode.
 	self compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode.
@@ -2733,12 +2918,11 @@ initializeTypeInformation
 	MethodVariablesTypes initializeForAllClasses.
 ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 18:35:38'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/28/2019 18:51:53'!
 modifyAdditionalMethodStateShape
 
-	self defineInstVarNamed: 'variablesRawTypes' in: AdditionalMethodState.
-	self defineInstVarNamed: 'returnRawTypes' in: AdditionalMethodState.
-	! !
+	#('variablesRawTypes' 'returnRawTypes' 'remoteVectorRawTypes' 'variableNameToTypeIndex' 'variableNameToRemoteVectorTypeIndex') 
+		do: [ :aVariableName | self defineInstVarNamed: aVariableName  in: AdditionalMethodState ]! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 14:10:22'!
 modifyClassDescriptionShape
@@ -2871,6 +3055,116 @@ addAndClassifySelectorSourceCode
 					from: priorProtocolOrNil
 					to: category
 					inClass: self ]]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/27/2019 20:25:42'!
+addAndClassifySelectorStep1SourceCode
+
+	^'addAndClassifySelector: nodeOrSelector withMethod: compiledMethod inProtocol: category notifying: requestor
+
+	| priorMethodOrNil priorProtocolOrNil selector |
+
+	selector := nodeOrSelector isSymbol ifTrue: [nodeOrSelector ] ifFalse: [ nodeOrSelector selector ].
+	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
+	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
+	self addSelectorSilently: selector withMethod: compiledMethod.
+	compiledMethod initializeTypeInformation.
+	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
+
+	priorMethodOrNil
+		ifNil: [
+			SystemChangeNotifier uniqueInstance 
+				methodAdded: compiledMethod 
+				selector: selector 
+				inProtocol: category 
+				class: self 
+				requestor: requestor ]
+		ifNotNil: [
+			
+			SystemChangeNotifier uniqueInstance 
+				methodChangedFrom: priorMethodOrNil 
+				to: compiledMethod 
+				selector: selector 
+				inClass: self 
+				requestor: requestor.
+			category = priorProtocolOrNil ifFalse: [
+				SystemChangeNotifier uniqueInstance
+					selectorRecategorized: selector
+					from: priorProtocolOrNil
+					to: category
+					inClass: self ]]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/27/2019 20:26:09'!
+addAndClassifySelectorStep2SourceCode
+
+	^'addAndClassifySelector: node withMethod: compiledMethod inProtocol: category notifying: requestor
+
+	| priorMethodOrNil priorProtocolOrNil selector |
+
+	selector := node selector.
+	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
+	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
+	self addSelectorSilently: selector withMethod: compiledMethod.
+
+	"I pass the methodNode becuase the compiledMethod needs the temps mapping to initialize its var raw types.
+	So to avoid parsing and generating the code again to get the temps mapping I pass the alredy created method node - Hernan" 
+	compiledMethod initializeTypeInformationUsing: node.
+
+	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
+
+	priorMethodOrNil
+		ifNil: [
+			SystemChangeNotifier uniqueInstance 
+				methodAdded: compiledMethod 
+				selector: selector 
+				inProtocol: category 
+				class: self 
+				requestor: requestor ]
+		ifNotNil: [
+			
+			SystemChangeNotifier uniqueInstance 
+				methodChangedFrom: priorMethodOrNil 
+				to: compiledMethod 
+				selector: selector 
+				inClass: self 
+				requestor: requestor.
+			category = priorProtocolOrNil ifFalse: [
+				SystemChangeNotifier uniqueInstance
+					selectorRecategorized: selector
+					from: priorProtocolOrNil
+					to: category
+					inClass: self ]]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/27/2019 20:11:47'!
+compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
+
+	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
+	| methodAndNode |
+	methodAndNode _ self basicCompile: text asString notifying: requestor 
+							trailer: self defaultMethodTrailer ifFail: [^nil].
+	logSource ifTrue: [
+		self logMethodSource: text forMethodWithNode: methodAndNode 
+			inCategory: category withStamp: changeStamp notifying: requestor.
+	].
+	self addAndClassifySelector: methodAndNode selector withMethod: methodAndNode 
+		method inProtocol: category notifying: requestor.
+	self theNonMetaClass noteCompilationOf: methodAndNode selector meta: self isMeta.
+	^ methodAndNode selector'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/27/2019 20:24:21'!
+compileClassifiedWithStampNotifyingLogSourceSourceCode
+
+	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
+	| methodAndNode |
+	methodAndNode _ self basicCompile: text asString notifying: requestor 
+							trailer: self defaultMethodTrailer ifFail: [^nil].
+	logSource ifTrue: [
+		self logMethodSource: text forMethodWithNode: methodAndNode 
+			inCategory: category withStamp: changeStamp notifying: requestor.
+	].
+	self addAndClassifySelector: methodAndNode node withMethod: methodAndNode 
+		method inProtocol: category notifying: requestor.
+	self theNonMetaClass noteCompilationOf: methodAndNode selector meta: self isMeta.
+	^ methodAndNode selector'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:10'!
 doneCompilingOriginalSourceCode
@@ -3848,18 +4142,17 @@ variableName
 
 	^variableName ! !
 
-!MethodVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 2/19/2019 11:53:46'!
-initializeOf: aVarName at: anIndex in: aCompiledMethod are: aRawTypes
+!MethodVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 2/28/2019 16:44:30'!
+initializeOf: aVarName in: aCompiledMethod are: aRawTypes
 
 	variableName := aVarName.
-	varIndex := anIndex.
 	method := aCompiledMethod.
 	self initializeRawTypes: aRawTypes ! !
 
-!MethodVariableTypeInfo class methodsFor: 'as yet unclassified' stamp: 'HAW 10/5/2018 16:56:37'!
-of: aVarName at: anIndex in: aCompiledMethod are: rawTypes
+!MethodVariableTypeInfo class methodsFor: 'instance creation' stamp: 'HAW 2/28/2019 16:44:11'!
+of: aVarName in: aCompiledMethod are: rawTypes
 
-	^self new initializeOf: aVarName at: anIndex in: aCompiledMethod are: rawTypes
+	^self new initializeOf: aVarName in: aCompiledMethod are: rawTypes
 ! !
 
 !ReturnTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:22:00'!
@@ -3961,10 +4254,10 @@ typeInfoOf: aVarName ifAbsent: anAbsentBlock
 
 	self subclassResponsibility ! !
 
-!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 12:21:14'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 2/28/2019 16:51:59'!
 typesInfoDo: aBlock
 	
-	self variablesNames do: [ :variableName | aBlock value: (self typeInfoOf: variableName) ]! !
+	self subclassResponsibility ! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 12:34:19'!
 typesInfoIsEmpty
@@ -3976,10 +4269,10 @@ typesInfoNotEmpty
 	
 	^self typesInfoIsEmpty not! !
 
-!VariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 12:22:15'!
+!VariablesTypes methodsFor: 'types' stamp: 'HAW 2/28/2019 16:52:56'!
 typesInfoSize
 	
-	^self variablesNames size! !
+	self subclassResponsibility ! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 10/21/2018 00:26:50'!
 typesOf: aVarName
@@ -4171,6 +4464,16 @@ typeInfoOf: anInstVarName ifAbsent: anAbsentBlock
 		ifFalse: [ definingClass instanceVariablesTypes typeInfoInHierarchyOf: anInstVarName ]
 ! !
 
+!InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 2/28/2019 16:51:49'!
+typesInfoDo: aBlock
+	
+	self variablesNames do: [ :variableName | aBlock value: (self typeInfoOf: variableName) ]! !
+
+!InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 2/28/2019 16:52:46'!
+typesInfoSize
+	
+	^self variablesNames size! !
+
 !InstanceVariablesTypes methodsFor: 'variable names' stamp: 'HAW 10/20/2018 17:00:06'!
 variablesNames
 
@@ -4247,87 +4550,52 @@ numberOfRawTypesForAll
 	
 	^numberOfTypes contents! !
 
-!MethodVariablesTypes methodsFor: 'enumerating' stamp: 'HAW 10/23/2018 15:02:12'!
-do: aBlock withIndices: indices
-
-	indices do: [ :index | aBlock value: (self typeInfoAt: index named: (variablesNames at: index)) ]! !
-
-!MethodVariablesTypes methodsFor: 'enumerating' stamp: 'HAW 10/23/2018 15:01:48'!
-parametersDo: aBlock
-
-	self do: aBlock withIndices: (paramentersSize to: 1 by: -1)! !
-
-!MethodVariablesTypes methodsFor: 'enumerating' stamp: 'HAW 10/23/2018 15:07:43'!
-temporariesDo: aBlock
-
-	self do: aBlock withIndices: (paramentersSize + 1 to: variablesNames size)
-	
-	! !
-
-!MethodVariablesTypes methodsFor: 'printing' stamp: 'HAW 10/23/2018 15:03:21'!
-printTypesInfoOn: aStream
-	
-	self parametersDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
-	self temporariesDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
-	! !
-
-!MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 15:00:19'!
-typeInfoAt: index named: aVarName
-	
-	| types |
-	
-	types := rawTypes isNil ifTrue: [ nil ] ifFalse: [ rawTypes at: index ifAbsent: [ nil ] ].
-	
- 	 ^ method methodClass createMethodVariableTypeInfoOf: aVarName at: index in: method are: types ! !
-
-!MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 10/23/2018 15:00:03'!
+!MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 2/28/2019 17:13:05'!
 typeInfoOf: aVarName ifAbsent: anAbsentBlock
 
-	| index |
+	| rawTypes |
 	
-	index := variablesNames indexOf: aVarName ifAbsent: [ ^anAbsentBlock value ].
-	^self typeInfoAt: index named: aVarName
-	! !
+	rawTypes := methodProperties rawTypesOf: aVarName ifAbsent: [ ^anAbsentBlock value ].
+	
+	^method methodClass createMethodVariableTypeInfoOf: aVarName in: method are: rawTypes ! !
 
-!MethodVariablesTypes methodsFor: 'variable names' stamp: 'NPM 10/10/2018 20:22:02'!
+!MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 2/28/2019 17:06:22'!
+typesInfoDo: aBlock
+	
+	self variablesNamesDo: [ :aVarName | aBlock value: (self typeInfoOf: aVarName ifAbsent: [ self error: 'should not happen' ])]! !
+
+!MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 2/28/2019 17:13:05'!
+typesInfoSize
+	
+	methodProperties numberOfVariables! !
+
+!MethodVariablesTypes methodsFor: 'variable names' stamp: 'HAW 2/28/2019 17:13:05'!
 variablesNames
 
-	^ variablesNames! !
+	^methodProperties variablesNames! !
 
-!MethodVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/20/2018 18:16:07'!
-initializeEachMethodVariableRawTypes
-	
-	| methodClass |
-	
-	methodClass := method methodClass.
+!MethodVariablesTypes methodsFor: 'variable names' stamp: 'HAW 2/28/2019 17:13:05'!
+variablesNamesDo: aBlock
 
-	rawTypes ifNotNil: [ 
-		variablesNames withIndexDo: [ :varName :varIndex | 
-			rawTypes at: varIndex put: (methodClass createMethodVariableRawTypesFor: varName in: method) ]]! !
+	^ methodProperties variablesNamesDo: aBlock! !
 
-!MethodVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/23/2018 15:37:40'!
-initializeOf: aCompiledMethod rawTypes: aRawTypes  
-	
-	| methodNode |
-	
+!MethodVariablesTypes methodsFor: 'initialization' stamp: 'HAW 2/28/2019 17:13:32'!
+initializeOf: aCompiledMethod with: aMethodProperties
+
 	method := aCompiledMethod.
-	rawTypes := aRawTypes.
-	
-	methodNode := method methodNode.
-	variablesNames := (methodNode arguments collect: [ :variableNode | variableNode name ]) reverse.
-	paramentersSize := variablesNames size.
-	
-	variablesNames := variablesNames, (methodNode temporaries collect: [ :variableNode | variableNode name ])! !
+	methodProperties := aMethodProperties 
+! !
 
-!MethodVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 11/28/2018 14:35:36'!
+!MethodVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 2/28/2019 17:11:01'!
 of: aCompiledMethod
 
-	^self of: aCompiledMethod rawTypes: aCompiledMethod variablesRawTypes! !
+	| methodProperties |
+	
+	methodProperties := aCompiledMethod 
+		withPropertiesDo: [ :properties | properties ] 
+		ifSelector: [ :aSelector | self error: 'This method is not annotating types' ].
 
-!MethodVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 10/20/2018 18:34:55'!
-of: aCompiledMethod rawTypes: aRawTypes
-
-	^self new initializeOf: aCompiledMethod rawTypes: aRawTypes ! !
+	^self new initializeOf: aCompiledMethod with: methodProperties! !
 
 !MethodVariablesTypes class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:04:39'!
 unload: aClassToUnload from: aRawTypes 
@@ -4563,7 +4831,7 @@ m1_read_write_temp
 	
 	^t1! !
 
-!ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 12/31/2018 11:19:22'!
+!ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 2/27/2019 14:14:41'!
 m1_temps_not_in_block_read_temp
 
 	| n1 n2 t1 |
@@ -4571,9 +4839,9 @@ m1_temps_not_in_block_read_temp
 	t1 := 1.
 	[t1 + 1 ] value.
 	
-	n1 := n2 := 2.
-	n1 := n1 + n2.
-
+	n1 := n2 := 'hola'.
+	n1 size + n2 size.
+	
 	^t1! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 12/31/2018 11:20:03'!
@@ -4642,6 +4910,38 @@ self new m3
 
 	a1 value.
 ! !
+
+!ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 2/27/2019 14:19:08'!
+m4_many_temps_in_remote_vector
+
+	| t1 t2 t3 |
+	
+	[ t1 := 1 ] value.
+	[ t2 := 'hello' ] value.
+	
+	t3 := t1 + t2 size.
+	
+	^t3! !
+
+!ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 2/27/2019 14:30:01'!
+m5_many_temps_in_remote_vector_with_block_params_and_temps
+
+	| t1 t2 t3 |
+	
+	t3 := 11.
+	
+	[ :p1 :p2 | | b1t1 b1t2 | 
+		t1 := 1.
+		b1t1 := 10.
+		b1t2 := b1t1 + 1 ] value: 1 value: 2.
+	
+	[ :p1 | |b2t1 | 
+		t2 := 'hello'.
+		b2t1 := 20 ] value: 3.
+	
+	t3 := t1 + t2 size.
+	
+	^t3! !
 
 !Customer methodsFor: 'xx' stamp: 'HAW 1/15/2019 22:59:13'!
 m0
@@ -4777,12 +5077,13 @@ m8
 !Customer class methodsFor: 'instance creation' stamp: 'HAW 9/17/2018 12:09'!
 named: aFirstName with: aLastName bornOn: aDateOfBirth	^self new initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth	! !
 
-!Object class methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 21:04:32'!
-methodReturnRawTypesSizeOf: aCompiledMethod
+!Object class methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 20:06:53'!
+createMethodReturnRawTypesOf: aMethod
 
-	aCompiledMethod isReturnField ifTrue: [ ^0 ].
-	
-	^super methodReturnRawTypesSizeOf: aCompiledMethod! !
+	^ aMethod selector = #class 
+		ifTrue: [ `{ ClassType new }` ]
+		ifFalse: [ super createMethodReturnRawTypesOf: aMethod ]
+! !
 
 !Workspace methodsFor: '*LiveTyping' stamp: 'HAW 10/28/2018 21:24:07'!
 selectedClassOrMetaClass
@@ -5062,10 +5363,10 @@ selectedMessage
 
 	^self sourceStringPrettifiedAndDiffed! !
 
-!Boolean class methodsFor: '*LiveTyping' stamp: 'HAW 1/21/2019 01:58:48'!
+!Boolean class methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 20:07:26'!
 createMethodReturnRawTypesOf: aMethod
 
-	(#(and: or: not eqv: xor: | &) includes: aMethod selector) ifTrue: [ ^{True. False.} ].
+	(#(and: or: not eqv: xor: | &) includes: aMethod selector) ifTrue: [ ^`{True. False.}` ].
 
 	^super createMethodReturnRawTypesOf: aMethod ! !
 
@@ -5229,12 +5530,11 @@ createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	^LocalInstanceVariableTypeInfo of: anInstVarName in: self are: types! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 1/16/2019 21:06:03'!
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 2/27/2019 20:07:43'!
 createMethodReturnRawTypesOf: aMethod
 		
 	aMethod isQuickReturnSelf ifTrue: [ ^`{ SelfType new }` ].
 	aMethod isReturnSpecial ifTrue: [ ^`{{true class}. {false class}. {nil class}. {-1 class}. {0 class}. {1 class}. {2 class}}` at: aMethod primitive - 256 ].
-	(aMethod selector = #class and: [ aMethod methodClass = Object ]) ifTrue: [ ^`{ ClassType new }` ].
 	
 	^self createRawTypesOfSize: (self methodReturnRawTypesSizeOf: aMethod) ! !
 
@@ -5251,20 +5551,10 @@ createMethodVariableRawTypesFor: varName in: method
 	^ self createRawTypesOfSize: (self methodVariableRawTypesSizeFor: varName in: method)
 ! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/20/2018 17:08:35'!
-createMethodVariableTypeInfoOf: aVarName at: index in: method are: types 
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 2/28/2019 16:43:19'!
+createMethodVariableTypeInfoOf: aVarName in: method are: types 
 
-	^ MethodVariableTypeInfo of: aVarName at: index in: method are: types ! !
-
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 11/21/2018 19:53:13'!
-createMethodVariablesRawTypesOf: aMethod
-
-	| methodNode |
-	
-	methodNode := aMethod methodNode.
-	
-	^ self createRawTypesOfSize: (methodNode arguments size + methodNode temporaries size)
-			! !
+	^ MethodVariableTypeInfo of: aVarName in: method are: types ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 11/21/2018 19:53:13'!
 createRawTypesOfSize: aSize
@@ -5281,11 +5571,6 @@ defaultRawTypesSize
 initializeEachInstanceVariableRawTypes
 
 	self instanceVariablesTypes initializeEachInstanceVariableRawTypes	! !
-
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/20/2018 18:07:57'!
-initializeEachMethodVariableRawTypesOf: aMethod
-		
-	aMethod methodVariablesTypes initializeEachMethodVariableRawTypes! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/16/2018 08:41:39'!
 initializeInstanceVariablesRawTypes
@@ -5330,10 +5615,12 @@ instanceVariablesTypes
 
 	^InstanceVariablesTypes of: self! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/20/2018 18:19:13'!
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 2/27/2019 19:53:33'!
 methodReturnRawTypesSizeOf: aMethod
 
-	^self defaultRawTypesSize! !
+	^ aMethod isReturnField 
+		ifTrue: [ 0 ]
+		ifFalse: [ self defaultRawTypesSize ]! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/20/2018 18:20:05'!
 methodVariableRawTypesSizeFor: varName in: method
@@ -5476,12 +5763,21 @@ isSubclassesEmpty
 	self subclassesDo: [ :aSubclass | ^false ].
 	^true ! !
 
-!Number class methodsFor: '*LiveTyping' stamp: 'HAW 1/18/2019 19:01:12'!
+!Number class methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 20:08:11'!
 createMethodReturnRawTypesOf: aMethod
 
 	^(aMethod selector = #@ and: [ aMethod methodClass = Number ]) 
-		ifTrue: [ { Point } ]
+		ifTrue: [ `{ Point }` ]
 		ifFalse: [ super createMethodReturnRawTypesOf: aMethod ]! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:31:04'!
+add: variableRawTypes to: anArrayOfRawTypes mapping: variableName to: variableTypeIndex in: variableNameToIndex
+	
+	"I abuse of the #at:ifAbsentPut: of OrderedCollection because I know that indexes do not repeat
+	and doing so I do not have to calculate the size first - Hernan"
+	anArrayOfRawTypes at: variableTypeIndex ifAbsentPut: [ variableRawTypes ].
+	
+	^variableNameToIndex at: variableName put: variableTypeIndex ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:11:56'!
 allRawTypesUnload: aClassToUnload
@@ -5490,6 +5786,34 @@ allRawTypesUnload: aClassToUnload
 		variablesRawTypesUnload: aClassToUnload;
 		returnRawTypesUnload: aClassToUnload ! !
 
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:39:28'!
+doesPointToLocalSlot: variableIndexOrRemoteVectorInfo
+	
+	^variableIndexOrRemoteVectorInfo isInteger ! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:39:51'!
+doesPointToRemoteVector: variableIndexOrRemoteVectorInfo
+	
+	^variableIndexOrRemoteVectorInfo isArray ! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 16:40:55'!
+doesTheMethodHasVariables
+
+	^method notNil and: [ method numTemps > 0 ]! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:39:51'!
+initializeRawTypesOfVariableNamed: variableName at: variableIndexOrRemoteVectorInfo into: variablesTypes or: remoteVectorTypes with: argumentNames
+
+	 | variableRawTypes |
+
+	variableRawTypes := method methodClass createMethodVariableRawTypesFor: variableName in: method.
+	(self doesPointToLocalSlot: variableIndexOrRemoteVectorInfo) ifTrue: [ 
+		^self initializeWith: variableRawTypes variableNamed: variableName at: variableIndexOrRemoteVectorInfo into: variablesTypes with: argumentNames ].
+	(self doesPointToRemoteVector: variableIndexOrRemoteVectorInfo) ifTrue: [ 
+		^self initializeWith: variableRawTypes variableNamed: variableName atRemoteVectorIndex: variableIndexOrRemoteVectorInfo into: remoteVectorTypes ].
+		
+	self error: 'variableIndexOrRemoteVectorInfo type not supported'! !
+
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:34:14'!
 initializeReturnRawTypes
 	
@@ -5497,22 +5821,127 @@ initializeReturnRawTypes
 		ifNil: [ nil ]
 		ifNotNil: [ method methodClass createMethodReturnRawTypesOf: method ]! !
 
-!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:34:39'!
-initializeTypeInformation
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:41:49'!
+initializeTypeInformationUsing: aMethodNode
 
-	self initializeVariablesRawTypes.
+	self initializeVariablesRawTypesUsing: aMethodNode.
 	self initializeReturnRawTypes
 ! !
 
-!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:34:39'!
-initializeVariablesRawTypes
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 16:42:05'!
+initializeVariablesRawTypesUsing: aMethodNode
 
-	(method isNil or: [ method numTemps = 0 ])
-		ifTrue: [ variablesRawTypes := nil ]
-		ifFalse: [ | methodClass |
-			methodClass := method methodClass.
-			variablesRawTypes := methodClass createMethodVariablesRawTypesOf: method.
-			methodClass initializeEachMethodVariableRawTypesOf: method. ]! !
+	self doesTheMethodHasVariables
+		ifTrue: [ self initializeVariablesRawTypesWhenMethodHasVariablesUsing: aMethodNode ]
+		ifFalse: [ self initializeVariablesRawTypesWhenMethodHasNoVariables ]
+
+! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:23:56'!
+initializeVariablesRawTypesWhenMethodHasNoVariables 
+
+	"I use nil instead of emtpy array/dictionary to save memory space and VM speed. It is a tradeoff
+	I do not like but necessary as implementation detail - Hernan"
+	
+	variablesRawTypes := nil.
+	remoteVectorRawTypes := nil.
+	variableNameToTypeIndex := nil.
+	variableNameToRemoteVectorTypeIndex := nil
+! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:25:24'!
+initializeVariablesRawTypesWhenMethodHasVariablesUsing: aMethodNode 
+
+	| argumentNames remoteVectorTypes variablesTypes |
+
+	argumentNames := aMethodNode argumentNames.
+	variablesTypes := OrderedCollection new.
+	remoteVectorTypes := OrderedCollection new.
+	
+	variableNameToTypeIndex := Dictionary new.
+	variableNameToRemoteVectorTypeIndex := Dictionary new.
+	
+	aMethodNode topBlockTempsMap do: [ :aTempMap |
+		self 
+			initializeRawTypesOfVariableNamed: aTempMap first 
+			at: aTempMap second 
+			into: variablesTypes 
+			or: remoteVectorTypes 
+			with: argumentNames ].
+	
+	"There is no need to add a slot for the remote vector because the VM
+	takes cares of arrays of types arrays size - Hernan"	
+	
+	"If there are no variable rawTypes and var name to index are initialized with nil
+	to save memory space and speedup the VM - Hernan"
+	variablesTypes isEmpty 
+		ifTrue: [ variablesRawTypes := variableNameToTypeIndex := nil ] 
+		ifFalse: [ variablesRawTypes := variablesTypes asArray ].
+		
+	remoteVectorTypes isEmpty 
+		ifTrue: [ remoteVectorRawTypes := variableNameToRemoteVectorTypeIndex := nil ] 
+		ifFalse: [ remoteVectorRawTypes := remoteVectorTypes asArray ]
+! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:33:49'!
+initializeWith: variableRawTypes variableNamed: variableName at: variableIndex into: variablesTypes with: argumentNames
+	
+	| variableTypeIndex |
+	
+	"Arguments are in reversed order in the stack, to make the VM faster I reverse the position in the types array
+	to aligned it with the stack - Hernan"
+	variableTypeIndex := (argumentNames includes: variableName)
+		ifTrue: [ argumentNames size - variableIndex + 1 ]
+		ifFalse: [ variableIndex ].
+	
+	self add: variableRawTypes to: variablesTypes mapping: variableName to: variableTypeIndex in: variableNameToTypeIndex! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:29:45'!
+initializeWith: variableRawTypes variableNamed: variableName atRemoteVectorIndex: removeVectorVariableInfo into: remoteVectorTypes
+	
+	| variableTypeIndex |
+	
+	"The first element of the array is the position of the remove vector in the context, the second
+	is the index of the variable in the remove vector - Hernan"
+	variableTypeIndex := removeVectorVariableInfo second.
+
+	self add: variableRawTypes to: remoteVectorTypes mapping: variableName to: variableTypeIndex in: variableNameToRemoteVectorTypeIndex
+	! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/28/2019 17:03:27'!
+numberOfVariables
+
+	^(self sizeOf: variablesRawTypes) + (self sizeOf: remoteVectorRawTypes)! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:21:54'!
+rawTypesOf: aVariableName ifAbsent: anAbsentBlock
+
+	^ self 
+		rawTypesOf: aVariableName 
+		mappingToIndexWith: variableNameToTypeIndex 
+		into: variablesRawTypes 
+		ifAbsent: [ 
+			self 
+				rawTypesOf: aVariableName 
+				mappingToIndexWith: variableNameToRemoteVectorTypeIndex 
+				into: remoteVectorRawTypes 
+				ifAbsent: anAbsentBlock ]
+! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:20:13'!
+rawTypesOf: aVariableName mappingToIndexWith: variableNameToIndexMapping into: anArrayOfRawTypes ifAbsent: anAbsentBlock
+
+	| variableIndex |
+	
+	variableNameToIndexMapping ifNil: [ ^anAbsentBlock value ].
+	variableIndex := variableNameToIndexMapping at: aVariableName ifAbsent: [ ^anAbsentBlock value ].
+	
+	^anArrayOfRawTypes at: variableIndex! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 18:09:38'!
+remoteVectorRawTypes
+	
+	^remoteVectorRawTypes ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:35:23'!
 returnRawTypes
@@ -5537,20 +5966,61 @@ setMethod: aMethod
 		
 ! !
 
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/28/2019 17:04:00'!
+sizeOf: anArrayOfRawTypesOrNil
+
+ 	^ anArrayOfRawTypesOrNil ifNil: [ 0 ] ifNotNil: [ anArrayOfRawTypesOrNil size ]
+! !
+
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 10/28/2018 20:31:31'!
 storeOn: aStream
 
 	"review this!!"! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/28/2019 17:01:44'!
+variableNameToIndex: variableNameToTypeIndex do: aBlock
+	
+	variableNameToTypeIndex ifNotNil: [ variableNameToTypeIndex keysDo: aBlock ]! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:14:39'!
+variableNameToRemoteVectorTypeIndex
+	
+	^variableNameToRemoteVectorTypeIndex! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:12:32'!
+variableNameToTypeIndex
+
+	^variableNameToTypeIndex! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/28/2019 17:06:53'!
+variablesNames
+
+	| names |
+	
+	names := OrderedCollection new.
+	self variablesNamesDo: [ :aVarName | names add: aVarName ].
+	
+	^names! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/28/2019 17:06:22'!
+variablesNamesDo: aBlock
+
+	self variableNameToIndex: variableNameToTypeIndex do: aBlock.
+	self variableNameToIndex: variableNameToRemoteVectorTypeIndex do: aBlock.
+	! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 11/28/2018 14:35:36'!
 variablesRawTypes
 	
 	^variablesRawTypes ! !
 
-!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:11:36'!
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/28/2019 18:16:19'!
 variablesRawTypesUnload: aClassToUnload
 
-	MethodVariablesTypes unload: aClassToUnload fromAllRawTypesOf: variablesRawTypes! !
+	MethodVariablesTypes 
+		unload: aClassToUnload fromAllRawTypesOf: variablesRawTypes;
+		unload: aClassToUnload fromAllRawTypesOf: remoteVectorRawTypes 
+		! !
 
 !ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 16:01:21'!
 createMethodReturnRawTypesOf: aCompiledMethod
@@ -5579,15 +6049,20 @@ doesOnlySurelySend: aCompiledMethod
 	
 	^typedMessageSendsCollector hasOnlySureSenders! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/3/2019 06:54:52'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:25:51'!
 initializeTypeInformation
+	
+	self initializeTypeInformationUsing: self methodNode! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:25:37'!
+initializeTypeInformationUsing: aMethodNode
 	
 	| properties |
 	
 	properties := self properties.
 	"I have to set it because #properties creates a new AdditionaMethodState but does not set it - Hernan"
 	self penultimateLiteral: properties.
-	properties initializeTypeInformation ! !
+	properties initializeTypeInformationUsing: aMethodNode ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 21:35:23'!
 isQuickReturnSelf
@@ -6031,6 +6506,13 @@ identifierPrintString
 nodeTypePrintString
 	
 	^'method'! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:50:17'!
+topBlockTempsMap
+	
+	self blockExtentsToTempsMap associationsDo: [ :anAssociation | anAssociation key first = 0 ifTrue: [ ^anAssociation value ]].
+	
+	self error: 'Should not happen, there is always a topContext'! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 13:35:04'!
 topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
