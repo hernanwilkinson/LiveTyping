@@ -1,9 +1,8 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3636] on 1 March 2019 at 5:35:49 pm'!
-'Description Remove implementors and senders from annotation pane'!
-!provides: 'LiveTyping' 1 15!
-!requires: '__LiveTyping-TestData__' 1 0 nil!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3639] on 4 March 2019 at 4:49:53 pm'!
+'Description Removed dependency to Refactoring now integrated in base system'!
+!provides: 'LiveTyping' 1 16!
 !requires: 'BaseImageTests' 1 127 nil!
-!requires: 'Refactoring' 1 72 nil!
+!requires: '__LiveTyping-TestData__' 1 0 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
