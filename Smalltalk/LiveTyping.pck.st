@@ -1,8 +1,8 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3641] on 7 March 2019 at 4:47:45 pm'!
-'Description Removed Typed Source from browser - Method recategorization'!
-!provides: 'LiveTyping' 1 19!
-!requires: 'BaseImageTests' 1 127 nil!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3647] on 7 March 2019 at 5:22:06 pm'!
+'Description Removed var shadowing form AddionalMethodState'!
+!provides: 'LiveTyping' 1 20!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
+!requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -2872,22 +2872,6 @@ of: aMethodReference describedAs: aReasonDescription
 	
 	^self new initializeOf: aMethodReference describedAs: aReasonDescription! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 2/28/2019 22:12:26'!
-initialize
-
-	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
-	! !
-
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 3/1/2019 16:39:07'!
-initializeLiveTyping
-
-	self 
-		modifyClassDescriptionShape;
-		modifyAdditionalMethodStateShape;
-		compileAfterInstallMethods;
-		initializeTypeInformation;
-		setAnnotationInfoForLiveTyping! !
-
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:07:37'!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
@@ -2937,6 +2921,22 @@ modifyClassDescriptionShape
 setAnnotationInfoForLiveTyping
 
 	^ Preferences parameters at: #MethodAnnotations put: #(timeStamp messageCategory packages changeSets)! !
+
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 2/28/2019 22:12:26'!
+initialize
+
+	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
+	! !
+
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 3/1/2019 16:39:07'!
+initializeLiveTyping
+
+	self 
+		modifyClassDescriptionShape;
+		modifyAdditionalMethodStateShape;
+		compileAfterInstallMethods;
+		initializeTypeInformation;
+		setAnnotationInfoForLiveTyping! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 2/20/2019 22:37:13'!
 messageListMenuOptions
@@ -3267,7 +3267,7 @@ messageListKeyFromSourceCode
 		aChar == $t ifTrue: [^ model runMethodTest].
 		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/6/2019 19:48:11'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2019 17:01:14'!
 recompileFromOriginalSourceCode
 
 	^'recompile: selector from: oldClass
@@ -3282,7 +3282,8 @@ recompileFromOriginalSourceCode
 				notifying: nil
 				ifFail: [^ self].   "Assume OK after proceed from SyntaxError"
 	selector == methodNode selector ifFalse: [self error: ''selector changed!!''].
-	self addSelectorSilently: selector withMethod: (methodNode generate: trailer).'
+	self addSelectorSilently: selector withMethod: (methodNode generate: trailer).
+'
 ! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/6/2019 19:47:30'!
@@ -5846,10 +5847,10 @@ storeOn: aStream
 
 	"review this!!"! !
 
-!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/28/2019 17:01:44'!
-variableNameToIndex: variableNameToTypeIndex do: aBlock
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 3/7/2019 17:21:21'!
+variableNameToIndex: aVariableNameToTypeIndex do: aBlock
 	
-	variableNameToTypeIndex ifNotNil: [ variableNameToTypeIndex keysDo: aBlock ]! !
+	aVariableNameToTypeIndex ifNotNil: [ aVariableNameToTypeIndex keysDo: aBlock ]! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:14:39'!
 variableNameToRemoteVectorTypeIndex
