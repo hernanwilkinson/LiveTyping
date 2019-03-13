@@ -1,8 +1,8 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3647] on 7 March 2019 at 5:22:06 pm'!
-'Description Removed var shadowing form AddionalMethodState'!
-!provides: 'LiveTyping' 1 20!
-!requires: '__LiveTyping-TestData__' 1 0 nil!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3649] on 12 March 2019 at 9:31:45 pm'!
+'Description Bux fix on createMethodReturnTypeInfoOf:'!
+!provides: 'LiveTyping' 1 21!
 !requires: 'BaseImageTests' 1 127 nil!
+!requires: '__LiveTyping-TestData__' 1 0 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -5899,12 +5899,12 @@ createMethodReturnRawTypesOf: aCompiledMethod
 	
 	^super createMethodReturnRawTypesOf: aCompiledMethod ! !
 
-!ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:43:19'!
+!ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 3/12/2019 21:22:09'!
 createMethodReturnTypeInfoOf: aCompiledMethod
 
 	aCompiledMethod selector == #size ifTrue: [ ^ ReturnTypeInfo of: aCompiledMethod are: `{ Integer }`].
 	
-	^super createMethodReturnRawTypesOf: aCompiledMethod ! !
+	^super createMethodReturnTypeInfoOf: aCompiledMethod ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:15:54'!
 actualSendersOf: aCompiledMethod 
