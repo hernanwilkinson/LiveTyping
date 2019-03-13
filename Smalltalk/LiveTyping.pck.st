@@ -1,8 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3649] on 12 March 2019 at 9:31:45 pm'!
-'Description Bux fix on createMethodReturnTypeInfoOf:'!
-!provides: 'LiveTyping' 1 21!
-!requires: 'BaseImageTests' 1 127 nil!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3659] on 12 March 2019 at 9:40:15 pm'!
+'Description CodeWindow>>messageListKey:from: new source code
+	'!
+!provides: 'LiveTyping' 1 22!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
+!requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -3194,7 +3195,7 @@ doneCompilingSourceCode
 	
 ! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:47'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/12/2019 21:36:55'!
 messageListKeyFromOriginalSourceCode
 
 	^'messageListKey: aChar from: view
@@ -3219,17 +3220,21 @@ messageListKeyFromOriginalSourceCode
 	aChar == $h ifTrue: [^ self browseHierarchy].
 	aChar == $p ifTrue: [^ self browseFullProtocol].
 
-	"The following require a method selection"
-	sel ifNotNil: [
-		aChar == $o ifTrue: [^ model fileOutMessage].
-		aChar == $c ifTrue: [^ model copySelector].
-		aChar == $v ifTrue: [^ self browseVersions].
-		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
-		aChar == $x ifTrue: [^ model removeMessage].
-		aChar == $t ifTrue: [^ model runMethodTest].
-		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
+	sel
+		ifNotNil: [
+			"The following require a method selection"
+			aChar == $o ifTrue: [^ model fileOutMessage].
+			aChar == $c ifTrue: [^ model copySelector].
+			aChar == $v ifTrue: [^ self browseVersions].
+			aChar == $O ifTrue: [^ self openSingleMessageBrowser].
+			aChar == $x ifTrue: [^ model removeMessage].
+			aChar == $t ifTrue: [^ model runMethodTest].
+			aChar == $r ifTrue: [^ model debugMethodTest].
+			aChar == $R ifTrue: [^ self renameSelector]]
+		ifNil: [
+			aChar == $R ifTrue: [^ model renameClass]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/20/2019 22:56:51'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/12/2019 21:39:28'!
 messageListKeyFromSourceCode
 
 	^'messageListKey: aChar from: view
@@ -3257,15 +3262,19 @@ messageListKeyFromSourceCode
 	aChar == $h ifTrue: [^ self browseHierarchy].
 	aChar == $p ifTrue: [^ self browseFullProtocol].
 
-	"The following require a method selection"
-	sel ifNotNil: [
-		aChar == $o ifTrue: [^ model fileOutMessage].
-		aChar == $c ifTrue: [^ model copySelector].
-		aChar == $v ifTrue: [^ self browseVersions].
-		aChar == $O ifTrue: [^ self openSingleMessageBrowser].
-		aChar == $x ifTrue: [^ model removeMessage].
-		aChar == $t ifTrue: [^ model runMethodTest].
-		aChar == $r ifTrue: [^ model debugMethodTest]]'! !
+	sel
+		ifNotNil: [
+			"The following require a method selection"
+			aChar == $o ifTrue: [^ model fileOutMessage].
+			aChar == $c ifTrue: [^ model copySelector].
+			aChar == $v ifTrue: [^ self browseVersions].
+			aChar == $O ifTrue: [^ self openSingleMessageBrowser].
+			aChar == $x ifTrue: [^ model removeMessage].
+			aChar == $t ifTrue: [^ model runMethodTest].
+			aChar == $r ifTrue: [^ model debugMethodTest].
+			aChar == $R ifTrue: [^ self renameSelector]]
+		ifNil: [
+			aChar == $R ifTrue: [^ model renameClass]]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2019 17:01:14'!
 recompileFromOriginalSourceCode
