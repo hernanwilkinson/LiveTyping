@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3688] on 30 April 2019 at 5:21:40 pm'!
-'Description Multiple changes done fliying to Genova'!
-!provides: 'LiveTyping' 1 25!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3721] on 30 April 2019 at 6:40:24 pm'!
+'Description fixes on ActualMessageSet '!
+!provides: 'LiveTyping' 1 27!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -11,7 +11,7 @@ SystemOrganization addCategory: #'LiveTyping-Refactoring'!
 
 !classDefinition: #ActualSendersMessageSet category: #LiveTyping!
 MessageSet subclass: #ActualSendersMessageSet
-	instanceVariableNames: 'types selector'
+	instanceVariableNames: 'types'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
@@ -727,29 +727,24 @@ instanceVariableRawTypesSizeFor: anInstVarName
 
 	^ 3! !
 
-!ActualSendersMessageSet methodsFor: 'message sends ranges' stamp: 'HAW 3/28/2019 09:13:19'!
-messageSendsRanges
+!ActualSendersMessageSet methodsFor: 'message sends ranges' stamp: 'HAW 4/30/2019 18:07:03'!
+messageSendsRangesOf: aSelector
 	
 	^ selectedMessage 
 		ifNil: [ #() ]
-		ifNotNil: [selectedMessage rangesOf: selector whenSendTo: types ]! !
+		ifNotNil: [selectedMessage rangesOf: aSelector whenSendTo: types ]
+! !
 
-!ActualSendersMessageSet methodsFor: 'initialization' stamp: 'HAW 3/27/2019 17:22:16'!
-initializeTypes: aReceiverTypes selector: aSentSelector
+!ActualSendersMessageSet methodsFor: 'initialization' stamp: 'HAW 4/30/2019 18:10:18'!
+initializeTypes: aReceiverTypes 
 
 	types := aReceiverTypes.
-	selector := aSentSelector ! !
+! !
 
-!ActualSendersMessageSet methodsFor: 'contents' stamp: 'HAW 3/28/2019 17:10:58'!
-acceptedContentsChanged
+!ActualSendersMessageSet class methodsFor: 'instance creation' stamp: 'HAW 4/30/2019 18:10:43'!
+messageList: messageList types: aReceiverTypes 
 
-	super acceptedContentsChanged.
-	self changed: #actualScopeSenderChanged! !
-
-!ActualSendersMessageSet class methodsFor: 'instance creation' stamp: 'HAW 3/27/2019 17:21:31'!
-messageList: messageList types: aReceiverTypes selector: aSentSelector
-
-	^(self messageList: messageList) initializeTypes: aReceiverTypes selector: aSentSelector! !
+	^(self messageList: messageList) initializeTypes: aReceiverTypes ! !
 
 !CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 18:49:19'!
 messageSendWithInvalidReceiverTypesLabelFor: array
@@ -8016,11 +8011,6 @@ nodeTypePrintString
 	
 	^'method'! !
 
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 16:48:24'!
-sourceRangeFor: aParseNode
-
-	^encoder sourceRangeFor: aParseNode ! !
-
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:50:17'!
 topBlockTempsMap
 	
@@ -8058,16 +8048,6 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
 	^aCompiledMethod returnTypes
 ! !
-
-!TextEditor methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 16:49:06'!
-messageSendsRanges: aRanges
-
-	selectionStartBlocks := OrderedCollection new.
-	selectionStopBlocks := OrderedCollection new.
-	
-	aRanges do: [ :range | 
-		selectionStartBlocks add: (textComposition characterBlockForIndex: range first).
-		selectionStopBlocks add: (textComposition characterBlockForIndex: range last + 1) ]! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 10:09:16'!
 actualImplementorsOfIt
@@ -8118,11 +8098,6 @@ actualSendersOfIt: aKeyboardEvent
 	self actualSendersOfIt.
 	^true! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/15/2019 14:43:53'!
-isEditingClassDefinition 
-
-	^(self codeProvider respondsTo: #editSelection) and: [ self codeProvider editSelection == #editClass]! !
-
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/15/2019 14:45:54'!
 showSelectionTypeInfo
 
@@ -8172,38 +8147,6 @@ showTypeInfoOfInstanceVariable
 	^(InstanceVariableTypesDisplay typeInfo: typeInfo) showTypes 
 ! !
 
-!TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 17:17:11'!
-actualScopeSenderChanged
-
-	| messageSendsRanges |
-
-	"This check is because the annotation pane is also a TextModelMorph and it will trap this event.
-	I chek with == true instead of ifTrue: alone because shouldAttendActualScopeSenderChanged 
-	could be nil on exisitng TextModelMorph instances - Hernan"
-	shouldAttendActualScopeSenderChanged == true ifTrue: [ 
-		messageSendsRanges := model textProvider messageSendsRanges.
-		self editor messageSendsRanges: messageSendsRanges.
-		self textMorph updateFromTextComposition.
-
-		self scrollSelectionIntoView ]
-! !
-
-!TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 17:12:51'!
-attendActualScopeSenderChanged
-
-	shouldAttendActualScopeSenderChanged := true! !
-
-!TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 4/18/2019 20:13:19'!
-autoSelectMessage
-
-	| messageSendsRanges |
-
-	messageSendsRanges := model textProvider messageSendsRangesOf: model autoSelectString.
-	self editor messageSendsRanges: messageSendsRanges.
-	self textMorph updateFromTextComposition.
-
-	self scrollSelectionIntoView ! !
-
 !CodeWindow methodsFor: '*LiveTyping' stamp: 'HAW 2/20/2019 22:38:29'!
 browseActualImplementorsOfSelectedMethod
 	
@@ -8216,12 +8159,13 @@ browseActualSendersOfSelectedMethod
 	self model currentCompiledMethod ifNotNil: [ :aSentCompileMethod |
 		Smalltalk browseAllActualSendersOn: aSentCompileMethod ]! !
 
-!MessageSetWindow class methodsFor: '*LiveTyping' stamp: 'HAW 3/27/2019 17:24:49'!
+!MessageSetWindow class methodsFor: '*LiveTyping' stamp: 'HAW 4/30/2019 18:13:04'!
 openMessageList: messageList label: labelString types: aReceiverTypes selector: aSentSelector
 
 	| messageSet |
 
-	messageSet := ActualSendersMessageSet messageList: messageList types: aReceiverTypes selector: aSentSelector.
+	messageSet := ActualSendersMessageSet messageList: messageList types: aReceiverTypes.
+	messageSet autoSelectString: aSentSelector.
 
 	^self open: messageSet label: labelString 
 ! !
@@ -8231,7 +8175,7 @@ codePane
 	
 	^codePane ! !
 
-!ChangeSelectorSendersStepWindow class methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 18:47:49'!
+!ChangeSelectorSendersStepWindow class methodsFor: '*LiveTyping' stamp: 'HAW 4/30/2019 18:18:45'!
 openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 
 	| window label |
@@ -8244,7 +8188,6 @@ openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 		types: aChangeSelectorWithActualScopeApplier receiverTypes 
 		selector: aChangeSelectorWithActualScopeApplier oldSelector.
 
-	window codePane attendActualScopeSenderChanged.
 	window initializeFrom: aChangeSelectorWithActualScopeApplier.
 	
 	^window 
