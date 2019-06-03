@@ -1,8 +1,8 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3721] on 30 April 2019 at 6:40:24 pm'!
-'Description fixes on ActualMessageSet '!
-!provides: 'LiveTyping' 1 27!
-!requires: 'BaseImageTests' 1 127 nil!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3781] on 3 June 2019 at 9:42:17 am'!
+'Description updated messageListKeyFromOriginalSourceCode'!
+!provides: 'LiveTyping' 1 28!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
+!requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
@@ -4567,7 +4567,7 @@ doneCompilingSourceCode
 	
 ! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/12/2019 21:36:55'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 6/3/2019 09:34:53'!
 messageListKeyFromOriginalSourceCode
 
 	^'messageListKey: aChar from: view
@@ -4598,6 +4598,7 @@ messageListKeyFromOriginalSourceCode
 			aChar == $o ifTrue: [^ model fileOutMessage].
 			aChar == $c ifTrue: [^ model copySelector].
 			aChar == $v ifTrue: [^ self browseVersions].
+			aChar == $C ifTrue: [^ model showHomeCategory].
 			aChar == $O ifTrue: [^ self openSingleMessageBrowser].
 			aChar == $x ifTrue: [^ model removeMessage].
 			aChar == $t ifTrue: [^ model runMethodTest].
@@ -4606,7 +4607,7 @@ messageListKeyFromOriginalSourceCode
 		ifNil: [
 			aChar == $R ifTrue: [^ model renameClass]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/12/2019 21:39:28'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 6/3/2019 09:35:25'!
 messageListKeyFromSourceCode
 
 	^'messageListKey: aChar from: view
@@ -4640,6 +4641,7 @@ messageListKeyFromSourceCode
 			aChar == $o ifTrue: [^ model fileOutMessage].
 			aChar == $c ifTrue: [^ model copySelector].
 			aChar == $v ifTrue: [^ self browseVersions].
+			aChar == $C ifTrue: [^ model showHomeCategory].
 			aChar == $O ifTrue: [^ self openSingleMessageBrowser].
 			aChar == $x ifTrue: [^ model removeMessage].
 			aChar == $t ifTrue: [^ model runMethodTest].
