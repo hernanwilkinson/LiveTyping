@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3781] on 3 June 2019 at 9:42:17 am'!
-'Description updated messageListKeyFromOriginalSourceCode'!
-!provides: 'LiveTyping' 1 28!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3781] on 4 June 2019 at 9:30:23 am'!
+'Description fix of sourceRangesFor: removed'!
+!provides: 'LiveTyping' 1 29!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -7563,7 +7563,7 @@ returnTypes
 	
 	^self returnTypeInfo types! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 18:27:51'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/4/2019 09:29:06'!
 sureMessageSendsRangesOf: aSentSelector whenSendTo: aReceiverTypes
 
 	| methodNode collector implementor ranges |
@@ -7576,7 +7576,8 @@ sureMessageSendsRangesOf: aSentSelector whenSendTo: aReceiverTypes
 		implementor ifNotNil: [ 
 			collector := ActualMessageSendsCollector in: self of: implementor.
 			methodNode accept: collector. 
-			collector sureMessageSends do: [ :aMessageSend | ranges add: (methodNode sourceRangeFor: aMessageSend) ]]].
+			collector sureMessageSends do: [ :aMessageSend | ranges add: (
+				methodNode rangeForNode: aMessageSend ifAbsent: [self error: 'Should not happen'])]]].
 	
 	^ranges ! !
 
