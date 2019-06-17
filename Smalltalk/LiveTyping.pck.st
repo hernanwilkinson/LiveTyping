@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3781] on 4 June 2019 at 9:30:23 am'!
-'Description fix of sourceRangesFor: removed'!
-!provides: 'LiveTyping' 1 29!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3801] on 17 June 2019 at 6:33:52 pm'!
+'Description move isSuperPseudoVariable and others to Core'!
+!provides: 'LiveTyping' 1 30!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -7868,31 +7868,6 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 identifierPrintString
 	
 	^key printString ! !
-
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 10/23/2018 13:57:13'!
-isFalsePseudoVariable
-	
-	^key = 'false'! !
-
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 10/23/2018 12:15:09'!
-isNilPseudoVariable
-	
-	^ key = 'nil'! !
-
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 01:07:27'!
-isSuperPseudoVariable
-	
-	^key = 'super'! !
-
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 01:05:18'!
-isThisContextPseudoVariable
-	
-	^key = 'thisContext'! !
-
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 10/23/2018 13:56:52'!
-isTruePseudoVariable
-	
-	^ key = 'true'! !
 
 !VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:05:06'!
 nodeTypePrintString
