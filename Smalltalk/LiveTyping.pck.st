@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3801] on 17 June 2019 at 6:33:52 pm'!
-'Description move isSuperPseudoVariable and others to Core'!
-!provides: 'LiveTyping' 1 30!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3813] on 10 July 2019 at 12:35:35 pm'!
+'Description fix to inst var type display'!
+!provides: 'LiveTyping' 1 31!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -5081,17 +5081,25 @@ typeInfo: anInstanceVariableTypeInfo
 	
 	^self new initializeTypeInfo: anInstanceVariableTypeInfo! !
 
-!InstanceVariableTypesDisplay methodsFor: 'as yet unclassified' stamp: 'HAW 4/2/2019 21:28:58'!
-addCrudOptions
-
-	self addCrudOptionsFor: instVarTypeInfo ! !
-
-!InstanceVariableTypesDisplay methodsFor: 'as yet unclassified' stamp: 'HAW 4/2/2019 21:20:56'!
+!InstanceVariableTypesDisplay methodsFor: 'initialization' stamp: 'HAW 4/2/2019 21:20:56'!
 initializeTypeInfo: anInstanceVariableTypeInfo 
 	
 	instVarTypeInfo := anInstanceVariableTypeInfo.
 	types := instVarTypeInfo types.
 	incompleteTypeInfoReasons := #()! !
+
+!InstanceVariableTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 4/2/2019 21:28:58'!
+addCrudOptions
+
+	self addCrudOptionsFor: instVarTypeInfo ! !
+
+!InstanceVariableTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 7/3/2019 19:34:54'!
+showTypes
+	
+	types isEmpty 
+		ifTrue: [ self inform: 'There is no type info for ', instVarTypeInfo variableName ]
+		ifFalse: [ self showTypesWhenNotEmpty ].
+! !
 
 !InstanceVariableTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 4/2/2019 21:23:21'!
 showTypesPopUp
