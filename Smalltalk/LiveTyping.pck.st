@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3813] on 10 July 2019 at 12:35:35 pm'!
-'Description fix to inst var type display'!
-!provides: 'LiveTyping' 1 31!
+'From Cuis 5.0 [latest update: #3823] on 11 July 2019 at 5:51:44 pm'!
+'Description support for balloon type info in methods and class definition'!
+!provides: 'LiveTyping' 1 32!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -4250,7 +4250,7 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 3/6/2019 19:50:26'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/11/2019 17:15:01'!
 compileAfterInstallMethods.
 
 	self 
@@ -4260,7 +4260,8 @@ compileAfterInstallMethods.
 		compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode;
 		compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode;
 		compile: self recompileFromSourceCode in: Behavior ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode;
-		compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode.
+		compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode;
+		compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode 
 ! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
@@ -4650,6 +4651,32 @@ messageListKeyFromSourceCode
 		ifNil: [
 			aChar == $R ifTrue: [^ model renameClass]]'! !
 
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/11/2019 17:13:27'!
+mouseMoveLocalPositionOriginalSourceCode
+
+	^'mouseMove: aMouseMoveEvent localPosition: localEventPosition
+
+	aMouseMoveEvent mouseButton1Pressed ifFalse: [
+		^ self enterClickableRegion: aMouseMoveEvent localPosition: localEventPosition ].
+	self handleInteraction: [
+		editor mouseMove: aMouseMoveEvent localPosition: localEventPosition].
+	owner scrollSelectionIntoView'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/11/2019 17:13:57'!
+mouseMoveLocalPositionSourceCode
+
+	^'mouseMove: aMouseMoveEvent localPosition: localEventPosition
+
+	aMouseMoveEvent hand 
+		removePendingBalloonFor: self;
+		triggerBalloonFor: self after: self balloonHelpDelayTime.
+	
+	aMouseMoveEvent mouseButton1Pressed ifFalse: [
+		^ self enterClickableRegion: aMouseMoveEvent localPosition: localEventPosition ].
+	self handleInteraction: [
+		editor mouseMove: aMouseMoveEvent localPosition: localEventPosition].
+	owner scrollSelectionIntoView'! !
+
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2019 17:01:14'!
 recompileFromOriginalSourceCode
 
@@ -4970,8 +4997,8 @@ commonSelectorsOption
 
 	^'Common selectors previous to Object'! !
 
-!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 4/1/2019 23:10:47'!
-initiliazeTypeInfo
+!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 7/11/2019 16:09:50'!
+initializeTypeInfo
 
 	typeInfo := VariableTypeInfo new initializeRawTypes: types asArray.
 ! !
@@ -5016,11 +5043,11 @@ showTypesPopUp
 	selectedIndex := menu startUpWithCaption: 'Type info of ', parseNodeToAnalize nodeTypeAndIdentifierPrintString .
 ! !
 
-!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 4/1/2019 14:56:42'!
+!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 7/11/2019 16:09:50'!
 showTypesWhenNotEmpty
 
 	self 
-		initiliazeTypeInfo;
+		initializeTypeInfo;
 		calculateLabelsAndLines;
 		showTypesPopUp;
 		browseSelected	! !
@@ -5039,6 +5066,11 @@ definingClass
 parseNodeToAnalize
 	
 	^parseNodeToAnalize! !
+
+!ParseNodeTypesDisplay methodsFor: 'accessing' stamp: 'HAW 7/11/2019 16:11:25'!
+typeInfo
+	
+	^typeInfo! !
 
 !ParseNodeTypesDisplay methodsFor: 'crud' stamp: 'HAW 12/6/2018 17:58:33'!
 addTypeTo: aVariableTypeInfo
@@ -5076,11 +5108,6 @@ of: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 	^self new initliazeOf: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 ! !
 
-!ParseNodeTypesDisplay class methodsFor: 'as yet unclassified' stamp: 'HAW 4/2/2019 21:14:57'!
-typeInfo: anInstanceVariableTypeInfo 
-	
-	^self new initializeTypeInfo: anInstanceVariableTypeInfo! !
-
 !InstanceVariableTypesDisplay methodsFor: 'initialization' stamp: 'HAW 4/2/2019 21:20:56'!
 initializeTypeInfo: anInstanceVariableTypeInfo 
 	
@@ -5108,6 +5135,11 @@ showTypesPopUp
 
 	menu := PopUpMenu labelArray: labels lines: lines icons: icons.
 	selectedIndex := menu startUpWithCaption: 'Type info of inst var ', instVarTypeInfo variableName ! !
+
+!InstanceVariableTypesDisplay class methodsFor: 'instance creation' stamp: 'HAW 7/11/2019 16:03:57'!
+typeInfo: anInstanceVariableTypeInfo 
+	
+	^self new initializeTypeInfo: anInstanceVariableTypeInfo! !
 
 !SenderInfo methodsFor: 'initialization' stamp: 'HAW 3/13/2019 16:23:53'!
 initializeOf: aSender for: aSentImplementors
@@ -5165,6 +5197,39 @@ of: aSender for: aSentImplementors
 	
 	^self new initializeOf: aSender for: aSentImplementors! !
 
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 7/11/2019 17:07:58'!
+print: types on: aStream upTo: aNumberOfTypes
+	
+	aStream nextPut: $<.
+
+	types isEmpty 
+		ifTrue: [ aStream nextPut: $? ]
+		ifFalse: [
+			types size > 1 ifTrue: [
+				self 
+					withCommonSupertypeDo: [ :aCommonSupertype | aStream nextPutAll: aCommonSupertype typeName ] 
+					ifGeneric: [ :aGenericType | aStream nextPutAll: 'any' ].
+				aStream nextPutAll: ' # ' ].
+			
+			aNumberOfTypes < types size 
+				ifTrue: [ 
+					self printAll: (types first: aNumberOfTypes) on: aStream.
+					aStream nextPutAll: ' | ...' ] 
+				ifFalse: [ self printAll: types on: aStream ]].
+			
+	aStream nextPut: $>.
+	
+	! !
+
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 7/11/2019 17:08:33'!
+printAll: types on: aStream.
+
+	types
+		do: [:aType | aStream nextPutAll: aType typeName ]
+		separatedBy: [ aStream nextPutAll: ' | ' ].
+				
+! !
+
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 1/20/2019 20:06:40'!
 printReducedTypes
 	
@@ -5196,27 +5261,26 @@ printTypes
 	
 	^String streamContents: [ :stream | self printTypesOn: stream ]! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 2/19/2019 17:54:03'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 7/11/2019 16:57:38'!
 printTypesOn: aStream
 
 	| types |
 	
-	aStream nextPut: $<.
-	
 	types := self types.
-	types isEmpty 
-		ifTrue: [ aStream nextPut: $? ]
-		ifFalse: [
-			types size > 1 ifTrue: [
-				self withCommonSupertypeDo: [ :aCommonSupertype | aStream nextPutAll: aCommonSupertype typeName ] ifGeneric: [ :aGenericType | aStream nextPutAll: 'any' ].
-				aStream nextPutAll: ' # ' ].
-			types
-				do: [:aType | aStream nextPutAll: aType typeName ]
-				separatedBy: [ aStream nextPutAll: ' | ' ]].
-			
-	aStream nextPut: $>.
-	
+
+	self print: types on: aStream upTo: types size.
 	! !
+
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 7/11/2019 16:57:04'!
+printTypesOn: aStream upTo: aNumberOfTypes
+
+	self print: self types on: aStream upTo: aNumberOfTypes.
+	! !
+
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 7/11/2019 16:42:32'!
+printTypesUpTo: aNumberOfTypes
+	
+	^String streamContents: [ :stream | self printTypesOn: stream upTo: aNumberOfTypes]! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 17:55:32'!
 addType: aType
@@ -7773,6 +7837,16 @@ browseAllActualmplementorsOf: aMethod
 	self browseAllActualImplementorsOf: aMethod selector for: aMethod methodClass
 ! !
 
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 14:55:45'!
+browseMessageList: messageList name: label prefixedWith: labelPrefix autoSelect: autoSelectString
+
+	^MessageSetWindow
+		openMessageList: messageList
+		label: labelPrefix, label
+		autoSelect: autoSelectString
+
+! !
+
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 11/27/2018 05:56:18'!
 identifierPrintString
 	
@@ -7843,6 +7917,12 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
 	^value typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ! !
 
+!BlockNode methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:49:45'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
+	
+	"This will have to change when block return types are supported - Hernan"
+	^#()! !
+
 !BraceNode methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:51:45'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
@@ -7861,6 +7941,11 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	^[ lastMessage typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ]
 		ensure: [ lastMessage receiver: nil ]
 	! !
+
+!LeafNode methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:16:31'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
+
+	^#()! !
 
 !LiteralNode methodsFor: '*LiveTyping' stamp: 'HAW 12/17/2018 16:42:45'!
 nodeTypePrintString
@@ -8035,6 +8120,11 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	^aCompiledMethod returnTypes
 ! !
 
+!TextEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:18:54'!
+balloonTypeInfoAt: mouseInTextPosition
+
+	^''! !
+
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 10:09:16'!
 actualImplementorsOfIt
 	self 
@@ -8083,6 +8173,51 @@ actualSendersOfIt: aKeyboardEvent
 
 	self actualSendersOfIt.
 	^true! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:20:41'!
+balloonTypeInfoAt: mousePositionInText
+
+	^self isEditingClassDefinition 
+		ifTrue: [ self balloonTypeInfoOfInstanceVariableAt: mousePositionInText ]
+		ifFalse: [ self balloonTypeInfoInMethodAt: mousePositionInText ]! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:20:47'!
+balloonTypeInfoInMethodAt: mousePositionInText
+
+	^self 
+		withMethodNodeAndClassDo: [ :methodNode :class | 
+			methodNode 
+				withParseNodeIncluding: mousePositionInText 
+				do: [ :aNodeUnderCursor | self balloonTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class ]
+				ifAbsent: [ 
+					mousePositionInText <= methodNode selectorLastPosition 
+						ifTrue: [ self balloonTypeInfoOf: methodNode in: methodNode definedAt: class ]
+						ifFalse: [ '' ]]]
+		ifErrorsParsing: [ :anError | '' ]
+
+
+! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:04:01'!
+balloonTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
+
+	^[ ((ParseNodeTypesDisplay of: aNodeUnderCursor in: methodNode definedAt: class) 
+		calculateTypes; 
+		initializeTypeInfo;
+		typeInfo) printTypesUpTo: 5 ]
+		on: MethodNotAnnotatingTypes 
+		do: [ :anError | 'Could not get type because: ', anError messageText ]
+! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:41:44'!
+balloonTypeInfoOfInstanceVariableAt: mousePositionInText
+
+	| instVarName typeInfo |
+	
+	instVarName := (self wordUnder: mousePositionInText) asString.
+	typeInfo := self codeProvider selectedClass typeInfoOfInstanceVariableNamed: instVarName ifAbsent: [^''].
+
+	^typeInfo printTypesUpTo: 5! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/15/2019 14:45:54'!
 showSelectionTypeInfo
@@ -8179,6 +8314,23 @@ openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 	^window 
 
 ! !
+
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:20:30'!
+showBalloon: msgString hand: aHand
+
+	| localMousePosition mousePositionInText ballonTypeInfo |
+	
+	localMousePosition := self internalizeFromWorld: aHand location translation.
+	mousePositionInText := (textComposition characterBlockAtPoint: localMousePosition) stringIndex.
+	ballonTypeInfo := editor balloonTypeInfoAt: mousePositionInText.
+	
+	^super showBalloon: ballonTypeInfo hand: aHand
+! !
+
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:14:34'!
+wantsBalloon
+	
+	^Preferences balloonHelpEnabled! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:10:57'!
 actualSendersOf: aCompiledMethod 
