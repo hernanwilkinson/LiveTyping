@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3826] on 16 July 2019 at 11:56:00 pm'!
-'Description Annotates types while debugging. Some desing changes on the types array'!
-!provides: 'LiveTyping' 1 34!
+'From Cuis 5.0 [latest update: #3826] on 17 July 2019 at 6:02:55 pm'!
+'Description Support to avoid showing types in balloon help, important for DenotativeObject'!
+!provides: 'LiveTyping' 1 35!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -5022,14 +5022,15 @@ mouseMoveLocalPositionOriginalSourceCode
 		editor mouseMove: aMouseMoveEvent localPosition: localEventPosition].
 	owner scrollSelectionIntoView'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/11/2019 17:13:57'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/17/2019 17:33:15'!
 mouseMoveLocalPositionSourceCode
 
 	^'mouseMove: aMouseMoveEvent localPosition: localEventPosition
 
-	aMouseMoveEvent hand 
-		removePendingBalloonFor: self;
-		triggerBalloonFor: self after: self balloonHelpDelayTime.
+	self shouldShowBalloonHelp ifTrue: [
+		aMouseMoveEvent hand 
+			removePendingBalloonFor: self;
+			triggerBalloonFor: self after: self balloonHelpDelayTime ].
 	
 	aMouseMoveEvent mouseButton1Pressed ifFalse: [
 		^ self enterClickableRegion: aMouseMoveEvent localPosition: localEventPosition ].
@@ -8847,6 +8848,28 @@ showTypeInfoOfInstanceVariable
 	^(InstanceVariableTypesDisplay typeInfo: typeInfo) showTypes 
 ! !
 
+!Morph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:22:14'!
+doNotShowBalloonHelp
+
+	self setProperty: #showBalloonHelp toValue: false! !
+
+!Morph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:23:53'!
+shouldShowBalloonHelp
+
+	^self valueOfProperty: #showBalloonHelp ifAbsent: [ true ]
+	! !
+
+!Morph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:22:27'!
+showBalloonHelp
+
+	self setProperty: #showBalloonHelp toValue: true! !
+
+!TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:44:29'!
+doNotShowBalloonHelp
+
+	super doNotShowBalloonHelp.
+	scroller doNotShowBalloonHelp! !
+
 !CodeWindow methodsFor: '*LiveTyping' stamp: 'HAW 2/20/2019 22:38:29'!
 browseActualImplementorsOfSelectedMethod
 	
@@ -8906,10 +8929,10 @@ showBalloon: msgString hand: aHand
 	^super showBalloon: ballonTypeInfo hand: aHand
 ! !
 
-!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:14:34'!
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:58:27'!
 wantsBalloon
 	
-	^Preferences balloonHelpEnabled! !
+	^self shouldShowBalloonHelp and: [ Preferences balloonHelpEnabled ]! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:10:57'!
 actualSendersOf: aCompiledMethod 
