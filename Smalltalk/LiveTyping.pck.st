@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3823] on 11 July 2019 at 5:51:44 pm'!
-'Description support for balloon type info in methods and class definition'!
-!provides: 'LiveTyping' 1 32!
+'From Cuis 5.0 [latest update: #3826] on 16 July 2019 at 11:56:00 pm'!
+'Description Annotates types while debugging. Some desing changes on the types array'!
+!provides: 'LiveTyping' 1 34!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -71,7 +71,7 @@ ReceiverTypesOfMessageSendsConform class
 
 !classDefinition: #NotImplementedMethod category: #LiveTyping!
 MethodReference subclass: #NotImplementedMethod
-	instanceVariableNames: 'class selector'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
@@ -167,6 +167,16 @@ TestCase subclass: #InstanceVariablesTypesTest
 	category: 'LiveTyping-Tests'!
 !classDefinition: 'InstanceVariablesTypesTest class' category: #'LiveTyping-Tests'!
 InstanceVariablesTypesTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #LiveTypingCodeSimulationTest category: #'LiveTyping-Tests'!
+TestCase subclass: #LiveTypingCodeSimulationTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'LiveTypingCodeSimulationTest class' category: #'LiveTyping-Tests'!
+LiveTypingCodeSimulationTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #MethodNotAnnotatingTypesTest category: #'LiveTyping-Tests'!
@@ -610,10 +620,10 @@ Customer class
 	instanceVariableNames: ''!
 
 
-!NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 12/19/2018 16:16:55'!
+!NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 7/16/2019 16:48:57'!
 typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
-	^class typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
+	^self actualClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
 
 !InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:45:21'!
 instanceVariableRawTypesSizeFor: anInstVarName
@@ -1187,25 +1197,25 @@ setStandardClass: aClass methodSymbol: aSelector
 	super setStandardClass: aClass methodSymbol: aSelector.
 	self prefixStringVersionWith: self class notImplementedStringVersionHeader ! !
 
-!NotImplementedMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 08:09:37'!
+!NotImplementedMethod methodsFor: 'senders' stamp: 'HAW 4/4/2019 08:09:37'!
 actualSendersOf: aCompiledMethod 
 
 	^#()! !
-
-!NotImplementedMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 08:22:15'!
-doesOnlySurelySend: aCompiledMethod 
-	
-	^false! !
-
-!NotImplementedMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 08:33:15'!
-liveTypingAutoCompleterDocumentation
-
-	^'' asText! !
 
 !NotImplementedMethod methodsFor: 'auto complete' stamp: 'HAW 4/4/2019 08:25:03'!
 dynamicTypingAutoCompleterDocumentation
 
 	^'' asText! !
+
+!NotImplementedMethod methodsFor: 'auto complete' stamp: 'HAW 4/4/2019 08:33:15'!
+liveTypingAutoCompleterDocumentation
+
+	^'' asText! !
+
+!NotImplementedMethod methodsFor: 'testing' stamp: 'HAW 4/4/2019 08:22:15'!
+doesOnlySurelySend: aCompiledMethod 
+	
+	^false! !
 
 !NotImplementedMethod class methodsFor: 'string version' stamp: 'HAW 4/4/2019 08:45:11'!
 notImplementedStringVersionHeader
@@ -2365,6 +2375,19 @@ test13RemovingAClassRemovesItAndItsClassFromInstanceVariableRawTypes
 		
 		self assert: typeInfo isTypesEmpty ]! !
 
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 20:29:11'!
+test14InstVarAtPutKeepTypeInfo
+
+	| types |
+	
+	self class initializeInstanceVariablesRawTypes.
+	self instVarAt: (self class indexOfInstanceVariable: 'iv1') put: 10.
+	
+	types := self class typesOfInstanceVariableNamed: 'iv1'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger)! !
+
 !InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 11/27/2018 15:04:54'!
 initializeHierarchyForTestingInstanceVariablesTypes
 	
@@ -2495,6 +2518,306 @@ test09EvaluatesIfAbsentBlockWhenAskTypeInfoForNonExistingInstVar
 
 	self class instanceVariablesTypes typeInfoOf: 'xyz' ifAbsent: [ ^self ].
 	self fail! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 18:42:27'!
+test01KeepTypesOfLocalTemporariesI
+
+	| method types |
+	
+	method := self class>>#assignmentToLocalTemporary.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ self assignmentToLocalTemporary ].
+	
+	types := method typesOfVariableNamed: 'temporary'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: String).! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 18:42:53'!
+test02KeepTypesOfRemoteTemporaries
+
+	| method types |
+	
+	method := self class>>#assignmentToRemoteTemporary.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ self assignmentToRemoteTemporary ].
+	
+	types := method typesOfVariableNamed: 'remoteTemp'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: String).
+	
+	types := method typesOfVariableNamed: 'localTemp'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 19:01:34'!
+test03KeepTypesOfParameters
+
+	| method types result |
+	
+	method := self class>>#parameter1:parameter2:.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := self parameter1: 1 parameter2: 'Hello' ].
+	
+	self assert: (1/2 + 1 + 'hello' size) equals: result.
+	
+	types := method typesOfVariableNamed: 'parameter1'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).
+	
+	types := method typesOfVariableNamed: 'parameter2'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: String).
+	
+	types := method typesOfVariableNamed: 'localTemp'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: Fraction).! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 19:30:50'!
+test04KeepReturnTopTypes
+
+	| method types result |
+	
+	method := self class>>#returnTop:.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := self returnTop: 1 ].
+	
+	self assert: 1 equals: result.
+	
+	types := method returnTypes.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).
+	
+	! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 19:32:52'!
+test05KeepReturnConstantTypes
+
+	| method types result |
+	
+	method := self class>>#returnConstant.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := self returnConstant ].
+		
+	types := method returnTypes.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: String).
+
+	"It has to be after getting the types because it changes the return types - Hernan"	
+	self assert: self returnConstant equals: result.
+! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 19:34:03'!
+test06KeepReturnReceiverTypes
+
+	| method types result |
+	
+	method := self class>>#returnReceiver.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := self returnReceiver ].
+		
+	self assert: self equals: result.
+	
+	types := method returnTypes.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: self class).
+
+	! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 19:38:34'!
+test07KeepReturnFromClosureTypes
+
+	| method types result |
+	
+	method := self class>>#returnFromClosure:.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := self returnFromClosure: 10 ].
+		
+	self assert: 10 equals: result.
+	
+	types := method returnTypes.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).
+
+	! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 19:59:09'!
+test08KeepReturnTypeWhenUnwind
+
+	| method types result |
+	
+	method := self class>>#returnUnwind:.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := self returnUnwind: 10 ].
+	
+	self assert: 10 equals: result.
+	
+	types := method returnTypes.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).
+
+! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 20:24:33'!
+test09BlockReturnDoesNotAffectMethodReturn
+
+	| method types result |
+	
+	method := self class>>#blockReturn.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := self blockReturn ].
+	
+	self assert: 10 equals: result.
+	
+	types := method returnTypes.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).
+
+! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 22:23:56'!
+test10KeepTypesOfParametersWhenSendingValueWithArguments
+
+	| method types result |
+	
+	method := self class>>#parameter1:parameter2:.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ result := method valueWithReceiver: self arguments: { 1. 'hello' }].
+	
+	self assert: (1/2 + 1 + 'hello' size) equals: result.
+	
+	types := method typesOfVariableNamed: 'parameter1'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).
+	
+	types := method typesOfVariableNamed: 'parameter2'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: String).
+	
+	types := method typesOfVariableNamed: 'localTemp'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: Fraction).! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 22:52:26'!
+test11BlockWithParametersDoNotAffectMethodParameters
+
+	| method types |
+	
+	method := self class>>#blockWithParameter:.
+	method initializeTypeInformation.
+	
+	ContextPart runSimulated: [ self blockWithParameter: 10].
+	
+	types := method typesOfVariableNamed: 'parameter1'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger).
+	
+! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 18:42:00'!
+assignmentToLocalTemporary
+	
+	| temporary |
+	
+	temporary := 'xx'.
+	
+	^temporary ! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 18:40:46'!
+assignmentToRemoteTemporary
+	
+	| localTemp remoteTemp |
+	
+	localTemp := 1.
+	
+	[ remoteTemp := localTemp printString ] value.
+	
+	^remoteTemp ! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 20:24:45'!
+blockReturn
+
+	[ 'hello' ] value.
+	
+	^10! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 22:54:10'!
+blockWithParameter: parameter1
+
+	[ :blockParameter | blockParameter size ] value: 'hello'.
+	
+	^parameter1 ! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 19:00:59'!
+parameter1: parameter1 parameter2: parameter2
+
+	| localTemp |
+	
+	localTemp := 1/2.
+	
+	^localTemp + parameter1 + parameter2 size! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 19:33:01'!
+returnConstant 
+
+	^'Hello'! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 19:38:43'!
+returnFromClosure: aValue
+
+	[ ^aValue ] value! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 19:34:58'!
+returnReceiver
+	
+	"It does not have to be a quick self return - Hernan"
+	
+	1 + 1.
+	
+	^self! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 19:30:50'!
+returnTop: aValue
+
+	1 + 1.
+	
+	^aValue! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 20:02:18'!
+returnUnwind: aValue
+
+	[ self valueParameter: [ ^aValue] ] ensure: [ 'hello' ] ! !
+
+!LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 7/16/2019 19:58:52'!
+valueParameter: aBlock
+
+	aBlock value.
+	! !
 
 !MethodNotAnnotatingTypesTest methodsFor: 'tests' stamp: 'HAW 3/27/2019 11:00:09'!
 test01CanSignalItWithAMethod
@@ -3404,7 +3727,7 @@ testExampleMessagesOfDifferentSubclasses
 	aCollection addAllFirst: #(1 2 3).
 	! !
 
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 2/8/2019 13:53:45'!
+!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 7/16/2019 23:44:40'!
 testExampleWithNoCommonSupertype
 
 	| oneHour today s |
@@ -3420,12 +3743,12 @@ testExampleWithNoCommonSupertype
 	self assert: 2 hours equals: oneHour + oneHour.
 	
 	"Chalten date"
-	today := FixedGregorianDate today.
+	today := February/1/ 2019.
 	self assert: February equals: today month.
 	self assert: February, 2019 equals: today monthOfYear.
 	today .
 	"Chronology date"
-	today := Date today.
+	today := Date year: 2019 month: 2 day: 1.
 	self assert: 'February' equals: today monthName.
 	self assert: (Month month: 'February' year: 2019) equals: today month 
 	
@@ -4002,7 +4325,7 @@ browse
 	 morph flash 
 ! !
 
-!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 2/20/2019 23:35:03'!
+!BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 7/16/2019 17:44:07'!
 browseActualMessageNode: messageNode 
 
 	sentSelector := messageNode selector key.
@@ -4010,7 +4333,7 @@ browseActualMessageNode: messageNode
 	types := messageNode receiverOrCascadeReceiver typesIn: methodToLookUp addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
 
 	types isEmpty 
-		ifTrue: [ self browseActualWithNoTypeInfoSendTo: messageNode receiver ]
+		ifTrue: [ self browseActualWithNoTypeInfoSendTo: messageNode receiverOrCascadeReceiver ]
 		ifFalse: [ self browseActualWithTypeInfo ].
 		
 		
@@ -4237,6 +4560,19 @@ of: aMethodReference describedAs: aReasonDescription
 	
 	^self new initializeOf: aMethodReference describedAs: aReasonDescription! !
 
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:23:16'!
+checkRedefinedMethodsDidNotChange
+
+	self 
+		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 6/15/2008 11:34';
+		checkTimeStampOf: ContextPart>>#return:from: is: 'ajh 3/5/2004 03:44';
+		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
+
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:24:39'!
+checkTimeStampOf: aMethod is: expectedTimeStamp
+
+	aMethod timeStamp = expectedTimeStamp ifFalse: [ self error: aMethod classAndSelector, ' has changed' ].! !
+
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:07:37'!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
@@ -4250,7 +4586,7 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/11/2019 17:15:01'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:15:47'!
 compileAfterInstallMethods.
 
 	self 
@@ -4261,7 +4597,10 @@ compileAfterInstallMethods.
 		compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode;
 		compile: self recompileFromSourceCode in: Behavior ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode;
 		compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode;
-		compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode 
+		compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode;
+		compile: self setSenderReceiverMethodArgumentsSourceCode in: MethodContext 
+			ifOriginalSourceCodeIs: self setSenderReceiverMethodArgumentsOriginalSourceCode;
+		compile: self blockReturnTopSourceCode in: MethodContext ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
 ! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
@@ -4299,12 +4638,13 @@ initialize
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
 	! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 3/12/2019 22:21:34'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 7/16/2019 23:19:51'!
 initializeLiveTyping
 
 	self 
 		modifyClassDescriptionShape;
 		modifyAdditionalMethodStateShape;
+		checkRedefinedMethodsDidNotChange;
 		compileAfterInstallMethods;
 		initializeTypeInformation;
 		setAnnotationInfoForLiveTyping;
@@ -4514,6 +4854,26 @@ addAndClassifySelectorStep2SourceCode
 					to: category
 					inClass: self ]]'! !
 
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/16/2019 23:15:13'!
+blockReturnTopOriginalSourceCode
+
+	^'blockReturnTop
+	"Simulate the interpreter''s action when a ReturnTopOfStackToCaller bytecode is 
+	 encountered in the receiver.  This should only happen in a closure activation."
+	self assert: closureOrNil isClosure.
+	^self return: self pop from: self'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/16/2019 23:14:48'!
+blockReturnTopSourceCode
+
+	^'blockReturnTop
+	
+	"I do not want block returns to affect method return types that is why
+	I send return:from: to super - Hernan"
+	
+	self assert: closureOrNil isClosure.
+	^super return: self pop from: self'! !
+
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/27/2019 20:11:47'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
@@ -4714,6 +5074,39 @@ recompileFromSourceCode
 	newMethod _ methodNode generate: trailer.
 	self addSelectorSilently: selector withMethod: newMethod.
 	newMethod copyTypeInformationFrom: method using: methodNode'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/16/2019 23:12:56'!
+setSenderReceiverMethodArgumentsOriginalSourceCode
+
+	^'setSender: s receiver: r method: m arguments: args 
+	"Create the receiver''s initial state."
+
+	sender := s.
+	receiver := r.
+	method := m.
+	closureOrNil := nil.
+	pc := method initialPC.
+	self stackp: method numTemps.
+	1 to: args size do: [:i | self at: i put: (args at: i)]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/16/2019 23:55:46'!
+setSenderReceiverMethodArgumentsSourceCode
+
+	^'setSender: s receiver: r method: m arguments: args 
+	"Create the receiver''s initial state."
+
+	| parameterIndex |
+	
+	sender := s.
+	receiver := r.
+	method := m.
+	closureOrNil := nil.
+	pc := method initialPC.
+	self stackp: method numTemps.
+	parameterIndex := args size.
+	1 to: args size do: [:i | 
+		method annotateTemporaryTypeOf: (self at: i put: (args at: i)) at: parameterIndex.
+		parameterIndex := parameterIndex - 1. ]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:30'!
 unloadOriginalSourceCode
@@ -5287,48 +5680,39 @@ addType: aType
 
 	^self addType: aType ifFull: [ self signalRawTypesIsFull]! !
 
-!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 17:55:10'!
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 7/16/2019 17:26:23'!
 addType: aType ifFull: aFullBlock
 
 	"If rawTypes is nil, it is assumed that type can not be added and therefore it is full - Hernan"
 	
-	rawTypes ifNotNil: [
-		rawTypes withIndexDo: [ :typeAtIndex :rawTypesIndex |
-			typeAtIndex = aType ifTrue: [ ^self ].
-			typeAtIndex ifNil: [ ^rawTypes at: rawTypesIndex put: aType ]]].
-	
-	aFullBlock value.! !
+	^rawTypes addType: aType ifFull: aFullBlock
+! !
 
-!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 11/2/2018 11:50:29'!
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 7/16/2019 17:34:13'!
 isTypesEmpty
 	
-	^rawTypes isNil or: [ rawTypes isEmpty or: [rawTypes first isNil ]]! !
+	^rawTypes isTypesEmpty! !
 
-!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 16:07:27'!
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 7/16/2019 17:35:00'!
 removeAllTypes
 	
-	rawTypes atAllPut: nil! !
+	rawTypes removeAllTypes ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 15:46:05'!
 removeType: aType
 
 	^self removeType: aType ifAbsent: [ self signalTypeNotFound]! !
 
-!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 2/22/2019 23:49:35'!
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 7/16/2019 17:37:00'!
 removeType: aType ifAbsent: anAbsentBlock
 
-	^self class removeType: aType from: rawTypes ifAbsent: anAbsentBlock ! !
+	^rawTypes removeType: aType ifAbsent: anAbsentBlock
+! !
 
-!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/20/2018 20:06:47'!
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 7/16/2019 17:52:09'!
 types
 	
-	| firstEmptyIndex |
-	
-	rawTypes ifNil: [ ^#() ].
-	firstEmptyIndex := rawTypes indexOf: nil ifAbsent: [^ rawTypes copy ].
-	firstEmptyIndex = 1 ifTrue: [ ^#() ].
-	
-	^rawTypes copyFrom: 1 to: firstEmptyIndex-1 	! !
+	^rawTypes types! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 12/6/2018 17:22:29'!
 typesDo: aBlock
@@ -5355,15 +5739,10 @@ typesNames
 	
 	^(self types collect: [ :aType | aType typeName ]) sorted! !
 
-!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 10/20/2018 20:44:21'!
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 7/16/2019 17:51:58'!
 typesSize
 	
-	| firstIndexOfNil |
-	
-	rawTypes ifNil: [ ^0 ].
-	firstIndexOfNil := rawTypes indexOf: nil ifAbsent: [ ^rawTypes size ].
-	
-	^firstIndexOfNil - 1! !
+	^rawTypes typesSize ! !
 
 !VariableTypeInfo methodsFor: 'common selectors' stamp: 'HAW 10/10/2018 21:19:30'!
 commonSelectors
@@ -5529,21 +5908,20 @@ initializeRawTypes: aRawTypes
 
 	rawTypes := aRawTypes ! !
 
-!VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 10/20/2018 20:36:57'!
+!VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 7/16/2019 17:56:22'!
 doesStoreTypes
 
-	^rawTypes notNil ! !
+	^rawTypes doesStoreTypes ! !
 
-!VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 4/1/2019 14:52:22'!
+!VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 7/16/2019 17:54:11'!
 includesNil
 	
-	^ rawTypes includes: UndefinedObject ! !
+	^ rawTypes includesNil ! !
 
-!VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 10/5/2018 16:54:33'!
+!VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 7/16/2019 17:55:39'!
 isMegamorphic
 	
-	^rawTypes notNil and: [ rawTypes last notNil ]
-		! !
+	^rawTypes isMegamorphic ! !
 
 !VariableTypeInfo methodsFor: 'exceptions' stamp: 'HAW 10/10/2018 20:40:52'!
 signal: aClass isNotInSuperclassesOf: anotherClass
@@ -5591,23 +5969,13 @@ typeNotFoundErrorDescription
 	
 	^'Type not found'! !
 
-!VariableTypeInfo class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:49:35'!
-removeType: aType from: rawTypes ifAbsent: anAbsentBlock
-
-	| typeIndex |
-	
-	rawTypes ifNil: [ ^anAbsentBlock value ].
-	typeIndex := rawTypes indexOf: aType ifAbsent: [ ^anAbsentBlock value ].
-	
-	rawTypes replaceFrom: typeIndex to: rawTypes size - 1 with: rawTypes startingAt: typeIndex + 1.
-	rawTypes at: rawTypes size put: nil! !
-
-!VariableTypeInfo class methodsFor: 'types' stamp: 'HAW 2/22/2019 23:49:35'!
+!VariableTypeInfo class methodsFor: 'types' stamp: 'HAW 7/16/2019 17:44:28'!
 unload: aClassToUnload from: rawTypes 
 
-	self
-		removeType: aClassToUnload from: rawTypes ifAbsent: [];
-		removeType: aClassToUnload class from: rawTypes ifAbsent: []! !
+	rawTypes
+		removeType: aClassToUnload ifAbsent: [];
+		removeType: aClassToUnload class ifAbsent: []
+		! !
 
 !InstanceVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 10/23/2018 11:22:19'!
 identifier
@@ -6779,6 +7147,54 @@ createMethodReturnTypeInfoOf: aMethod
 
 	^super createMethodReturnTypeInfoOf: aMethod ! !
 
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:26:03'!
+addType: aType ifFull: aFullBlock
+
+	^aFullBlock value.! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:35:11'!
+annotateTypeOf: aValue at: anIndex ! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:56:15'!
+doesStoreTypes
+
+	^false! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:54:03'!
+includesNil
+	
+	^false! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:55:29'!
+isMegamorphic
+	
+	^false! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:34:05'!
+isTypesEmpty
+	
+	^true! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:34:52'!
+removeAllTypes
+	
+	! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:36:45'!
+removeType: aType ifAbsent: anAbsentBlock
+
+	^anAbsentBlock value ! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:51:07'!
+types
+	
+	^#()! !
+
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:51:45'!
+typesSize
+	
+	^0 ! !
+
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 2/19/2019 14:42:30'!
 highestClassImplementing: aSelector ifNone: aNoneBlock
 
@@ -7226,6 +7642,21 @@ allRawTypesUnload: aClassToUnload
 		variablesRawTypesUnload: aClassToUnload;
 		returnRawTypesUnload: aClassToUnload ! !
 
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:35:11'!
+annotateRemoteTemporaryTypeOf: aValue at: anIndex 
+
+	remoteVectorRawTypes annotateTypeOf: aValue at: anIndex ! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:30:52'!
+annotateReturnTypeOf: aValue
+
+	returnRawTypes addType: aValue class ifFull: []! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:35:11'!
+annotateTemporaryTypeOf: aValue at: aTemporaryIndex 
+
+	variablesRawTypes annotateTypeOf: aValue at: aTemporaryIndex ! !
+
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 19:39:17'!
 copyTypeInformationFrom: anotherAdditionalMethodState
 
@@ -7472,6 +7903,51 @@ variablesRawTypesUnload: aClassToUnload
 		unload: aClassToUnload fromAllRawTypesOf: remoteVectorRawTypes 
 		! !
 
+!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:45'!
+popIntoTemporaryVariable: offset 
+
+	| index value |
+	
+	index := offset + 1.
+	value := self pop.
+		
+	self contextForLocalVariables at: index put: value.
+	method annotateTemporaryTypeOf: value at: index 
+	! !
+
+!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:30:52'!
+return: value from: aSender 
+	
+	| newTop ctxt  |
+
+	aSender isDead ifTrue: [
+		"I do not have to keep the type because it does not return - Hernan"
+		^ self send: #cannotReturn: to: self with: {value} super: false].
+	newTop _ aSender sender.
+	ctxt _ self findNextUnwindContextUpTo: newTop.
+	ctxt ifNotNil: [
+		"If #aboutToReturn:through: fails, I do not keep the type - Hernan"
+		newTop _ self send: #aboutToReturn:through: to: self with: {value. ctxt} super: false.
+		method annotateReturnTypeOf: value.
+		^ newTop ].
+	self releaseTo: newTop.
+	newTop ifNotNil: [newTop push: value].
+	method annotateReturnTypeOf: value.
+	
+	^ newTop
+! !
+
+!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:22'!
+storeIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex
+	
+	| index value |
+	
+	index := remoteTempIndex + 1.
+	value := self top.
+	
+	self object: (self at: tempVectorIndex + 1) basicAt: index put: value.
+	method annotateRemoteTemporaryTypeOf: value at: index ! !
+
 !Collection methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 11:47:11'!
 inject: aCollector addingAll: aBlock
 	
@@ -7498,6 +7974,78 @@ createMethodReturnTypeInfoOf: aCompiledMethod
 	
 	^super createMethodReturnTypeInfoOf: aCompiledMethod ! !
 
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:25:39'!
+addType: aType ifFull: aFullBlock
+
+	self withIndexDo: [ :typeAtIndex :rawTypesIndex |
+		typeAtIndex = aType ifTrue: [ ^self ].
+		typeAtIndex ifNil: [ ^self at: rawTypesIndex put: aType ]].
+	
+	^aFullBlock value.! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:35:11'!
+annotateTypeOf: aValue at: anIndex
+
+	| rawTypes |
+	
+	rawTypes := self at: anIndex ifAbsent: [^self].
+	rawTypes addType: aValue class ifFull: []! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:56:09'!
+doesStoreTypes
+
+	^true! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:53:52'!
+includesNil
+	
+	^ self includes: UndefinedObject ! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:55:21'!
+isMegamorphic
+	
+	^self last notNil 
+		! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:33:30'!
+isTypesEmpty
+	
+	^self isEmpty or: [self first isNil ]! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:34:30'!
+removeAllTypes
+	
+	self atAllPut: nil! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:36:29'!
+removeType: aType ifAbsent: anAbsentBlock
+
+	| typeIndex |
+	
+	typeIndex := self indexOf: aType ifAbsent: [ ^anAbsentBlock value ].
+	
+	self replaceFrom: typeIndex to: self size - 1 with: self startingAt: typeIndex + 1.
+	self at: self size put: nil! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:50:57'!
+types
+	
+	| firstEmptyIndex |
+	
+	firstEmptyIndex := self indexOf: nil ifAbsent: [^ self copy ].
+	firstEmptyIndex = 1 ifTrue: [ ^#() ].
+	
+	^self copyFrom: 1 to: firstEmptyIndex-1 	! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:51:36'!
+typesSize
+	
+	| firstIndexOfNil |
+	
+	firstIndexOfNil := self indexOf: nil ifAbsent: [ ^self size ].
+	
+	^firstIndexOfNil - 1! !
+
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:15:54'!
 actualSendersOf: aCompiledMethod 
 	
@@ -7513,6 +8061,37 @@ allRawTypesUnload: aClassToUnload
 	
 	self withPropertiesDo: [ :properties | properties allRawTypesUnload: aClassToUnload ]
 	! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:22'!
+annotateRemoteTemporaryTypeOf: aValue at: anIndex 
+
+	"See keepTemporaryTypeInfoAt:of: - Hernan"
+
+	self 
+		withPropertiesDo: [ :properties | properties annotateRemoteTemporaryTypeOf: aValue at: anIndex ]
+		ifSelector: [ :selector | ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:30:52'!
+annotateReturnTypeOf: aValue
+
+	"See keepTemporaryTypeInfoAt:of: - Hernan"
+
+	self 
+		withPropertiesDo: [ :properties | properties annotateReturnTypeOf: aValue ]
+		ifSelector: [ :selector | ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:45'!
+annotateTemporaryTypeOf: aValue at: aTemporaryIndex 
+
+	"Used on code simulation. 
+	It bypasses MethodVariables and MethodVariableTypes for performance reason.
+	If the method is not keeping type info or the index is invalid or the types array is full, it does nothing
+	because we do not want to get error while debugging - Hernan"
+	
+	self 
+		withPropertiesDo: [ :properties | properties annotateTemporaryTypeOf: aValue at: aTemporaryIndex ]
+		ifSelector: [ :selector | ]
+		! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 10:19:52'!
 asMethodReference
@@ -8140,7 +8719,7 @@ actualImplementorsOfIt: aKeyboardEvent
 	self actualImplementorsOfIt.
 	^true! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 10:22:27'!
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:44:22'!
 actualLocalImplementorsOfIt
 
 	self 
