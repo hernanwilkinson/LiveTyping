@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3838] on 11 August 2019 at 8:23:22 pm'!
-'Description Type Checker - Remove method with actual senders'!
-!provides: 'LiveTyping' 1 36!
+'From Cuis 5.0 [latest update: #3839] on 11 August 2019 at 11:45:34 pm'!
+'Description method categorization and refactorings'!
+!provides: 'LiveTyping' 1 37!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -8,6 +8,7 @@ SystemOrganization addCategory: #'LiveTyping-Tests'!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
 SystemOrganization addCategory: #'LiveTyping-Refactoring'!
 SystemOrganization addCategory: #'LiveTyping-TypeChecking'!
+SystemOrganization addCategory: #'LiveTyping-TypeChecking-Tests'!
 
 
 !classDefinition: #ActualSendersMessageSet category: #LiveTyping!
@@ -20,14 +21,14 @@ MessageSet subclass: #ActualSendersMessageSet
 ActualSendersMessageSet class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingResult category: #'LiveTyping-TypeChecking'!
-MessageSet subclass: #TypeCheckingResult
+!classDefinition: #TypeCheckingResultSet category: #'LiveTyping-TypeChecking'!
+MessageSet subclass: #TypeCheckingResultSet
 	instanceVariableNames: 'methodTypeChecker showProblems'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResult class' category: #'LiveTyping-TypeChecking'!
-TypeCheckingResult class
+!classDefinition: 'TypeCheckingResultSet class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingResultSet class
 	instanceVariableNames: ''!
 
 !classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: #'LiveTyping-Refactoring'!
@@ -290,23 +291,23 @@ TestCase subclass: #CustomerTest
 CustomerTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #ManyMethodsTypeCheckerTest category: #'LiveTyping-TypeChecking'!
+!classDefinition: #ManyMethodsTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests'!
 TestCase subclass: #ManyMethodsTypeCheckerTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'ManyMethodsTypeCheckerTest class' category: #'LiveTyping-TypeChecking'!
+	category: 'LiveTyping-TypeChecking-Tests'!
+!classDefinition: 'ManyMethodsTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests'!
 ManyMethodsTypeCheckerTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodTypeCheckerTest category: #'LiveTyping-TypeChecking'!
+!classDefinition: #MethodTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests'!
 TestCase subclass: #MethodTypeCheckerTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodTypeCheckerTest class' category: #'LiveTyping-TypeChecking'!
+	category: 'LiveTyping-TypeChecking-Tests'!
+!classDefinition: 'MethodTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests'!
 MethodTypeCheckerTest class
 	instanceVariableNames: ''!
 
@@ -770,76 +771,6 @@ TypeChecker subclass: #MethodTypeChecker
 MethodTypeChecker class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckerTestMethods category: #'LiveTyping-TypeChecking'!
-Object subclass: #TypeCheckerTestMethods
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckerTestMethods class' category: #'LiveTyping-TypeChecking'!
-TypeCheckerTestMethods class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeCheckingProblem category: #'LiveTyping-TypeChecking'!
-Object subclass: #TypeCheckingProblem
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingProblem class' category: #'LiveTyping-TypeChecking'!
-TypeCheckingProblem class
-	instanceVariableNames: ''!
-
-!classDefinition: #MethodNotAnnotatingTypesProblem category: #'LiveTyping-TypeChecking'!
-TypeCheckingProblem subclass: #MethodNotAnnotatingTypesProblem
-	instanceVariableNames: 'method'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodNotAnnotatingTypesProblem class' category: #'LiveTyping-TypeChecking'!
-MethodNotAnnotatingTypesProblem class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeError category: #'LiveTyping-TypeChecking'!
-TypeCheckingProblem subclass: #TypeError
-	instanceVariableNames: 'method messageNode notImplemented methodNode'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeError class' category: #'LiveTyping-TypeChecking'!
-TypeError class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeIssue category: #'LiveTyping-TypeChecking'!
-TypeCheckingProblem subclass: #TypeIssue
-	instanceVariableNames: 'method messageNode reason methodNode'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeIssue class' category: #'LiveTyping-TypeChecking'!
-TypeIssue class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeCheckProblem category: #'LiveTyping-TypeChecking'!
-TypeIssue subclass: #TypeCheckProblem
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckProblem class' category: #'LiveTyping-TypeChecking'!
-TypeCheckProblem class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeWarning category: #'LiveTyping-TypeChecking'!
-TypeIssue subclass: #TypeWarning
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeWarning class' category: #'LiveTyping-TypeChecking'!
-TypeWarning class
-	instanceVariableNames: ''!
-
 !classDefinition: #TypeCheckingProblemToMethodReferenceAdapter category: #'LiveTyping-TypeChecking'!
 Object subclass: #TypeCheckingProblemToMethodReferenceAdapter
 	instanceVariableNames: 'typeCheckingProblem prefix'
@@ -848,6 +779,76 @@ Object subclass: #TypeCheckingProblemToMethodReferenceAdapter
 	category: 'LiveTyping-TypeChecking'!
 !classDefinition: 'TypeCheckingProblemToMethodReferenceAdapter class' category: #'LiveTyping-TypeChecking'!
 TypeCheckingProblemToMethodReferenceAdapter class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckingResult category: #'LiveTyping-TypeChecking'!
+Object subclass: #TypeCheckingResult
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingResult class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingResult class
+	instanceVariableNames: ''!
+
+!classDefinition: #MethodNotAnnotatingTypesProblem category: #'LiveTyping-TypeChecking'!
+TypeCheckingResult subclass: #MethodNotAnnotatingTypesProblem
+	instanceVariableNames: 'method'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'MethodNotAnnotatingTypesProblem class' category: #'LiveTyping-TypeChecking'!
+MethodNotAnnotatingTypesProblem class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckingError category: #'LiveTyping-TypeChecking'!
+TypeCheckingResult subclass: #TypeCheckingError
+	instanceVariableNames: 'method messageNode notImplemented methodNode'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingError class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingError class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckingIssue category: #'LiveTyping-TypeChecking'!
+TypeCheckingResult subclass: #TypeCheckingIssue
+	instanceVariableNames: 'method messageNode reason methodNode'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingIssue class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingIssue class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckingProblem category: #'LiveTyping-TypeChecking'!
+TypeCheckingIssue subclass: #TypeCheckingProblem
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingProblem class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingProblem class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckingWarning category: #'LiveTyping-TypeChecking'!
+TypeCheckingIssue subclass: #TypeCheckingWarning
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingWarning class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingWarning class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckerTestMethods category: #'LiveTyping-TypeChecking-Tests'!
+Object subclass: #TypeCheckerTestMethods
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking-Tests'!
+!classDefinition: 'TypeCheckerTestMethods class' category: #'LiveTyping-TypeChecking-Tests'!
+TypeCheckerTestMethods class
 	instanceVariableNames: ''!
 
 
@@ -971,7 +972,7 @@ instanceVariableRawTypesSizeFor: anInstVarName
 
 	^ 3! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:13:02'!
+!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:13:02'!
 typeCheck
 	
 	method isPrimitive ifTrue: [ ^self ].
@@ -1001,14 +1002,14 @@ messageList: messageList types: aReceiverTypes
 	newInstance := self messageList: messageList.
 	^newInstance initializeTypes: aReceiverTypes ! !
 
-!TypeCheckingResult methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:36:26'!
+!TypeCheckingResultSet methodsFor: 'list' stamp: 'HAW 8/9/2019 10:36:26'!
 calculateList
 
 	messageList := methodTypeChecker errorsAndWarningsAsMethodReferencesWithProblems: showProblems.
 	self reformulateList.
 	! !
 
-!TypeCheckingResult methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 19:27:36'!
+!TypeCheckingResultSet methodsFor: 'accessing' stamp: 'HAW 7/18/2019 19:27:36'!
 contents: aString notifying: aRequestor 
 
 	| result |
@@ -1020,7 +1021,15 @@ contents: aString notifying: aRequestor
 	^result 
 ! !
 
-!TypeCheckingResult methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:35:15'!
+!TypeCheckingResultSet methodsFor: 'source code ranges' stamp: 'HAW 7/18/2019 00:13:44'!
+messageSendsRangesOf: aSelector
+
+	^ selectedMessage 
+		ifNil: [ #() ]
+		ifNotNil: [ selectedMessage sourceCodeRange ]
+! !
+
+!TypeCheckingResultSet methodsFor: 'initialization' stamp: 'HAW 8/9/2019 10:35:15'!
 initializeFor: aMethodTypeChecker showingProblems: showingProblems 
 	
 	methodTypeChecker := aMethodTypeChecker.
@@ -1030,15 +1039,7 @@ initializeFor: aMethodTypeChecker showingProblems: showingProblems
 	"It does not matter the methodSelector, it is just a symbol that flags that ranges should be look for selecting - Hernan"
 	self autoSelectString: methodTypeChecker methodSelector ! !
 
-!TypeCheckingResult methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:13:44'!
-messageSendsRangesOf: aSelector
-
-	^ selectedMessage 
-		ifNil: [ #() ]
-		ifNotNil: [ selectedMessage sourceCodeRange ]
-! !
-
-!TypeCheckingResult class methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:29:20'!
+!TypeCheckingResultSet class methodsFor: 'instance creation' stamp: 'HAW 8/9/2019 10:29:20'!
 for: aMethodTypeChecker showingProblems: showingProblems 
 	
 	^self new initializeFor: aMethodTypeChecker showingProblems: showingProblems 
@@ -1545,6 +1546,22 @@ castingStrategyForIfNil: aMessageNode
 		allowingNilOn: aMessageNode arguments first 
 		forbidingNilOn: nil! !
 
+!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/10/2019 13:38:38'!
+castingStrategyForIfNotNil: aMessageNode 
+	
+	| receiver |
+
+	receiver := aMessageNode receiverOrCascadeReceiver.
+	receiver isAssignmentNode ifTrue: [ receiver := receiver variable ].
+	
+	^castingStrategy 
+		forCheckingNilOn: receiver
+		in: self 
+		for: aMessageNode 
+		allowingNilOn: nil 
+		forbidingNilOn: aMessageNode arguments first 
+		! !
+
 !MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 17:23:59'!
 castingStrategyForIsKindOf: aMessageNode 
 	
@@ -1698,7 +1715,7 @@ prepareToValue
 	actualMethod := method compiledMethod.
 	castingStrategy := NoTypeCast new.! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/9/2019 19:00:13'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/11/2019 23:27:33'!
 checkMessageSentIn: aMessageNode isImplementedInAll: receiverTypes 
 	
 	| implementorsFinder |
@@ -1707,7 +1724,7 @@ checkMessageSentIn: aMessageNode isImplementedInAll: receiverTypes
 	implementorsFinder value.
 	
 	implementorsFinder notImplementedIsEmpty ifFalse: [ 
-		errors add: (TypeError on: method node: aMessageNode of: methodNode notImplemented: implementorsFinder notImplemented)].
+		errors add: (TypeCheckingError on: method node: aMessageNode of: methodNode notImplemented: implementorsFinder notImplemented)].
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/9/2019 18:59:24'!
@@ -1758,7 +1775,7 @@ visitMessageNodeInCascade: aMessageNode
 		
 	! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/9/2019 18:58:45'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/11/2019 23:29:38'!
 withReceiverTypesOf: aMessageNode do: aTypesBlock
 
 	| incompleteTypeInfoReasons receiverTypes |
@@ -1768,45 +1785,29 @@ withReceiverTypesOf: aMessageNode do: aTypesBlock
 	incompleteTypeInfoReasons do: [ :anIncompleteTypeInfoReason | anIncompleteTypeInfoReason addTo: self node: aMessageNode ].
 	
 	(receiverTypes isEmpty and: [ incompleteTypeInfoReasons isEmpty ])
-		ifTrue: [ problems add: (TypeCheckProblem forReceiverWithNoTypesOn: method node: aMessageNode of: methodNode)]
+		ifTrue: [ problems add: (TypeCheckingProblem forReceiverWithNoTypesOn: method node: aMessageNode of: methodNode)]
 		ifFalse: [ aTypesBlock value: receiverTypes ]
 		! !
 
-!MethodTypeCheckerVisitor methodsFor: 'problems' stamp: 'HAW 8/9/2019 09:04:39'!
+!MethodTypeCheckerVisitor methodsFor: 'problems' stamp: 'HAW 8/11/2019 23:29:38'!
 addProblem: anIncompleteTypeInfoWarning node: aMessageNode 
 	
-	problems add: (TypeCheckProblem  
+	problems add: (TypeCheckingProblem  
 			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoWarning reasonDescription on: method node: aMessageNode of: methodNode)! !
 
-!MethodTypeCheckerVisitor methodsFor: 'warnings' stamp: 'HAW 8/9/2019 19:16:48'!
+!MethodTypeCheckerVisitor methodsFor: 'warnings' stamp: 'HAW 8/11/2019 23:29:46'!
 addWarning: anIncompleteTypeInfoError node: aMessageNode 
 	
-	warnings add: (TypeWarning 
+	warnings add: (TypeCheckingWarning 
 			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoError reasonDescription on: method node: aMessageNode of: methodNode)! !
 
-!MethodTypeCheckerVisitor methodsFor: 'as yet unclassified' stamp: 'HAW 8/10/2019 13:38:38'!
-castingStrategyForIfNotNil: aMessageNode 
-	
-	| receiver |
-
-	receiver := aMessageNode receiverOrCascadeReceiver.
-	receiver isAssignmentNode ifTrue: [ receiver := receiver variable ].
-	
-	^castingStrategy 
-		forCheckingNilOn: receiver
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: nil 
-		forbidingNilOn: aMessageNode arguments first 
-		! !
-
-!MethodTypeCheckerVisitor class methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:07:02'!
+!MethodTypeCheckerVisitor class methodsFor: 'instace creation' stamp: 'HAW 8/9/2019 09:07:02'!
 for: aMethod collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
 
 	^self new initializeFor: aMethod collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
 	! !
 
-!TypeCheckingResultWindow methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:41:43'!
+!TypeCheckingResultWindow methodsFor: 'menu building' stamp: 'HAW 7/18/2019 00:41:43'!
 messageListMenu
 
 	| aMenu |
@@ -1825,12 +1826,12 @@ messageListMenu
 		
 	^ aMenu! !
 
-!TypeCheckingResultWindow class methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:29:04'!
+!TypeCheckingResultWindow class methodsFor: 'instance creation' stamp: 'HAW 8/11/2019 23:28:38'!
 openFor: aTypeChecker labelTrail: aLabelTrail showingProblems: showingProblems 
 
 	| window model |
 	
-	model := TypeCheckingResult for: aTypeChecker showingProblems: showingProblems.
+	model := TypeCheckingResultSet for: aTypeChecker showingProblems: showingProblems.
 	window := super open: model label: 'Type checking result for ', aLabelTrail.
 	model messageListIndex: 1.
 	
@@ -4519,8 +4520,8 @@ test03
 	(TestCase allSubclasses select: [:aTestCase | aTestCase category =  'Regex-Tests-Core']) 
 		do: [:aTestCase | aTestCase suite run ].! !
 
-!ManyMethodsTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:43:59'!
-test01
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 21:56:12'!
+test01ManyMethodsCanBeTypeChecked
 
 	| methodWithManyTypeErrorsTypeChecker methodWithTypeErrorTypeChecker typeChecker |
 	
@@ -4535,8 +4536,8 @@ test01
 	self assert: typeChecker warningsSize equals: methodWithTypeErrorTypeChecker warningsSize + methodWithManyTypeErrorsTypeChecker warningsSize.
 ! !
 
-!ManyMethodsTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:47:31'!
-test02
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 21:56:30'!
+test02ClassesCanBeTypeChecked
 
 	| typeChecker typeCheckers |
 	
@@ -4551,8 +4552,8 @@ test02
 	self assert: typeChecker warningsSize equals: (typeCheckers sum: [ :aTypeCheker | aTypeCheker warningsSize ]).
 ! !
 
-!ManyMethodsTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:30:09'!
-test03
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 21:57:20'!
+test03MethodsWithoutTypeAnnotationsLogsAProblem
 
 	| typeChecker methodToCheck  |
 	
@@ -4567,15 +4568,436 @@ test03
 	self assert: typeChecker warningsIsEmpty.
 ! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:43:43'!
-assertHasNoTypeErrorsAndWarnings: aSelector
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 22:41:57'!
+test04ProblemsDetectIfNone
 
-	self 
-		typeCheck: aSelector 
-		andAssert: [ :typeChecker | self assert: typeChecker hasNoErrorsAndWarnings ]
+	| typeCheckProblem typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithNoReturnTypes }.
+	typeChecker := typeChecker value.
+	
+	self assert: 1 equals: typeChecker problemsSize.
+	
+	typeCheckProblem := typeChecker problemsDetect: [ :aTypeCheckProblem | true ] ifNone: [ self fail ].
+	self assert: typeCheckProblem receiver isMessageNode.	
+	self assert: #printString equals: typeCheckProblem selector key.
 ! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:33:17'!
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 22:45:37'!
+test05ProblemsDetectIfNoneValuesIfNoneWhenNoProblemFound
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithoutTypeErrors }.
+	typeChecker value.
+	
+	typeChecker problemsDetect: [ :aTypeCheckProblem | true ] ifNone: [ ^self ].
+	
+	self fail! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 22:47:48'!
+test06WarningsCollectsAllTypeCheckersWarnings
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithWarningForError }.
+	typeChecker value.
+	
+	self assert: typeChecker warnings notEmpty! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 22:56:07'!
+test07ErrorsDetectIfNone
+
+	| typeChecker error |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithManyTypeErrors }.
+	typeChecker value.
+	
+	error := typeChecker errorsDetect: [ :anError | true ] ifNone: [ self fail ].
+	self assert: #date equals: error selector key ! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 22:56:47'!
+test08ErrorsDetectIfNoneValuesIfNoneWhenNoProblemFound
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithoutTypeErrors }.
+	typeChecker value.
+	
+	typeChecker errorsDetect: [ :aTypeCheckProblem | true ] ifNone: [ ^self ].
+	
+	self fail
+
+	! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 23:01:04'!
+test09ProblemsCollectsTypeCheckersProblems
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithNoReturnTypes }.
+	typeChecker := typeChecker value.
+	
+	self assert: typeChecker problems notEmpty
+! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 23:05:32'!
+test10WarningsDetectIfNone
+
+	| typeChecker typeWarning |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithWarningForError. }.
+	typeChecker value.
+	
+	typeWarning := typeChecker warningsDetect: [ :aTypeWarning | true ] ifNone: [ self fail ].
+	self assert: typeWarning receiver isMessageNode.	
+	self assert: #first equals: typeWarning selector key.
+! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 23:06:37'!
+test11WarningsDetectIfNoneValuesIfNoneWhenNoProblemFound
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithoutTypeErrors }.
+	typeChecker value.
+	
+	typeChecker warningsDetect: [ :aTypeCheckProblem | true ] ifNone: [ ^self ].
+	
+	self fail
+
+	! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 23:08:37'!
+test12HasErrorsReturnsTrueIfATypeCheckerHasErrors
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithTypeError }.
+	typeChecker value.
+	
+	self assert: typeChecker hasErrors ! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 23:09:53'!
+test13HasErrorsReturnsFalseWhenNoErrorFound
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithoutTypeErrors }.
+	typeChecker value.
+	
+	self deny: typeChecker hasErrors ! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 23:12:26'!
+test14ErrorsCollectsAllTypeCheckersErrors
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithTypeError }.
+	typeChecker value.
+	
+	self assert: typeChecker errors notEmpty ! !
+
+!ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 23:15:01'!
+test15HasErrorsOrWarnings
+
+	| typeChecker |
+	
+	typeChecker := ManyMethodsTypeChecker forAll: { TypeCheckerTestMethods >> #methodWithTypeError }.
+	typeChecker value.
+	
+	self assert: typeChecker hasErrorsOrWarnings ! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:42:49'!
+test11IfNotNilFiltersUndefinedObjectType
+
+	self assertHasNoTypeErrorsAndWarnings: #ifNotNilCheck.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:41:15'!
+test12IfNotNilDoesNotFiltersUndefinedObjectTypeForNotCheckedObject
+
+	self 
+		typeCheck: #ifNotNilCheckAccesingOtherObject 
+		andAssert: [ :typeChecker | 
+			self assert: 1 equals: typeChecker errorsSize.
+			self assert: typeChecker warningsIsEmpty ]	
+	
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:44:05'!
+test13ComparingForNilWithIfTrueIfFalse
+
+	self assertHasNoTypeErrorsAndWarnings: #comparingForNilWithIfTrueIfFalse.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:44:15'!
+test14ComparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes
+
+	self assertHasNoTypeErrorsAndWarnings: #comparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:45:28'!
+test15ComparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
+
+	| error |
+	
+	self 
+		typeCheck: #comparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
+		andAssert: [:typeChecker |
+			self assert: 1 equals: typeChecker errorsSize.
+
+			error := typeChecker errors first.
+			self assert: 1 equals: error notImplementedSize.
+			self assert: 'temp1' equals: error receiver key.
+			self assert: (error selector isNamed: #*) ]! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:45:40'!
+test16NestedIfNotNilFiltersUndefinedObjectType
+
+	self assertHasNoTypeErrorsAndWarnings: #nestedIfNotNilCheck.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:46:16'!
+test17NestedIfNotNilDoesNotFilterUndefinedObjectWhenOutsideRightIfNotNil
+
+	| error |
+	
+	self 
+		typeCheck: #nestedIfNotNilCheckErrorsWhenOutsideOfRightIfNotNil
+		andAssert: [ :typeChecker |
+			self assert: 1 equals: typeChecker errorsSize.
+
+			error := typeChecker errors first.
+			self assert: 1 equals: error notImplementedSize.
+			self assert: 'temp2' equals: error receiver key.
+			self assert: (error selector isNamed: #*) ]! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:46:26'!
+test18IfNilAssumesUndefinedObjectAsType
+
+	self assertHasNoTypeErrorsAndWarnings: #ifNilCheck.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:46:38'!
+test19NestedIfNilAssumesUndefinedObjectAsType
+
+	self assertHasNoTypeErrorsAndWarnings: #nestedIfNilCheck.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:47:11'!
+test20NestedIfNilDoesUseUndefinedObjectWhenOutsideRightIfNil
+
+	| error |
+	
+	self
+		typeCheck: #nestedIfNilCheckErrorsWhenOutsideOfRightIfNil
+		andAssert: [:typeChecker | 
+			self assert: 1 equals: typeChecker errorsSize.
+
+			error := typeChecker errors first.
+			self assert: 1 equals: error notImplementedSize.
+			self assert: 'temp2' equals: error receiver key.
+			self assert: (error selector isNamed: #subclasses) ]! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:47:29'!
+test21IfNilIfNotNilWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #ifNilIfNotNil.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:48:59'!
+test22IfNotNilIfNilWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #ifNotNilIfNil.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:50:43'!
+test23EqualsNilIfTrueIfFalseWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfTrueIfFalse.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:53:26'!
+test24EqualsNilIfTrueWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfTrue
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:55:10'!
+test25IdenticalToNilIfTrueWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfTrue
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 15:56:48'!
+test26EqualsNilIfFalseWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfFalse.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:02:24'!
+test27IdenticalToNilIfFalseWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfFalse.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:04:48'!
+test28EqualsToNilIfFalseIfTrueWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfFalseIfTrue.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:05:26'!
+test29IdenticalToNilIfFalseIfTrueWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfFalseIfTrue.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:13:08'!
+test30nilEqualsToIfTrueIfFalseOrIfFalseIfTrueWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #nilEqualsToIfTrueIfFalseOrIfFalseIfTrue.
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:14:08'!
+test31nilEqualsToIfTrueOrIfFalseWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #nilEqualsToIfTrueOrIfFalse! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:17:53'!
+test32nilIdenticalToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #nilIdenticalTo! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:26:51'!
+test33NotEqualToNilWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #notEqualToNil! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:28:25'!
+test34NotIdenticalToNilWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #notIdenticalToNil! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:32:22'!
+test35isNilWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #isNilCondition! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 17:03:19'!
+test36notNilWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #notNilCondition! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 18:52:24'!
+test37TypeCastWithEqualOrIdenticalToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCastWithEqualOrIdenticalTo! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 18:52:31'!
+test38TypeCastWithNotEqualOrNotIdenticalToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCastWithNotEqualOrNotIdenticalTo! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 18:52:37'!
+test39TypeCastToUsingEqualOrIdenticalToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCastToWithEqualOrIdenticalTo! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 18:54:39'!
+test40TypeCastToUsingNotEqualOrNotIdenticalToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCastToWithNotEqualOrNotIdenticalTo! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/3/2019 10:06:46'!
+test41TypeCastUsingIsKindOfToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCastUsingIsKindOf! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/3/2019 10:27:45'!
+test42TypeCheckMessageWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessage! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/3/2019 10:53:54'!
+test43TypeCheckMessageSentToSelfWorksAsExpected
+
+	| typeChecker |
+	
+	typeChecker := (Morph>>#buildDebugMenu:) typeCheck.
+	
+	self assert: typeChecker hasNoErrorsAndWarnings 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/3/2019 15:49:19'!
+test44TypeCheckMessageWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageNestedInsideIfNotNil! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/9/2019 11:47:55'!
+test45
+
+	(TypeCheckerTestMethods>>#returnParameter:) initializeTypeInformation.
+	TypeCheckerTestMethods new 
+		returnParameter: 1;
+		returnParameter: nil.
+	
+	self shouldFail: [self assertHasNoTypeErrorsAndWarnings: #ifNotNilWithMessageSend]! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/6/2019 14:50:18'!
+test46TypeCastRejectsCanBeNested
+
+	self assertHasNoTypeErrorsAndWarnings: #nestedRejects! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/6/2019 14:50:40'!
+test47IsKindOfCastingAllowsSubtypes
+
+	self assertHasNoTypeErrorsAndWarnings: #isKindOfKeepsSubtypes! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/9/2019 11:19:55'!
+test48IfNotNilWithBlockArgumentFiltersUndefinedObject
+
+	self assertHasNoTypeErrorsAndWarnings: #ifNotNilCheckWithArgument! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/9/2019 15:06:39'!
+test49TypeCastWithBlockInRejectBlockKeepsCastingStrategy
+
+	self assertHasNoTypeErrorsAndWarnings: #castWithBlockInRejectBlock! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/9/2019 15:53:19'!
+test50TypeCastWithoutBlockShouldFail
+
+	self 
+		typeCheck: #ifNotNilWithoutBlock 
+		andAssert: [ :typeChecker | self assert: 1 equals: typeChecker errorsSize ]
+ ! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/9/2019 20:12:22'!
+test51NotNilAndFiltersUndefinedObject
+
+	self assertHasNoTypeErrorsAndWarnings: #notNilAnd 
+		! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/10/2019 13:23:58'!
+test52CascasdeMessageSendAreTypeChecked
+
+	| methodToCheck typeChecker |
+	
+	methodToCheck := TypeCheckerTestMethods >> #cascadeMessageSend.
+	
+	typeChecker := methodToCheck typeCheck.
+
+	self assert: 1 equals: typeChecker errorsSize. 
+	self assert: #odd equals: typeChecker errors anyOne notImplemented first selector! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/10/2019 13:28:24'!
+test53TypeCastWorksOnCascadeMessageSends
+
+	self assertHasNoTypeErrorsAndWarnings: #cascadeMessageSendWithTypeCast 
+		! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/9/2019 09:33:17'!
 test01MethodNotAnnotatingTypesGeneratesWarning
 
 	| methodToCkeck typeChecker |
@@ -4588,7 +5010,7 @@ test01MethodNotAnnotatingTypesGeneratesWarning
 	self assert: 1 equals: typeChecker problemsSize.
 	self assert: (typeChecker problems anyOne isKindOf: MethodNotAnnotatingTypesProblem)! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/6/2019 11:42:24'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/6/2019 11:42:24'!
 test02EmptyMethodDoesNotGenerateWarningsOrErrors
 
 	| methodToCkeck typeChecker |
@@ -4600,7 +5022,7 @@ test02EmptyMethodDoesNotGenerateWarningsOrErrors
 	self assert: typeChecker errorsIsEmpty.
 	self assert: typeChecker warningsIsEmpty! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/6/2019 11:43:00'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/6/2019 11:43:00'!
 test03MessageSendNotUnderstoodByReceiverGeneratesError
 
 	| methodToCheck typeChecker typeError notImplemented |
@@ -4623,7 +5045,7 @@ test03MessageSendNotUnderstoodByReceiverGeneratesError
 	self assert: SmallInteger equals: notImplemented first actualClass.
 	self assert: #date equals: notImplemented first selector.! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/6/2019 11:43:23'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/6/2019 11:43:23'!
 test04MessageUnderstooodByReceiverDoesNotGenerateErrors
 
 	| methodToCkeck typeChecker |
@@ -4635,7 +5057,7 @@ test04MessageUnderstooodByReceiverDoesNotGenerateErrors
 	self assert: typeChecker errorsIsEmpty.
 	self assert: typeChecker warningsIsEmpty ! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/6/2019 11:46:01'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/6/2019 11:46:01'!
 test05ErrorsWhenNoTypeImplementMessageSent
 
 	| typeError notImplemented typesNotImplementingSelector |
@@ -4660,7 +5082,7 @@ test05ErrorsWhenNoTypeImplementMessageSent
 			self assert: (typesNotImplementingSelector includes: SmallInteger).
 			self assert: (typesNotImplementingSelector includes: String) ]! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/6/2019 11:47:40'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/6/2019 11:47:40'!
 test06DifferentErrorsAreReported
 
 	| methodToCheck typeChecker typeError |
@@ -4685,7 +5107,7 @@ test06DifferentErrorsAreReported
 	self assert: (typeError notImplementedIncludesType: String).
 ! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:16:34'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/11/2019 23:29:46'!
 test07ReceiverWithoutTypesGeneratesWarning
 
 	| typeCheckProblem |
@@ -4699,10 +5121,10 @@ test07ReceiverWithoutTypesGeneratesWarning
 			
 			typeCheckProblem := typeChecker problemsDetect: [ :aTypeCheckWarning | aTypeCheckWarning receiver key = 'temp1' ] ifNone: [ self fail ].	
 			self assert: #date equals: typeCheckProblem selector key.
-			self assert: TypeWarning receiverHasNoTypesDescription equals: typeCheckProblem reason ]
+			self assert: TypeCheckingWarning receiverHasNoTypesDescription equals: typeCheckProblem reason ]
 	! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:16:44'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/11/2019 23:29:46'!
 test08GivesAWarningWhenReceiversTypeHasAnError
 
 	| methodToCheck typeChecker typeWarning |
@@ -4718,12 +5140,12 @@ test08GivesAWarningWhenReceiversTypeHasAnError
 	self assert: typeWarning receiver isMessageNode.	
 	self assert: #first equals: typeWarning selector key.
 	self 
-		assert: (TypeWarning canNotDeduceReceiverTypeDueToDescription: (
+		assert: (TypeCheckingWarning canNotDeduceReceiverTypeDueToDescription: (
 			IncompleteTypeInfoError missingImplementationDescriptionOf: (MethodReference class: SmallInteger selector: #date))) 
 		equals: typeWarning reason
 	! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:19:57'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/11/2019 23:29:38'!
 test09WhenMethodHasNoReturnTypesAProblemIsAdded
 
 	| methodToCheck typeChecker typeCheckProblem |
@@ -4741,12 +5163,12 @@ test09WhenMethodHasNoReturnTypesAProblemIsAdded
 	self assert: typeCheckProblem receiver isMessageNode.	
 	self assert: #printString equals: typeCheckProblem selector key.
 	self 
-		assert: (TypeCheckProblem canNotDeduceReceiverTypeDueToDescription: (
+		assert: (TypeCheckingProblem canNotDeduceReceiverTypeDueToDescription: (
 			(IncompleteTypeInfoWarning noReturnTypesDescriptionOf: methodToCheck asMethodReference)))
 		equals: typeCheckProblem reason
 	! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 7/19/2019 17:39:47'!
+!MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 7/19/2019 17:39:47'!
 test10PrimitiveMethodsAreNotTypedChecked
 
 	| methodToCheck typeChecker |
@@ -4758,296 +5180,15 @@ test10PrimitiveMethodsAreNotTypedChecked
 	self assert: typeChecker hasNoErrorsAndWarnings 
 	! !
 
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:42:49'!
-test11IfNotNilFiltersUndefinedObjectType
-
-	self assertHasNoTypeErrorsAndWarnings: #ifNotNilCheck.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:41:15'!
-test12IfNotNilDoesNotFiltersUndefinedObjectTypeForNotCheckedObject
+!MethodTypeCheckerTest methodsFor: 'assertions' stamp: 'HAW 8/2/2019 15:43:43'!
+assertHasNoTypeErrorsAndWarnings: aSelector
 
 	self 
-		typeCheck: #ifNotNilCheckAccesingOtherObject 
-		andAssert: [ :typeChecker | 
-			self assert: 1 equals: typeChecker errorsSize.
-			self assert: typeChecker warningsIsEmpty ]	
-	
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:44:05'!
-test13ComparingForNilWithIfTrueIfFalse
-
-	self assertHasNoTypeErrorsAndWarnings: #comparingForNilWithIfTrueIfFalse.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:44:15'!
-test14ComparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes
-
-	self assertHasNoTypeErrorsAndWarnings: #comparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:45:28'!
-test15ComparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
-
-	| error |
-	
-	self 
-		typeCheck: #comparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
-		andAssert: [:typeChecker |
-			self assert: 1 equals: typeChecker errorsSize.
-
-			error := typeChecker errors first.
-			self assert: 1 equals: error notImplementedSize.
-			self assert: 'temp1' equals: error receiver key.
-			self assert: (error selector isNamed: #*) ]! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:45:40'!
-test16NestedIfNotNilFiltersUndefinedObjectType
-
-	self assertHasNoTypeErrorsAndWarnings: #nestedIfNotNilCheck.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:46:16'!
-test17NestedIfNotNilDoesNotFilterUndefinedObjectWhenOutsideRightIfNotNil
-
-	| error |
-	
-	self 
-		typeCheck: #nestedIfNotNilCheckErrorsWhenOutsideOfRightIfNotNil
-		andAssert: [ :typeChecker |
-			self assert: 1 equals: typeChecker errorsSize.
-
-			error := typeChecker errors first.
-			self assert: 1 equals: error notImplementedSize.
-			self assert: 'temp2' equals: error receiver key.
-			self assert: (error selector isNamed: #*) ]! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:46:26'!
-test18IfNilAssumesUndefinedObjectAsType
-
-	self assertHasNoTypeErrorsAndWarnings: #ifNilCheck.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:46:38'!
-test19NestedIfNilAssumesUndefinedObjectAsType
-
-	self assertHasNoTypeErrorsAndWarnings: #nestedIfNilCheck.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:47:11'!
-test20NestedIfNilDoesUseUndefinedObjectWhenOutsideRightIfNil
-
-	| error |
-	
-	self
-		typeCheck: #nestedIfNilCheckErrorsWhenOutsideOfRightIfNil
-		andAssert: [:typeChecker | 
-			self assert: 1 equals: typeChecker errorsSize.
-
-			error := typeChecker errors first.
-			self assert: 1 equals: error notImplementedSize.
-			self assert: 'temp2' equals: error receiver key.
-			self assert: (error selector isNamed: #subclasses) ]! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:47:29'!
-test21IfNilIfNotNilWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #ifNilIfNotNil.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:48:59'!
-test22IfNotNilIfNilWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #ifNotNilIfNil.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:50:43'!
-test23EqualsNilIfTrueIfFalseWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfTrueIfFalse.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:53:26'!
-test24EqualsNilIfTrueWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfTrue
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:55:10'!
-test25IdenticalToNilIfTrueWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfTrue
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:56:48'!
-test26EqualsNilIfFalseWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfFalse.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:02:24'!
-test27IdenticalToNilIfFalseWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfFalse.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:04:48'!
-test28EqualsToNilIfFalseIfTrueWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfFalseIfTrue.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:05:26'!
-test29IdenticalToNilIfFalseIfTrueWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfFalseIfTrue.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:13:08'!
-test30nilEqualsToIfTrueIfFalseOrIfFalseIfTrueWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #nilEqualsToIfTrueIfFalseOrIfFalseIfTrue.
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:14:08'!
-test31nilEqualsToIfTrueOrIfFalseWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #nilEqualsToIfTrueOrIfFalse! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:17:53'!
-test32nilIdenticalToWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #nilIdenticalTo! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:26:51'!
-test33NotEqualToNilWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #notEqualToNil! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:28:25'!
-test34NotIdenticalToNilWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #notIdenticalToNil! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:32:22'!
-test35isNilWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #isNilCondition! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 17:03:19'!
-test36notNilWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #notNilCondition! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:52:24'!
-test37TypeCastWithEqualOrIdenticalToWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #typeCastWithEqualOrIdenticalTo! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:52:31'!
-test38TypeCastWithNotEqualOrNotIdenticalToWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #typeCastWithNotEqualOrNotIdenticalTo! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:52:37'!
-test39TypeCastToUsingEqualOrIdenticalToWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #typeCastToWithEqualOrIdenticalTo! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:54:39'!
-test40TypeCastToUsingNotEqualOrNotIdenticalToWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #typeCastToWithNotEqualOrNotIdenticalTo! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 10:06:46'!
-test41TypeCastUsingIsKindOfToWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #typeCastUsingIsKindOf! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 10:27:45'!
-test42TypeCheckMessageWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessage! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 10:53:54'!
-test43TypeCheckMessageSentToSelfWorksAsExpected
-
-	| typeChecker |
-	
-	typeChecker := (Morph>>#buildDebugMenu:) typeCheck.
-	
-	self assert: typeChecker hasNoErrorsAndWarnings 
-	! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 15:49:19'!
-test44TypeCheckMessageWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageNestedInsideIfNotNil! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 11:47:55'!
-test45
-
-	(TypeCheckerTestMethods>>#returnParameter:) initializeTypeInformation.
-	TypeCheckerTestMethods new 
-		returnParameter: 1;
-		returnParameter: nil.
-	
-	self shouldFail: [self assertHasNoTypeErrorsAndWarnings: #ifNotNilWithMessageSend]! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/6/2019 14:50:18'!
-test46TypeCastRejectsCanBeNested
-
-	self assertHasNoTypeErrorsAndWarnings: #nestedRejects! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/6/2019 14:50:40'!
-test47IsKindOfCastingAllowsSubtypes
-
-	self assertHasNoTypeErrorsAndWarnings: #isKindOfKeepsSubtypes! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 11:19:55'!
-test48IfNotNilWithBlockArgumentFiltersUndefinedObject
-
-	self assertHasNoTypeErrorsAndWarnings: #ifNotNilCheckWithArgument! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 15:06:39'!
-test49TypeCastWithBlockInRejectBlockKeepsCastingStrategy
-
-	self assertHasNoTypeErrorsAndWarnings: #castWithBlockInRejectBlock! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 15:53:19'!
-test50TypeCastWithoutBlockShouldFail
-
-	self 
-		typeCheck: #ifNotNilWithoutBlock 
-		andAssert: [ :typeChecker | self assert: 1 equals: typeChecker errorsSize ]
- ! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 20:12:22'!
-test51NotNilAndFiltersUndefinedObject
-
-	self assertHasNoTypeErrorsAndWarnings: #notNilAnd 
-		! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/10/2019 13:23:58'!
-test52CascasdeMessageSendAreTypeChecked
-
-	| methodToCheck typeChecker |
-	
-	methodToCheck := TypeCheckerTestMethods >> #cascadeMessageSend.
-	
-	typeChecker := methodToCheck typeCheck.
-
-	self assert: 1 equals: typeChecker errorsSize. 
-	self assert: #odd equals: typeChecker errors anyOne notImplemented first selector! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/10/2019 13:28:24'!
-test53TypeCastWorksOnCascadeMessageSends
-
-	self assertHasNoTypeErrorsAndWarnings: #cascadeMessageSendWithTypeCast 
-		! !
-
-!MethodTypeCheckerTest methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:42:05'!
+		typeCheck: aSelector 
+		andAssert: [ :typeChecker | self assert: typeChecker hasNoErrorsAndWarnings ]
+! !
+
+!MethodTypeCheckerTest methodsFor: 'assertions' stamp: 'HAW 8/2/2019 15:42:05'!
 typeCheck: aSelector andAssert: assertionsBlock
 
 	| methodToCheck typeChecker |
@@ -8475,7 +8616,29 @@ m8
 !Customer class methodsFor: 'instance creation' stamp: 'HAW 9/17/2018 12:09'!
 named: aFirstName with: aLastName bornOn: aDateOfBirth	^self new initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth	! !
 
-!TypeCastingStrategy methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:37:53'!
+!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/9/2019 18:35:22'!
+receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons 
+	
+	^aMessageNode receiverTypesIn: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: self.
+	
+! !
+
+!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/11/2019 22:00:11'!
+typesIfCasting: types in: aParseNode ifNot: notBlock
+
+	self subclassResponsibility ! !
+
+!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/11/2019 22:00:24'!
+typesIfRejecting: types in: aParseNode
+	
+	self subclassResponsibility ! !
+
+!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/11/2019 22:00:51'!
+typesOf: aParseNode when: currentTypes
+
+	self subclassResponsibility ! !
+
+!TypeCastingStrategy methodsFor: 'strategy creation' stamp: 'HAW 8/5/2019 17:37:53'!
 forCasting: anObject to: aTypeToCastTo for: aMessageNode castingOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType
 
 	^OneTypeCast 
@@ -8486,7 +8649,7 @@ forCasting: anObject to: aTypeToCastTo for: aMessageNode castingOn: anArgumentNo
 		rejectingOn: anArgumentNodeToRejectType 
 		after: self! !
 
-!TypeCastingStrategy methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:24:50'!
+!TypeCastingStrategy methodsFor: 'strategy creation' stamp: 'HAW 8/5/2019 17:24:50'!
 forCasting: anObject toWithAllSubclassesOf: aTypeToCastTo for: aMessageNode castingOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType
 
 	^IsKindOfTypeCast 
@@ -8497,87 +8660,63 @@ forCasting: anObject toWithAllSubclassesOf: aTypeToCastTo for: aMessageNode cast
 		rejectingOn: anArgumentNodeToRejectType 
 		after: self! !
 
-!TypeCastingStrategy methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 16:39:42'!
+!TypeCastingStrategy methodsFor: 'strategy creation' stamp: 'HAW 8/5/2019 16:39:42'!
 forCheckingNilOn: anObject in: aMethodTypeCheckerVisitor for: aMessageNode allowingNilOn: anArgumentNodeForNil forbidingNilOn: anArgumentNodeForNotNil
 	
 	^self forCasting: anObject to: UndefinedObject for: aMessageNode castingOn: anArgumentNodeForNil rejectingOn: anArgumentNodeForNotNil ! !
 
-!TypeCastingStrategy methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 18:35:22'!
-receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons 
-	
-	^aMessageNode receiverTypesIn: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: self.
-	
-! !
+!TypeCastingStrategy methodsFor: 'visiting parse node' stamp: 'HAW 8/11/2019 22:01:05'!
+visitingBlockNode: aBlockNode while: anArroundBlock
 
-!NoTypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:11:19'!
+	self subclassResponsibility ! !
+
+!NoTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:11:19'!
 typesIfCasting: types in: aParseNode ifNot: notBlock
 
 	^notBlock value! !
 
-!NoTypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:16:46'!
+!NoTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:16:46'!
 typesIfRejecting: types in: aParseNode
 	
 	^types! !
 
-!NoTypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 13:53:43'!
+!NoTypeCast methodsFor: 'casting' stamp: 'HAW 8/9/2019 13:53:43'!
 typesOf: aParseNode when: currentTypes
 
 	^currentTypes ! !
 
-!NoTypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 7/20/2019 18:59:03'!
+!NoTypeCast methodsFor: 'visiting parse node' stamp: 'HAW 7/20/2019 18:59:03'!
 visitingBlockNode: aBlockNode while: anArroundBlock
 
 	anArroundBlock value! !
 
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:37:40'!
-cast: types
-
-	self subclassResponsibility ! !
-
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 18:15:08'!
+!TypeCast methodsFor: 'casting - private' stamp: 'HAW 8/9/2019 18:15:08'!
 castWhile: anArroundBlock
 
 	shouldCast := true.
 	anArroundBlock value.
 	shouldCast := false.! !
 
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 18:29:45'!
-hasToCast: aBlockNode
-
-	^aBlockNode = castingNode ! !
-
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 18:30:48'!
-hasToRejectType: aBlockNode
-	
-	^ aBlockNode = rejectingTypeNode! !
-
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 16:42:48'!
-initializeOn: anObject to: aTypeToCastTo for: aMessageNode castinOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType after: aPreviousStrategy 
-	
-	objectToCast := anObject.
-	typeToCastTo := aTypeToCastTo.
-	messageNode := aMessageNode.
-	castingNode := anArgumentNodeToApplyCast.
-	rejectingTypeNode := anArgumentNodeToRejectType.
-	previousStrategy := aPreviousStrategy.
-	shouldRejectType := false.
-	shouldCast := false.! !
-
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 18:15:35'!
+!TypeCast methodsFor: 'casting - private' stamp: 'HAW 8/9/2019 18:15:35'!
 rejectTypeWhile: anArroundBlock
 
 	shouldRejectType := true.
 	anArroundBlock value.
 	shouldRejectType := false.! !
 
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/10/2019 17:24:32'!
+!TypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:37:40'!
+cast: types
+
+	self subclassResponsibility ! !
+
+!TypeCast methodsFor: 'casting' stamp: 'HAW 8/10/2019 17:24:32'!
 typesIfCasting: types in: aParseNode ifNot: notBlock
 	
 	^(shouldCast and: [ aParseNode isSameAs: objectToCast ]) 
 		ifTrue: [ self cast: types ]
 		ifFalse: [ previousStrategy typesIfCasting: types in: aParseNode ifNot: notBlock ]! !
 
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/10/2019 16:51:34'!
+!TypeCast methodsFor: 'casting' stamp: 'HAW 8/10/2019 16:51:34'!
 typesIfRejecting: types in: aParseNode
 	
 	| typesToReject |
@@ -8589,7 +8728,7 @@ typesIfRejecting: types in: aParseNode
 	^previousStrategy typesIfRejecting: typesToReject in: aParseNode 
 ! !
 
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 12:19:15'!
+!TypeCast methodsFor: 'casting' stamp: 'HAW 8/9/2019 12:19:15'!
 typesOf: aParseNode when: currentTypes
 
 	| newTypes |
@@ -8598,7 +8737,7 @@ typesOf: aParseNode when: currentTypes
 	
 	^newTypes! !
 
-!TypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 18:30:39'!
+!TypeCast methodsFor: 'visiting parse node' stamp: 'HAW 8/9/2019 18:30:39'!
 visitingBlockNode: aBlockNode while: anArroundBlock
 
 	(self hasToCast: aBlockNode) ifTrue: [ ^self castWhile: anArroundBlock ].
@@ -8606,7 +8745,29 @@ visitingBlockNode: aBlockNode while: anArroundBlock
 	
 	anArroundBlock value ! !
 
-!TypeCast class methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 16:42:12'!
+!TypeCast methodsFor: 'initialization' stamp: 'HAW 8/5/2019 16:42:48'!
+initializeOn: anObject to: aTypeToCastTo for: aMessageNode castinOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType after: aPreviousStrategy 
+	
+	objectToCast := anObject.
+	typeToCastTo := aTypeToCastTo.
+	messageNode := aMessageNode.
+	castingNode := anArgumentNodeToApplyCast.
+	rejectingTypeNode := anArgumentNodeToRejectType.
+	previousStrategy := aPreviousStrategy.
+	shouldRejectType := false.
+	shouldCast := false.! !
+
+!TypeCast methodsFor: 'testing' stamp: 'HAW 8/9/2019 18:29:45'!
+hasToCast: aBlockNode
+
+	^aBlockNode = castingNode ! !
+
+!TypeCast methodsFor: 'testing' stamp: 'HAW 8/9/2019 18:30:48'!
+hasToRejectType: aBlockNode
+	
+	^ aBlockNode = rejectingTypeNode! !
+
+!TypeCast class methodsFor: 'instance creation' stamp: 'HAW 8/5/2019 16:42:12'!
 on: anObject to: aTypeToCastTo for: aMessageNode castingOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType after: aPreviousStrategy 	
 
 	^self new 
@@ -8618,17 +8779,17 @@ on: anObject to: aTypeToCastTo for: aMessageNode castingOn: anArgumentNodeToAppl
 		after: aPreviousStrategy 	
 ! !
 
-!IsKindOfTypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:27:52'!
+!IsKindOfTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:27:52'!
 cast: types
 
 	^types select: [ :aType | aType includesBehavior: typeToCastTo ].! !
 
-!OneTypeCast methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:37:46'!
+!OneTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:37:46'!
 cast: types
 
 	^{ typeToCastTo }	! !
 
-!TypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 11:01:54'!
+!TypeChecker methodsFor: 'showing results' stamp: 'HAW 8/9/2019 11:01:54'!
 showResultsWith: aLabelTrail
 
 	| showProblems |
@@ -8638,7 +8799,101 @@ showResultsWith: aLabelTrail
 		
 	TypeCheckingResultWindow openFor: self labelTrail: aLabelTrail showingProblems: showProblems ! !
 
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:44:56'!
+!TypeChecker methodsFor: 'problems' stamp: 'HAW 8/11/2019 22:36:14'!
+problems
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'problems' stamp: 'HAW 8/11/2019 22:36:14'!
+problemsDetect: aCondition ifNone: noneBlock
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'problems' stamp: 'HAW 8/11/2019 22:36:14'!
+problemsSize
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'warnings' stamp: 'HAW 8/11/2019 22:36:14'!
+warnings
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'warnings' stamp: 'HAW 8/11/2019 22:36:14'!
+warningsDetect: aCondition ifNone: aNoneBlock
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'warnings' stamp: 'HAW 8/11/2019 22:36:14'!
+warningsIsEmpty
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'warnings' stamp: 'HAW 8/11/2019 22:36:14'!
+warningsSize
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'errors' stamp: 'HAW 8/11/2019 22:36:14'!
+errors
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'errors' stamp: 'HAW 8/11/2019 22:36:14'!
+errorsAndWarnings
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'errors' stamp: 'HAW 8/11/2019 22:36:14'!
+errorsDetect: aCondition ifNone: aNoneBlock
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'errors' stamp: 'HAW 8/11/2019 22:36:14'!
+errorsIsEmpty
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'errors' stamp: 'HAW 8/11/2019 22:36:14'!
+errorsSize
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'type checking' stamp: 'HAW 8/11/2019 22:36:14'!
+value
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'testing' stamp: 'HAW 8/11/2019 22:36:14'!
+hasErrors
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'testing' stamp: 'HAW 8/11/2019 22:36:14'!
+hasErrorsOrWarnings
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'testing' stamp: 'HAW 8/11/2019 22:36:14'!
+hasNoErrorsAndWarnings
+	
+	self subclassResponsibility! !
+
+!TypeChecker methodsFor: 'testing' stamp: 'HAW 8/11/2019 22:36:14'!
+hasProblems
+	
+	self subclassResponsibility! !
+
+!ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 8/11/2019 23:12:52'!
+errors
+	
+	^typeCheckers 
+		inject: OrderedCollection new
+		into: [ :errors :typeChecker |
+			errors addAll: typeChecker errors.
+			errors ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 7/18/2019 17:44:56'!
 errorsAndWarnings
 	
 	| list |
@@ -8652,7 +8907,28 @@ errorsAndWarnings
 			
 	^list! !
 
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:43:58'!
+!ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 8/11/2019 22:51:06'!
+errorsDetect: aCondition ifNone: noneBlock
+
+	| errors |
+	
+	typeCheckers do: [ :typeChecker |
+		errors := typeChecker errorsDetect: aCondition ifNone: [ nil ].
+		errors ifNotNil: [ ^errors ]].
+	
+	^noneBlock value! !
+
+!ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 7/18/2019 18:17:35'!
+errorsIsEmpty
+	
+	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker errorsIsEmpty ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 7/18/2019 13:14:24'!
+errorsSize
+	
+	^typeCheckers sum: [ :typeChecker | typeChecker errorsSize ] ifEmpty: [ 0 ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'problems to list' stamp: 'HAW 8/9/2019 10:43:58'!
 errorsAndWarningsAsMethodReferencesWithProblems: showProblems
 	
 	| list |
@@ -8666,7 +8942,7 @@ errorsAndWarningsAsMethodReferencesWithProblems: showProblems
 				
 	^list! !
 
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/19/2019 15:53:10'!
+!ManyMethodsTypeChecker methodsFor: 'problems to list' stamp: 'HAW 7/19/2019 15:53:10'!
 errorsAsMethodReferences
 	
 	| list |
@@ -8680,76 +8956,116 @@ errorsAsMethodReferences
 			
 	^list! !
 
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:17:35'!
-errorsIsEmpty
-	
-	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker errorsIsEmpty ]! !
-
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 13:14:24'!
-errorsSize
-	
-	^typeCheckers sum: [ :typeChecker | typeChecker errorsSize ] ifEmpty: [ 0 ]! !
-
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:45:24'!
-hasNoErrorsAndWarnings
-	
-	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker hasNoErrorsAndWarnings ]! !
-
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:54:46'!
-hasProblems
-	
-	^typeCheckers anySatisfy: [ :aTypeChecker | aTypeChecker hasProblems ]! !
-
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:54:09'!
-initializeForAll: aMethodToCheck 
-
-	methodsToCheck := aMethodToCheck collect: [ :aMethod | aMethod asMethodReference ]! !
-
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:10:31'!
-methodSelector
-	
-	^typeCheckers anyOne methodSelector ! !
-
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:32:40'!
-problemsSize
-	
-	^typeCheckers sum: [ :aTypeChecker | aTypeChecker problemsSize ] ifEmpty: [ 0 ]! !
-
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:40:33'!
+!ManyMethodsTypeChecker methodsFor: 'problems to list' stamp: 'HAW 7/18/2019 18:40:33'!
 sortedTypeCheckers
 	
 	^typeCheckers sorted: [ :leftTypeChecker :rightTypeChecker | leftTypeChecker method <= rightTypeChecker method ]! !
 
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:44:31'!
+!ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 8/11/2019 23:09:05'!
+hasErrors
+	
+	^typeCheckers anySatisfy: [ :aTypeChecker | aTypeChecker hasErrors ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 8/11/2019 23:15:29'!
+hasErrorsOrWarnings
+	
+	^typeCheckers anySatisfy: [ :aTypeChecker | aTypeChecker hasErrorsOrWarnings ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 7/18/2019 17:45:24'!
+hasNoErrorsAndWarnings
+	
+	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker hasNoErrorsAndWarnings ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 8/9/2019 10:54:46'!
+hasProblems
+	
+	^typeCheckers anySatisfy: [ :aTypeChecker | aTypeChecker hasProblems ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'method' stamp: 'HAW 7/18/2019 17:10:31'!
+methodSelector
+	
+	^typeCheckers anyOne methodSelector ! !
+
+!ManyMethodsTypeChecker methodsFor: 'problems' stamp: 'HAW 8/11/2019 23:04:08'!
+problems
+
+	^typeCheckers 
+		inject: OrderedCollection new
+		into: [ :problems :typeChecker |
+			problems addAll: typeChecker problems.
+			problems ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'problems' stamp: 'HAW 8/11/2019 22:43:49'!
+problemsDetect: aCondition ifNone: noneBlock
+	
+	| problem |
+	
+	typeCheckers do: [ :typeChecker |
+		problem := typeChecker problemsDetect: aCondition ifNone: [ nil ].
+		problem ifNotNil: [ ^problem ]].
+	
+	^noneBlock value! !
+
+!ManyMethodsTypeChecker methodsFor: 'problems' stamp: 'HAW 8/9/2019 09:32:40'!
+problemsSize
+	
+	^typeCheckers sum: [ :aTypeChecker | aTypeChecker problemsSize ] ifEmpty: [ 0 ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'type checking' stamp: 'HAW 7/18/2019 17:44:31'!
 value
 	
 	typeCheckers := methodsToCheck collect: [:aMethod | aMethod typeCheck ].
 	
 	^self! !
 
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:32:20'!
+!ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 8/11/2019 22:48:41'!
+warnings
+	
+	^typeCheckers 
+		inject: OrderedCollection new
+		into: [ :warnings :typeChecker |
+			warnings addAll: typeChecker warnings.
+			warnings ]! !
+
+!ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 8/11/2019 23:06:14'!
+warningsDetect: aCondition ifNone: noneBlock
+
+	| warning |
+	
+	typeCheckers do: [ :typeChecker |
+		warning := typeChecker warningsDetect: aCondition ifNone: [ nil ].
+		warning ifNotNil: [ ^warning ]].
+	
+	^noneBlock value! !
+
+!ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 8/9/2019 09:32:20'!
 warningsIsEmpty
 	
 	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker warningsIsEmpty ]! !
 
-!ManyMethodsTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 13:14:59'!
+!ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 7/18/2019 13:14:59'!
 warningsSize
 	
 	^typeCheckers sum: [ :typeChecker | typeChecker warningsSize ] ifEmpty: [ 0 ]! !
 
-!ManyMethodsTypeChecker class methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 20:26:52'!
+!ManyMethodsTypeChecker methodsFor: 'initialization' stamp: 'HAW 7/18/2019 18:54:09'!
+initializeForAll: aMethodToCheck 
+
+	methodsToCheck := aMethodToCheck collect: [ :aMethod | aMethod asMethodReference ]! !
+
+!ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 8/9/2019 20:26:52'!
 addMethodsOf: aClass to: methods
  
 	methods 
 		addAll: aClass theNonMetaClass methodDictionary values;
 		addAll: aClass theMetaClass methodDictionary values! !
 
-!ManyMethodsTypeChecker class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:54:18'!
+!ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 18:54:18'!
 forAll: aMethodToCheck
 
 	^self new initializeForAll: aMethodToCheck ! !
 
-!ManyMethodsTypeChecker class methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 20:25:32'!
+!ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 8/9/2019 20:25:32'!
 forAllClasses: classes
 
 	| methods |
@@ -8759,154 +9075,130 @@ forAllClasses: classes
 	
 	^self forAll: methods! !
 
-!ManyMethodsTypeChecker class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:34:23'!
+!ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 15:34:23'!
 forClass: aClass 
 	
 	^self forAll: aClass theNonMetaClass methodDictionary values, aClass theMetaClass methodDictionary values! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:44:13'!
-addMethodReferencesOf: aTypeCheckingProblemCollection prefixing: aPrefix to: methodReferencesCollection
-
-	aTypeCheckingProblemCollection do: [ :aTypeCheckingProblem |
-		methodReferencesCollection add: (TypeCheckingProblemToMethodReferenceAdapter of: aTypeCheckingProblem prefixing: aPrefix) ].
+!MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 7/17/2019 22:48:54'!
+warnings
 	
-	^methodReferencesCollection ! !
+	^warnings! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 22:49:59'!
-classAndSelector
+!MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 7/17/2019 20:04:26'!
+warningsDetect: aCondition ifNone: aNoneBlock
+
+	^warnings detect: aCondition ifNone: aNoneBlock ! !
+
+!MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 7/17/2019 19:47:39'!
+warningsIsEmpty
 	
-	^method classAndSelector ! !
+	^warnings isEmpty ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:49:20'!
+!MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 7/17/2019 19:58:00'!
+warningsSize
+	
+	^warnings size! !
+
+!MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 7/17/2019 19:49:20'!
 errors
 	
 	^errors! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:38:03'!
+!MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 7/18/2019 00:38:03'!
 errorsAndWarnings
 
 	^errors, warnings
 	! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:41:17'!
-errorsAndWarningsAsMethodReferencesWithProblems: showProblems
-	
-	^self errorsAndWarningsAsMethodReferencesWithProblems: showProblems prefixing: ''! !
-
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:40:43'!
-errorsAndWarningsAsMethodReferencesWithProblems: showingProblems prefixing: aPrefix
-	
-	| listToShow |
-	listToShow := self addMethodReferencesOf: errors prefixing: aPrefix to: OrderedCollection new.
-	self addMethodReferencesOf: warnings prefixing: aPrefix to: listToShow.
-	showingProblems ifTrue: [ self addMethodReferencesOf: problems prefixing: aPrefix to: listToShow ].
-	
-	^listToShow! !
-
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 19:28:34'!
-errorsAsMethodReferences
-	
-	^self errorsAsMethodReferencesPrefixing: ''! !
-
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 19:28:59'!
-errorsAsMethodReferencesPrefixing: aPrefix
-
-	^self addMethodReferencesOf: errors prefixing: aPrefix to: OrderedCollection new! !
-
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:54:03'!
+!MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 7/17/2019 19:54:03'!
 errorsDetect: aCondition ifNone: aNoneBlock
 
 	^errors detect: aCondition ifNone: aNoneBlock ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:47:27'!
+!MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 7/17/2019 19:47:27'!
 errorsIsEmpty
 	
 	^errors isEmpty ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:49:14'!
+!MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 7/17/2019 19:49:14'!
 errorsSize
 	
 	^errors size! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 19:33:08'!
+!MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 7/18/2019 19:33:08'!
 hasErrors
 	
 	^errors notEmpty! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:47:22'!
+!MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 7/18/2019 18:47:22'!
 hasErrorsOrWarnings
 	
 	^errors notEmpty or: [ warnings notEmpty ]! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 22:43:58'!
+!MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 7/17/2019 22:43:58'!
 hasNoErrorsAndWarnings
 	
 	^errors isEmpty and: [ warnings isEmpty ]! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 10:54:57'!
+!MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 8/9/2019 10:54:57'!
 hasProblems
 	
 	^problems notEmpty ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 14:44:48'!
+!MethodTypeChecker methodsFor: 'initialization' stamp: 'HAW 8/9/2019 14:44:48'!
 initializeErrorsWarningsAndProblems
 	
 	errors := OrderedCollection new.
 	warnings := OrderedCollection new.
 	problems := OrderedCollection new.! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:35:06'!
+!MethodTypeChecker methodsFor: 'initialization' stamp: 'HAW 7/18/2019 17:35:06'!
 initializeFor: aMethod 
 	
 	method := aMethod asMethodReference ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:18:56'!
+!MethodTypeChecker methodsFor: 'method' stamp: 'HAW 7/17/2019 22:49:59'!
+classAndSelector
+	
+	^method classAndSelector ! !
+
+!MethodTypeChecker methodsFor: 'method' stamp: 'HAW 7/18/2019 18:18:56'!
 method
 	
 	^method! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 23:08:15'!
+!MethodTypeChecker methodsFor: 'method' stamp: 'HAW 7/17/2019 23:08:15'!
 methodClass
 	
 	^method methodClass ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:05:08'!
+!MethodTypeChecker methodsFor: 'method' stamp: 'HAW 7/18/2019 17:05:08'!
 methodReference
 	
 	^method asMethodReference ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 23:09:29'!
+!MethodTypeChecker methodsFor: 'method' stamp: 'HAW 7/17/2019 23:09:29'!
 methodSelector
 	
 	^method selector ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:33:33'!
+!MethodTypeChecker methodsFor: 'problems' stamp: 'HAW 8/9/2019 09:33:33'!
 problems
 	
 	^problems! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:19:11'!
+!MethodTypeChecker methodsFor: 'problems' stamp: 'HAW 8/9/2019 09:19:11'!
 problemsDetect: aCondition ifNone: noneBlock
 
 	^problems detect: aCondition ifNone: noneBlock ! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 09:18:42'!
+!MethodTypeChecker methodsFor: 'problems' stamp: 'HAW 8/9/2019 09:18:42'!
 problemsSize
 	
 	^problems size! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:12:24'!
-typeCheckWhenAnnotatingTypes
-	
-	(MethodTypeCheckerVisitor for: method collectingErrorsInto: errors warningsInto: warnings andProblemsInto: problems) value
-	! !
-
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:13:02'!
-typeCheckWhenNotAnnotatingTypes
-	
-	problems add: (MethodNotAnnotatingTypesProblem for: method)! !
-
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:08:42'!
+!MethodTypeChecker methodsFor: 'type checking' stamp: 'HAW 8/9/2019 19:08:42'!
 value
 
 	self 
@@ -8915,741 +9207,55 @@ value
 			
 	^self! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 22:48:54'!
-warnings
+!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:12:24'!
+typeCheckWhenAnnotatingTypes
 	
-	^warnings! !
+	(MethodTypeCheckerVisitor for: method collectingErrorsInto: errors warningsInto: warnings andProblemsInto: problems) value
+	! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 20:04:26'!
-warningsDetect: aCondition ifNone: aNoneBlock
-
-	^warnings detect: aCondition ifNone: aNoneBlock ! !
-
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:47:39'!
-warningsIsEmpty
+!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:13:02'!
+typeCheckWhenNotAnnotatingTypes
 	
-	^warnings isEmpty ! !
+	problems add: (MethodNotAnnotatingTypesProblem for: method)! !
 
-!MethodTypeChecker methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:58:00'!
-warningsSize
+!MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 7/18/2019 18:44:13'!
+addMethodReferencesOf: aTypeCheckingProblemCollection prefixing: aPrefix to: methodReferencesCollection
+
+	aTypeCheckingProblemCollection do: [ :aTypeCheckingProblem |
+		methodReferencesCollection add: (TypeCheckingProblemToMethodReferenceAdapter of: aTypeCheckingProblem prefixing: aPrefix) ].
 	
-	^warnings size! !
+	^methodReferencesCollection ! !
 
-!MethodTypeChecker class methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:42:35'!
+!MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 8/9/2019 10:41:17'!
+errorsAndWarningsAsMethodReferencesWithProblems: showProblems
+	
+	^self errorsAndWarningsAsMethodReferencesWithProblems: showProblems prefixing: ''! !
+
+!MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 8/11/2019 22:09:11'!
+errorsAndWarningsAsMethodReferencesWithProblems: showingProblems prefixing: aPrefix
+	
+	| listToShow |
+	
+	listToShow := self addMethodReferencesOf: errors prefixing: aPrefix to: OrderedCollection new.
+	self addMethodReferencesOf: warnings prefixing: aPrefix to: listToShow.
+	showingProblems ifTrue: [ self addMethodReferencesOf: problems prefixing: aPrefix to: listToShow ].
+	
+	^listToShow! !
+
+!MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 7/18/2019 19:28:34'!
+errorsAsMethodReferences
+	
+	^self errorsAsMethodReferencesPrefixing: ''! !
+
+!MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 7/18/2019 19:28:59'!
+errorsAsMethodReferencesPrefixing: aPrefix
+
+	^self addMethodReferencesOf: errors prefixing: aPrefix to: OrderedCollection new! !
+
+!MethodTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 7/17/2019 19:42:35'!
 for: aMethod 
 	
 	^self new initializeFor: aMethod ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/10/2019 13:17:03'!
-cascadeMessageSend
-
-	self
-		odd;
-		printString! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/10/2019 13:29:24'!
-cascadeMessageSendWithTypeCast
-
-	| temp1 |
-	
-	temp1 := nil.
-	temp1 := 1.
-	
-	temp1
-		printString;
-		ifNotNil: [ temp1 + 1 ]
-	! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 15:06:06'!
-castWithBlockInRejectBlock
-
-	nil ifNotNil: [ :temp1 | [ temp1 mod: 5 ] value ]! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/30/2019 14:37:10'!
-comparingForNilWithIfTrueIfFalse
-	
-	| temp1 |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 == nil ifTrue: [] ifFalse: [ temp1 + 1] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/30/2019 14:36:07'!
-comparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes
-	
-	| temp1 |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 == nil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/30/2019 14:54:13'!
-comparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
-	
-	| temp1 |
-	
-	temp1 := 1.
-	temp1 == nil ifTrue: [ temp1 * 1 ] ifFalse: [ temp1 + 1] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:21:38'!
-emptyMethod
-
-	! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:56:43'!
-equalsNilIfFalse
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 = nil ifFalse: [ temp1 + 1 ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:03:52'!
-equalsNilIfFalseIfTrue
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 = nil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:53:15'!
-equalsNilIfTrue
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 = nil ifTrue: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:50:09'!
-equalsNilIfTrueIfFalse
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 = nil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:02:11'!
-identicalToNilIfFalse
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 == nil ifFalse: [ temp1 + 1 ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:05:19'!
-identicalToNilIfFalseIfTrue
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 == nil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:54:49'!
-identicalToNilIfTrue
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 == nil ifTrue: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/30/2019 15:49:21'!
-ifNilCheck
-
-	| temp1 |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 ifNil: [ temp1 subclasses ].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:38:59'!
-ifNilIfNotNil
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 ifNil: [ temp1 subclasses ] ifNotNil: [ temp1 + 1 ].
-! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/20/2019 16:20:13'!
-ifNotNilCheck
-
-	| temp1 |
-	
-	temp1 := nil.
-	temp1 := 1.
-	temp1 ifNotNil: [ temp1 +1 ].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/20/2019 19:10:08'!
-ifNotNilCheckAccesingOtherObject
-
-	| temp1 temp2 |
-	
-	temp1 := nil.
-	temp2 := nil.
-	temp1 ifNotNil: [ temp2 +1 ].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 11:54:40'!
-ifNotNilCheckWithArgument
-
-	nil ifNotNil: [ :one |  one + 2 ].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:48:44'!
-ifNotNilIfNil
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 ifNotNil: [ temp1 + 1 ] ifNil: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 11:47:55'!
-ifNotNilWithMessageSend
-
-	(self returnParameter: 1) ifNotNil: [ (self returnParameter: 1) + 1 ]
-	! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 15:40:12'!
-ifNotNilWithoutBlock
-
-	| temp1 |
-	
-	temp1 := nil.
-	temp1 := 1.
-	
-	temp1 ifNotNil: temp1 + 1! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/5/2019 17:29:32'!
-isKindOfKeepsSubtypes
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := OrderedCollection new.
-	temp1 := LinkedList new.
-	
-	(temp1 isKindOf: Collection) ifTrue: [ temp1 addLast:1 ].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:32:12'!
-isNilCondition
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 isNil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ].
-	temp1 isNil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ].
-	temp1 isNil ifTrue: [ temp1 subclasses ].
-	temp1 isNil ifFalse: [ temp1 + 1 ].
-! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/19/2019 17:44:19'!
-methodNotAnnotatingTypes
-	
-	'something' size! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/30/2019 16:35:46'!
-methodWithManyTypeErrors
-
-	1 date.
-	'hello' factorial! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:21:38'!
-methodWithNoReturnTypes
-	
-	self methodWithNoReturnTypes printString! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:21:38'!
-methodWithReceiverWithNoTypes
-	
-	| temp1 |
-	
-	false ifTrue: [ 
-		temp1 := 1.
-		temp1 date ].
-	
-	! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:21:38'!
-methodWithTypeError
-	
-	1 date! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:21:38'!
-methodWithTypeErrorWithManyNotImplemented
-	
-	| temp1 |
-	
-	temp1 := 1.
-	temp1 := 'hello'.
-	false ifTrue: [ temp1 date ]! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:21:38'!
-methodWithWarningForError
-	
-	1 date first! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:21:38'!
-methodWithoutTypeErrors
-	
-	1 + 1! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:30:32'!
-nestedIfNilCheck
-
-	| temp1 temp2 |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp2 := 2.
-	temp2 := nil.
-	temp1 ifNil: [ 
-		temp2 ifNil: [ 
-			temp1 subclasses.
-			temp2 subclasses ]].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 15:35:01'!
-nestedIfNilCheckErrorsWhenOutsideOfRightIfNil
-
-	| temp1 temp2 |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp2 := 2.
-	temp2 := nil.
-	temp1 ifNil: [ 
-		temp2 ifNil: [ ].
-		temp2 subclasses ].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/30/2019 15:19:13'!
-nestedIfNotNilCheck
-
-	| temp1 temp2 |
-	
-	temp1 := nil.
-	temp1 := 1.
-	temp2 := nil.
-	temp2 := 2.
-	temp1 ifNotNil: [ 
-		temp2 ifNotNil: [ 
-			temp1 +1.
-			temp2 + 1 ]].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 7/30/2019 15:20:24'!
-nestedIfNotNilCheckErrorsWhenOutsideOfRightIfNotNil
-
-	| temp1 temp2 |
-	
-	temp1 := nil.
-	temp1 := 1.
-	temp2 := nil.
-	temp2 := 2.
-	temp1 ifNotNil: [ 
-		temp2 ifNotNil: [ ].
-		temp2 * 1 ].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 23:27:41'!
-nestedRejects
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 := 'hello'.
-	
-	temp1 ifNotNil: [ (temp1 isKindOf: SmallInteger) ifFalse: [ temp1 first ]].! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:13:27'!
-nilEqualsToIfTrueIfFalseOrIfFalseIfTrue
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	nil = temp1 ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ].
-	nil = temp1 ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:13:59'!
-nilEqualsToIfTrueOrIfFalse
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	nil = temp1 ifTrue: [ temp1 subclasses ].
-	nil = temp1 ifFalse: [ temp1 + 1 ]! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:17:42'!
-nilIdenticalTo
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	nil == temp1 ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ].
-	nil == temp1 ifFalse: [ temp1 + 1 ]! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:21:12'!
-notEqualToNil
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 ~= nil ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].
-	temp1 ~= nil ifFalse: [ temp1 subclasses ] ifTrue: [ temp1 + 1 ].
-	temp1 ~= nil ifTrue: [ temp1 + 1 ].
-	temp1 ~= nil ifFalse: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 16:28:15'!
-notIdenticalToNil
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 ~~ nil ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].
-	temp1 ~~ nil ifFalse: [ temp1 subclasses ] ifTrue: [ temp1 + 1 ].
-	temp1 ~~ nil ifTrue: [ temp1 + 1 ].
-	temp1 ~~ nil ifFalse: [ temp1 subclasses ] ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:41:53'!
-notNilAnd
-
-	| temp1 |
-	
-	temp1 := nil.
-	temp1 := 1.
-	
-	^temp1 notNil and: [ temp1 odd ]! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 17:03:12'!
-notNilCondition
-
-	| temp1  |
-	
-	temp1 := 1.
-	temp1 := nil.
-	temp1 notNil ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].
-	temp1 notNil ifFalse: [ temp1 subclasses ] ifTrue: [ temp1 + 1 ].
-	temp1 notNil ifTrue: [ temp1 + 1 ].
-	temp1 notNil ifFalse: [ temp1 subclasses ]! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 11:47:55'!
-returnParameter: anObject
-
-	^anObject ! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:46:49'!
-typeCastToWithEqualOrIdenticalTo
-
-	| temp1  |
-	
-	temp1 := 'hello'.
-	temp1 := 1.
-	
-	SmallInteger = temp1 class ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
-	SmallInteger = temp1 class ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
-	SmallInteger = temp1 class ifTrue: [ temp1 + 1 ].
-	SmallInteger = temp1 class ifFalse: [ temp1 first ].
-
-	SmallInteger == temp1 class ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
-	SmallInteger == temp1 class ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
-	SmallInteger == temp1 class ifTrue: [ temp1 + 1 ].
-	SmallInteger == temp1 class ifFalse: [ temp1 first ].
-! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:54:13'!
-typeCastToWithNotEqualOrNotIdenticalTo
-
-	| temp1  |
-	
-	temp1 := 'hello'.
-	temp1 := 1.
-	
-	SmallInteger ~= temp1 class ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
-	SmallInteger ~= temp1 class ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 first ].
-	SmallInteger ~= temp1 class ifTrue: [ temp1 first ].
-	SmallInteger ~= temp1 class ifFalse: [ temp1 + 1 ].
-
-	SmallInteger ~~ temp1 class ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
-	SmallInteger ~~ temp1 class ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 first ].
-	SmallInteger ~~ temp1 class ifTrue: [ temp1 first ].
-	SmallInteger ~~ temp1 class ifFalse: [ temp1 + 1 ].
-! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 10:08:33'!
-typeCastUsingIsKindOf
-
-	| temp1  |
-	
-	temp1 := 'hello'.
-	temp1 := 1.
-	
-	(temp1 isKindOf: SmallInteger) ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
-	(temp1 isKindOf: SmallInteger) ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
-	(temp1 isKindOf: SmallInteger) ifTrue: [ temp1 + 1 ].
-	(temp1 isKindOf: SmallInteger) ifFalse: [ temp1 first ].
-
-	! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:45:30'!
-typeCastWithEqualOrIdenticalTo
-
-	| temp1  |
-	
-	temp1 := 'hello'.
-	temp1 := 1.
-	
-	temp1 class = SmallInteger ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
-	temp1 class = SmallInteger ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
-	temp1 class = SmallInteger ifTrue: [ temp1 + 1 ].
-	temp1 class = SmallInteger ifFalse: [ temp1 first ].
-
-	temp1 class == SmallInteger ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
-	temp1 class == SmallInteger ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
-	temp1 class == SmallInteger ifTrue: [ temp1 + 1 ].
-	temp1 class == SmallInteger ifFalse: [ temp1 first ].
-! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/2/2019 18:44:52'!
-typeCastWithNotEqualOrNotIdenticalTo
-
-	| temp1  |
-	
-	temp1 := 'hello'.
-	temp1 := 1.
-	
-	temp1 class ~= SmallInteger ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
-	temp1 class ~= SmallInteger ifFalse: [ temp1 + 1  ] ifTrue: [ temp1 first ].
-	temp1 class ~= SmallInteger ifTrue: [ temp1 first ].
-	temp1 class ~= SmallInteger ifFalse: [ temp1 + 1 ].
-
-	temp1 class ~~ SmallInteger ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
-	temp1 class ~~ SmallInteger ifFalse: [ temp1 + 1  ] ifTrue: [ temp1 first ].
-	temp1 class ~~ SmallInteger ifTrue: [ temp1 first ].
-	temp1 class ~~ SmallInteger ifFalse: [ temp1 + 1 ].
-! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 10:27:16'!
-typeCheckMessage
-
-	| temp1  |
-	
-	temp1 := Morph new.
-	temp1 := PluggableMorph new.
-	
-	temp1 hasModel ifTrue: [ temp1 model ].
-	! !
-
-!TypeCheckerTestMethods methodsFor: 'as yet unclassified' stamp: 'HAW 8/3/2019 15:50:18'!
-typeCheckMessageNestedInsideIfNotNil
-
-	| temp1  |
-	
-	temp1 := nil.
-	temp1 := Morph new.
-	temp1 := PluggableMorph new.
-	
-	temp1 ifNotNil: [ temp1 hasModel ifTrue: [ temp1 model ]]
-	! !
-
-!TypeCheckerTestMethods class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:26:30'!
-classMethodWithTypeError
-	
-	1 date! !
-
-!TypeCheckingProblem methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:21:16'!
-displayStringOrText
-
-	^ self problemTypeIdentifierString, ': ', self problemDescription! !
-
-!TypeCheckingProblem methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:22:06'!
-problemDescription
-
-	self subclassResponsibility ! !
-
-!TypeCheckingProblem methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:22:03'!
-problemTypeIdentifierString
-
-	self subclassResponsibility ! !
-
-!MethodNotAnnotatingTypesProblem methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:51:03'!
-initializeFor: aMethod
-	
-	method := aMethod! !
-
-!MethodNotAnnotatingTypesProblem methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:31:43'!
-method
-	
-	^method! !
-
-!MethodNotAnnotatingTypesProblem methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:22:17'!
-problemDescription
-
-	^ 'Method is not annotating types'! !
-
-!MethodNotAnnotatingTypesProblem methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:21:29'!
-problemTypeIdentifierString
-
-	^ 'Problem'! !
-
-!MethodNotAnnotatingTypesProblem methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:31:59'!
-sourceCodeRange
-	
-	^#()! !
-
-!MethodNotAnnotatingTypesProblem class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 17:50:51'!
-for: aMethod
-	
-	^self new initializeFor: aMethod! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:10:10'!
-initializeOn: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
-
-	method := aCompiledMethod.
-	messageNode := aMessageNode.
-	methodNode := aMethodNode.
-	notImplemented := aNotImplemented ! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 18:35:31'!
-method
-	
-	^method! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:15:25'!
-notImplemented
-	
-	^notImplemented! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:33:02'!
-notImplementedIncludesType: aType
-
-	^notImplemented anySatisfy: [ :aNotImplemented | aNotImplemented actualClass = aType ]! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:32:31'!
-notImplementedSize
-	
-	^notImplemented size! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 19:34:41'!
-notImplementedTypes
-	
-	^notImplemented collect: [:aNotImplemented | aNotImplemented actualClass ]! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:22:30'!
-problemDescription
-
-	^ self selector identifierPrintString, ' not implemented in ', self notImplementedTypes asCommaStringAnd ! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:21:37'!
-problemTypeIdentifierString
-
-	^ 'Error'! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 18:38:08'!
-receiver
-	
-	^messageNode receiver ! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 18:38:39'!
-selector
-	
-	^messageNode selector! !
-
-!TypeError methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:13:20'!
-sourceCodeRange
-	
-	^Array with: (methodNode rangeForNode: messageNode ifAbsent: [^#()])! !
-
-!TypeError class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:09:54'!
-on: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
-
-	^self new initializeOn: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
-
-! !
-
-!TypeIssue methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:19:57'!
-initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
-
-	method := aMethod.
-	messageNode := aMessageNode.
-	methodNode := aMethodNode.
-	reason := aReason ! !
-
-!TypeIssue methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:33:12'!
-method
-	
-	^method! !
-
-!TypeIssue methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:26:42'!
-problemDescription
-
-	^self reason! !
-
-!TypeIssue methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 20:13:22'!
-reason
-	
-	^reason! !
-
-!TypeIssue methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 20:04:47'!
-receiver
-	
-	^messageNode receiver ! !
-
-!TypeIssue methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 20:04:58'!
-selector
-	
-	^messageNode selector ! !
-
-!TypeIssue methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:20:18'!
-sourceCodeRange
-	
-	^Array with: (methodNode rangeForNode: messageNode ifAbsent: [^#()])! !
-
-!TypeIssue class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:30:09'!
-canNotDeduceReceiverTypeDueToDescription: aReason
- 
-	^'Can not deduce receiver''s type becuase: ', aReason ! !
-
-!TypeIssue class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:18:56'!
-forReceiverWithNoTypesOn: aMethod node: aMessageNode of: methodNode  
-	
-	^self on: aMethod node: aMessageNode of: methodNode reason: self receiverHasNoTypesDescription! !
-
-!TypeIssue class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 00:19:45'!
-on: aMethod node: aMessageNode of: aMethodNode reason: aReason
-
-	^self new initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
-
-! !
-
-!TypeIssue class methodsFor: 'as yet unclassified' stamp: 'HAW 7/17/2019 20:13:15'!
-receiverHasNoTypesDescription
-	
-	^'Receiver has no types'! !
-
-!TypeIssue class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 00:27:46'!
-canNotDeduceReceiverTypeDueTo: aReason on: aCompiledMethod node: aMessageNode of: aMethodNode 
-	
-	^self on: aCompiledMethod node: aMessageNode of: aMethodNode reason: (self canNotDeduceReceiverTypeDueToDescription: aReason)! !
-
-!TypeCheckProblem methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:21:45'!
-problemTypeIdentifierString
-
-	^ 'Problem'! !
-
-!TypeWarning methodsFor: 'as yet unclassified' stamp: 'HAW 8/9/2019 19:21:52'!
-problemTypeIdentifierString
-
-	^ 'Warning'! !
 
 !TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:27:36'!
 actualClass
@@ -9688,6 +9294,727 @@ of: aTypeCheckingProblem prefixing: aHeader
 	^self new initializeOf: aTypeCheckingProblem prefixing: aHeader
 
 ! !
+
+!TypeCheckingResult methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:21:16'!
+displayStringOrText
+
+	^ self problemTypeIdentifierString, ': ', self problemDescription! !
+
+!TypeCheckingResult methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:22:06'!
+problemDescription
+
+	self subclassResponsibility ! !
+
+!TypeCheckingResult methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:22:03'!
+problemTypeIdentifierString
+
+	self subclassResponsibility ! !
+
+!TypeCheckingResult methodsFor: 'method' stamp: 'HAW 8/11/2019 23:22:06'!
+method
+
+	self subclassResponsibility ! !
+
+!TypeCheckingResult methodsFor: 'method' stamp: 'HAW 8/11/2019 23:22:50'!
+sourceCodeRange
+
+	self subclassResponsibility ! !
+
+!MethodNotAnnotatingTypesProblem methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:22:17'!
+problemDescription
+
+	^ 'Method is not annotating types'! !
+
+!MethodNotAnnotatingTypesProblem methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:21:29'!
+problemTypeIdentifierString
+
+	^ 'Problem'! !
+
+!MethodNotAnnotatingTypesProblem methodsFor: 'initialization' stamp: 'HAW 7/18/2019 17:51:03'!
+initializeFor: aMethod
+	
+	method := aMethod! !
+
+!MethodNotAnnotatingTypesProblem methodsFor: 'method' stamp: 'HAW 7/18/2019 18:31:43'!
+method
+	
+	^method! !
+
+!MethodNotAnnotatingTypesProblem methodsFor: 'method' stamp: 'HAW 7/18/2019 18:31:59'!
+sourceCodeRange
+	
+	^#()! !
+
+!MethodNotAnnotatingTypesProblem class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 17:50:51'!
+for: aMethod
+	
+	^self new initializeFor: aMethod! !
+
+!TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 7/17/2019 19:15:25'!
+notImplemented
+	
+	^notImplemented! !
+
+!TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 7/17/2019 19:33:02'!
+notImplementedIncludesType: aType
+
+	^notImplemented anySatisfy: [ :aNotImplemented | aNotImplemented actualClass = aType ]! !
+
+!TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 7/17/2019 19:32:31'!
+notImplementedSize
+	
+	^notImplemented size! !
+
+!TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 7/17/2019 19:34:41'!
+notImplementedTypes
+	
+	^notImplemented collect: [:aNotImplemented | aNotImplemented actualClass ]! !
+
+!TypeCheckingError methodsFor: 'method' stamp: 'HAW 7/17/2019 18:35:31'!
+method
+	
+	^method! !
+
+!TypeCheckingError methodsFor: 'method' stamp: 'HAW 7/18/2019 00:13:20'!
+sourceCodeRange
+	
+	^Array with: (methodNode rangeForNode: messageNode ifAbsent: [^#()])! !
+
+!TypeCheckingError methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:22:30'!
+problemDescription
+
+	^ self selector identifierPrintString, ' not implemented in ', self notImplementedTypes asCommaStringAnd ! !
+
+!TypeCheckingError methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:21:37'!
+problemTypeIdentifierString
+
+	^ 'Error'! !
+
+!TypeCheckingError methodsFor: 'initialization' stamp: 'HAW 7/18/2019 00:10:10'!
+initializeOn: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
+
+	method := aCompiledMethod.
+	messageNode := aMessageNode.
+	methodNode := aMethodNode.
+	notImplemented := aNotImplemented ! !
+
+!TypeCheckingError methodsFor: 'receiver/selector' stamp: 'HAW 7/17/2019 18:38:08'!
+receiver
+	
+	^messageNode receiver ! !
+
+!TypeCheckingError methodsFor: 'receiver/selector' stamp: 'HAW 7/17/2019 18:38:39'!
+selector
+	
+	^messageNode selector! !
+
+!TypeCheckingError class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 00:09:54'!
+on: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
+
+	^self new initializeOn: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
+
+! !
+
+!TypeCheckingIssue methodsFor: 'receiver/selector' stamp: 'HAW 7/17/2019 20:04:47'!
+receiver
+	
+	^messageNode receiver ! !
+
+!TypeCheckingIssue methodsFor: 'receiver/selector' stamp: 'HAW 7/17/2019 20:04:58'!
+selector
+	
+	^messageNode selector ! !
+
+!TypeCheckingIssue methodsFor: 'method' stamp: 'HAW 7/18/2019 18:33:12'!
+method
+	
+	^method! !
+
+!TypeCheckingIssue methodsFor: 'method' stamp: 'HAW 7/18/2019 00:20:18'!
+sourceCodeRange
+	
+	^Array with: (methodNode rangeForNode: messageNode ifAbsent: [^#()])! !
+
+!TypeCheckingIssue methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:26:42'!
+problemDescription
+
+	^self reason! !
+
+!TypeCheckingIssue methodsFor: 'printing' stamp: 'HAW 7/17/2019 20:13:22'!
+reason
+	
+	^reason! !
+
+!TypeCheckingIssue methodsFor: 'initialization' stamp: 'HAW 7/18/2019 00:19:57'!
+initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
+
+	method := aMethod.
+	messageNode := aMessageNode.
+	methodNode := aMethodNode.
+	reason := aReason ! !
+
+!TypeCheckingIssue class methodsFor: 'description' stamp: 'HAW 7/18/2019 00:30:09'!
+canNotDeduceReceiverTypeDueToDescription: aReason
+ 
+	^'Can not deduce receiver''s type becuase: ', aReason ! !
+
+!TypeCheckingIssue class methodsFor: 'description' stamp: 'HAW 7/17/2019 20:13:15'!
+receiverHasNoTypesDescription
+	
+	^'Receiver has no types'! !
+
+!TypeCheckingIssue class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 00:27:46'!
+canNotDeduceReceiverTypeDueTo: aReason on: aCompiledMethod node: aMessageNode of: aMethodNode 
+	
+	^self on: aCompiledMethod node: aMessageNode of: aMethodNode reason: (self canNotDeduceReceiverTypeDueToDescription: aReason)! !
+
+!TypeCheckingIssue class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 00:18:56'!
+forReceiverWithNoTypesOn: aMethod node: aMessageNode of: methodNode  
+	
+	^self on: aMethod node: aMessageNode of: methodNode reason: self receiverHasNoTypesDescription! !
+
+!TypeCheckingIssue class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 00:19:45'!
+on: aMethod node: aMessageNode of: aMethodNode reason: aReason
+
+	^self new initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
+
+! !
+
+!TypeCheckingProblem methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:21:45'!
+problemTypeIdentifierString
+
+	^ 'Problem'! !
+
+!TypeCheckingWarning methodsFor: 'printing' stamp: 'HAW 8/9/2019 19:21:52'!
+problemTypeIdentifierString
+
+	^ 'Warning'! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/10/2019 13:17:03'!
+cascadeMessageSend
+
+	self
+		odd;
+		printString! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/10/2019 13:29:24'!
+cascadeMessageSendWithTypeCast
+
+	| temp1 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	
+	temp1
+		printString;
+		ifNotNil: [ temp1 + 1 ]
+	! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 7/18/2019 15:21:38'!
+emptyMethod
+
+	! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 7/19/2019 17:44:19'!
+methodNotAnnotatingTypes
+	
+	'something' size! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 7/18/2019 15:21:38'!
+methodWithNoReturnTypes
+	
+	self methodWithNoReturnTypes printString! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 7/18/2019 15:21:38'!
+methodWithReceiverWithNoTypes
+	
+	| temp1 |
+	
+	false ifTrue: [ 
+		temp1 := 1.
+		temp1 date ].
+	
+	! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 7/18/2019 15:21:38'!
+methodWithoutTypeErrors
+	
+	1 + 1! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/9/2019 11:47:55'!
+returnParameter: anObject
+
+	^anObject ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/30/2019 14:37:10'!
+comparingForNilWithIfTrueIfFalse
+	
+	| temp1 |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 == nil ifTrue: [] ifFalse: [ temp1 + 1] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/30/2019 14:36:07'!
+comparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes
+	
+	| temp1 |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 == nil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/30/2019 14:54:13'!
+comparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
+	
+	| temp1 |
+	
+	temp1 := 1.
+	temp1 == nil ifTrue: [ temp1 * 1 ] ifFalse: [ temp1 + 1] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:56:43'!
+equalsNilIfFalse
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 = nil ifFalse: [ temp1 + 1 ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:03:52'!
+equalsNilIfFalseIfTrue
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 = nil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:53:15'!
+equalsNilIfTrue
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 = nil ifTrue: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:50:09'!
+equalsNilIfTrueIfFalse
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 = nil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:02:11'!
+identicalToNilIfFalse
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 == nil ifFalse: [ temp1 + 1 ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:05:19'!
+identicalToNilIfFalseIfTrue
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 == nil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:54:49'!
+identicalToNilIfTrue
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 == nil ifTrue: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/30/2019 15:49:21'!
+ifNilCheck
+
+	| temp1 |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 ifNil: [ temp1 subclasses ].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:38:59'!
+ifNilIfNotNil
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 ifNil: [ temp1 subclasses ] ifNotNil: [ temp1 + 1 ].
+! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/20/2019 16:20:13'!
+ifNotNilCheck
+
+	| temp1 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	temp1 ifNotNil: [ temp1 +1 ].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/20/2019 19:10:08'!
+ifNotNilCheckAccesingOtherObject
+
+	| temp1 temp2 |
+	
+	temp1 := nil.
+	temp2 := nil.
+	temp1 ifNotNil: [ temp2 +1 ].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/9/2019 11:54:40'!
+ifNotNilCheckWithArgument
+
+	nil ifNotNil: [ :one |  one + 2 ].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:48:44'!
+ifNotNilIfNil
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 ifNotNil: [ temp1 + 1 ] ifNil: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/9/2019 11:47:55'!
+ifNotNilWithMessageSend
+
+	(self returnParameter: 1) ifNotNil: [ (self returnParameter: 1) + 1 ]
+	! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/9/2019 15:40:12'!
+ifNotNilWithoutBlock
+
+	| temp1 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	
+	temp1 ifNotNil: temp1 + 1! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:32:12'!
+isNilCondition
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 isNil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ].
+	temp1 isNil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ].
+	temp1 isNil ifTrue: [ temp1 subclasses ].
+	temp1 isNil ifFalse: [ temp1 + 1 ].
+! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:30:32'!
+nestedIfNilCheck
+
+	| temp1 temp2 |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp2 := 2.
+	temp2 := nil.
+	temp1 ifNil: [ 
+		temp2 ifNil: [ 
+			temp1 subclasses.
+			temp2 subclasses ]].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:35:01'!
+nestedIfNilCheckErrorsWhenOutsideOfRightIfNil
+
+	| temp1 temp2 |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp2 := 2.
+	temp2 := nil.
+	temp1 ifNil: [ 
+		temp2 ifNil: [ ].
+		temp2 subclasses ].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/30/2019 15:19:13'!
+nestedIfNotNilCheck
+
+	| temp1 temp2 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	temp2 := nil.
+	temp2 := 2.
+	temp1 ifNotNil: [ 
+		temp2 ifNotNil: [ 
+			temp1 +1.
+			temp2 + 1 ]].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/30/2019 15:20:24'!
+nestedIfNotNilCheckErrorsWhenOutsideOfRightIfNotNil
+
+	| temp1 temp2 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	temp2 := nil.
+	temp2 := 2.
+	temp1 ifNotNil: [ 
+		temp2 ifNotNil: [ ].
+		temp2 * 1 ].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/3/2019 23:27:41'!
+nestedRejects
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 := 'hello'.
+	
+	temp1 ifNotNil: [ (temp1 isKindOf: SmallInteger) ifFalse: [ temp1 first ]].! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:13:27'!
+nilEqualsToIfTrueIfFalseOrIfFalseIfTrue
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	nil = temp1 ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ].
+	nil = temp1 ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:13:59'!
+nilEqualsToIfTrueOrIfFalse
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	nil = temp1 ifTrue: [ temp1 subclasses ].
+	nil = temp1 ifFalse: [ temp1 + 1 ]! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:17:42'!
+nilIdenticalTo
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	nil == temp1 ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ].
+	nil == temp1 ifFalse: [ temp1 + 1 ]! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:21:12'!
+notEqualToNil
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 ~= nil ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].
+	temp1 ~= nil ifFalse: [ temp1 subclasses ] ifTrue: [ temp1 + 1 ].
+	temp1 ~= nil ifTrue: [ temp1 + 1 ].
+	temp1 ~= nil ifFalse: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:28:15'!
+notIdenticalToNil
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 ~~ nil ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].
+	temp1 ~~ nil ifFalse: [ temp1 subclasses ] ifTrue: [ temp1 + 1 ].
+	temp1 ~~ nil ifTrue: [ temp1 + 1 ].
+	temp1 ~~ nil ifFalse: [ temp1 subclasses ] ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/9/2019 19:41:53'!
+notNilAnd
+
+	| temp1 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	
+	^temp1 notNil and: [ temp1 odd ]! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 17:03:12'!
+notNilCondition
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	temp1 notNil ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].
+	temp1 notNil ifFalse: [ temp1 subclasses ] ifTrue: [ temp1 + 1 ].
+	temp1 notNil ifTrue: [ temp1 + 1 ].
+	temp1 notNil ifFalse: [ temp1 subclasses ]! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/9/2019 15:06:06'!
+castWithBlockInRejectBlock
+
+	nil ifNotNil: [ :temp1 | [ temp1 mod: 5 ] value ]! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:29:32'!
+isKindOfKeepsSubtypes
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := OrderedCollection new.
+	temp1 := LinkedList new.
+	
+	(temp1 isKindOf: Collection) ifTrue: [ temp1 addLast:1 ].! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/2/2019 18:46:49'!
+typeCastToWithEqualOrIdenticalTo
+
+	| temp1  |
+	
+	temp1 := 'hello'.
+	temp1 := 1.
+	
+	SmallInteger = temp1 class ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
+	SmallInteger = temp1 class ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
+	SmallInteger = temp1 class ifTrue: [ temp1 + 1 ].
+	SmallInteger = temp1 class ifFalse: [ temp1 first ].
+
+	SmallInteger == temp1 class ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
+	SmallInteger == temp1 class ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
+	SmallInteger == temp1 class ifTrue: [ temp1 + 1 ].
+	SmallInteger == temp1 class ifFalse: [ temp1 first ].
+! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/2/2019 18:54:13'!
+typeCastToWithNotEqualOrNotIdenticalTo
+
+	| temp1  |
+	
+	temp1 := 'hello'.
+	temp1 := 1.
+	
+	SmallInteger ~= temp1 class ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
+	SmallInteger ~= temp1 class ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 first ].
+	SmallInteger ~= temp1 class ifTrue: [ temp1 first ].
+	SmallInteger ~= temp1 class ifFalse: [ temp1 + 1 ].
+
+	SmallInteger ~~ temp1 class ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
+	SmallInteger ~~ temp1 class ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 first ].
+	SmallInteger ~~ temp1 class ifTrue: [ temp1 first ].
+	SmallInteger ~~ temp1 class ifFalse: [ temp1 + 1 ].
+! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/3/2019 10:08:33'!
+typeCastUsingIsKindOf
+
+	| temp1  |
+	
+	temp1 := 'hello'.
+	temp1 := 1.
+	
+	(temp1 isKindOf: SmallInteger) ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
+	(temp1 isKindOf: SmallInteger) ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
+	(temp1 isKindOf: SmallInteger) ifTrue: [ temp1 + 1 ].
+	(temp1 isKindOf: SmallInteger) ifFalse: [ temp1 first ].
+
+	! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/2/2019 18:45:30'!
+typeCastWithEqualOrIdenticalTo
+
+	| temp1  |
+	
+	temp1 := 'hello'.
+	temp1 := 1.
+	
+	temp1 class = SmallInteger ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
+	temp1 class = SmallInteger ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
+	temp1 class = SmallInteger ifTrue: [ temp1 + 1 ].
+	temp1 class = SmallInteger ifFalse: [ temp1 first ].
+
+	temp1 class == SmallInteger ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 first ].
+	temp1 class == SmallInteger ifFalse: [ temp1 first ] ifTrue: [ temp1 + 1 ].
+	temp1 class == SmallInteger ifTrue: [ temp1 + 1 ].
+	temp1 class == SmallInteger ifFalse: [ temp1 first ].
+! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/2/2019 18:44:52'!
+typeCastWithNotEqualOrNotIdenticalTo
+
+	| temp1  |
+	
+	temp1 := 'hello'.
+	temp1 := 1.
+	
+	temp1 class ~= SmallInteger ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
+	temp1 class ~= SmallInteger ifFalse: [ temp1 + 1  ] ifTrue: [ temp1 first ].
+	temp1 class ~= SmallInteger ifTrue: [ temp1 first ].
+	temp1 class ~= SmallInteger ifFalse: [ temp1 + 1 ].
+
+	temp1 class ~~ SmallInteger ifTrue: [ temp1 first ] ifFalse: [ temp1 + 1 ].
+	temp1 class ~~ SmallInteger ifFalse: [ temp1 + 1  ] ifTrue: [ temp1 first ].
+	temp1 class ~~ SmallInteger ifTrue: [ temp1 first ].
+	temp1 class ~~ SmallInteger ifFalse: [ temp1 + 1 ].
+! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/3/2019 10:27:16'!
+typeCheckMessage
+
+	| temp1  |
+	
+	temp1 := Morph new.
+	temp1 := PluggableMorph new.
+	
+	temp1 hasModel ifTrue: [ temp1 model ].
+	! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/3/2019 15:50:18'!
+typeCheckMessageNestedInsideIfNotNil
+
+	| temp1  |
+	
+	temp1 := nil.
+	temp1 := Morph new.
+	temp1 := PluggableMorph new.
+	
+	temp1 ifNotNil: [ temp1 hasModel ifTrue: [ temp1 model ]]
+	! !
+
+!TypeCheckerTestMethods methodsFor: 'methods with errors' stamp: 'HAW 7/30/2019 16:35:46'!
+methodWithManyTypeErrors
+
+	1 date.
+	'hello' factorial! !
+
+!TypeCheckerTestMethods methodsFor: 'methods with errors' stamp: 'HAW 7/18/2019 15:21:38'!
+methodWithTypeError
+	
+	1 date! !
+
+!TypeCheckerTestMethods methodsFor: 'methods with errors' stamp: 'HAW 7/18/2019 15:21:38'!
+methodWithTypeErrorWithManyNotImplemented
+	
+	| temp1 |
+	
+	temp1 := 1.
+	temp1 := 'hello'.
+	false ifTrue: [ temp1 date ]! !
+
+!TypeCheckerTestMethods methodsFor: 'methods with warnings' stamp: 'HAW 7/18/2019 15:21:38'!
+methodWithWarningForError
+	
+	1 date first! !
+
+!TypeCheckerTestMethods class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 15:26:30'!
+classMethodWithTypeError
+	
+	1 date! !
 
 !ProtoObject class methodsFor: '*LiveTyping-private' stamp: 'HAW 7/19/2019 17:22:29'!
 createMethodReturnRawTypesOf: aCompiledMethod 
