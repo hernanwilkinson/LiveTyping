@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 11 August 2019 at 11:45:34 pm'!
-'Description method categorization and refactorings'!
-!provides: 'LiveTyping' 1 37!
+'From Cuis 5.0 [latest update: #3839] on 12 August 2019 at 3:16:01 pm'!
+'Description Support for classes in metamodel of InstanceType'!
+!provides: 'LiveTyping' 1 38!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -902,11 +902,17 @@ typeName
 
 	^'class'! !
 
-!InstanceType methodsFor: 'type convertion' stamp: 'HAW 1/18/2019 10:00:29'!
+!InstanceType methodsFor: 'type convertion' stamp: 'HAW 8/12/2019 15:13:17'!
 asTypeFor: aReceiverType
 
-	^aReceiverType soleInstance 
-	! !
+	^aReceiverType isMeta 
+		ifTrue: [ aReceiverType soleInstance ]
+		ifFalse: [ 
+			(aReceiverType = Behavior or: [ aReceiverType = ClassDescription or: [ aReceiverType = Class or: [ aReceiverType = Metaclass ]]])
+				ifTrue: [ aReceiverType ]
+				ifFalse: [ self error: self class onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription ]]
+			
+			! !
 
 !InstanceType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:48'!
 typeName
@@ -2836,6 +2842,23 @@ test06newTypeIsMetaclassSoleInstance
 	self assert: types anyOne equals: self class.
 	self assert: method returnTypes asSet equals: types
 ! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 8/12/2019 15:13:44'!
+test07InstanceTypeReturnsClassWhenIsKindOfOfBehaviorButNotMeta
+
+	self assert: (InstanceType new asTypeFor: Behavior) equals: Behavior.
+	self assert: (InstanceType new asTypeFor: ClassDescription) equals: ClassDescription.
+	self assert: (InstanceType new asTypeFor: Class) equals: Class.
+	self assert: (InstanceType new asTypeFor: Metaclass) equals: Metaclass.
+! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 8/12/2019 15:02:49'!
+test08InstanceTypeErrorsWhenUsedWithNoBehavior
+
+	self 
+		should: [ InstanceType new asTypeFor: Object ]
+		raise: Error - MessageNotUnderstood 
+		withMessageText: InstanceType onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 15:36:25'!
 twoClassMessageSend
@@ -5951,6 +5974,11 @@ should it be used only as message return type? it looks like...
 Should I call it MetaReturnType?
 
 "! !
+
+!InstanceType class methodsFor: 'error description' stamp: 'HAW 8/12/2019 15:03:16'!
+onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription
+	
+	^'Only behaviors can be converted by instance type'! !
 
 !IncompleteTypeInfo methodsFor: 'initialization' stamp: 'HAW 12/3/2018 11:53:42'!
 initializeOf: aMethodReference describedAs: aReasonDescription
