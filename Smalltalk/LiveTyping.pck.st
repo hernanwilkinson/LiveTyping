@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 12 August 2019 at 3:16:01 pm'!
-'Description Support for classes in metamodel of InstanceType'!
-!provides: 'LiveTyping' 1 38!
+'From Cuis 5.0 [latest update: #3839] on 17 August 2019 at 11:32:41 am'!
+'Description Rename selector with actual senders now selects message sends based on receiver types'!
+!provides: 'LiveTyping' 1 39!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -4464,21 +4464,20 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: (types includes: 1 class).
 	self assert: (types includes: 1.0 class)! !
 
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 3/14/2019 14:56:51'!
-m1
+!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 8/13/2019 19:24:11'!
+testAutoCompleteExample
 
-	^10! !
+	 10 factorial isInteger not.
+	! !
 
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 3/14/2019 14:56:43'!
-test
+!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 8/14/2019 10:23:49'!
+testExample
 
-	| x y z |
+	| temp1 |
 	
-	x := Array with: 1.
+	temp1 := self doSomething.
 	
-	y := x first.
-	
-	(z := self) m1.! !
+	temp1 isInteger not ! !
 
 !AutocompleteExample methodsFor: 'examples' stamp: 'HAW 2/14/2019 19:02:39'!
 testExampleMessagesOfDifferentSubclasses
@@ -4524,6 +4523,11 @@ testExampleWithNoCommonSupertype
 	
 	
 	! !
+
+!AutocompleteExample methodsFor: 'as yet unclassified' stamp: 'HAW 8/14/2019 09:07:25'!
+doSomething
+	
+	^10 factorial ! !
 
 !CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 17:52:11'!
 test01
@@ -5584,10 +5588,12 @@ initializeImplementorsAndSenders
 	senders := OrderedCollection new.
 ! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/28/2019 18:39:25'!
+!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 11:16:30'!
 openChangeSelectorSendersStepWindow
 	
-	ChangeSelectorSendersStepWindow openForActualScopeFrom: self
+	self isActualScopeChoice 
+		ifTrue: [ ChangeSelectorSendersStepWindow openForActualScopeFrom: self ]
+		ifFalse: [ super openChangeSelectorSendersStepWindow ]
 	
 	! !
 
@@ -5620,7 +5626,7 @@ initializeOf: aMessageNode at: aSelectedSelector
 	selectedSelector := aSelectedSelector.
 ! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'as yet unclassified' stamp: 'HAW 3/28/2019 18:45:52'!
+!RenameSelectorWithActualScopeApplier methodsFor: 'types' stamp: 'HAW 3/28/2019 18:45:52'!
 receiverTypes
 	
 	^implementors collect: [ :anImplementor | anImplementor methodClass ]! !
@@ -6215,7 +6221,7 @@ smalltalkEditorCmdShortcutsSpec
 		)
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/10/2019 18:44:14'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/17/2019 10:48:40'!
 smalltalkEditorMenuOptions
 
 	^`{
@@ -6243,13 +6249,20 @@ smalltalkEditorMenuOptions
 			{
 				#itemGroup 		-> 		37.
 				#itemOrder 		-> 		50.
+				#label 			-> 		'Actual Local Implementors of it (L)'.
+				#selector 		-> 		#actualLocalImplementorsOfIt.
+				#icon 			-> 		#developmentIcon
+			} asDictionary.
+			{
+				#itemGroup 		-> 		37.
+				#itemOrder 		-> 		60.
 				#label 			-> 		'Type Check (T)'.
 				#selector 		-> 		#typeCheckMethod.
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
 				#itemGroup 		-> 		37.
-				#itemOrder 		-> 		60.
+				#itemOrder 		-> 		70.
 				#label 			-> 		'Reset types'.
 				#selector 		-> 		#resetMethodTypes.
 				#object 			-> 		#codeProvider.
@@ -9108,6 +9121,17 @@ forClass: aClass
 	
 	^self forAll: aClass theNonMetaClass methodDictionary values, aClass theMetaClass methodDictionary values! !
 
+!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:12:24'!
+typeCheckWhenAnnotatingTypes
+	
+	(MethodTypeCheckerVisitor for: method collectingErrorsInto: errors warningsInto: warnings andProblemsInto: problems) value
+	! !
+
+!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:13:02'!
+typeCheckWhenNotAnnotatingTypes
+	
+	problems add: (MethodNotAnnotatingTypesProblem for: method)! !
+
 !MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 7/17/2019 22:48:54'!
 warnings
 	
@@ -9234,17 +9258,6 @@ value
 		typeCheck.
 			
 	^self! !
-
-!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:12:24'!
-typeCheckWhenAnnotatingTypes
-	
-	(MethodTypeCheckerVisitor for: method collectingErrorsInto: errors warningsInto: warnings andProblemsInto: problems) value
-	! !
-
-!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:13:02'!
-typeCheckWhenNotAnnotatingTypes
-	
-	problems add: (MethodNotAnnotatingTypesProblem for: method)! !
 
 !MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 7/18/2019 18:44:13'!
 addMethodReferencesOf: aTypeCheckingProblemCollection prefixing: aPrefix to: methodReferencesCollection
@@ -9682,14 +9695,15 @@ ifNilIfNotNil
 	temp1 ifNil: [ temp1 subclasses ] ifNotNil: [ temp1 + 1 ].
 ! !
 
-!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/20/2019 16:20:13'!
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/14/2019 12:50:58'!
 ifNotNilCheck
 
 	| temp1 |
 	
 	temp1 := nil.
 	temp1 := 1.
-	temp1 ifNotNil: [ temp1 +1 ].! !
+	
+	temp1 ifNotNil: [ temp1 +1 ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/20/2019 19:10:08'!
 ifNotNilCheckAccesingOtherObject
@@ -12303,7 +12317,7 @@ codePane
 	
 	^codePane ! !
 
-!ChangeSelectorSendersStepWindow class methodsFor: '*LiveTyping' stamp: 'HAW 4/30/2019 18:18:45'!
+!ChangeSelectorSendersStepWindow class methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 11:19:04'!
 openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 
 	| window label |
