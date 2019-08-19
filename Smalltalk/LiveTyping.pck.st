@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 17 August 2019 at 11:32:41 am'!
-'Description Rename selector with actual senders now selects message sends based on receiver types'!
-!provides: 'LiveTyping' 1 39!
+'From Cuis 5.0 [latest update: #3839] on 19 August 2019 at 6:31:11 am'!
+'Description Add/Remove parameters with actual/actual scope'!
+!provides: 'LiveTyping' 1 40!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -119,6 +119,26 @@ MethodReference subclass: #PossibleSender
 	category: 'LiveTyping'!
 !classDefinition: 'PossibleSender class' category: #LiveTyping!
 PossibleSender class
+	instanceVariableNames: ''!
+
+!classDefinition: #AddParameterWithActualScopeTest category: #'LiveTyping-Tests'!
+RefactoringTest subclass: #AddParameterWithActualScopeTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'AddParameterWithActualScopeTest class' category: #'LiveTyping-Tests'!
+AddParameterWithActualScopeTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #RemoveParameterWithActualScopeTest category: #'LiveTyping-Tests'!
+RefactoringTest subclass: #RemoveParameterWithActualScopeTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'RemoveParameterWithActualScopeTest class' category: #'LiveTyping-Tests'!
+RemoveParameterWithActualScopeTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #RenameSelectorWithActualScopeTest category: #'LiveTyping-Tests'!
@@ -321,14 +341,44 @@ SmalltalkCompleter subclass: #LiveTypingSmalltalkCompleter
 LiveTypingSmalltalkCompleter class
 	instanceVariableNames: ''!
 
+!classDefinition: #AddParameterWithActualScope category: #LiveTyping!
+AddParameter subclass: #AddParameterWithActualScope
+	instanceVariableNames: 'shouldChangePossibleMessageSends'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'AddParameterWithActualScope class' category: #LiveTyping!
+AddParameterWithActualScope class
+	instanceVariableNames: ''!
+
 !classDefinition: #RenameSelectorWithActualScope category: #'LiveTyping-Refactoring'!
 RenameSelector subclass: #RenameSelectorWithActualScope
-	instanceVariableNames: 'shouldRenamePossibleMessageSends'
+	instanceVariableNames: 'shouldChangePossibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
 !classDefinition: 'RenameSelectorWithActualScope class' category: #'LiveTyping-Refactoring'!
 RenameSelectorWithActualScope class
+	instanceVariableNames: ''!
+
+!classDefinition: #RemoveParameterWithActualScope category: #LiveTyping!
+RemoveParameter subclass: #RemoveParameterWithActualScope
+	instanceVariableNames: 'shouldChangePossibleMessageSends'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'RemoveParameterWithActualScope class' category: #LiveTyping!
+RemoveParameterWithActualScope class
+	instanceVariableNames: ''!
+
+!classDefinition: #AddParameterWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+AddParameterApplier subclass: #AddParameterWithActualScopeApplier
+	instanceVariableNames: 'messageNode selectedSelector'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'AddParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+AddParameterWithActualScopeApplier class
 	instanceVariableNames: ''!
 
 !classDefinition: #RenameSelectorWithActualScopeApplier category: #'LiveTyping-Refactoring'!
@@ -339,6 +389,16 @@ RenameSelectorApplier subclass: #RenameSelectorWithActualScopeApplier
 	category: 'LiveTyping-Refactoring'!
 !classDefinition: 'RenameSelectorWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
 RenameSelectorWithActualScopeApplier class
+	instanceVariableNames: ''!
+
+!classDefinition: #RemoveParameterWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+RemoveParameterApplier subclass: #RemoveParameterWithActualScopeApplier
+	instanceVariableNames: 'messageNode selectedSelector'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'RemoveParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+RemoveParameterWithActualScopeApplier class
 	instanceVariableNames: ''!
 
 !classDefinition: #ActualImplementorsFinder category: #LiveTyping!
@@ -1934,6 +1994,800 @@ possibleSenderStringVersionHeader
 	
 	^'(Possible) - '! !
 
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 15:28:35'!
+test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | self ', oldSelector, '. false ifTrue: [ x ', oldSelector, ' ]'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1: 1. false ifTrue: [ x ', oldSelector, ' ]'.
+	! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 15:45:17'!
+test01_01_DoesNotChangePossibleMessageSendWhenInstructedToDoSoWithKeywordMessages
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1:m3:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: 'm1: p1 m3: p3'.
+	classToRefactor compile: senderToChange, ' | x | self m1: 1 m3: 3. false ifTrue: [ x m1: 1 m3: 3 ]'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p2'
+		at: 2 
+		initializedWith: '2'
+		using: #m2: 
+		toKeywordSelector: oldSelector  
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1: 1 m2: 2 m3: 3. false ifTrue: [ x m1: 1 m3: 3 ]'.
+	! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:24:04'!
+test02CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementors
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: oldSelector asString.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', oldSelector.
+	classToRefactor new perform: senderToChange.
+	
+	self 
+		should: [  
+		 	AddParameterWithActualScope 
+				named: 'p1' 
+				initializedWith: '1' 
+				toUnarySelector: oldSelector 
+				implementors: { classToRefactor>>oldSelector }
+				senders: { classToRefactor>>senderToChange }
+				withPossibleMessageSends: false. ]
+		raise: CanNotChangeSelectorWithNotIncludedTypes
+		withExceptionDo: [ :anError |
+			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
+			messageSendWithInvalidReceiverTypes := anError messageSendsWithInvalidReceiverTypes anyOne.
+			self assert: classToRefactor>>senderToChange equals: messageSendWithInvalidReceiverTypes first.
+			self assert: 'x' equals: messageSendWithInvalidReceiverTypes second receiver name.
+			self assert: (messageSendWithInvalidReceiverTypes second selector isNamed: oldSelector).
+			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
+			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
+	! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:26:59'!
+test02_01_CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsForKeywordMessage
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
+	
+	oldSelector := #m1:m3:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1 m3: p3'.
+	classOfOtherImplementor compile: 'm1: p1 m3: p3'.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1 m3: 3'.
+	classToRefactor new perform: senderToChange.
+		
+	self 
+		should: [  
+			AddParameterWithActualScope 
+				named: 'p2'
+				at: 2 
+				initializedWith: '2'
+				using: #m2: 
+				toKeywordSelector: oldSelector  
+				implementors: { classToRefactor>>oldSelector }
+				senders: { classToRefactor>>senderToChange }
+				withPossibleMessageSends: false ]
+		raise: CanNotChangeSelectorWithNotIncludedTypes
+		withExceptionDo: [ :anError |
+			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
+			messageSendWithInvalidReceiverTypes := anError messageSendsWithInvalidReceiverTypes anyOne.
+			self assert: classToRefactor>>senderToChange equals: messageSendWithInvalidReceiverTypes first.
+			self assert: 'x' equals: messageSendWithInvalidReceiverTypes second receiver name.
+			self assert: (messageSendWithInvalidReceiverTypes second selector isNamed: oldSelector).
+			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
+			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
+	! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:44:50'!
+test03AddParameterWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	self createClassNamed: self classOfOtherImplementorName subclassOf: classToRefactor.
+	classToRefactor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | x := ', self classOfOtherImplementorName, ' new. x ', oldSelector.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.	
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | x := ', self classOfOtherImplementorName, ' new. x m1: 1'.! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:46:11'!
+test04AddParameterWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
+
+	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: oldSelector asString.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', oldSelector.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classToRefactor>>oldSelector.   classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.	
+
+	refactor apply.
+	
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1'.! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:47:31'!
+test05AddParameterInDifferentMessageSendsWithReceiverTypeIsIncludedInImplementorsType
+
+	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: oldSelector asString.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x y | x := self. y := ', self classOfOtherImplementorName, ' new. x ', oldSelector, '. y ', oldSelector.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector  
+		implementors: { classToRefactor>>oldSelector.   classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x y | x := self. y := ', self classOfOtherImplementorName, ' new. x m1: 1. y m1: 1'! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:48:39'!
+test06AddParameterInDifferentMessageSendsWithReceiverTypeEqualToImplementorsType
+
+	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: oldSelector asString.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x y | x := y:= self. x := y := ', self classOfOtherImplementorName, ' new. x ', oldSelector, '. y ', oldSelector.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector  
+		implementors: { classToRefactor>>oldSelector.   classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x y | x := y:= self. x := y := ', self classOfOtherImplementorName, ' new. x m1: 1. y m1: 1'.! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:49:48'!
+test07AddParameterToPossibleMessageSendIfInstructedToDoSo
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | self ', oldSelector, '. false ifTrue: [ x ', oldSelector, ' ]'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: true.
+		
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1: 1. false ifTrue: [ x m1: 1 ]'.
+	! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:50:59'!
+test08AddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelectorNotImplementedInTypeHierarchy
+
+	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
+	
+	oldSelector := #m1.
+	newSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', oldSelector.
+	classToRefactor new perform: senderToChange.
+	
+	rename := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+
+	rename apply.
+
+	self deny: (classToRefactor canUnderstand: newSelector).
+	self assert: (classOfOtherImplementor canUnderstand: newSelector).
+	self deny: (classOfOtherImplementor canUnderstand: oldSelector).
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1'.! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:30:39'!
+test09AddParameterOnlyToValidMessageSendWhenMoreSendsInSameMethod
+
+	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
+	
+	oldSelector := #m1.
+	newSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: oldSelector asString.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' self ', oldSelector, '. ', self classOfOtherImplementorName, ' new ', oldSelector.
+	classToRefactor new perform: senderToChange.
+	
+	rename := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+
+	rename apply.
+
+	self assert: (classToRefactor canUnderstand: newSelector).
+	self deny: (classToRefactor canUnderstand: oldSelector).
+	self assert: (classOfOtherImplementor canUnderstand: oldSelector).
+	self deny: (classOfOtherImplementor canUnderstand: newSelector).
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' self m1: 1. ', self classOfOtherImplementorName, ' new ', oldSelector .! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 11:53:08'!
+test10UsesTheModifiedSourceCodeWhenAddingParameterToMethodWithSureAndPossibleSenders
+
+	| classToRefactor oldSelector senderToChange rename |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' |x| self ', oldSelector, '. x ', oldSelector.
+	
+	rename :=AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange. }
+		withPossibleMessageSends: false.
+
+	rename apply.
+
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' |x| self m1: 1. x ', oldSelector.! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 20:18:58'!
+test11CanNotAddParameterWithReceiverTypeOfCascadeMessageSendNotIncludedInImplementors
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: oldSelector asString.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', oldSelector, '; printString'.
+	classToRefactor new perform: senderToChange.
+	
+	self 
+		should: [  
+		 	AddParameterWithActualScope 
+				named: 'p1' 
+				initializedWith: '1' 
+				toUnarySelector: oldSelector 
+				implementors: { classToRefactor>>oldSelector }
+				senders: { classToRefactor>>senderToChange }
+				withPossibleMessageSends: false. ]
+		raise: CanNotChangeSelectorWithNotIncludedTypes
+		withExceptionDo: [ :anError |
+			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
+			messageSendWithInvalidReceiverTypes := anError messageSendsWithInvalidReceiverTypes anyOne.
+			self assert: classToRefactor>>senderToChange equals: messageSendWithInvalidReceiverTypes first.
+			self assert: 'x' equals: messageSendWithInvalidReceiverTypes second receiverOrCascadeReceiver name.
+			self assert: (messageSendWithInvalidReceiverTypes second selector isNamed: oldSelector).
+			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
+			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
+	! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:35:02'!
+test12SuperclassInstanceCreationMessagesShouldNotBeUsed
+
+	| instanceCreationMethod |
+	
+	(AddParameter class organization listAtCategoryNamed: 'instance creation') do: [ :anInstanceCreationSelector |
+		instanceCreationMethod := AddParameterWithActualScope class compiledMethodAt: anInstanceCreationSelector ifAbsent: [ self fail ].
+		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
+
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:37:41'!
+test13AddLastParameterCorrectly
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	self createClassNamed: self classOfOtherImplementorName subclassOf: classToRefactor.
+	classToRefactor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' self m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p2' 
+		initializedWith: '2' 
+		using: #m2: 
+		toKeywordSelector: oldSelector  
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.	
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m1: 1 m2: 2'.! !
+
+!AddParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 8/17/2019 11:40:33'!
+classOfOtherImplementorName
+	
+	^#ClassOfSender! !
+
+!AddParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 8/17/2019 11:40:51'!
+classToRefactorName
+
+	^#ClassToAddParameter! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 12:05:57'!
+test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x | self m1: 1. false ifTrue: [ x m1: 1 ]'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := RemoveParameterWithActualScope
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1. false ifTrue: [ x m1: 1 ]'.
+	! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:12:21'!
+test02CanNotRemoveParameterWithReceiverTypeOfMessageSendNotIncludedInImplementors
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1'.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	self 
+		should: [  
+		 	RemoveParameterWithActualScope 
+				named: 'p1' 
+				from: classToRefactor>>oldSelector 
+				implementors: { classToRefactor>>oldSelector }
+				senders: { classToRefactor>>senderToChange }
+				withPossibleMessageSends: false. ]
+		raise: CanNotChangeSelectorWithNotIncludedTypes
+		withExceptionDo: [ :anError |
+			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
+			messageSendWithInvalidReceiverTypes := anError messageSendsWithInvalidReceiverTypes anyOne.
+			self assert: classToRefactor>>senderToChange equals: messageSendWithInvalidReceiverTypes first.
+			self assert: 'x' equals: messageSendWithInvalidReceiverTypes second receiver name.
+			self assert: (messageSendWithInvalidReceiverTypes second selector isNamed: oldSelector).
+			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
+			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
+	! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:15:24'!
+test03RemovesParameterWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	self createClassNamed: self classOfOtherImplementorName subclassOf: classToRefactor.
+	classToRefactor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x | x := ', self classOfOtherImplementorName, ' new. x m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.	
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | x := ', self classOfOtherImplementorName, ' new. x m1'.! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:17:03'!
+test04RemovesParameterWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
+
+	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1'.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector.   classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.	
+
+	refactor apply.
+	
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1'.! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:19:10'!
+test05RemovesParameterInDifferentMessageSendsWithReceiverTypeIsIncludedInImplementorsType
+
+	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1'.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x y | x := self. y := ', self classOfOtherImplementorName, ' new. x m1: 1. y m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector.   classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x y | x := self. y := ', self classOfOtherImplementorName, ' new. x m1. y m1'! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:20:31'!
+test06RemovesParameterInDifferentMessageSendsWithReceiverTypeEqualToImplementorsType
+
+	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1'.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x y | x := y:= self. x := y := ', self classOfOtherImplementorName, ' new. x m1: 1. y m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector.   classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x y | x := y:= self. x := y := ', self classOfOtherImplementorName, ' new. x m1. y m1'.! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:22:13'!
+test07RemovesParameterToPossibleMessageSendIfInstructedToDoSo
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x | self m1: 1. false ifTrue: [ x m1: 1]'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: true.
+		
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1. false ifTrue: [ x m1]'.
+	! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:24:38'!
+test08RemovesParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelectorNotImplementedInTypeHierarchy
+
+	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
+	
+	oldSelector := #m1:.
+	newSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	rename := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classOfOtherImplementor>>oldSelector 
+		implementors: { classOfOtherImplementor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+
+	rename apply.
+
+	self deny: (classToRefactor canUnderstand: newSelector).
+	self assert: (classOfOtherImplementor canUnderstand: newSelector).
+	self deny: (classOfOtherImplementor canUnderstand: oldSelector).
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1'.! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:30:21'!
+test09RemovesParameterOnlyToValidMessageSendWhenMoreSendsInSameMethod
+
+	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
+	
+	oldSelector := #m1:.
+	newSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1'.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' self m1: 1. ', self classOfOtherImplementorName, ' new m1: 1'.
+	classToRefactor new perform: senderToChange.
+	
+	rename := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+
+	rename apply.
+
+	self assert: (classToRefactor canUnderstand: newSelector).
+	self deny: (classToRefactor canUnderstand: oldSelector).
+	self assert: (classOfOtherImplementor canUnderstand: oldSelector).
+	self deny: (classOfOtherImplementor canUnderstand: newSelector).
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' self m1. ', self classOfOtherImplementorName, ' new m1: 1' .! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:32:27'!
+test10UsesTheModifiedSourceCodeWhenRemovingParameterToMethodWithSureAndPossibleSenders
+
+	| classToRefactor oldSelector senderToChange rename |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' |x| self m1: 1. x m1: 1'.
+	
+	rename :=RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange. }
+		withPossibleMessageSends: false.
+
+	rename apply.
+
+	self 
+		assert: (classToRefactor>>senderToChange) sourceCode 
+		equals: senderToChange, ' |x| self m1. x m1: 1'.! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:33:52'!
+test11CanNotRemoveParameterWithReceiverTypeOfCascadeMessageSendNotIncludedInImplementors
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
+	
+	oldSelector := #m1:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1'.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1; printString'.
+	classToRefactor new perform: senderToChange.
+	
+	self 
+		should: [  
+		 	RemoveParameterWithActualScope 
+				named: 'p1' 
+				from: classToRefactor>>oldSelector 
+				implementors: { classToRefactor>>oldSelector }
+				senders: { classToRefactor>>senderToChange }
+				withPossibleMessageSends: false. ]
+		raise: CanNotChangeSelectorWithNotIncludedTypes
+		withExceptionDo: [ :anError |
+			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
+			messageSendWithInvalidReceiverTypes := anError messageSendsWithInvalidReceiverTypes anyOne.
+			self assert: classToRefactor>>senderToChange equals: messageSendWithInvalidReceiverTypes first.
+			self assert: 'x' equals: messageSendWithInvalidReceiverTypes second receiverOrCascadeReceiver name.
+			self assert: (messageSendWithInvalidReceiverTypes second selector isNamed: oldSelector).
+			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
+			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
+	! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:34:34'!
+test12SuperclassInstanceCreationMessagesShouldNotBeUsed
+
+	| instanceCreationMethod |
+	
+	(RemoveParameter class organization listAtCategoryNamed: 'instance creation') do: [ :anInstanceCreationSelector |
+		instanceCreationMethod := RemoveParameterWithActualScope class compiledMethodAt: anInstanceCreationSelector ifAbsent: [ self fail ].
+		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:38:23'!
+test13RemovesOtherThanLastParameterCorrectly
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1:m2:.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	self createClassNamed: self classOfOtherImplementorName subclassOf: classToRefactor.
+	classToRefactor compile: 'm1: p1 m2: p2'.
+	classToRefactor compile: senderToChange, ' self m1: 1 m2: 2'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := RemoveParameterWithActualScope 
+		named: 'p1' 
+		from: classToRefactor>>oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.	
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m2: 2'.! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 8/18/2019 12:02:24'!
+classOfOtherImplementorName
+	
+	^#ClassOfSender! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 8/18/2019 12:02:41'!
+classToRefactorName
+
+	^#ClassToRemoveParameter! !
+
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 3/14/2019 13:45:13'!
 test01DoesNotRenamesPossibleMessageSendWhenInstructedToDoSo
 
@@ -2165,8 +3019,8 @@ test08RenamesWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelectorNo
 		assert: (classToRefactor>>senderToChange) sourceCode 
 		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', newSelector.! !
 
-!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 3/27/2019 16:03:44'!
-test09RenamesValidMessageSendsInSameMethod
+!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:29:55'!
+test09RenamesOnlyValidMessageSendWhenMoreSendsInSameMethod
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
 	
@@ -2198,7 +3052,7 @@ test09RenamesValidMessageSendsInSameMethod
 		assert: (classToRefactor>>senderToChange) sourceCode 
 		equals: senderToChange, ' self ', newSelector, '. ', self classOfOtherImplementorName, ' new ', oldSelector.! !
 
-!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 3/28/2019 19:49:34'!
+!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 11:50:06'!
 test10UsesTheModifiedSourceCodeWhenRenamingAMethodWithSureAndPossibleSenders
 
 	| classToRefactor oldSelector senderToChange newSelector rename |
@@ -2215,8 +3069,7 @@ test10UsesTheModifiedSourceCodeWhenRenamingAMethodWithSureAndPossibleSenders
 		from: oldSelector 
 		to: newSelector 
 		implementors: { classToRefactor>>oldSelector }
-		"There has to be the same sender twice because that is what happens when there are possible senders - Hernan"
-		senders: { classToRefactor>>senderToChange. classToRefactor>>senderToChange }
+		senders: { classToRefactor>>senderToChange.  }
 		withPossibleMessageSends: false.
 
 	rename apply.
@@ -2259,6 +3112,15 @@ test11CanNotRenameWithReceiverTypeOfCascadeMessageSendNotIncludedInImplementors
 			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
 			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
 	! !
+
+!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/18/2019 19:34:51'!
+test12SuperclassInstanceCreationMessagesShouldNotBeUsed
+
+	| instanceCreationMethod |
+	
+	(ChangeSelectorKeepingParameters class organization listAtCategoryNamed: 'instance creation') do: [ :anInstanceCreationSelector |
+		instanceCreationMethod := RenameSelectorWithActualScope class compiledMethodAt: anInstanceCreationSelector ifAbsent: [ self fail ].
+		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 3/14/2019 09:40:22'!
 classOfOtherImplementorName
@@ -5409,38 +6271,125 @@ isForCurrentTypeSystem
 
 	^ Smalltalk isLiveTypingInstalled ! !
 
-!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 3/28/2019 19:24:16'!
-addMessageSendSelectorKeywordRangesOf: aMethodNode to: rangesToKeywords
+!AddParameterWithActualScope methodsFor: 'initialization' stamp: 'HAW 8/17/2019 15:29:04'!
+initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends 
 	
-	| oldSelectorKeywordsRanges |
+	shouldChangePossibleMessageSends := aShouldChangePossibleMessageSends ! !
 
-	oldSelectorKeywordsRanges := aMethodNode 
-		actualMessageSendsSelectorPositionsOfAll: implementors 
-		ifAbsent: [ #() ] 
-		withPossibleMessageSends: shouldRenamePossibleMessageSends.
-	
-	oldSelectorKeywordsRanges do: [ :aMessageSendSelectorRanges | 
-		aMessageSendSelectorRanges withIndexDo: [ :aRange :index | 
-			rangesToKeywords add: aRange -> (newSelectorKeywords at: index) ]].
+!AddParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 8/17/2019 15:57:54'!
+messageSendKeywordPositionsIn: aMethodNode
+
+	^aMethodNode actualMessageSendKeywordPositionsOfAll: implementors at: index ifAbsent: [ #()] withPossibleMessageSends: shouldChangePossibleMessageSends.
 	! !
 
-!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 3/28/2019 20:00:19'!
-renameSendersIn: aMethod
+!AddParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 8/17/2019 15:58:04'!
+messageSendLastPositionIn: aMethodNode
 
-	"If there is a method with sure senders and possible senders, because the method was already changed and compiled 
-	renaming sure senders I have to obtain the new method because aMethod is pointing to the previous one. If I do not 
-	do that the changed source code will be lost - Hernan"
+	^aMethodNode actualMessageSendLastPositionsOfAll: implementors ifAbsent: [ #() ] withPossibleMessageSends: shouldChangePossibleMessageSends.
+			! !
 
-	| currentMethod |
+!AddParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 8/17/2019 16:25:24'!
+named: aNewParameter
+	at: anIndex 
+	initializedWith: aNewParameterValue
+	using: aNewKeyword 
+	toKeywordSelector: anOldSelector  
+	implementors: implementorsCollection 
+	senders: sendersCollection
+	withPossibleMessageSends: aShouldChangePossibleMessageSends
 	
-	currentMethod := aMethod methodClass >> aMethod selector.
+	self assertReceiverTypesOfAll: sendersCollection areIncludedInAllTypesOf: implementorsCollection. 
 
-	^super renameSendersIn: currentMethod! !
+	^(super
+		named: aNewParameter
+		at: anIndex 
+		initializedWith: aNewParameterValue
+		using: aNewKeyword 
+		toKeywordSelector: anOldSelector  
+		implementors: implementorsCollection 
+		senders: sendersCollection) initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends ! !
 
-!RenameSelectorWithActualScope methodsFor: 'initialization' stamp: 'HAW 3/14/2019 13:46:14'!
+!AddParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 8/17/2019 15:32:06'!
+named: aNewParameter 
+	initializedWith: aNewParameterValue 
+	toUnarySelector: anOldSelector  
+	implementors: implementorsCollection 
+	senders: sendersCollection
+ 	withPossibleMessageSends: aShouldChangePossibleMessageSends
+	
+	self assertReceiverTypesOfAll: sendersCollection areIncludedInAllTypesOf: implementorsCollection. 
+
+	^(super 
+		named: aNewParameter 
+		initializedWith: aNewParameterValue 
+		toUnarySelector: anOldSelector  
+		implementors: implementorsCollection 
+		senders: sendersCollection) initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends ! !
+
+!AddParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 8/17/2019 16:28:15'!
+named: aNewParameter 
+	initializedWith: aNewParameterValue
+	using: aNewKeyword 
+	toKeywordSelector: anOldSelector  
+	implementors: implementorsCollection 
+	senders: sendersCollection
+ 	withPossibleMessageSends: aShouldChangePossibleMessageSends
+
+	^self 
+		named: aNewParameter 
+		at: anOldSelector numArgs + 1
+		initializedWith: aNewParameterValue
+		using: aNewKeyword 
+		toKeywordSelector: anOldSelector  
+		implementors: implementorsCollection 
+		senders: sendersCollection
+	 	withPossibleMessageSends: aShouldChangePossibleMessageSends
+! !
+
+!AddParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 16:29:01'!
+named: aNewParameter
+	at: anIndex 
+	initializedWith: aNewParameterValue
+	using: aNewKeyword 
+	toKeywordSelector: anOldSelector  
+	implementors: implementorsCollection 
+	senders: sendersCollection
+	
+	self shouldNotImplement ! !
+
+!AddParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 16:29:30'!
+named: aNewParameter 
+	initializedWith: aNewParameterValue 
+	toUnarySelector: anOldSelector  
+	implementors: implementorsCollection 
+	senders: sendersCollection
+ 	
+	self shouldNotImplement ! !
+
+!AddParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 16:28:37'!
+named: aNewParameter 
+	initializedWith: aNewParameterValue
+	using: aNewKeyword 
+	toKeywordSelector: anOldSelector  
+	implementors: implementorsCollection 
+	senders: sendersCollection
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 8/18/2019 12:01:50'!
+messageSendSelectorKeywordPositionsIn: aMethodNode 
+	
+	^aMethodNode 
+		actualMessageSendsSelectorPositionsOfAll: implementors 
+		ifAbsent: [ #() ] 
+		withPossibleMessageSends: shouldChangePossibleMessageSends.
+	
+! !
+
+!RenameSelectorWithActualScope methodsFor: 'initialization' stamp: 'HAW 8/18/2019 12:01:50'!
 initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
 
-	shouldRenamePossibleMessageSends := aShouldRenamePossibleMessageSends ! !
+	shouldChangePossibleMessageSends := aShouldRenamePossibleMessageSends ! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 3/14/2019 13:45:50'!
 from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders withPossibleMessageSends: shouldRenamePossibleMessageSends
@@ -5450,34 +6399,173 @@ from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors sen
 	^(super from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders)
 		initilaizeWithPossibleMessageSends: shouldRenamePossibleMessageSends! !
 
-!RenameSelectorWithActualScope class methodsFor: 'pre-conditions' stamp: 'HAW 3/27/2019 15:31:14'!
-assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:15'!
+from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders
 
-	| messageSendsWithInvalidReceiverTypes | 
-		
-	messageSendsWithInvalidReceiverTypes := (ReceiverTypesOfMessageSendsConform from: aCollectionOfSenders to: aCollectionOfImplementors) value.
-	messageSendsWithInvalidReceiverTypes notEmpty ifTrue: [ self signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes ].! !
+	self shouldNotImplement ! !
 
-!RenameSelectorWithActualScope class methodsFor: 'exceptions' stamp: 'HAW 3/14/2019 10:54:37'!
-errorDescriptionForReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:34'!
+from: anOldSelector to: aNewSelector in: aClassToRefactor
 
-	^String streamContents: [ :stream |
-		stream nextPutAll: 'There are receiver types of message sends not included in implementor types'; newLine.
-		messageSendsWithInvalidReceiverTypes do: [ :array |
-			array first printClassAndSelectorOn: stream.
-			stream 
-				nextPutAll: ' - Message send: '; 
-				print: array second;
-				nextPutAll: ' - Types: ';
-				nextPutAll: array third asCommaSeparated: [ :type | stream nextPutAll: type name ];
-				newLine]] 
-		 ! !
+	self shouldNotImplement ! !
 
-!RenameSelectorWithActualScope class methodsFor: 'exceptions' stamp: 'HAW 3/14/2019 11:08:04'!
-signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes 
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:51'!
+from: anOldSelector to: aNewSelector inCategoriesAndHierarchyOf: aClass organizedBy: anOrganization
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:17'!
+from: anOldSelector to: aNewSelector inCategoryOf: aClass organizedBy: anOrganization
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:39'!
+from: anOldSelector to: aNewSelector inHierarchyOf: aClass
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:51'!
+from: anOldSelector to: aNewSelector inSystem: aSystem
+
+	self shouldNotImplement ! !
+
+!RemoveParameterWithActualScope methodsFor: 'initialization' stamp: 'HAW 8/18/2019 12:01:30'!
+initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends 
 	
-	CanNotChangeSelectorWithNotIncludedTypes signalWith: messageSendsWithInvalidReceiverTypes
-		! !
+	shouldChangePossibleMessageSends := aShouldChangePossibleMessageSends ! !
+
+!RemoveParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 8/18/2019 12:13:12'!
+keywordAndParameterPositionsIn: aMethodNode
+	
+	^aMethodNode 
+		actualMessageSendKeywordAndParameterPositionsOfAll: implementors 
+		at: parameterIndex 
+		of: oldSelector 
+		ifAbsent: [ #() ]
+		withPossibleMessageSends: shouldChangePossibleMessageSends.
+	! !
+
+!RemoveParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 8/18/2019 19:13:04'!
+named: aParameterToRemove from: aMethod implementors: implementorsCollection senders: sendersCollection withPossibleMessageSends: aShouldChangePossibleMessageSends
+
+	self assertReceiverTypesOfAll: sendersCollection areIncludedInAllTypesOf: implementorsCollection. 
+
+	^(super named: aParameterToRemove from: aMethod implementors: implementorsCollection senders: sendersCollection) 
+		initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends ! !
+
+!RemoveParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/18/2019 19:35:36'!
+named: aParameterToRemove from: aMethod implementors: implementorsCollection senders: sendersCollection
+
+	self shouldNotImplement ! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:20:59'!
+createRefactoring
+
+	^ self isActualScopeChoice
+		ifTrue: [ self createRefactoringWithActualScope ]
+		ifFalse: [ super createRefactoring ]! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:24:02'!
+createRefactoringWithActualScope
+	
+	self filterSenders.
+	oldSelector isUnary ifTrue: [ ^self createRefactoringWithActualScopeForUnarySelector].
+	oldSelector isKeyword ifTrue: [ ^self createRefactoringWithActualScopeForKeywordSelector ].
+	
+	self error: 'oldSelector should be unary or keyword!!'
+	! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:26:26'!
+createRefactoringWithActualScopeForKeywordSelector 
+	
+	^self refactoringClass 
+		named: newParameter
+		at: parameterIndex 
+		initializedWith: newParameterValue 
+		using: newKeyword 
+		toKeywordSelector: oldSelector 
+		implementors: implementors 
+		senders: senders 
+		withPossibleMessageSends: self isWithPossibleMessageSends ! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:25:51'!
+createRefactoringWithActualScopeForUnarySelector
+	
+	^self refactoringClass 
+		named: newParameter
+		initializedWith: newParameterValue 
+		toUnarySelector: oldSelector 
+		implementors: implementors 
+		senders: senders 
+		withPossibleMessageSends: self isWithPossibleMessageSends! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:24:15'!
+refactoringClass
+	
+	^self isActualScopeChoice 
+		ifTrue: [ AddParameterWithActualScope ]
+		ifFalse: [ super refactoringClass ]! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:20:59'!
+valueHandlingRefactoringExceptions: aBlock
+
+	^super valueHandlingRefactoringExceptions: [ aBlock 
+		on: CanNotChangeSelectorWithNotIncludedTypes
+		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:20:59'!
+calculateImplementorsAndSenders
+
+	self isActualScopeChoice ifTrue: [ ^self actualImplementorsAndSenders ].
+	
+	^super calculateImplementorsAndSenders ! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:39:46'!
+messageNode
+
+	^messageNode ! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:20:59'!
+openChangeSelectorSendersStepWindow
+	
+	self isActualScopeChoice 
+		ifTrue: [ ChangeSelectorSendersStepWindow openForActualScopeFrom: self ]
+		ifFalse: [ super openChangeSelectorSendersStepWindow ]
+	
+	! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:45:55'!
+scopeOptionLabels
+	
+	^super scopeOptionLabels, self actualScopeOptionLabels! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:39:54'!
+selectedSelector
+
+	^selectedSelector ! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 8/17/2019 22:19:31'!
+createSenders
+
+	^OrderedCollection new.
+! !
+
+!AddParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 8/17/2019 20:20:59'!
+initializeOf: aMessageNode at: aSelectedSelector
+
+	messageNode := aMessageNode.
+	selectedSelector := aSelectedSelector.
+! !
+
+!AddParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 8/19/2019 05:43:26'!
+createAndValueHandlingExceptionsOn: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
+	
+	^self createAndValueHandlingExceptions: [ self on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector ]! !
+
+!AddParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 8/18/2019 20:38:05'!
+on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
+
+	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 4/4/2019 08:28:23'!
 createRefactoring
@@ -5486,33 +6574,17 @@ createRefactoring
 		ifTrue: [ self createRefactoringWithActualScope ]
 		ifFalse: [ super createRefactoring ]! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/14/2019 18:56:35'!
+!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:34:26'!
 createRefactoringWithActualScope
 	
 	self filterSenders.
-	^self refactoringClass from: oldSelector to: newSelector implementors: implementors senders: senders withPossibleMessageSends: (scopeChoice = 6) ! !
-
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/14/2019 18:54:51'!
-handleCanNotChangeSelectorWithNotIncludedTypes: anError
-
-	| errorIcon messageSendWithInvalidReceiverType selection selectionMenu |
 	
-	errorIcon := Theme current closeIcon.
-	selectionMenu := PopUpMenu 
-		labelArray: anError messageSendsWithInvalidReceiverTypesAsLabels
-		lines: #()  
-		icons: ((1 to: anError messageSendsWithInvalidReceiverTypes size) collect: [ :aNumber | errorIcon ]).
-		
-	selection := selectionMenu startUpWithCaption: anError messageText. 
-	selection = 0 ifFalse: [ 
-		messageSendWithInvalidReceiverType := anError messageSendsWithInvalidReceiverTypes at: selection.
-		MessageSetWindow 
-			openMessageList: (Array with: (MethodReference method: messageSendWithInvalidReceiverType first)) 
-			label: 'Missing implementor types: ', messageSendWithInvalidReceiverType third asCommaStringAnd
-			autoSelect: (String streamContents: [ :stream | messageSendWithInvalidReceiverType second printOn: stream indent: 0 ])].
-		
-	self endRequest 
-! !
+	^self refactoringClass 
+		from: oldSelector 
+		to: newSelector 
+		implementors: implementors 
+		senders: senders 
+		withPossibleMessageSends: self isWithPossibleMessageSends ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 4/4/2019 08:30:41'!
 refactoringClass
@@ -5528,27 +6600,6 @@ valueHandlingRefactoringExceptions: aBlock
 		on: CanNotChangeSelectorWithNotIncludedTypes
 		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/15/2019 16:29:23'!
-actualImplementorsAndSenders 
-
-	self isRenameOnMessageSend 
-		ifTrue: [  self actualImplementorsAndSendersWhenRenamingOnMessageSend ]
-		ifFalse: [ self refactoringClass addActualImplementorsOf: oldSelector in: implementingClass to: implementors andActualSendersTo: senders inSystem: Smalltalk ]
-! !
-
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/15/2019 16:37:54'!
-actualImplementorsAndSendersWhenRenamingOnMessageSend
-
-	| incompleteTypeInfo receiverTypes |
-
-	incompleteTypeInfo := Set new.
-	receiverTypes := messageNode receiverOrCascadeReceiver typesIn: implementingClass>>selectedSelector addingIncompleteTypeInfoTo: incompleteTypeInfo.
-	
-	receiverTypes isEmpty ifTrue: [ self canNotRenameWithoutTypeInfo ].
-	incompleteTypeInfo notEmpty ifTrue: [ self canNotRenameWithIncompleteTypeInfo ].
-	
-	self refactoringClass addActualImplementorsOf: oldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: Smalltalk ! !
-
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 4/4/2019 08:30:11'!
 calculateImplementorsAndSenders
 
@@ -5556,37 +6607,10 @@ calculateImplementorsAndSenders
 	
 	^super calculateImplementorsAndSenders ! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/15/2019 16:36:37'!
-canNotRenameWithIncompleteTypeInfo
-	
-	self 
-		inform: 'Can not rename because there are errors getting receiver types';
-		endRequest ! !
+!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:40:27'!
+messageNode
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/15/2019 16:36:54'!
-canNotRenameWithoutTypeInfo
-	
-	self 
-		inform: 'Can not rename because there is no receiver type information';
-		endRequest ! !
-
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/14/2019 19:06:41'!
-filterSenders
-	
-	senders := senders 
-		reject: [ :aMethodReferenceOrCompiledMethod | 
-			(aMethodReferenceOrCompiledMethod isKindOf: MethodReference) and: [ aMethodReferenceOrCompiledMethod isValid not ]]
-		thenCollect: [ :aMethodReferenceOrCompiledMethod | 
-			(aMethodReferenceOrCompiledMethod isKindOf: CompiledMethod) 
-				ifTrue: [ aMethodReferenceOrCompiledMethod ]
-				ifFalse: [ aMethodReferenceOrCompiledMethod compiledMethod ]]! !
-
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/13/2019 21:33:01'!
-initializeImplementorsAndSenders
-
-	implementors := IdentitySet new.
-	senders := OrderedCollection new.
-! !
+	^messageNode ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 11:16:30'!
 openChangeSelectorSendersStepWindow
@@ -5597,27 +6621,21 @@ openChangeSelectorSendersStepWindow
 	
 	! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/14/2019 16:50:26'!
+!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:46:28'!
 scopeOptionLabels
 	
-	^super scopeOptionLabels, { 'Actual Implementors & Actual/Possible Message Sends'. 'Actual Implementors & Actual Message Sends' } ! !
+	^super scopeOptionLabels, self actualScopeOptionLabels! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/14/2019 18:18:32'!
-sendersFrom: methodReferences
+!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/17/2019 20:40:35'!
+selectedSelector
 
-	senders := methodReferences
-		reject: [ :aMethodReference | aMethodReference stringVersion beginsWith: '--' ]
-		thenCollect: [:aMethodReference | aMethodReference compiledMethod ]! !
+	^selectedSelector ! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'testing' stamp: 'HAW 4/4/2019 08:29:29'!
-isActualScopeChoice
-	
-	^scopeChoice isNil or: [ scopeChoice >= 6 ]! !
+!RenameSelectorWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 8/17/2019 23:52:19'!
+createSenders
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'testing' stamp: 'HAW 3/15/2019 14:47:51'!
-isRenameOnMessageSend
-	
-	^messageNode notNil! !
+	^OrderedCollection new.
+! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 3/15/2019 16:27:27'!
 initializeOf: aMessageNode at: aSelectedSelector
@@ -5626,17 +6644,99 @@ initializeOf: aMessageNode at: aSelectedSelector
 	selectedSelector := aSelectedSelector.
 ! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'types' stamp: 'HAW 3/28/2019 18:45:52'!
-receiverTypes
-	
-	^implementors collect: [ :anImplementor | anImplementor methodClass ]! !
-
 !RenameSelectorWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 3/15/2019 14:40:45'!
 createAndValueHandlingExceptionsOn: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 	
 	^self createAndValueHandlingExceptions: [ self on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector ]! !
 
-!RenameSelectorWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 3/15/2019 14:41:01'!
+!RenameSelectorWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 8/18/2019 20:37:55'!
+on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
+
+	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/18/2019 19:39:24'!
+createRefactoring
+
+	^ self isActualScopeChoice
+		ifTrue: [ self createRefactoringWithActualScope ]
+		ifFalse: [ super createRefactoring ]! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/19/2019 05:54:36'!
+createRefactoringWithActualScope
+	
+	self filterSenders.
+	
+	^self refactoringClass 
+		named: parameterToRemove 
+		from: originalMethod 
+		implementors: implementors 
+		senders: senders 
+		withPossibleMessageSends: self isWithPossibleMessageSends.! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/18/2019 19:41:32'!
+refactoringClass
+	
+	^self isActualScopeChoice 
+		ifTrue: [ RemoveParameterWithActualScope ]
+		ifFalse: [ super refactoringClass ]! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/18/2019 19:39:24'!
+valueHandlingRefactoringExceptions: aBlock
+
+	^super valueHandlingRefactoringExceptions: [ aBlock 
+		on: CanNotChangeSelectorWithNotIncludedTypes
+		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/18/2019 19:39:24'!
+calculateImplementorsAndSenders
+
+	self isActualScopeChoice ifTrue: [ ^self actualImplementorsAndSenders ].
+	
+	^super calculateImplementorsAndSenders ! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/18/2019 19:39:24'!
+messageNode
+
+	^messageNode ! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/18/2019 19:39:24'!
+openChangeSelectorSendersStepWindow
+	
+	self isActualScopeChoice 
+		ifTrue: [ ChangeSelectorSendersStepWindow openForActualScopeFrom: self ]
+		ifFalse: [ super openChangeSelectorSendersStepWindow ]
+	
+	! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/18/2019 19:39:24'!
+scopeOptionLabels
+	
+	^super scopeOptionLabels, self actualScopeOptionLabels! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 8/18/2019 19:39:24'!
+selectedSelector
+
+	^selectedSelector ! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 8/18/2019 19:39:24'!
+createSenders
+
+	^OrderedCollection new.
+! !
+
+!RemoveParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 8/18/2019 19:39:24'!
+initializeOf: aMessageNode at: aSelectedSelector
+
+	messageNode := aMessageNode.
+	selectedSelector := aSelectedSelector.
+! !
+
+!RemoveParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 8/19/2019 05:43:33'!
+createAndValueHandlingExceptionsOn: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
+	
+	^self createAndValueHandlingExceptions: [ self on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector ]! !
+
+!RemoveParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 8/18/2019 19:39:25'!
 on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
@@ -6114,10 +7214,14 @@ modifyClassDescriptionShape
 		on: Error do: [ :anError | anError return: nil ]
 ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 3/12/2019 22:22:03'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 8/18/2019 20:17:29'!
 registerRefactoringAppliers
 
-	RefactoringApplier registerRenameSelectorApplier: RenameSelectorWithActualScopeApplier ! !
+	RefactoringApplier 
+		registerRenameSelectorApplier: RenameSelectorWithActualScopeApplier;
+		registerAddParameterApplier: AddParameterWithActualScopeApplier;
+		registerRemoveParameterApplier: RemoveParameterWithActualScopeApplier
+		! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 3/1/2019 16:38:17'!
 setAnnotationInfoForLiveTyping
@@ -6221,7 +7325,7 @@ smalltalkEditorCmdShortcutsSpec
 		)
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/17/2019 10:48:40'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/18/2019 20:44:35'!
 smalltalkEditorMenuOptions
 
 	^`{
@@ -6514,7 +7618,7 @@ doneCompilingSourceCode
 	
 ! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 6/3/2019 09:34:53'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/19/2019 06:06:02'!
 messageListKeyFromOriginalSourceCode
 
 	^'messageListKey: aChar from: view
@@ -6550,11 +7654,13 @@ messageListKeyFromOriginalSourceCode
 			aChar == $x ifTrue: [^ model removeMessage].
 			aChar == $t ifTrue: [^ model runMethodTest].
 			aChar == $r ifTrue: [^ model debugMethodTest].
-			aChar == $R ifTrue: [^ self renameSelector]]
+			aChar == $R ifTrue: [^ self renameSelector].
+			aChar == $U ifTrue: [^ self addParameter ].
+			aChar == $I ifTrue: [^ self removeParameter ]]
 		ifNil: [
 			aChar == $R ifTrue: [^ model renameClass]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/10/2019 18:58:46'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/19/2019 06:27:12'!
 messageListKeyFromSourceCode
 
 	^'messageListKey: aChar from: view
@@ -6595,7 +7701,9 @@ messageListKeyFromSourceCode
 			aChar == $x ifTrue: [^ model removeMessage].
 			aChar == $t ifTrue: [^ model runMethodTest].
 			aChar == $r ifTrue: [^ model debugMethodTest].
-			aChar == $R ifTrue: [^ self renameSelector]]
+			aChar == $R ifTrue: [^ self renameSelector].
+			aChar == $U ifTrue: [^ self addParameter ].
+			aChar == $I ifTrue: [^ self removeParameter ]]
 		ifNil: [
 			aChar == $R ifTrue: [^ model renameClass]]'! !
 
@@ -11240,13 +12348,19 @@ typesSize
 	
 	^firstIndexOfNil - 1! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:15:54'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:05:08'!
 actualSendersOf: aCompiledMethod 
+	
+	^self actualSendersOf: aCompiledMethod using: self methodNode
+	! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:04:42'!
+actualSendersOf: aCompiledMethod using: aCompiledMethodMethodNode
 	
 	| sendersCollector |
 	
 	sendersCollector := ActualMessageSendsCollector in: self of: aCompiledMethod.
-	self methodNode accept: sendersCollector.
+	aCompiledMethodMethodNode accept: sendersCollector.
 	
 	^sendersCollector ! !
 
@@ -11296,6 +12410,12 @@ asMethodReference
 caretAutoCompleterDocumentation
 
 	^ Text string: String newLineString, '^ ' attributes: (SHTextStylerST80 attributesFor: #return)! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 11:29:11'!
+compiledMethod
+
+	"To be polimorphic with MethodReference - Hernan"
+	^self! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 19:42:14'!
 copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
@@ -11360,6 +12480,12 @@ isQuickReturnSelf
 isReturnSpecialTrue
 	
 	^self primitive = 257! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 11:29:00'!
+isValid
+
+	"To be polimorphic with MethodReference - Hernan"
+	^true! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:34:33'!
 liveTypingAutoCompleterDocumentation
@@ -11693,23 +12819,56 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons c
 
 	^aTypeCast typesOf: self when: (self typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons)! !
 
-!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 09:00:50'!
-actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
-	
-	| ranges sortedRanges sendersCollector sender |
-	
-	sender := class>>selector.
-	ranges := Set new.
-	compiledMethods do: [ :aCompiledMethod |
-		sendersCollector := sender actualSendersOf: aCompiledMethod.
-		ranges addAll: (sendersCollector sureMessageSends collect: [ :aMessageSendNode | aMessageSendNode keywordRanges ]).
-		shouldAddPossibleMessageSends ifTrue: [
-			ranges addAll: (sendersCollector possibleMessageSends collect: [ :aPossibleMessageSend | aPossibleMessageSend key keywordRanges ])]].
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:22:35'!
+actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods 
+		at: aParameterIndex 
+		of: aSelector
+		ifAbsent: absentBlock 
+		withPossibleMessageSends: shouldAddPossibleMessageSends 
+		using: aMethodNode
 		
-	ranges isEmpty ifTrue: [ ^aBlock value ].
-	sortedRanges := ranges asSortedCollection: [ :left :right | left first first < right first first ].
+	^self 
+		withActualMessageSendsOfAll: compiledMethods 
+		do: [ :aMessageSendNode | aMessageSendNode keywordAndParameterPositionAt: aParameterIndex encodedWith: self ifAbsent: absentBlock ]
+		ifAbsent: absentBlock 
+		withPossibleMessageSends: shouldAddPossibleMessageSends 
+		sortingWith: [ :left :right | left first <= right first ]
+		using: aMethodNode ! !
 
-	^sortedRanges ! !
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:12:39'!
+actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode 
+
+	^self 
+		withActualMessageSendsOfAll: compiledMethods 
+		do: [ :aMessageSendNode | (aMessageSendNode keywordPositionAt: aKeywordIndex) first ] 
+		ifAbsent: absentBlock 
+		withPossibleMessageSends: shouldAddPossibleMessageSends 
+		sortingWith: [ :left :right | left <= right ] 
+		using: aMethodNode 
+! !
+
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:19:13'!
+actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
+
+	^self 
+		withActualMessageSendsOfAll: compiledMethods 
+		do: [ :aMessageSendNode | (sourceRanges at: aMessageSendNode) last ]
+		ifAbsent: absentBlock 
+		withPossibleMessageSends: shouldAddPossibleMessageSends 
+		sortingWith: [ :left :right | left <= right ] 
+		using: aMethodNode ! !
+
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:17:05'!
+actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode  
+	
+	^self 
+		withActualMessageSendsOfAll: compiledMethods 
+		do:  [ :aMessageSendNode | aMessageSendNode keywordRanges ] 
+		ifAbsent: absentBlock 
+		withPossibleMessageSends: shouldAddPossibleMessageSends 
+		sortingWith: [ :left :right | left first first < right first first ] 
+		using: aMethodNode.
+! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 13:34:58'!
 topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
@@ -11728,6 +12887,29 @@ topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
 
 	^ nodeWithRangeAtPosition ifNil: anAbsentBlock ifNotNil: [ nodeWithRangeAtPosition ]
 			! !
+
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:22:46'!
+withActualMessageSendsOfAll: compiledMethods 
+	do: aMessageSendNodeBlock 
+	ifAbsent: absentBlock 
+	withPossibleMessageSends: shouldAddPossibleMessageSends 
+	sortingWith: aSortBlock 
+	using: aMethodNode 
+	
+	| ranges sortedRanges sendersCollector sender |
+	
+	sender := class>>selector.
+	ranges := Set new.
+	compiledMethods do: [ :aCompiledMethod |
+		sendersCollector := sender actualSendersOf: aCompiledMethod using: aMethodNode.
+		ranges addAll: (sendersCollector sureMessageSends collect: aMessageSendNodeBlock).
+		shouldAddPossibleMessageSends ifTrue: [
+			ranges addAll: (sendersCollector possibleMessageSends collect: [ :aPossibleMessageSend | aMessageSendNodeBlock value: aPossibleMessageSend key])]].
+		
+	ranges isEmpty ifTrue: [ ^absentBlock value ].
+	sortedRanges := ranges asSortedCollection: aSortBlock.
+
+	^sortedRanges ! !
 
 !AssignmentNode methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:58:21'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
@@ -12050,10 +13232,35 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons c
 		
 	^types! !
 
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 09:01:01'!
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:17:22'!
+actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParameterIndex of: aSelector ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
+	
+	^encoder 
+		actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods 
+		at: aParameterIndex 
+		of: aSelector
+		ifAbsent: absentBlock 
+		withPossibleMessageSends: shouldAddPossibleMessageSends 
+		using: self
+	
+	! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:12:28'!
+actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
+
+	^encoder actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
+! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:15:25'!
+actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends  
+
+	^encoder actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
+! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:16:57'!
 actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
 
-	^encoder actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends
+	^encoder actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
 ! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2018 14:20:06'!
@@ -12452,4 +13659,142 @@ addActualImplementorsOf: anOldSelector in: aPotentialClassToRefactor to: impleme
 		to: implementors 
 		andActualSendersTo: senders 
 		inSystem: aSystem ! !
+
+!ChangeSelector class methodsFor: '*LiveTyping-pre-conditions' stamp: 'HAW 8/17/2019 15:32:57'!
+assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors
+
+	| messageSendsWithInvalidReceiverTypes | 
+		
+	messageSendsWithInvalidReceiverTypes := (ReceiverTypesOfMessageSendsConform from: aCollectionOfSenders to: aCollectionOfImplementors) value.
+	messageSendsWithInvalidReceiverTypes notEmpty ifTrue: [ self signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes ].! !
+
+!ChangeSelector class methodsFor: '*LiveTyping-exceptions' stamp: 'HAW 8/17/2019 15:33:33'!
+errorDescriptionForReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes
+
+	^String streamContents: [ :stream |
+		stream nextPutAll: 'There are receiver types of message sends not included in implementor types'; newLine.
+		messageSendsWithInvalidReceiverTypes do: [ :array |
+			array first printClassAndSelectorOn: stream.
+			stream 
+				nextPutAll: ' - Message send: '; 
+				print: array second;
+				nextPutAll: ' - Types: ';
+				nextPutAll: array third asCommaSeparated: [ :type | stream nextPutAll: type name ];
+				newLine]] 
+		 ! !
+
+!ChangeSelector class methodsFor: '*LiveTyping-exceptions' stamp: 'HAW 8/17/2019 15:33:50'!
+signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes 
+	
+	CanNotChangeSelectorWithNotIncludedTypes signalWith: messageSendsWithInvalidReceiverTypes
+		! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:37:12'!
+actualImplementorsAndSenders 
+
+	self isOnMessageSend 
+		ifTrue: [ self actualImplementorsAndSendersWhenOnMessageSend ]
+		ifFalse: [ self actualImplementorsAndSendersWhenNotOnMessageSend ]
+! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:37:26'!
+actualImplementorsAndSendersWhenNotOnMessageSend 
+
+	self refactoringClass 
+		addActualImplementorsOf: oldSelector 
+		in: implementingClass 
+		to: implementors 
+		andActualSendersTo: senders 
+		inSystem: Smalltalk! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:42:46'!
+actualImplementorsAndSendersWhenOnMessageSend
+
+	| incompleteTypeInfo receiverTypes |
+
+	incompleteTypeInfo := Set new.
+	receiverTypes := self messageNode receiverOrCascadeReceiver typesIn: implementingClass>>self selectedSelector addingIncompleteTypeInfoTo: incompleteTypeInfo.
+	
+	receiverTypes isEmpty ifTrue: [ self canNotRefactorWithoutTypeInfo ].
+	incompleteTypeInfo notEmpty ifTrue: [ self canNotRefactorWithIncompleteTypeInfo ].
+	
+	self refactoringClass addActualImplementorsOf: oldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: Smalltalk ! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:46:09'!
+actualScopeOptionLabels
+
+	^{ 'Actual Implementors & Actual/Possible Message Sends'. 'Actual Implementors & Actual Message Sends' } ! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:42:14'!
+canNotRefactorWithIncompleteTypeInfo
+	
+	self 
+		inform: 'Can not apply the refactoring because there are errors getting receiver types';
+		endRequest ! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/19/2019 06:29:14'!
+canNotRefactorWithoutTypeInfo
+	
+	self 
+		inform: 'Can not apply the refactoring because there is no receiver type information';
+		endRequest ! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 11:30:07'!
+filterSenders
+	
+	senders := (senders 
+		reject: [ :aMethodReferenceOrCompiledMethod | aMethodReferenceOrCompiledMethod isValid not ]
+		thenCollect: [ :aMethodReferenceOrCompiledMethod | aMethodReferenceOrCompiledMethod compiledMethod ]) asIdentitySet ! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:32:57'!
+handleCanNotChangeSelectorWithNotIncludedTypes: anError
+
+	| errorIcon messageSendWithInvalidReceiverType selection selectionMenu |
+	
+	errorIcon := Theme current closeIcon.
+	selectionMenu := PopUpMenu 
+		labelArray: anError messageSendsWithInvalidReceiverTypesAsLabels
+		lines: #()  
+		icons: ((1 to: anError messageSendsWithInvalidReceiverTypes size) collect: [ :aNumber | errorIcon ]).
+		
+	selection := selectionMenu startUpWithCaption: anError messageText. 
+	selection = 0 ifFalse: [ 
+		messageSendWithInvalidReceiverType := anError messageSendsWithInvalidReceiverTypes at: selection.
+		MessageSetWindow 
+			openMessageList: (Array with: (MethodReference method: messageSendWithInvalidReceiverType first)) 
+			label: 'Missing implementor types: ', messageSendWithInvalidReceiverType third asCommaStringAnd
+			autoSelect: (String streamContents: [ :stream | messageSendWithInvalidReceiverType second printOn: stream indent: 0 ])].
+		
+	self endRequest 
+! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 22:14:46'!
+isActualScopeChoice
+	
+	^scopeChoice isNil or: [ scopeChoice >= 6 ]! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 22:15:20'!
+isOnMessageSend
+	
+	^self messageNode notNil! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:33:43'!
+isWithPossibleMessageSends
+
+	^scopeChoice = 6! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:39:02'!
+messageNode
+	
+	self subclassResponsibility ! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 22:15:54'!
+receiverTypes
+	
+	^implementors collect: [ :anImplementor | anImplementor methodClass ]! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:39:15'!
+selectedSelector
+
+	self subclassResponsibility ! !
 LiveTyping initialize!
