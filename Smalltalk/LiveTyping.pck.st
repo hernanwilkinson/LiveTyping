@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 19 August 2019 at 6:31:11 am'!
-'Description Add/Remove parameters with actual/actual scope'!
-!provides: 'LiveTyping' 1 40!
+'From Cuis 5.0 [latest update: #3843] on 21 August 2019 at 10:33:38 pm'!
+'Description Type checking improvements and support for x ifNotNil: [ ^... ] and the like'!
+!provides: 'LiveTyping' 1 41!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -83,7 +83,7 @@ ReceiverTypesOfMessageSendsConform class
 
 !classDefinition: #MethodTypeCheckerVisitor category: #'LiveTyping-TypeChecking'!
 ParseNodeVisitor subclass: #MethodTypeCheckerVisitor
-	instanceVariableNames: 'method errors warnings methodNode actualMethod castingStrategy problems'
+	instanceVariableNames: 'errors warnings methodNode actualMethod problems methodReference blockCastingApplier castingApplierBuilder'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
@@ -751,29 +751,9 @@ Object subclass: #Customer
 Customer class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCastingStrategy category: #'LiveTyping-TypeChecking'!
-Object subclass: #TypeCastingStrategy
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCastingStrategy class' category: #'LiveTyping-TypeChecking'!
-TypeCastingStrategy class
-	instanceVariableNames: ''!
-
-!classDefinition: #NoTypeCast category: #'LiveTyping-TypeChecking'!
-TypeCastingStrategy subclass: #NoTypeCast
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'NoTypeCast class' category: #'LiveTyping-TypeChecking'!
-NoTypeCast class
-	instanceVariableNames: ''!
-
 !classDefinition: #TypeCast category: #'LiveTyping-TypeChecking'!
-TypeCastingStrategy subclass: #TypeCast
-	instanceVariableNames: 'messageNode typeToCastTo objectToCast castingNode rejectingTypeNode shouldRejectType shouldCast previousStrategy'
+Object subclass: #TypeCast
+	instanceVariableNames: 'objetToCast'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
@@ -781,8 +761,48 @@ TypeCastingStrategy subclass: #TypeCast
 TypeCast class
 	instanceVariableNames: ''!
 
+!classDefinition: #ManyTypesCast category: #'LiveTyping-TypeChecking'!
+TypeCast subclass: #ManyTypesCast
+	instanceVariableNames: 'typesToCastTo typesToReject'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'ManyTypesCast class' category: #'LiveTyping-TypeChecking'!
+ManyTypesCast class
+	instanceVariableNames: ''!
+
+!classDefinition: #OneTypeCast category: #'LiveTyping-TypeChecking'!
+TypeCast subclass: #OneTypeCast
+	instanceVariableNames: 'typeToCastTo'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'OneTypeCast class' category: #'LiveTyping-TypeChecking'!
+OneTypeCast class
+	instanceVariableNames: ''!
+
+!classDefinition: #EqualTypeCast category: #'LiveTyping-TypeChecking'!
+OneTypeCast subclass: #EqualTypeCast
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'EqualTypeCast class' category: #'LiveTyping-TypeChecking'!
+EqualTypeCast class
+	instanceVariableNames: ''!
+
+!classDefinition: #EqualTypeReject category: #'LiveTyping-TypeChecking'!
+OneTypeCast subclass: #EqualTypeReject
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'EqualTypeReject class' category: #'LiveTyping-TypeChecking'!
+EqualTypeReject class
+	instanceVariableNames: ''!
+
 !classDefinition: #IsKindOfTypeCast category: #'LiveTyping-TypeChecking'!
-TypeCast subclass: #IsKindOfTypeCast
+OneTypeCast subclass: #IsKindOfTypeCast
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -791,14 +811,114 @@ TypeCast subclass: #IsKindOfTypeCast
 IsKindOfTypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #OneTypeCast category: #'LiveTyping-TypeChecking'!
-TypeCast subclass: #OneTypeCast
+!classDefinition: #IsKindOfTypeReject category: #'LiveTyping-TypeChecking'!
+OneTypeCast subclass: #IsKindOfTypeReject
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'OneTypeCast class' category: #'LiveTyping-TypeChecking'!
-OneTypeCast class
+!classDefinition: 'IsKindOfTypeReject class' category: #'LiveTyping-TypeChecking'!
+IsKindOfTypeReject class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCastApplier category: #'LiveTyping-TypeChecking'!
+Object subclass: #TypeCastApplier
+	instanceVariableNames: 'receiverTypes'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCastApplier class' category: #'LiveTyping-TypeChecking'!
+TypeCastApplier class
+	instanceVariableNames: ''!
+
+!classDefinition: #EffectiveTypeCastApplier category: #'LiveTyping-TypeChecking'!
+TypeCastApplier subclass: #EffectiveTypeCastApplier
+	instanceVariableNames: 'previous casts rejections'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'EffectiveTypeCastApplier class' category: #'LiveTyping-TypeChecking'!
+EffectiveTypeCastApplier class
+	instanceVariableNames: ''!
+
+!classDefinition: #NoTypeCastApplier category: #'LiveTyping-TypeChecking'!
+TypeCastApplier subclass: #NoTypeCastApplier
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'NoTypeCastApplier class' category: #'LiveTyping-TypeChecking'!
+NoTypeCastApplier class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+Object subclass: #TypeCastApplierBuilder
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+TypeCastApplierBuilder class
+	instanceVariableNames: ''!
+
+!classDefinition: #EffectiveTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+TypeCastApplierBuilder subclass: #EffectiveTypeCastApplierBuilder
+	instanceVariableNames: 'castingBlock rejectingBlock objectToCast afterMessageTypeCasts'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'EffectiveTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+EffectiveTypeCastApplierBuilder class
+	instanceVariableNames: ''!
+
+!classDefinition: #IsKindOfManyTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+EffectiveTypeCastApplierBuilder subclass: #IsKindOfManyTypeCastApplierBuilder
+	instanceVariableNames: 'typesToCastTo typesToReject'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'IsKindOfManyTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+IsKindOfManyTypeCastApplierBuilder class
+	instanceVariableNames: ''!
+
+!classDefinition: #OneTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+EffectiveTypeCastApplierBuilder subclass: #OneTypeCastApplierBuilder
+	instanceVariableNames: 'castType'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'OneTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+OneTypeCastApplierBuilder class
+	instanceVariableNames: ''!
+
+!classDefinition: #EqualsTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+OneTypeCastApplierBuilder subclass: #EqualsTypeCastApplierBuilder
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'EqualsTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+EqualsTypeCastApplierBuilder class
+	instanceVariableNames: ''!
+
+!classDefinition: #IsKindOfTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+OneTypeCastApplierBuilder subclass: #IsKindOfTypeCastApplierBuilder
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'IsKindOfTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+IsKindOfTypeCastApplierBuilder class
+	instanceVariableNames: ''!
+
+!classDefinition: #NoTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+TypeCastApplierBuilder subclass: #NoTypeCastApplierBuilder
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'NoTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+NoTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
 !classDefinition: #TypeChecker category: #'LiveTyping-TypeChecking'!
@@ -1548,7 +1668,7 @@ from: aCollectionOfSenders to: aCollectionOfImplementors
 
 	^self new initializeFrom: aCollectionOfSenders to: aCollectionOfImplementors! !
 
-!MethodTypeCheckerVisitor methodsFor: 'evaluating' stamp: 'HAW 8/9/2019 14:46:00'!
+!MethodTypeCheckerVisitor methodsFor: 'evaluating' stamp: 'HAW 8/21/2019 18:29:22'!
 value
 
 	self 
@@ -1556,232 +1676,215 @@ value
 		visitMethodNode: methodNode.	
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:39:42'!
-castingStrategyForClassEqualOrIdenticalTo: aMessageNode
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForClassEqualOrIdenticalTo: aMessageNode
 	
-	^castingStrategy
-		forCasting: aMessageNode receiver arguments first receiver
+	^EqualsTypeCastApplierBuilder 
 		to: aMessageNode receiver receiver key value 
-		for: aMessageNode 
-		castingOn: aMessageNode arguments first 
-		rejectingOn: aMessageNode arguments second! !
+		on: aMessageNode receiver arguments first receiver
+		during: aMessageNode arguments first 
+		rejectingDuring: aMessageNode arguments second! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:39:42'!
-castingStrategyForClassNotEqualOrNotIdenticalTo: aMessageNode
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForClassNotEqualOrNotIdenticalTo: aMessageNode
 	
-	^castingStrategy
-		forCasting: aMessageNode receiver arguments first receiver
+	^EqualsTypeCastApplierBuilder 
 		to: aMessageNode receiver receiver key value 
-		for: aMessageNode 
-		castingOn: aMessageNode arguments second 
-		rejectingOn: aMessageNode arguments first! !
+		on: aMessageNode receiver arguments first receiver
+		during: aMessageNode arguments second 
+		rejectingDuring: aMessageNode arguments first
+		! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:39:42'!
-castingStrategyForEqualOrIdenticalToClass: aMessageNode
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForEqualOrIdenticalToClass: aMessageNode
 	
-	^castingStrategy
-		forCasting: aMessageNode receiver receiver receiver
+	^EqualsTypeCastApplierBuilder 
 		to: aMessageNode receiver arguments first key value
-		for: aMessageNode 
-		castingOn: aMessageNode arguments first 
-		rejectingOn: aMessageNode arguments second! !
+		on: aMessageNode receiver receiver receiver
+		during: aMessageNode arguments first 
+		rejectingDuring: aMessageNode arguments second! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/9/2019 13:58:26'!
-castingStrategyForEqualOrIdenticalToNil: aMessageNode 
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForEqualOrIdenticalToNil: aMessageNode 
 	
 	| receiver |
 
 	receiver := aMessageNode receiver receiver.
 	receiver isAssignmentNode ifTrue: [ receiver := receiver variable ].
 	
-	^castingStrategy 
-		forCheckingNilOn: receiver
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: aMessageNode arguments first 
-		forbidingNilOn: aMessageNode arguments second 
+	^ EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: receiver 
+		during: aMessageNode arguments first 
+		rejectingDuring: aMessageNode arguments second
+
 		! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:37:19'!
-castingStrategyForIfNil: aMessageNode 
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForIfNil: aMessageNode 
 
-	^castingStrategy 
-		forCheckingNilOn: aMessageNode receiver 
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: aMessageNode arguments first 
-		forbidingNilOn: nil! !
+	^EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: aMessageNode receiver 
+		during: aMessageNode arguments first.
+	
+	
+	! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/10/2019 13:38:38'!
-castingStrategyForIfNotNil: aMessageNode 
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForIfNotNil: aMessageNode 
 	
 	| receiver |
 
 	receiver := aMessageNode receiverOrCascadeReceiver.
 	receiver isAssignmentNode ifTrue: [ receiver := receiver variable ].
 	
-	^castingStrategy 
-		forCheckingNilOn: receiver
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: nil 
-		forbidingNilOn: aMessageNode arguments first 
+	^EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: receiver
+		rejectingDuring: aMessageNode arguments first 
 		! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 17:23:59'!
-castingStrategyForIsKindOf: aMessageNode 
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:25:34'!
+builderForIsKindOf: aMessageNode 
 	
-	^castingStrategy 
-		forCasting: aMessageNode receiver receiver
-		toWithAllSubclassesOf: aMessageNode receiver arguments first key value 
-		for: aMessageNode 
-		castingOn: aMessageNode arguments first 
-		rejectingOn: aMessageNode arguments second! !
-
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:37:19'!
-castingStrategyForIsNilCheck: aMessageNode
-
-	^castingStrategy 
-		forCheckingNilOn: aMessageNode receiver receiver
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: aMessageNode arguments first 
-		forbidingNilOn: aMessageNode arguments second 
-! !
-
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:37:19'!
-castingStrategyForNilEqualOrIdenticalTo: aMessageNode 
-	
-	^castingStrategy 
-		forCheckingNilOn: aMessageNode receiver arguments first
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: aMessageNode arguments first 
-		forbidingNilOn: aMessageNode arguments second 
-		! !
-
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:37:19'!
-castingStrategyForNilNotEqualOrNotIdenticalTo: aMessageNode 
-	
-	^castingStrategy 
-		forCheckingNilOn: aMessageNode receiver arguments first
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: aMessageNode arguments second 
-		forbidingNilOn: aMessageNode arguments first 
-		! !
-
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:39:42'!
-castingStrategyForNotEqualOrNotIdenticalToClass: aMessageNode
-	
-	^castingStrategy
-		forCasting: aMessageNode receiver receiver receiver
+	^IsKindOfTypeCastApplierBuilder 
 		to: aMessageNode receiver arguments first key value
-		for: aMessageNode 
-		castingOn: aMessageNode arguments second 
-		rejectingOn: aMessageNode arguments first! !
+		on: aMessageNode receiver receiver
+		during: aMessageNode arguments first 
+		rejectingDuring: aMessageNode arguments second! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:37:19'!
-castingStrategyForNotEqualOrNotIdenticalToNil: aMessageNode 
-	
-	^castingStrategy 
-		forCheckingNilOn: aMessageNode receiver receiver 
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: aMessageNode arguments second 
-		forbidingNilOn: aMessageNode arguments first 
-		! !
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForIsNilCheck: aMessageNode
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/5/2019 16:37:19'!
-castingStrategyForNotNilCheck: aMessageNode
-
-	^castingStrategy 
-		forCheckingNilOn: aMessageNode receiver receiver
-		in: self 
-		for: aMessageNode 
-		allowingNilOn: aMessageNode arguments second 
-		forbidingNilOn: aMessageNode arguments first 
+	^EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: aMessageNode receiver receiver
+		during: aMessageNode arguments first 
+		rejectingDuring: aMessageNode arguments second 
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/10/2019 13:38:22'!
-newCastingStrategyFor: aMessageNode
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForNilEqualOrIdenticalTo: aMessageNode 
+	
+	^EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: aMessageNode receiver arguments first 
+		during: aMessageNode arguments first 
+		rejectingDuring: aMessageNode arguments second 
+		! !
+
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForNilNotEqualOrNotIdenticalTo: aMessageNode 
+	
+	^EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: aMessageNode receiver arguments first 
+		during: aMessageNode arguments second 
+		rejectingDuring: aMessageNode arguments first 
+		
+		! !
+
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForNotEqualOrNotIdenticalToClass: aMessageNode
+	
+	^EqualsTypeCastApplierBuilder 
+		to: aMessageNode receiver arguments first key value
+		on: aMessageNode receiver receiver receiver 
+		during: aMessageNode arguments second 
+		rejectingDuring: aMessageNode arguments first! !
+
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForNotEqualOrNotIdenticalToNil: aMessageNode 
+	
+	^EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: aMessageNode receiver receiver 
+		during: aMessageNode arguments second 
+		rejectingDuring: aMessageNode arguments first 
+		! !
+
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:24:57'!
+builderForNotNilCheck: aMessageNode
+
+	^EqualsTypeCastApplierBuilder 
+		toUndefinedObjectOn: aMessageNode receiver receiver
+		during: aMessageNode arguments second 
+		rejectingDuring: aMessageNode arguments first 
+! !
+
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 18:28:13'!
+newBuilderFor: aMessageNode
 
 	|  condition |
 
-	aMessageNode isIfNil ifTrue: [ ^self castingStrategyForIfNil: aMessageNode ].
-	aMessageNode isIfNotNil ifTrue: [ ^self castingStrategyForIfNotNil: aMessageNode ].
+	aMessageNode isIfNil ifTrue: [ ^self builderForIfNil: aMessageNode ].
+	aMessageNode isIfNotNil ifTrue: [ ^self builderForIfNotNil: aMessageNode ].
 	
 	aMessageNode isIfWithMessageNodeAsCondition ifTrue: [
 		condition := aMessageNode receiver.
-		condition isIsNil ifTrue: [^self castingStrategyForIsNilCheck: aMessageNode ].
-		condition isNotNil ifTrue: [^self castingStrategyForNotNilCheck: aMessageNode ].
+		condition isIsNil ifTrue: [^self builderForIsNilCheck: aMessageNode ].
+		condition isNotNil ifTrue: [^self builderForNotNilCheck: aMessageNode ].
 		
-		condition isEqualOrIdenticalToNil ifTrue: [ ^self castingStrategyForEqualOrIdenticalToNil: aMessageNode ].
-		condition isNilEqualOrIdenticalTo ifTrue: [ ^self castingStrategyForNilEqualOrIdenticalTo: aMessageNode ].
-		condition isObjectClassEqualOrIdenticalToClass ifTrue: [ ^self castingStrategyForEqualOrIdenticalToClass: aMessageNode ].
-		condition isClassEqualOrIdenticalToObjectClass ifTrue: [ ^self castingStrategyForClassEqualOrIdenticalTo: aMessageNode ].
-		condition isIsKindOfWithLiteralBehavior ifTrue: [ ^self castingStrategyForIsKindOf: aMessageNode ].
+		condition isEqualOrIdenticalToNil ifTrue: [ ^self builderForEqualOrIdenticalToNil: aMessageNode ].
+		condition isNilEqualOrIdenticalTo ifTrue: [ ^self builderForNilEqualOrIdenticalTo: aMessageNode ].
+		condition isObjectClassEqualOrIdenticalToClass ifTrue: [ ^self builderForEqualOrIdenticalToClass: aMessageNode ].
+		condition isClassEqualOrIdenticalToObjectClass ifTrue: [ ^self builderForClassEqualOrIdenticalTo: aMessageNode ].
+		condition isIsKindOfWithLiteralBehavior ifTrue: [ ^self builderForIsKindOf: aMessageNode ].
 		
-		condition isNotEqualOrNotIdenticalToNil ifTrue: [ ^self castingStrategyForNotEqualOrNotIdenticalToNil: aMessageNode ].
-		condition isNilNotEqualOrNotIdenticalTo ifTrue: [ ^self castingStrategyForNilNotEqualOrNotIdenticalTo: aMessageNode ].
-		condition isObjectClassNotEqualOrNotIdenticalToClass ifTrue: [ ^self castingStrategyForNotEqualOrNotIdenticalToClass: aMessageNode ].
-		condition isClassNotEqualOrNotIdenticalToObjectClass ifTrue: [ ^self castingStrategyForClassNotEqualOrNotIdenticalTo: aMessageNode ].
+		condition isNotEqualOrNotIdenticalToNil ifTrue: [ ^self builderForNotEqualOrNotIdenticalToNil: aMessageNode ].
+		condition isNilNotEqualOrNotIdenticalTo ifTrue: [ ^self builderForNilNotEqualOrNotIdenticalTo: aMessageNode ].
+		condition isObjectClassNotEqualOrNotIdenticalToClass ifTrue: [ ^self builderForNotEqualOrNotIdenticalToClass: aMessageNode ].
+		condition isClassNotEqualOrNotIdenticalToObjectClass ifTrue: [ ^self builderForClassNotEqualOrNotIdenticalTo: aMessageNode ].
 		
-		^self newCastingStrategyIfIsTypeCheck: condition in: aMessageNode ].
+		^self newBuilderIfIsTypeCheck: condition in: aMessageNode ].
 	
 	aMessageNode isAnd ifTrue: [ 
 		condition := aMessageNode receiver.
-		condition isNotNil ifTrue: [^self castingStrategyForNotNilCheck: aMessageNode ]].
+		condition isNotNil ifTrue: [^self builderForNotNilCheck: aMessageNode ]].
 
-	^castingStrategy
+	^NoTypeCastApplierBuilder new
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'type casting strategy' stamp: 'HAW 8/9/2019 10:28:12'!
-newCastingStrategyIfIsTypeCheck: condition in: aMessageNode
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 18:28:29'!
+newBuilderIfIsTypeCheck: condition in: aMessageNode
 	
-	| incompleteTypeInfoReasons types implementors typeToCastTo |
+	| incompleteTypeInfoReasons types implementors typesToCastTo typesToReject |
 
-	condition isUnaryMessageSend ifFalse: [ ^castingStrategy ].
+	condition isUnaryMessageSend ifFalse: [ ^NoTypeCastApplierBuilder new ].
 
 	incompleteTypeInfoReasons := OrderedCollection new.
-	types := castingStrategy receiverTypesFor: condition in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
-	incompleteTypeInfoReasons notEmpty ifTrue: [ ^castingStrategy ].
+	types := blockCastingApplier receiverTypesFor: condition in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
+	incompleteTypeInfoReasons notEmpty ifTrue: [ ^NoTypeCastApplierBuilder new ].
 	
-	condition receiver isSelfPseudoVariable ifTrue: [ types := types anyOne withAllSubclasses ].
-
 	"I have to converted to array because nil can not be added to sets - Hernan"
 	implementors := types asArray collect: [ :aType | aType lookupSelector: condition selectorSymbol ].
-	(implementors anySatisfy: [ :anImplementor | anImplementor isNil ]) ifTrue: [ ^castingStrategy ].
+	(implementors includes: nil) ifTrue: [ ^NoTypeCastApplierBuilder new ].
+	implementors := implementors asIdentitySet.
 	
-	typeToCastTo := implementors 
-		detect: [ :anImplementor | anImplementor isReturnSpecialTrue ] 
-		ifFound: [ :anImplementor | anImplementor methodClass ] 
-		ifNone: [ ^castingStrategy ].
-	
-	^castingStrategy 
-		forCasting: condition receiver 
-		to: typeToCastTo 
-		for: aMessageNode 
-		castingOn: aMessageNode arguments first
-		rejectingOn: aMessageNode arguments second! !
+	typesToCastTo := (implementors reject: [ :anImplementor | anImplementor isReturnSpecialFalse ]) collect: [ :anImplementor | anImplementor methodClass ].
+	typesToReject := (implementors reject: [ :anImplementor | anImplementor isReturnSpecialTrue ]) collect: [ :anImplementor | anImplementor methodClass ].
+		
+	^IsKindOfManyTypeCastApplierBuilder 
+		to: typesToCastTo 
+		rejecting: typesToReject 
+		on: condition receiver 
+		during: aMessageNode arguments first
+		rejectingDuring: aMessageNode arguments second.
+	! !
 
-!MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 8/9/2019 09:06:55'!
-initializeFor: aMethod collectingErrorsInto: aCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
+!MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 8/19/2019 22:48:33'!
+initializeFor: aMethodReference collectingErrorsInto: aCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
 	
-	method := aMethod.
+	methodReference := aMethodReference.
 	errors := aCollectionOfErrors.
 	warnings := aCollectionOfWarnings.
 	problems := aCollectionOfProblems 
 	! !
 
-!MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 8/9/2019 14:46:00'!
+!MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 8/21/2019 14:25:58'!
 prepareToValue
 	
-	methodNode := method methodNode.
-	actualMethod := method compiledMethod.
-	castingStrategy := NoTypeCast new.! !
+	methodNode := methodReference methodNode.
+	actualMethod := methodReference compiledMethod.
+	
+	blockCastingApplier := NoTypeCastApplier new.
+	castingApplierBuilder := NoTypeCastApplierBuilder new.! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/11/2019 23:27:33'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/21/2019 12:38:13'!
 checkMessageSentIn: aMessageNode isImplementedInAll: receiverTypes 
 	
 	| implementorsFinder |
@@ -1790,10 +1893,10 @@ checkMessageSentIn: aMessageNode isImplementedInAll: receiverTypes
 	implementorsFinder value.
 	
 	implementorsFinder notImplementedIsEmpty ifFalse: [ 
-		errors add: (TypeCheckingError on: method node: aMessageNode of: methodNode notImplemented: implementorsFinder notImplemented)].
+		errors add: (TypeCheckingError on: methodReference node: aMessageNode of: methodNode notImplemented: implementorsFinder notImplemented)].
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/9/2019 18:59:24'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/19/2019 13:50:03'!
 typeCheck: aMessageNode
 		
 	self 
@@ -1801,24 +1904,30 @@ typeCheck: aMessageNode
 		do: [ :receiverTypes | self checkMessageSentIn: aMessageNode isImplementedInAll: receiverTypes ]
 	! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/9/2019 19:02:49'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/21/2019 14:18:40'!
 visitArgumentsOf: aMessageNode
 
-	| currentCustingStrategy |
+	| currentCastingStrategyBuilder |
 	
-	currentCustingStrategy := castingStrategy.
-	castingStrategy := self newCastingStrategyFor: aMessageNode.
-	aMessageNode argumentsInEvaluationOrder do: [:argument| argument accept: self].		
-	castingStrategy := currentCustingStrategy 
+	currentCastingStrategyBuilder := castingApplierBuilder.
+	castingApplierBuilder := self newBuilderFor: aMessageNode.
+	
+	aMessageNode argumentsInEvaluationOrder do: [:argument| argument accept: self].
+	
+	castingApplierBuilder addAfterMessageTypeCastsTo: blockCastingApplier.		
+	castingApplierBuilder := currentCastingStrategyBuilder 
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/5/2019 15:54:29'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/21/2019 14:18:40'!
 visitBlockNode: aBlockNode 
 	
-	castingStrategy visitingBlockNode: aBlockNode while: [ super visitBlockNode: aBlockNode ]
+	blockCastingApplier := castingApplierBuilder for: aBlockNode previous: blockCastingApplier.
+	super visitBlockNode: aBlockNode.
+	blockCastingApplier := blockCastingApplier previous.
+	
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/9/2019 19:01:08'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/19/2019 13:50:03'!
 visitMessageNode: aMessageNode 
 
 	aMessageNode receiver accept: self.
@@ -1830,7 +1939,7 @@ visitMessageNode: aMessageNode
 		
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/10/2019 13:24:37'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/19/2019 13:50:03'!
 visitMessageNodeInCascade: aMessageNode 
 
 	aMessageNode selector accept: self.
@@ -1841,36 +1950,36 @@ visitMessageNodeInCascade: aMessageNode
 		
 	! !
 
-!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/11/2019 23:29:38'!
+!MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 8/21/2019 22:23:41'!
 withReceiverTypesOf: aMessageNode do: aTypesBlock
 
 	| incompleteTypeInfoReasons receiverTypes |
 	
 	incompleteTypeInfoReasons := OrderedCollection new.
-	receiverTypes := castingStrategy receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
+	receiverTypes := blockCastingApplier receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.
 	incompleteTypeInfoReasons do: [ :anIncompleteTypeInfoReason | anIncompleteTypeInfoReason addTo: self node: aMessageNode ].
 	
 	(receiverTypes isEmpty and: [ incompleteTypeInfoReasons isEmpty ])
-		ifTrue: [ problems add: (TypeCheckingProblem forReceiverWithNoTypesOn: method node: aMessageNode of: methodNode)]
+		ifTrue: [ problems add: (TypeCheckingProblem forReceiverWithNoTypesOn: methodReference node: aMessageNode of: methodNode)]
 		ifFalse: [ aTypesBlock value: receiverTypes ]
 		! !
 
-!MethodTypeCheckerVisitor methodsFor: 'problems' stamp: 'HAW 8/11/2019 23:29:38'!
+!MethodTypeCheckerVisitor methodsFor: 'problems' stamp: 'HAW 8/19/2019 22:47:23'!
 addProblem: anIncompleteTypeInfoWarning node: aMessageNode 
 	
 	problems add: (TypeCheckingProblem  
-			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoWarning reasonDescription on: method node: aMessageNode of: methodNode)! !
+			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoWarning reasonDescription on: methodReference node: aMessageNode of: methodNode)! !
 
-!MethodTypeCheckerVisitor methodsFor: 'warnings' stamp: 'HAW 8/11/2019 23:29:46'!
+!MethodTypeCheckerVisitor methodsFor: 'warnings' stamp: 'HAW 8/19/2019 22:47:23'!
 addWarning: anIncompleteTypeInfoError node: aMessageNode 
 	
 	warnings add: (TypeCheckingWarning 
-			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoError reasonDescription on: method node: aMessageNode of: methodNode)! !
+			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoError reasonDescription on: methodReference node: aMessageNode of: methodNode)! !
 
-!MethodTypeCheckerVisitor class methodsFor: 'instace creation' stamp: 'HAW 8/9/2019 09:07:02'!
-for: aMethod collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
+!MethodTypeCheckerVisitor class methodsFor: 'instace creation' stamp: 'HAW 8/19/2019 22:48:43'!
+for: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
 
-	^self new initializeFor: aMethod collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
+	^self new initializeFor: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
 	! !
 
 !TypeCheckingResultWindow methodsFor: 'menu building' stamp: 'HAW 7/18/2019 00:41:43'!
@@ -1980,6 +2089,11 @@ rangesOf: aSentSelector whenSendTo: aReceiverTypes
 		(possibleMessageSendsAsStrings includes: parseNode printString) ifTrue: [ ranges add: range ]].
 	
 	^ranges! !
+
+!PossibleSender methodsFor: 'testing' stamp: 'HAW 8/20/2019 23:28:46'!
+isPossibleSender
+
+	^true! !
 
 !PossibleSender class methodsFor: 'instance creation' stamp: 'HAW 8/10/2019 12:01:24'!
 in: aSender withPossibleMessageSends: aPossibleMessageSends
@@ -3152,14 +3266,17 @@ test02ReturnsImplementorsOfSuperclasses
 	self assert: implementors size equals: 1.
 	self assert: (implementors includes: (MethodReference method: TypeInfoRootTestClass >> #implementedOnRootOnly:))! !
 
-!ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 2/19/2019 14:50:51'!
+!ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 8/21/2019 12:59:08'!
 test03IfNotImplementedInRootOrSuperclassesDoesNotIncludeSubclassesImplementations
 
 	| implementors  |
 	
 	implementors := Smalltalk actualImplementorsOf: #implementedOnRootOnly: in: Object.
 	
-	self assert: implementors isEmpty! !
+	self assert: 2 equals: implementors size.
+	self assert: (implementors includes: (NotImplementedMethod class: Object selector: #implementedOnRootOnly:)).
+	self assert: (implementors includes: (MethodReference class: TypeInfoRootTestClass selector: #implementedOnRootOnly:)).
+! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 2/19/2019 14:50:38'!
 test04IncludesSubclassesImplementations
@@ -3172,14 +3289,17 @@ test04IncludesSubclassesImplementations
 	self assert: (implementors includes: (MethodReference class: TypeInfoRootTestClass selector: #implementedOnRootAndSibling1:)).
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling1TestClass selector: #implementedOnRootAndSibling1:)).! !
 
-!ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 2/19/2019 14:51:11'!
+!ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 8/21/2019 13:00:53'!
 test05DoesNotIncludeImplementorsOfSubclassesNotDefinedInSuperclass
 
 	| implementors  |
 	
 	implementors := Smalltalk actualImplementorsOf: #implementedOnSibling1AndSibling2: in: TypeInfoRootTestClass.
 	
-	self assert: implementors isEmpty! !
+	self assert: implementors size equals: 3.
+	self assert: (implementors includes: (NotImplementedMethod class: TypeInfoRootTestClass selector: #implementedOnSibling1AndSibling2:)).
+	self assert: (implementors includes: (MethodReference class: TypeInfoSibling1TestClass selector: #implementedOnSibling1AndSibling2:)).
+	self assert: (implementors includes: (MethodReference class: TypeInfoSibling2TestClass selector: #implementedOnSibling1AndSibling2:))! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 2/19/2019 14:51:11'!
 test06DoesNotIncludeImplementorsOfSiblingsWhenNotDefinedInSuperclass
@@ -5759,6 +5879,11 @@ test32nilIdenticalToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #nilIdenticalTo! !
 
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/20/2019 23:13:39'!
+test32_01_nilNotIdenticalOrEqualToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #nilNotEqualOrIdenticalIdenticalTo! !
+
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:26:51'!
 test33NotEqualToNilWorksAsExpected
 
@@ -5824,16 +5949,6 @@ test44TypeCheckMessageWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageNestedInsideIfNotNil! !
 
-!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/9/2019 11:47:55'!
-test45
-
-	(TypeCheckerTestMethods>>#returnParameter:) initializeTypeInformation.
-	TypeCheckerTestMethods new 
-		returnParameter: 1;
-		returnParameter: nil.
-	
-	self shouldFail: [self assertHasNoTypeErrorsAndWarnings: #ifNotNilWithMessageSend]! !
-
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/6/2019 14:50:18'!
 test46TypeCastRejectsCanBeNested
 
@@ -5885,6 +6000,77 @@ test53TypeCastWorksOnCascadeMessageSends
 
 	self assertHasNoTypeErrorsAndWarnings: #cascadeMessageSendWithTypeCast 
 		! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/19/2019 14:21:00'!
+test54IfNilWithReturnRejectsNilInNextColaborations
+
+	self assertHasNoTypeErrorsAndWarnings: #ifNilWithReturn 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 17:47:46'!
+test55TypeCheckMessageWithSubclassesReturningFalse
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageWithFalseInSubclass 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 17:48:09'!
+test56Float_store_on_hasNoTypeErrors
+
+	| methodToCheck typeChecker |
+	
+	methodToCheck := Float >> #storeOn:base:.
+	
+	typeChecker := methodToCheck typeCheck.
+
+	self assert: typeChecker hasNoErrorsAndWarnings.
+	self deny: typeChecker hasProblems ! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 17:48:42'!
+test57TypeCheckMessageWithFalse_True_False_InSubclassesCastCorrectly
+	
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageWithFalse_True_False_InSubclasses 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/20/2019 18:46:40'!
+test58TypeCheckMessageWithReturnOnIfTrueRejectsTypeInNextColaborations
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageWithReturnOnIfTrue 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/20/2019 18:46:51'!
+test59TypeCheckMessageWithReturnOnIfFalseRejectsTypeInNextColaborations
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageWithReturnOnIfFalse 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/20/2019 19:31:38'!
+test60TypeCastWithReturnOnIfTrueRejectsTypeInNextColaborations
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCastWithReturnOnIfTrue 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/20/2019 19:32:49'!
+test61TypeCastWithReturnOnIfFalseRejectsTypeInNextColaborations
+
+	self assertHasNoTypeErrorsAndWarnings: #typeCastWithReturnOnIfFalse 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 21:29:08'!
+test62ifNotNilifNotNilWithMoreThanAMessageSendAndNilAsValue
+
+	| methodToCheck testMethods typeChecker |
+	
+	testMethods := TypeCheckerTestMethods new.
+	testMethods 
+		ifNotNilifNotNil: nil; 
+		ifNotNilifNotNil: testMethods.
+
+	methodToCheck := TypeCheckerTestMethods >> #ifNotNilifNotNil:.
+
+	typeChecker := methodToCheck typeCheck.
+	
+	self assert: typeChecker hasNoErrorsAndWarnings 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/9/2019 09:33:17'!
 test01MethodNotAnnotatingTypesGeneratesWarning
@@ -8287,9 +8473,12 @@ of: aSender for: aSentImplementors
 	
 	^self new initializeOf: aSender for: aSentImplementors! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 7/11/2019 17:07:58'!
-print: types on: aStream upTo: aNumberOfTypes
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 8/20/2019 16:33:54'!
+print: originalTypes on: aStream upTo: aNumberOfTypes
 	
+	| types |
+	
+	types := originalTypes asArray.
 	aStream nextPut: $<.
 
 	types isEmpty 
@@ -8361,7 +8550,7 @@ printTypesOn: aStream
 	self print: types on: aStream upTo: types size.
 	! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 7/11/2019 16:57:04'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 8/20/2019 16:33:25'!
 printTypesOn: aStream upTo: aNumberOfTypes
 
 	self print: self types on: aStream upTo: aNumberOfTypes.
@@ -9765,178 +9954,401 @@ m8
 !Customer class methodsFor: 'instance creation' stamp: 'HAW 9/17/2018 12:09'!
 named: aFirstName with: aLastName bornOn: aDateOfBirth	^self new initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth	! !
 
-!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/9/2019 18:35:22'!
-receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons 
-	
-	^aMessageNode receiverTypesIn: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: self.
-	
-! !
+!TypeCast methodsFor: 'applying' stamp: 'HAW 8/20/2019 19:47:03'!
+applyTo: aParseNode using: originalTypes
 
-!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/11/2019 22:00:11'!
-typesIfCasting: types in: aParseNode ifNot: notBlock
+	^(self isFor: aParseNode) 
+		ifTrue: [ self cast: originalTypes ]
+		ifFalse: [ originalTypes ]! !
 
-	self subclassResponsibility ! !
+!TypeCast methodsFor: 'testing' stamp: 'HAW 8/19/2019 22:31:36'!
+isFor: aParseNode
 
-!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/11/2019 22:00:24'!
-typesIfRejecting: types in: aParseNode
-	
-	self subclassResponsibility ! !
+	^objetToCast isSameAs: aParseNode! !
 
-!TypeCastingStrategy methodsFor: 'casting' stamp: 'HAW 8/11/2019 22:00:51'!
-typesOf: aParseNode when: currentTypes
+!TypeCast methodsFor: 'casting' stamp: 'HAW 8/19/2019 22:34:47'!
+cast: originalTypes
 
 	self subclassResponsibility ! !
 
-!TypeCastingStrategy methodsFor: 'strategy creation' stamp: 'HAW 8/5/2019 17:37:53'!
-forCasting: anObject to: aTypeToCastTo for: aMessageNode castingOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType
-
-	^OneTypeCast 
-		on: anObject 
-		to: aTypeToCastTo 
-		for: aMessageNode 
-		castingOn: anArgumentNodeToApplyCast 
-		rejectingOn: anArgumentNodeToRejectType 
-		after: self! !
-
-!TypeCastingStrategy methodsFor: 'strategy creation' stamp: 'HAW 8/5/2019 17:24:50'!
-forCasting: anObject toWithAllSubclassesOf: aTypeToCastTo for: aMessageNode castingOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType
-
-	^IsKindOfTypeCast 
-		on: anObject 
-		to: aTypeToCastTo 
-		for: aMessageNode 
-		castingOn: anArgumentNodeToApplyCast 
-		rejectingOn: anArgumentNodeToRejectType 
-		after: self! !
-
-!TypeCastingStrategy methodsFor: 'strategy creation' stamp: 'HAW 8/5/2019 16:39:42'!
-forCheckingNilOn: anObject in: aMethodTypeCheckerVisitor for: aMessageNode allowingNilOn: anArgumentNodeForNil forbidingNilOn: anArgumentNodeForNotNil
-	
-	^self forCasting: anObject to: UndefinedObject for: aMessageNode castingOn: anArgumentNodeForNil rejectingOn: anArgumentNodeForNotNil ! !
-
-!TypeCastingStrategy methodsFor: 'visiting parse node' stamp: 'HAW 8/11/2019 22:01:05'!
-visitingBlockNode: aBlockNode while: anArroundBlock
-
-	self subclassResponsibility ! !
-
-!NoTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:11:19'!
-typesIfCasting: types in: aParseNode ifNot: notBlock
-
-	^notBlock value! !
-
-!NoTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:16:46'!
-typesIfRejecting: types in: aParseNode
-	
-	^types! !
-
-!NoTypeCast methodsFor: 'casting' stamp: 'HAW 8/9/2019 13:53:43'!
-typesOf: aParseNode when: currentTypes
-
-	^currentTypes ! !
-
-!NoTypeCast methodsFor: 'visiting parse node' stamp: 'HAW 7/20/2019 18:59:03'!
-visitingBlockNode: aBlockNode while: anArroundBlock
-
-	anArroundBlock value! !
-
-!TypeCast methodsFor: 'casting - private' stamp: 'HAW 8/9/2019 18:15:08'!
-castWhile: anArroundBlock
-
-	shouldCast := true.
-	anArroundBlock value.
-	shouldCast := false.! !
-
-!TypeCast methodsFor: 'casting - private' stamp: 'HAW 8/9/2019 18:15:35'!
-rejectTypeWhile: anArroundBlock
-
-	shouldRejectType := true.
-	anArroundBlock value.
-	shouldRejectType := false.! !
-
-!TypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:37:40'!
-cast: types
-
-	self subclassResponsibility ! !
-
-!TypeCast methodsFor: 'casting' stamp: 'HAW 8/10/2019 17:24:32'!
-typesIfCasting: types in: aParseNode ifNot: notBlock
-	
-	^(shouldCast and: [ aParseNode isSameAs: objectToCast ]) 
-		ifTrue: [ self cast: types ]
-		ifFalse: [ previousStrategy typesIfCasting: types in: aParseNode ifNot: notBlock ]! !
-
-!TypeCast methodsFor: 'casting' stamp: 'HAW 8/10/2019 16:51:34'!
-typesIfRejecting: types in: aParseNode
-	
-	| typesToReject |
-	
-	typesToReject := (shouldRejectType and: [ aParseNode isSameAs: objectToCast ]) 
-		ifTrue: [ types reject: [ :aType | aType = typeToCastTo ] ]
-		ifFalse: [ types ].
-		
-	^previousStrategy typesIfRejecting: typesToReject in: aParseNode 
-! !
-
-!TypeCast methodsFor: 'casting' stamp: 'HAW 8/9/2019 12:19:15'!
-typesOf: aParseNode when: currentTypes
+!ManyTypesCast methodsFor: 'casting' stamp: 'HAW 8/20/2019 20:30:54'!
+cast: originalTypes
 
 	| newTypes |
 	
-	newTypes := self typesIfCasting: currentTypes in: aParseNode ifNot: [ self typesIfRejecting: currentTypes in: aParseNode ].
+	newTypes := originalTypes select: [ :aType | self shouldKeep: aType ].
 	
-	^newTypes! !
+	^newTypes ! !
 
-!TypeCast methodsFor: 'visiting parse node' stamp: 'HAW 8/9/2019 18:30:39'!
-visitingBlockNode: aBlockNode while: anArroundBlock
-
-	(self hasToCast: aBlockNode) ifTrue: [ ^self castWhile: anArroundBlock ].
-	(self hasToRejectType: aBlockNode) ifTrue: [ ^self rejectTypeWhile: anArroundBlock ].
+!ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 8/20/2019 20:37:49'!
+does: aType withoutRejectionsIncludesBehavior: aTypeToCastTo
 	
-	anArroundBlock value ! !
+	^(aType includesBehavior: aTypeToCastTo) and: [ self is: aType notRejectedInSubclassesOf: aTypeToCastTo ]! !
 
-!TypeCast methodsFor: 'initialization' stamp: 'HAW 8/5/2019 16:42:48'!
-initializeOn: anObject to: aTypeToCastTo for: aMessageNode castinOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType after: aPreviousStrategy 
-	
-	objectToCast := anObject.
+!ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 8/20/2019 20:38:48'!
+is: aType notRejectedInSubclassesOf: aTypeToCastTo
+
+	^(self typeToRejectSubclassesOf: aTypeToCastTo) noneSatisfy: [ :aTypeToReject | aType includesBehavior: aTypeToReject ]! !
+
+!ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 8/20/2019 20:35:01'!
+shouldKeep: aType
+
+	^typesToCastTo anySatisfy: [ :aTypeToCastTo | self does: aType withoutRejectionsIncludesBehavior: aTypeToCastTo ]
+	! !
+
+!ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 8/20/2019 20:38:57'!
+typeToRejectSubclassesOf: aTypeToCastTo
+
+	^typesToReject select: [ :aTypeToReject | aTypeToReject inheritsFrom: aTypeToCastTo ]! !
+
+!ManyTypesCast methodsFor: 'initialization' stamp: 'HAW 8/20/2019 16:58:29'!
+initializeTo: aTypesToCastTo rejecting: aTypesToReject of: anObjectToCast
+
+	typesToCastTo := aTypesToCastTo.
+	typesToReject := aTypesToReject.
+	objetToCast := anObjectToCast ! !
+
+!ManyTypesCast class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 16:57:59'!
+to: aTypesToCastTo rejecting: aTypesToReject of: anObjectToCast
+
+	^self new initializeTo: aTypesToCastTo rejecting: aTypesToReject of: anObjectToCast! !
+
+!OneTypeCast methodsFor: 'initialization' stamp: 'HAW 8/20/2019 20:16:09'!
+initializeTo: aTypeToCastTo of: anObjectToCast
+
 	typeToCastTo := aTypeToCastTo.
-	messageNode := aMessageNode.
-	castingNode := anArgumentNodeToApplyCast.
-	rejectingTypeNode := anArgumentNodeToRejectType.
-	previousStrategy := aPreviousStrategy.
-	shouldRejectType := false.
-	shouldCast := false.! !
+	objetToCast := anObjectToCast ! !
 
-!TypeCast methodsFor: 'testing' stamp: 'HAW 8/9/2019 18:29:45'!
-hasToCast: aBlockNode
+!OneTypeCast class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 20:16:24'!
+to: aTypeToCastTo of: anObjectToCast
 
-	^aBlockNode = castingNode ! !
+	^self new initializeTo: aTypeToCastTo of: anObjectToCast! !
 
-!TypeCast methodsFor: 'testing' stamp: 'HAW 8/9/2019 18:30:48'!
-hasToRejectType: aBlockNode
+!EqualTypeCast methodsFor: 'casting' stamp: 'HAW 8/19/2019 22:34:47'!
+cast: originalTypes
 	
-	^ aBlockNode = rejectingTypeNode! !
+	^ { typeToCastTo }! !
 
-!TypeCast class methodsFor: 'instance creation' stamp: 'HAW 8/5/2019 16:42:12'!
-on: anObject to: aTypeToCastTo for: aMessageNode castingOn: anArgumentNodeToApplyCast rejectingOn: anArgumentNodeToRejectType after: aPreviousStrategy 	
+!EqualTypeReject methodsFor: 'casting' stamp: 'HAW 8/20/2019 20:28:00'!
+cast: originalTypes
 
-	^self new 
-		initializeOn: anObject 
-		to: aTypeToCastTo 
-		for: aMessageNode 
-		castinOn: anArgumentNodeToApplyCast 
-		rejectingOn: anArgumentNodeToRejectType 
-		after: aPreviousStrategy 	
+	^ originalTypes reject: [ :aType | aType = typeToCastTo ]! !
+
+!IsKindOfTypeCast methodsFor: 'casting' stamp: 'HAW 8/19/2019 22:34:47'!
+cast: originalTypes
+	
+	^originalTypes select: [ :aType | aType includesBehavior: typeToCastTo ].! !
+
+!IsKindOfTypeReject methodsFor: 'casting' stamp: 'HAW 8/20/2019 20:28:00'!
+cast: originalTypes
+
+	^originalTypes reject: [ :aType | aType includesBehavior: typeToCastTo ]! !
+
+!TypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/20/2019 21:06:44'!
+applyTo: aParseNode with: originalTypes
+
+	self subclassResponsibility ! !
+
+!TypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/19/2019 22:55:22'!
+typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock
+
+	self subclassResponsibility ! !
+
+!TypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/19/2019 22:55:34'!
+typesIfRejecting: aParseNode using: originalTypes 
+
+	self subclassResponsibility ! !
+
+!TypeCastApplier methodsFor: 'receiver types' stamp: 'HAW 8/21/2019 14:36:33'!
+initialize
+
+	receiverTypes := IdentityDictionary new! !
+
+!TypeCastApplier methodsFor: 'receiver types' stamp: 'HAW 8/21/2019 14:36:19'!
+receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons 
+	
+	^receiverTypes
+		at: aMessageNode receiverOrCascadeReceiver
+		ifAbsentPut: [ aMessageNode receiverTypesIn: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: self ].
+	
 ! !
 
-!IsKindOfTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:27:52'!
-cast: types
+!EffectiveTypeCastApplier methodsFor: 'adding' stamp: 'HAW 8/21/2019 18:29:31'!
+addTypeCasts: aCollectionOfRejections
 
-	^types select: [ :aType | aType includesBehavior: typeToCastTo ].! !
+	rejections addAll: aCollectionOfRejections.
+	receiverTypes removeAll	! !
 
-!OneTypeCast methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:37:46'!
-cast: types
+!EffectiveTypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/19/2019 15:25:39'!
+applyTo: aParseNode with: originalTypes
 
-	^{ typeToCastTo }	! !
+	^self typesIfCasting: aParseNode using: originalTypes ifNot: [ self typesIfRejecting: aParseNode using: originalTypes ]! !
+
+!EffectiveTypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/19/2019 22:34:55'!
+typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock
+
+	^casts 
+		detect: [ :aCastType | aCastType isFor: aParseNode ]
+		ifFound: [ :aCastType | aCastType cast: originalTypes ]
+		ifNone: [ previous typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock ]! !
+
+!EffectiveTypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/21/2019 18:18:06'!
+typesIfRejecting: aParseNode using: originalTypes 
+
+	| newTypes |
+	
+	newTypes := rejections 
+		inject: originalTypes 
+		into: [ :leftTypes :aRejectType | aRejectType applyTo: aParseNode using: leftTypes ].
+		
+	^previous typesIfRejecting: aParseNode using: newTypes! !
+
+!EffectiveTypeCastApplier methodsFor: 'initialization' stamp: 'HAW 8/21/2019 18:18:06'!
+initializeCasts: aCollectionOfCasts rejections: aCollectionOfRejections previous: aPreviousCastingStrategy 
+
+	casts := aCollectionOfCasts.
+	rejections := aCollectionOfRejections.
+	previous := aPreviousCastingStrategy.
+	! !
+
+!EffectiveTypeCastApplier methodsFor: 'previous' stamp: 'HAW 8/19/2019 15:03:58'!
+previous
+	
+	^previous! !
+
+!EffectiveTypeCastApplier class methodsFor: 'instance creation' stamp: 'HAW 8/19/2019 20:02:47'!
+casts: aCollectionOfCasts rejections: aCollectionOfRejections previous: aPreviousCastingStrategy 
+	
+	^self new initializeCasts: aCollectionOfCasts rejections: aCollectionOfRejections previous: aPreviousCastingStrategy 
+! !
+
+!EffectiveTypeCastApplier class methodsFor: 'instance creation' stamp: 'HAW 8/19/2019 20:03:46'!
+previous: aPreviousCastingStrategy
+
+	^self 
+		casts: OrderedCollection new 
+		rejections: OrderedCollection new
+		previous: aPreviousCastingStrategy ! !
+
+!NoTypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/20/2019 21:02:54'!
+applyTo: aParseNode with: originalTypes
+
+	^originalTypes ! !
+
+!NoTypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/19/2019 15:27:52'!
+typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock
+
+	^aNotBlock value! !
+
+!NoTypeCastApplier methodsFor: 'applying' stamp: 'HAW 8/19/2019 15:34:01'!
+typesIfRejecting: aParseNode using: originalTypes 
+
+	^originalTypes ! !
+
+!TypeCastApplierBuilder methodsFor: 'type casts' stamp: 'HAW 8/20/2019 19:55:33'!
+addAfterMessageTypeCastsTo: aCastingStrategy 
+
+	self subclassResponsibility ! !
+
+!TypeCastApplierBuilder methodsFor: 'building' stamp: 'HAW 8/19/2019 23:01:59'!
+for: aBlockNode previous: aPreviousCastingStrategy
+
+	self subclassResponsibility ! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 19:53:47'!
+buildTypeCast
+
+	self subclassResponsibility ! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 19:53:42'!
+buildTypeReject 
+
+	self subclassResponsibility ! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'type casts' stamp: 'HAW 8/20/2019 19:56:15'!
+addAfterMessageTypeCastsTo: aCastingStrategy 
+	
+	aCastingStrategy addTypeCasts: afterMessageTypeCasts ! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:16:29'!
+buildCastApplierBefore: aPreviousCastingStrategy 
+	
+	 self subclassResponsibility ! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:15:43'!
+buildRejectApplierBefore: aPreviousCastingStrategy
+	
+	 self subclassResponsibility ! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:17:23'!
+for: aBlockNode previous: aPreviousCastingApplier 
+	
+	aBlockNode = castingBlock ifTrue: [ ^self buildCastApplierBefore: aPreviousCastingApplier ].
+	aBlockNode = rejectingBlock ifTrue: [ ^self buildRejectApplierBefore: aPreviousCastingApplier ].
+	
+	^EffectiveTypeCastApplier previous: aPreviousCastingApplier ! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 8/21/2019 21:36:56'!
+addToAfterMessageTypeCasts: aTypeCastBlockBuilder ifReturns: anArgumentBlock
+	
+	anArgumentBlock isBlockNode 
+		ifTrue: [ anArgumentBlock returns 
+			ifTrue: [ afterMessageTypeCasts add: aTypeCastBlockBuilder value ]].
+! !
+
+!EffectiveTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 8/21/2019 21:35:15'!
+initializeAfterMessageTypeCasts
+
+	afterMessageTypeCasts := OrderedCollection new.
+	self 
+		addToAfterMessageTypeCasts: [ self buildTypeReject ] ifReturns: castingBlock;
+		addToAfterMessageTypeCasts: [ self buildTypeCast ] ifReturns: rejectingBlock
+			
+	! !
+
+!IsKindOfManyTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:17:40'!
+buildCastApplierBefore: aPreviousCastingApplier 
+
+	^EffectiveTypeCastApplier 
+		casts: (OrderedCollection with: self buildTypeCast)
+		rejections: OrderedCollection new
+		previous: aPreviousCastingApplier! !
+
+!IsKindOfManyTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:17:45'!
+buildRejectApplierBefore: aPreviousCastingApplier
+
+	^EffectiveTypeCastApplier 
+		casts: OrderedCollection new
+		rejections: (OrderedCollection with: self buildTypeReject)
+		previous: aPreviousCastingApplier! !
+
+!IsKindOfManyTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 19:58:08'!
+buildTypeCast
+		
+	^ManyTypesCast to: typesToCastTo rejecting: typesToReject of: objectToCast! !
+
+!IsKindOfManyTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 20:23:11'!
+buildTypeReject
+
+	^ManyTypesCast to: typesToReject rejecting: typesToCastTo of: objectToCast! !
+
+!IsKindOfManyTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 8/20/2019 20:05:59'!
+initializeTo: aTypesToCastTo rejecting: aTypesToRejet on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType 
+
+	typesToCastTo := aTypesToCastTo.
+	typesToReject := aTypesToRejet.
+	objectToCast := anObjectToCast.
+	castingBlock := aBlockToCastType.
+	rejectingBlock := aBlockToRejectType.
+	self initializeAfterMessageTypeCasts 
+	! !
+
+!IsKindOfManyTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 16:42:48'!
+to: aTypesToCastTo rejecting: aTypesToRejet on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType 
+
+	^self new initializeTo: aTypesToCastTo rejecting: aTypesToRejet on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType ! !
+
+!OneTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 8/20/2019 20:03:19'!
+initializeTo: aType on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType 
+
+	castType := aType .
+	objectToCast := anObjectToCast.
+	castingBlock := aBlockToCastType.
+	rejectingBlock := aBlockToRejectType.
+	self initializeAfterMessageTypeCasts.
+! !
+
+!OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 20:02:26'!
+to: aClass on: anObject during: aBlockToCastType 
+	
+	^self to: aClass on: anObject during: aBlockToCastType rejectingDuring: BlockNode empty
+	! !
+
+!OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 20:02:34'!
+to: aType on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType 
+
+	^self new initializeTo: aType on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType ! !
+
+!OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 20:02:45'!
+toUndefinedObjectOn: anObjectToCast during: aBlockToCastType 
+	
+	^self to: UndefinedObject on: anObjectToCast during: aBlockToCastType rejectingDuring: BlockNode empty! !
+
+!OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 20:02:54'!
+toUndefinedObjectOn: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType 
+	
+	^self to: UndefinedObject on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType ! !
+
+!OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 8/20/2019 20:03:03'!
+toUndefinedObjectOn: anObjectToCast rejectingDuring: aBlockToRejectType 
+	
+	^self to: UndefinedObject on: anObjectToCast during: BlockNode empty rejectingDuring: aBlockToRejectType ! !
+
+!EqualsTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:17:31'!
+buildCastApplierBefore: aPreviousCastingApplier 
+	
+	 ^EffectiveTypeCastApplier 
+		casts: (OrderedCollection with: self buildTypeCast)
+		rejections: OrderedCollection new
+		previous: aPreviousCastingApplier! !
+
+!EqualsTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:17:36'!
+buildRejectApplierBefore: aPreviousCastingApplier
+	
+	 ^EffectiveTypeCastApplier 
+		casts: OrderedCollection new
+		rejections: (OrderedCollection with: self buildTypeReject)
+		previous: aPreviousCastingApplier! !
+
+!EqualsTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 20:15:22'!
+buildTypeCast
+		
+	^EqualTypeCast to: castType of: objectToCast! !
+
+!EqualsTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 20:26:45'!
+buildTypeReject
+		
+	^EqualTypeReject to: castType of: objectToCast! !
+
+!IsKindOfTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:17:50'!
+buildCastApplierBefore: aPreviousCastingApplier 
+
+	^EffectiveTypeCastApplier 
+		casts: (OrderedCollection with: self buildTypeCast)
+		rejections: OrderedCollection new
+		previous: aPreviousCastingApplier
+	! !
+
+!IsKindOfTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 8/21/2019 14:17:54'!
+buildRejectApplierBefore: aPreviousCastingApplier
+
+	^EffectiveTypeCastApplier 
+		casts: OrderedCollection new
+		rejections: (OrderedCollection with: self buildTypeReject)
+		previous: aPreviousCastingApplier
+	! !
+
+!IsKindOfTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 19:49:30'!
+buildTypeCast
+	
+	^IsKindOfTypeCast to: castType of: objectToCast! !
+
+!IsKindOfTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 8/20/2019 20:26:45'!
+buildTypeReject
+	
+	^IsKindOfTypeReject to: castType of: objectToCast! !
+
+!NoTypeCastApplierBuilder methodsFor: 'type casts' stamp: 'HAW 8/20/2019 19:55:33'!
+addAfterMessageTypeCastsTo: aCastingStrategy 
+	
+	! !
+
+!NoTypeCastApplierBuilder methodsFor: 'building' stamp: 'HAW 8/21/2019 14:17:59'!
+for: aBlockNode previous: aPreviousCastingApplier
+
+	"I don't use NoCastingTypeApplier because rejects can be added to the strategy for example 
+	when: x ifNil: [ ^... ] - Hernan"
+	^EffectiveTypeCastApplier previous: aPreviousCastingApplier ! !
 
 !TypeChecker methodsFor: 'showing results' stamp: 'HAW 8/9/2019 11:01:54'!
 showResultsWith: aLabelTrail
@@ -10229,7 +10641,7 @@ forClass: aClass
 	
 	^self forAll: aClass theNonMetaClass methodDictionary values, aClass theMetaClass methodDictionary values! !
 
-!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:12:24'!
+!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/20/2019 21:10:22'!
 typeCheckWhenAnnotatingTypes
 	
 	(MethodTypeCheckerVisitor for: method collectingErrorsInto: errors warningsInto: warnings andProblemsInto: problems) value
@@ -10406,38 +10818,38 @@ for: aMethod
 	
 	^self new initializeFor: aMethod ! !
 
-!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:27:36'!
+!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'method reference protocol' stamp: 'HAW 7/18/2019 18:27:36'!
 actualClass
 	
 	^typeCheckingProblem method actualClass! !
 
-!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:30:58'!
+!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'method reference protocol' stamp: 'HAW 7/18/2019 18:27:53'!
+methodSymbol
+	
+	^typeCheckingProblem method methodSymbol ! !
+
+!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'method reference protocol' stamp: 'HAW 7/18/2019 18:30:18'!
+sourceCodeRange
+	
+	^typeCheckingProblem sourceCodeRange ! !
+
+!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'printing' stamp: 'HAW 7/18/2019 18:30:58'!
 displayStringOrText
 
 	^prefix, typeCheckingProblem displayStringOrText! !
 
-!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:27:00'!
+!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'initialization' stamp: 'HAW 7/18/2019 18:27:00'!
 initializeOf: aTypeCheckingProblem prefixing: aHeader
 
 	typeCheckingProblem := aTypeCheckingProblem.
 	prefix := aHeader ! !
 
-!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:27:53'!
-methodSymbol
-	
-	^typeCheckingProblem method methodSymbol ! !
-
-!TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:30:18'!
-sourceCodeRange
-	
-	^typeCheckingProblem sourceCodeRange ! !
-
-!TypeCheckingProblemToMethodReferenceAdapter class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:26:08'!
+!TypeCheckingProblemToMethodReferenceAdapter class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 18:26:08'!
 of: aTypeCheckingProblem
 
 	^self of: aTypeCheckingProblem prefixing: ''! !
 
-!TypeCheckingProblemToMethodReferenceAdapter class methodsFor: 'as yet unclassified' stamp: 'HAW 7/18/2019 18:26:37'!
+!TypeCheckingProblemToMethodReferenceAdapter class methodsFor: 'instance creation' stamp: 'HAW 7/18/2019 18:26:37'!
 of: aTypeCheckingProblem prefixing: aHeader
 
 	^self new initializeOf: aTypeCheckingProblem prefixing: aHeader
@@ -10602,10 +11014,10 @@ initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
 	methodNode := aMethodNode.
 	reason := aReason ! !
 
-!TypeCheckingIssue class methodsFor: 'description' stamp: 'HAW 7/18/2019 00:30:09'!
+!TypeCheckingIssue class methodsFor: 'description' stamp: 'HAW 8/21/2019 21:53:53'!
 canNotDeduceReceiverTypeDueToDescription: aReason
  
-	^'Can not deduce receiver''s type becuase: ', aReason ! !
+	^'Can not deduce receiver''s type because: ', aReason ! !
 
 !TypeCheckingIssue class methodsFor: 'description' stamp: 'HAW 7/17/2019 20:13:15'!
 receiverHasNoTypesDescription
@@ -10689,6 +11101,11 @@ methodWithReceiverWithNoTypes
 methodWithoutTypeErrors
 	
 	1 + 1! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/21/2019 19:17:41'!
+returnParameter2: anObject
+
+	^anObject ! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/9/2019 11:47:55'!
 returnParameter: anObject
@@ -10802,6 +11219,17 @@ ifNilIfNotNil
 	temp1 := nil.
 	temp1 ifNil: [ temp1 subclasses ] ifNotNil: [ temp1 + 1 ].
 ! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/19/2019 14:21:30'!
+ifNilWithReturn
+
+	| temp1 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	
+	temp1 ifNil: [ ^self ].
+	temp1 + 1! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/14/2019 12:50:58'!
 ifNotNilCheck
@@ -10960,6 +11388,16 @@ nilIdenticalTo
 	nil == temp1 ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ].
 	nil == temp1 ifFalse: [ temp1 + 1 ]! !
 
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/20/2019 23:13:05'!
+nilNotEqualOrIdenticalIdenticalTo
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := nil.
+	nil ~~ temp1 ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].
+	nil ~= temp1 ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].! !
+
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:21:12'!
 notEqualToNil
 
@@ -11010,6 +11448,26 @@ notNilCondition
 castWithBlockInRejectBlock
 
 	nil ifNotNil: [ :temp1 | [ temp1 mod: 5 ] value ]! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/21/2019 19:57:57'!
+ifNotNilifNotNil
+
+	"
+	self new ifNotNilifNotNil
+	"	
+	self returnParameter: nil.
+	self returnParameter2: nil.
+	{ nil. self } do: [ :value | (self returnParameter: value) ifNotNil: [ :w | (w returnParameter2: 1) ifNotNil: [ :c | c + 1 ]]]! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/21/2019 20:00:32'!
+ifNotNilifNotNil: value
+
+	"
+	self new ifNotNilifNotNil: nil; ifNotNilifNotNil: self new
+	"	
+	
+	self returnParameter2: nil.
+	value ifNotNil: [ :w | (w returnParameter2: 1) ifNotNil: [ :c | c + 1 ]]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:29:32'!
 isKindOfKeepsSubtypes
@@ -11113,6 +11571,28 @@ typeCastWithNotEqualOrNotIdenticalTo
 	temp1 class ~~ SmallInteger ifFalse: [ temp1 + 1 ].
 ! !
 
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 19:32:37'!
+typeCastWithReturnOnIfFalse
+
+	| temp1  |
+	
+	temp1 := 'hello'.
+	temp1 := 1.
+	
+	SmallInteger = temp1 class ifFalse: [^self ].
+	temp1 odd ! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 19:30:53'!
+typeCastWithReturnOnIfTrue
+
+	| temp1  |
+	
+	temp1 := 'hello'.
+	temp1 := 1.
+	
+	SmallInteger = temp1 class ifTrue: [^self ].
+	temp1 first ! !
+
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/3/2019 10:27:16'!
 typeCheckMessage
 
@@ -11135,6 +11615,53 @@ typeCheckMessageNestedInsideIfNotNil
 	
 	temp1 ifNotNil: [ temp1 hasModel ifTrue: [ temp1 model ]]
 	! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 16:13:51'!
+typeCheckMessageWithFalseInSubclass
+
+	| temp1  |
+	
+	temp1 := OrderedCollection new.
+	temp1 := Color new.
+	
+	temp1 isCollection ifTrue: [ temp1 add: 1 ] ifFalse: [ temp1 alpha ]! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 18:36:11'!
+typeCheckMessageWithFalse_True_False_InSubclasses
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := OrderedCollection new.
+	temp1 := Color new.
+	
+	temp1 isCollection 
+		ifTrue: [ temp1 add: 1 ] 
+		ifFalse: [ temp1 isNumber 
+			ifTrue: [ temp1 + 1 ]
+			ifFalse: [ temp1 alpha ]]! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 18:46:19'!
+typeCheckMessageWithReturnOnIfFalse
+
+	| temp1  |
+	
+	temp1 := OrderedCollection new.
+	temp1 := 1.
+	
+	temp1 isNumber ifFalse: [ ^self ].
+	temp1 odd! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 18:45:01'!
+typeCheckMessageWithReturnOnIfTrue
+
+	| temp1  |
+	
+	temp1 := OrderedCollection new.
+	temp1 := Color new.
+	
+	temp1 isCollection ifTrue: [ ^self ].
+	temp1 alpha! !
 
 !TypeCheckerTestMethods methodsFor: 'methods with errors' stamp: 'HAW 7/30/2019 16:35:46'!
 methodWithManyTypeErrors
@@ -11484,12 +12011,9 @@ typeCheck
 	
 	^(ManyMethodsTypeChecker forClass: self) value! !
 
-!Behavior methodsFor: '*LiveTyping' stamp: 'HAW 2/19/2019 14:44:45'!
-withAllSubclassesImplementing: aSelector
+!Behavior methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 12:54:47'!
+withAllSubclassesImplementing: aSelector addTo: implementors
 
-	| implementors |
-	
-	implementors := OrderedCollection new.
 	self withAllSubclassesDo: [ :aBehavior | 
 		(aBehavior includesSelector: aSelector) ifTrue: [ implementors add: (MethodReference class: aBehavior selector: aSelector) ]].
 
@@ -11539,7 +12063,7 @@ allRawTypesUnload: aClassToUnload
 		methodsAllRawTypesUnload: aClassToUnload 
 ! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 8/10/2019 12:47:27'!
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 8/21/2019 09:17:00'!
 allSubclassesImplementationsReturnTypesOf: aCompiledMethod
 	
 	^(self allSubclasses 
@@ -11642,11 +12166,9 @@ createMethodReturnRawTypesOf: aMethod
 	
 	^self createRawTypesOfSize: (self methodReturnRawTypesSizeOf: aMethod) ! !
 
-!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 8/10/2019 12:46:57'!
+!ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 8/21/2019 00:24:01'!
 createMethodReturnTypeInfoOf: aCompiledMethod
 
-	aCompiledMethod isAbstract ifTrue: [
-		^ReturnTypeInfo of: aCompiledMethod are: (self allSubclassesImplementationsReturnTypesOf: aCompiledMethod) ].
 	aCompiledMethod isReturnField ifTrue: [ 
 		^ReturnTypeInfo of: aCompiledMethod are: (aCompiledMethod methodClass typesOfInstanceVariableAt: aCompiledMethod returnField + 1) asArray ].
 	aCompiledMethod isQuickReturnSelf ifTrue: [ 
@@ -11655,6 +12177,8 @@ createMethodReturnTypeInfoOf: aCompiledMethod
 		^ReturnTypeInfo 
 			of: aCompiledMethod 
 			are:  (`{{true class}. {false class}. {nil class}. {-1 class}. {0 class}. {1 class}. {2 class}}` at: aCompiledMethod primitive - 256) ].
+	aCompiledMethod isAbstract ifTrue: [
+		^ReturnTypeInfo of: aCompiledMethod are: (self allSubclassesImplementationsReturnTypesOf: aCompiledMethod) ].
 		
 	^ ReturnTypeInfo of: aCompiledMethod ! !
 
@@ -12476,6 +13000,11 @@ isQuickReturnSelf
 	
 	^self primitive = 256! !
 
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/20/2019 15:57:40'!
+isReturnSpecialFalse
+	
+	^self primitive = 258! !
+
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 10:50:08'!
 isReturnSpecialTrue
 	
@@ -12621,14 +13150,19 @@ variablesRawTypes
 	
 	^self typeAnnotationsHolder variablesRawTypes! !
 
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 2/19/2019 14:44:01'!
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 12:54:21'!
 actualImplementorsOf: aSelector in: aClass 
 	
-	| highestImplementorClass |
+	| highestImplementorClass implementors |
 	
-	highestImplementorClass := aClass highestClassImplementing: aSelector ifNone: [ ^#() ].
+	implementors := OrderedCollection new.
+	highestImplementorClass := aClass 
+		highestClassImplementing: aSelector 
+		ifNone: [ 
+			implementors add: (NotImplementedMethod class: aClass selector: aSelector).
+			aClass ].
 	
-	^ highestImplementorClass withAllSubclassesImplementing: aSelector.
+	^ highestImplementorClass withAllSubclassesImplementing: aSelector addTo: implementors.
 	! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 09:39:05'!
@@ -12814,10 +13348,10 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	self subclassResponsibility ! !
 
-!ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 8/9/2019 12:17:02'!
-typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCast 
+!ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 14:20:02'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
 
-	^aTypeCast typesOf: self when: (self typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons)! !
+	^aTypeCastApplier applyTo: self with: (self typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons)! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:22:35'!
 actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods 
@@ -12916,6 +13450,12 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
 	^value typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ! !
 
+!AssignmentNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 21:29:58'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
+
+	^value typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
+! !
+
 !BlockNode methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:49:45'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
@@ -12973,11 +13513,11 @@ nodeTypePrintString
 
 	^'pseudo var'! !
 
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 12/3/2018 11:40:40'!
+!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 09:17:11'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
-	self isSelfPseudoVariable ifTrue: [ ^Array with: aCompiledMethod methodClass ].
-	self isSuperPseudoVariable ifTrue: [ ^Array with: aCompiledMethod methodClass superclass ].
+	self isSelfPseudoVariable ifTrue: [ ^aCompiledMethod methodClass withAllSubclasses ].
+	self isSuperPseudoVariable ifTrue: [ ^aCompiledMethod methodClass superclass withAllSubclasses ].
 	self isTruePseudoVariable ifTrue: [ ^`Array with: true class` ].
 	self isFalsePseudoVariable ifTrue: [ ^`Array with: false class` ].
 	self isThisContextPseudoVariable ifTrue: [ ^`Array with: thisContext class` ]. 
@@ -13194,28 +13734,28 @@ receiverOrCascadeReceiver
 	
 	^receiver ifNil: [ originalReceiver ]! !
 
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/5/2019 16:49:25'!
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 14:19:01'!
 receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
-	^self receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: NoTypeCast new! !
+	^self receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: NoTypeCastApplier new! !
 
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 23:06:14'!
-receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCast 
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 22:29:41'!
+receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
 	
-	^self receiverOrCascadeReceiver typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCast ! !
+	^self receiverOrCascadeReceiver typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier ! !
 
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/5/2019 16:45:17'!
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 14:19:01'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
-	^self typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: NoTypeCast new! !
+	^self typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: NoTypeCastApplier new! !
 
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/9/2019 08:40:21'!
-typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCast 
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 22:29:58'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
 	
 	| types sentSelector receiverTypes  |
 
 	sentSelector := self selectorSymbol.
-	receiverTypes := aTypeCast receiverTypesFor: self in: aCompiledMethod addingIncompleteTypeInfoTo:  incompleteTypeInfoReasons.
+	receiverTypes := aTypeCastApplier receiverTypesFor: self in: aCompiledMethod addingIncompleteTypeInfoTo:  incompleteTypeInfoReasons.
 	
 	types := receiverTypes
 		inject: Set new
@@ -13580,6 +14120,11 @@ isAnnotatingTypes
 	
 	^self compiledMethod isAnnotatingTypes ! !
 
+!MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 8/20/2019 23:28:24'!
+isPossibleSender
+
+	^false! !
+
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 8/9/2019 19:10:51'!
 isPrimitive
 	
@@ -13739,12 +14284,12 @@ canNotRefactorWithoutTypeInfo
 		inform: 'Can not apply the refactoring because there is no receiver type information';
 		endRequest ! !
 
-!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 11:30:07'!
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/20/2019 23:31:53'!
 filterSenders
 	
 	senders := (senders 
-		reject: [ :aMethodReferenceOrCompiledMethod | aMethodReferenceOrCompiledMethod isValid not ]
-		thenCollect: [ :aMethodReferenceOrCompiledMethod | aMethodReferenceOrCompiledMethod compiledMethod ]) asIdentitySet ! !
+		select: [ :aMethodReference | aMethodReference isValid and: [ aMethodReference isPossibleSender not ]]
+		thenCollect: [ :aMethodReference | aMethodReference compiledMethod ]) asIdentitySet ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:32:57'!
 handleCanNotChangeSelectorWithNotIncludedTypes: anError
