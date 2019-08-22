@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3846] on 22 August 2019 at 4:17:41 pm'!
-'Description print can be nil !! on ballon help'!
-!provides: 'LiveTyping' 1 43!
+'From Cuis 5.0 [latest update: #3846] on 22 August 2019 at 6:53:42 pm'!
+'Description fixes for ifTrue: as cascade message'!
+!provides: 'LiveTyping' 1 44!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -1806,7 +1806,7 @@ builderForNotNilCheck: aMessageNode
 		rejectingDuring: aMessageNode arguments first 
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 23:33:58'!
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/22/2019 16:44:19'!
 newBuilderFor: aMessageNode
 
 	|  condition |
@@ -1815,7 +1815,7 @@ newBuilderFor: aMessageNode
 	aMessageNode isIfNotNil ifTrue: [ ^self builderForIfNotNil: aMessageNode ].
 	
 	aMessageNode isIfWithMessageNodeAsCondition ifTrue: [
-		condition := aMessageNode receiver.
+		condition := aMessageNode receiverOrCascadeReceiver.
 		condition isIsNil ifTrue: [^self builderForIsNilCheck: aMessageNode ].
 		condition isNotNil ifTrue: [^self builderForNotNilCheck: aMessageNode ].
 		
@@ -1843,7 +1843,7 @@ newBuilderFor: aMessageNode
 	^NoTypeCastApplierBuilder new
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 18:28:29'!
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/22/2019 18:51:50'!
 newBuilderIfIsTypeCheck: condition in: aMessageNode
 	
 	| incompleteTypeInfoReasons types implementors typesToCastTo typesToReject |
@@ -1867,7 +1867,7 @@ newBuilderIfIsTypeCheck: condition in: aMessageNode
 		rejecting: typesToReject 
 		on: condition receiver 
 		during: aMessageNode arguments first
-		rejectingDuring: aMessageNode arguments second.
+		rejectingDuring: (aMessageNode arguments at: 2 ifAbsent: [ BlockNode empty ]).
 	! !
 
 !MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 8/19/2019 22:48:33'!
@@ -6094,6 +6094,13 @@ test65isNilOr
 	self assertHasNoTypeErrorsAndWarnings: #isNilOr 
 	! !
 
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/22/2019 18:52:59'!
+test66DoesNotFailsWithMessageSendAsConditionOfIfTrueWithCascadeSend
+
+	self 
+		shouldnt: [ self assertHasNoTypeErrorsAndWarnings: #messageSendAsConditionOfIfTrueWithCascadeSend ] 
+		raise: Error! !
+
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 23:36:35'!
 test66orWithoutMessageAsReceiverShouldNotError
 
@@ -6106,6 +6113,13 @@ test67andWithoutMessageAsReceiverShouldNotError
 
 	self 
 		shouldnt: [ self assertHasNoTypeErrorsAndWarnings: #andWithoutMessageAsReceiver ] 
+		raise: Error! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/22/2019 16:45:43'!
+test68DoesNotFailsWithIfTrueSendInCascadeMode
+
+	self 
+		shouldnt: [ self assertHasNoTypeErrorsAndWarnings: #ifTrueCascadeSend ] 
 		raise: Error! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/9/2019 09:33:17'!
@@ -11122,6 +11136,22 @@ emptyMethod
 
 	! !
 
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/22/2019 16:47:39'!
+ifTrueCascadeSend
+
+	^true
+		ifTrue: [ 1 + 1 ];
+		yourself
+! !
+
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/22/2019 18:50:52'!
+messageSendAsConditionOfIfTrueWithCascadeSend
+
+	^true not
+		ifTrue: [ 1 + 1 ];
+		yourself
+! !
+
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 7/19/2019 17:44:19'!
 methodNotAnnotatingTypes
 	
@@ -11335,6 +11365,16 @@ ifNotNilWithoutBlock
 	
 	temp1 ifNotNil: temp1 + 1! !
 
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/22/2019 16:20:36'!
+ifNotNilifNotNil: value
+
+	"
+	self new ifNotNilifNotNil: nil; ifNotNilifNotNil: self new
+	"	
+	
+	self returnParameter2: nil.
+	value ifNotNil: [ :w | (w returnParameter2: 1) ifNotNil: [ :c | c + 1 ]] ! !
+
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 16:32:12'!
 isNilCondition
 
@@ -11534,26 +11574,6 @@ orWithoutMessageAsReceiver
 castWithBlockInRejectBlock
 
 	nil ifNotNil: [ :temp1 | [ temp1 mod: 5 ] value ]! !
-
-!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/21/2019 19:57:57'!
-ifNotNilifNotNil
-
-	"
-	self new ifNotNilifNotNil
-	"	
-	self returnParameter: nil.
-	self returnParameter2: nil.
-	{ nil. self } do: [ :value | (self returnParameter: value) ifNotNil: [ :w | (w returnParameter2: 1) ifNotNil: [ :c | c + 1 ]]]! !
-
-!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/21/2019 20:00:32'!
-ifNotNilifNotNil: value
-
-	"
-	self new ifNotNilifNotNil: nil; ifNotNilifNotNil: self new
-	"	
-	
-	self returnParameter2: nil.
-	value ifNotNil: [ :w | (w returnParameter2: 1) ifNotNil: [ :c | c + 1 ]]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/5/2019 17:29:32'!
 isKindOfKeepsSubtypes
@@ -13745,10 +13765,10 @@ isIfNotNil
 	
 	^self selectorSymbol = #ifNotNil:! !
 
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/2/2019 19:13:23'!
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/22/2019 16:44:03'!
 isIfWithMessageNodeAsCondition
 	
-	^self isAnyKindOfIf and: [ receiver isMessageNode ]! !
+	^self isAnyKindOfIf and: [ self receiverOrCascadeReceiver isMessageNode ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 10:17:06'!
 isIsKindOfWithLiteralBehavior
