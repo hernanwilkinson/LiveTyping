@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3843] on 21 August 2019 at 10:33:38 pm'!
-'Description Type checking improvements and support for x ifNotNil: [ ^... ] and the like'!
-!provides: 'LiveTyping' 1 41!
+'From Cuis 5.0 [latest update: #3846] on 22 August 2019 at 11:45:54 am'!
+'Description x isNil or: [ ... ] support. Tests that fail with new things to do'!
+!provides: 'LiveTyping' 1 42!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -1806,7 +1806,7 @@ builderForNotNilCheck: aMessageNode
 		rejectingDuring: aMessageNode arguments first 
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 18:28:13'!
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 23:33:58'!
 newBuilderFor: aMessageNode
 
 	|  condition |
@@ -1835,6 +1835,10 @@ newBuilderFor: aMessageNode
 	aMessageNode isAnd ifTrue: [ 
 		condition := aMessageNode receiver.
 		condition isNotNil ifTrue: [^self builderForNotNilCheck: aMessageNode ]].
+
+	aMessageNode isOr ifTrue: [ 
+		condition := aMessageNode receiver.
+		condition isMessageNode ifTrue: [ condition isIsNil ifTrue: [^self builderForIsNilCheck: aMessageNode ]]].
 
 	^NoTypeCastApplierBuilder new
 ! !
@@ -6071,6 +6075,38 @@ test62ifNotNilifNotNilWithMoreThanAMessageSendAndNilAsValue
 	typeChecker := methodToCheck typeCheck.
 	
 	self assert: typeChecker hasNoErrorsAndWarnings 	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 22:55:31'!
+test63orCheck
+
+	self assertHasNoTypeErrorsAndWarnings: #orCheck 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 23:15:15'!
+test64notNilAndIfTrue
+
+	self assertHasNoTypeErrorsAndWarnings: #notNilAndIfTrue 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 23:18:50'!
+test65isNilOr
+
+	self assertHasNoTypeErrorsAndWarnings: #isNilOr 
+	! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 23:36:35'!
+test66orWithoutMessageAsReceiverShouldNotError
+
+	self 
+		shouldnt: [ self assertHasNoTypeErrorsAndWarnings: #orWithoutMessageAsReceiver ] 
+		raise: Error! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/21/2019 23:36:05'!
+test67andWithoutMessageAsReceiverShouldNotError
+
+	self 
+		shouldnt: [ self assertHasNoTypeErrorsAndWarnings: #andWithoutMessageAsReceiver ] 
+		raise: Error! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 8/9/2019 09:33:17'!
 test01MethodNotAnnotatingTypesGeneratesWarning
@@ -11112,6 +11148,15 @@ returnParameter: anObject
 
 	^anObject ! !
 
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/21/2019 23:35:58'!
+andWithoutMessageAsReceiver
+
+	| temp1 |
+	
+	temp1 := true.
+	
+	^temp1 and: [ temp1 ]! !
+
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 7/30/2019 14:37:10'!
 comparingForNilWithIfTrueIfFalse
 	
@@ -11293,6 +11338,16 @@ isNilCondition
 	temp1 isNil ifFalse: [ temp1 + 1 ].
 ! !
 
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/21/2019 23:18:16'!
+isNilOr
+
+	| temp1 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	
+	^temp1 isNil or: [ temp1 odd ]! !
+
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 15:30:32'!
 nestedIfNilCheck
 
@@ -11432,6 +11487,18 @@ notNilAnd
 	
 	^temp1 notNil and: [ temp1 odd ]! !
 
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/21/2019 23:13:23'!
+notNilAndIfTrue
+
+	| temp1 temp2 |
+	
+	temp1 := nil.
+	temp1 := 1.
+	temp2 := nil.
+	temp2 := 1.
+	
+	^(temp1 notNil and: [ temp2 notNil ]) ifTrue: [ temp1 odd. temp2 odd ]! !
+
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/2/2019 17:03:12'!
 notNilCondition
 
@@ -11443,6 +11510,15 @@ notNilCondition
 	temp1 notNil ifFalse: [ temp1 subclasses ] ifTrue: [ temp1 + 1 ].
 	temp1 notNil ifTrue: [ temp1 + 1 ].
 	temp1 notNil ifFalse: [ temp1 subclasses ]! !
+
+!TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 8/21/2019 23:36:35'!
+orWithoutMessageAsReceiver
+
+	| temp1 |
+	
+	temp1 := true.
+	
+	^temp1 or: [ temp1 ]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/9/2019 15:06:06'!
 castWithBlockInRejectBlock
@@ -11479,6 +11555,20 @@ isKindOfKeepsSubtypes
 	temp1 := LinkedList new.
 	
 	(temp1 isKindOf: Collection) ifTrue: [ temp1 addLast:1 ].! !
+
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/21/2019 22:54:20'!
+orCheck
+
+	| temp1  |
+	
+	temp1 := 1.
+	temp1 := 1/3.
+	temp1 := Date today.
+	
+	(temp1 isInteger or: [ temp1 isFraction ]) ifTrue: [ temp1 odd ] ifFalse: [ temp1 year ].
+		
+
+! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/2/2019 18:46:49'!
 typeCastToWithEqualOrIdenticalTo
@@ -13699,6 +13789,11 @@ isObjectClassNotEqualOrNotIdenticalToClass
 	^self isNotEqualOrNotIdentical and: [ self isReceiverClassMessageSend and: [ self isFirstArgumentLiteralBehavior ]]
 		
 	! !
+
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 23:19:20'!
+isOr
+
+	^self selectorSymbol = #or:! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/2/2019 19:27:15'!
 isReceiverClassMessageSend
