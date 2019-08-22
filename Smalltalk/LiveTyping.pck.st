@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3846] on 22 August 2019 at 11:45:54 am'!
-'Description x isNil or: [ ... ] support. Tests that fail with new things to do'!
-!provides: 'LiveTyping' 1 42!
+'From Cuis 5.0 [latest update: #3846] on 22 August 2019 at 4:17:41 pm'!
+'Description print can be nil !! on ballon help'!
+!provides: 'LiveTyping' 1 43!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -8509,10 +8509,10 @@ of: aSender for: aSentImplementors
 	
 	^self new initializeOf: aSender for: aSentImplementors! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 8/20/2019 16:33:54'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 8/22/2019 16:13:15'!
 print: originalTypes on: aStream upTo: aNumberOfTypes
 	
-	| types |
+	| types canBeNil |
 	
 	types := originalTypes asArray.
 	aStream nextPut: $<.
@@ -8526,11 +8526,21 @@ print: originalTypes on: aStream upTo: aNumberOfTypes
 					ifGeneric: [ :aGenericType | aStream nextPutAll: 'any' ].
 				aStream nextPutAll: ' # ' ].
 			
+			(types includes: UndefinedObject) 
+				ifTrue: [
+					canBeNil := true.
+					types := types reject: [ :aType | aType = UndefinedObject ]]
+				ifFalse: [
+					canBeNil := false ].
+				
 			aNumberOfTypes < types size 
 				ifTrue: [ 
 					self printAll: (types first: aNumberOfTypes) on: aStream.
+					canBeNil ifTrue: [ aStream nextPutAll: ' | can be nil !!' ].
 					aStream nextPutAll: ' | ...' ] 
-				ifFalse: [ self printAll: types on: aStream ]].
+				ifFalse: [ 
+					self printAll: types on: aStream.
+					canBeNil ifTrue: [ aStream nextPutAll: ' | can be nil !!' ]]].
 			
 	aStream nextPut: $>.
 	
