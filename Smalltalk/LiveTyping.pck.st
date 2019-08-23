@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3846] on 22 August 2019 at 6:53:42 pm'!
-'Description fixes for ifTrue: as cascade message'!
-!provides: 'LiveTyping' 1 44!
+'From Cuis 5.0 [latest update: #3846] on 23 August 2019 at 5:09:44 pm'!
+'Description cast builder refactoring'!
+!provides: 'LiveTyping' 1 45!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -1742,6 +1742,28 @@ builderForIfNotNil: aMessageNode
 		rejectingDuring: aMessageNode arguments first 
 		! !
 
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/23/2019 15:20:31'!
+builderForIfWithMessageNodeAsCondition: aMessageNode
+
+	| condition |
+	 
+	condition := aMessageNode receiverOrCascadeReceiver.
+	condition isIsNil ifTrue: [^self builderForIsNilCheck: aMessageNode ].
+	condition isNotNil ifTrue: [^self builderForNotNilCheck: aMessageNode ].
+	
+	condition isEqualOrIdenticalToNil ifTrue: [ ^self builderForEqualOrIdenticalToNil: aMessageNode ].
+	condition isNilEqualOrIdenticalTo ifTrue: [ ^self builderForNilEqualOrIdenticalTo: aMessageNode ].
+	condition isObjectClassEqualOrIdenticalToClass ifTrue: [ ^self builderForEqualOrIdenticalToClass: aMessageNode ].
+	condition isClassEqualOrIdenticalToObjectClass ifTrue: [ ^self builderForClassEqualOrIdenticalTo: aMessageNode ].
+	condition isIsKindOfWithLiteralBehavior ifTrue: [ ^self builderForIsKindOf: aMessageNode ].
+	
+	condition isNotEqualOrNotIdenticalToNil ifTrue: [ ^self builderForNotEqualOrNotIdenticalToNil: aMessageNode ].
+	condition isNilNotEqualOrNotIdenticalTo ifTrue: [ ^self builderForNilNotEqualOrNotIdenticalTo: aMessageNode ].
+	condition isObjectClassNotEqualOrNotIdenticalToClass ifTrue: [ ^self builderForNotEqualOrNotIdenticalToClass: aMessageNode ].
+	condition isClassNotEqualOrNotIdenticalToObjectClass ifTrue: [ ^self builderForClassNotEqualOrNotIdenticalTo: aMessageNode ].
+	
+	^self newBuilderIfIsTypeCheck: condition in: aMessageNode ! !
+
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/21/2019 14:25:34'!
 builderForIsKindOf: aMessageNode 
 	
@@ -1806,36 +1828,17 @@ builderForNotNilCheck: aMessageNode
 		rejectingDuring: aMessageNode arguments first 
 ! !
 
-!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/22/2019 16:44:19'!
+!MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 8/23/2019 15:20:05'!
 newBuilderFor: aMessageNode
 
 	|  condition |
 
 	aMessageNode isIfNil ifTrue: [ ^self builderForIfNil: aMessageNode ].
 	aMessageNode isIfNotNil ifTrue: [ ^self builderForIfNotNil: aMessageNode ].
-	
-	aMessageNode isIfWithMessageNodeAsCondition ifTrue: [
-		condition := aMessageNode receiverOrCascadeReceiver.
-		condition isIsNil ifTrue: [^self builderForIsNilCheck: aMessageNode ].
-		condition isNotNil ifTrue: [^self builderForNotNilCheck: aMessageNode ].
-		
-		condition isEqualOrIdenticalToNil ifTrue: [ ^self builderForEqualOrIdenticalToNil: aMessageNode ].
-		condition isNilEqualOrIdenticalTo ifTrue: [ ^self builderForNilEqualOrIdenticalTo: aMessageNode ].
-		condition isObjectClassEqualOrIdenticalToClass ifTrue: [ ^self builderForEqualOrIdenticalToClass: aMessageNode ].
-		condition isClassEqualOrIdenticalToObjectClass ifTrue: [ ^self builderForClassEqualOrIdenticalTo: aMessageNode ].
-		condition isIsKindOfWithLiteralBehavior ifTrue: [ ^self builderForIsKindOf: aMessageNode ].
-		
-		condition isNotEqualOrNotIdenticalToNil ifTrue: [ ^self builderForNotEqualOrNotIdenticalToNil: aMessageNode ].
-		condition isNilNotEqualOrNotIdenticalTo ifTrue: [ ^self builderForNilNotEqualOrNotIdenticalTo: aMessageNode ].
-		condition isObjectClassNotEqualOrNotIdenticalToClass ifTrue: [ ^self builderForNotEqualOrNotIdenticalToClass: aMessageNode ].
-		condition isClassNotEqualOrNotIdenticalToObjectClass ifTrue: [ ^self builderForClassNotEqualOrNotIdenticalTo: aMessageNode ].
-		
-		^self newBuilderIfIsTypeCheck: condition in: aMessageNode ].
-	
+	aMessageNode isIfWithMessageNodeAsCondition ifTrue: [ ^self builderForIfWithMessageNodeAsCondition: aMessageNode ].
 	aMessageNode isAnd ifTrue: [ 
 		condition := aMessageNode receiver.
 		condition isNotNil ifTrue: [^self builderForNotNilCheck: aMessageNode ]].
-
 	aMessageNode isOr ifTrue: [ 
 		condition := aMessageNode receiver.
 		condition isMessageNode ifTrue: [ condition isIsNil ifTrue: [^self builderForIsNilCheck: aMessageNode ]]].
@@ -10026,10 +10029,10 @@ isFor: aParseNode
 
 	^objetToCast isSameAs: aParseNode! !
 
-!TypeCast methodsFor: 'casting' stamp: 'HAW 8/19/2019 22:34:47'!
+!TypeCast methodsFor: 'casting' stamp: 'HAW 8/23/2019 15:54:10'!
 cast: originalTypes
 
-	self subclassResponsibility ! !
+	self subclassResponsibility! !
 
 !ManyTypesCast methodsFor: 'casting' stamp: 'HAW 8/20/2019 20:30:54'!
 cast: originalTypes
