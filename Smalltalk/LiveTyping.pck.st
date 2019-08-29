@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3846] on 23 August 2019 at 5:09:44 pm'!
-'Description cast builder refactoring'!
-!provides: 'LiveTyping' 1 45!
+'From Cuis 5.0 [latest update: #3846] on 30 August 2019 at 12:00:02 am'!
+'Description Actual scope label change.'!
+!provides: 'LiveTyping' 1 46!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -9523,10 +9523,13 @@ initializeForAllClasses
 	"
 	ProtoObject withAllSubclassesDo: [ :aClass | aClass initializeMethodsTypeInformation ]! !
 
-!MethodVariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 10/20/2018 17:35:34'!
+!MethodVariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 8/27/2019 07:37:11'!
 of: aClass do: aBlock
 
-	aClass methodsDo: [ :aCompiledMethod | aBlock value: aCompiledMethod methodVariablesTypes ]! !
+	aClass methodsDo: [ :aCompiledMethod | 
+		[ aBlock value: aCompiledMethod methodVariablesTypes ]
+			on: MethodNotAnnotatingTypes 
+			do: [ :error | ]]! !
 
 !MethodVariablesTypes class methodsFor: 'statistics' stamp: 'HAW 3/27/2019 11:15:33'!
 numberOfRawTypesForAll
@@ -14393,10 +14396,10 @@ actualImplementorsAndSendersWhenOnMessageSend
 	
 	self refactoringClass addActualImplementorsOf: oldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: Smalltalk ! !
 
-!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:46:09'!
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/28/2019 09:21:48'!
 actualScopeOptionLabels
 
-	^{ 'Actual Implementors & Actual/Possible Message Sends'. 'Actual Implementors & Actual Message Sends' } ! !
+	^{ 'Actual/Possible Scope'. 'Actual Scope' } ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:42:14'!
 canNotRefactorWithIncompleteTypeInfo
