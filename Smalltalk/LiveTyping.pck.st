@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3935] on 28 October 2019 at 1:09:06 am'!
-'Description Support for auto completer previous binary message send'!
-!provides: 'LiveTyping' 1 47!
+'From Cuis 5.0 [latest update: #3935] on 28 October 2019 at 1:36:35 am'!
+'Description Fix for autocomplete in workspace'!
+!provides: 'LiveTyping' 1 48!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -11,1023 +11,1023 @@ SystemOrganization addCategory: #'LiveTyping-TypeChecking'!
 SystemOrganization addCategory: #'LiveTyping-TypeChecking-Tests'!
 
 
-!classDefinition: #ActualSendersMessageSet category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ActualSendersMessageSet category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 MessageSet subclass: #ActualSendersMessageSet
 	instanceVariableNames: 'types'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ActualSendersMessageSet class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ActualSendersMessageSet class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ActualSendersMessageSet class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingResultSet category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingResultSet category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 MessageSet subclass: #TypeCheckingResultSet
 	instanceVariableNames: 'methodTypeChecker showProblems'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResultSet class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingResultSet class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingResultSet class
 	instanceVariableNames: ''!
 
-!classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 RefactoringError subclass: #CanNotChangeSelectorWithNotIncludedTypes
 	instanceVariableNames: 'messageSendsWithInvalidReceiverTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'CanNotChangeSelectorWithNotIncludedTypes class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'CanNotChangeSelectorWithNotIncludedTypes class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 CanNotChangeSelectorWithNotIncludedTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodNotAnnotatingTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #MethodNotAnnotatingTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Error subclass: #MethodNotAnnotatingTypes
 	instanceVariableNames: 'method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MethodNotAnnotatingTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodNotAnnotatingTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 MethodNotAnnotatingTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #ActualMessageSendsCollector category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ActualMessageSendsCollector category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ParseNodeVisitor subclass: #ActualMessageSendsCollector
 	instanceVariableNames: 'sent toAnalize sentSelector sentMethodClass sureMessageSends possibleMessageSends toAnalizeMethodClass isToAnalizeInSuperclass'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ActualMessageSendsCollector class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ActualMessageSendsCollector class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ActualMessageSendsCollector class
 	instanceVariableNames: ''!
 
-!classDefinition: #MultiImplementorsActualMessageSendsCollector category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #MultiImplementorsActualMessageSendsCollector category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ParseNodeVisitor subclass: #MultiImplementorsActualMessageSendsCollector
 	instanceVariableNames: 'sentImplementors sendersInfo completeSureSenders partialSureSenders possibleSenders messageList numberOfTitles'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MultiImplementorsActualMessageSendsCollector class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MultiImplementorsActualMessageSendsCollector class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 MultiImplementorsActualMessageSendsCollector class
 	instanceVariableNames: ''!
 
-!classDefinition: #ReceiverTypesOfMessageSendsConform category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ReceiverTypesOfMessageSendsConform category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 ParseNodeVisitor subclass: #ReceiverTypesOfMessageSendsConform
 	instanceVariableNames: 'senders implementors sentSelector types currentSender notIncludedReceiverTypesInMessageSends currentSenderMethodClass'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'ReceiverTypesOfMessageSendsConform class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ReceiverTypesOfMessageSendsConform class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 ReceiverTypesOfMessageSendsConform class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodTypeCheckerVisitor category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #MethodTypeCheckerVisitor category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 ParseNodeVisitor subclass: #MethodTypeCheckerVisitor
 	instanceVariableNames: 'errors warnings methodNode actualMethod problems methodReference blockCastingApplier castingApplierBuilder'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodTypeCheckerVisitor class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodTypeCheckerVisitor class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 MethodTypeCheckerVisitor class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingResultWindow category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingResultWindow category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 MessageSetWindow subclass: #TypeCheckingResultWindow
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResultWindow class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingResultWindow class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingResultWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #NotImplementedMethod category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #NotImplementedMethod category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 MethodReference subclass: #NotImplementedMethod
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'NotImplementedMethod class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'NotImplementedMethod class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 NotImplementedMethod class
 	instanceVariableNames: ''!
 
-!classDefinition: #PossibleSender category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #PossibleSender category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 MethodReference subclass: #PossibleSender
 	instanceVariableNames: 'possibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'PossibleSender class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'PossibleSender class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 PossibleSender class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #AddParameterWithActualScopeTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #AddParameterWithActualScopeTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 RefactoringTest subclass: #AddParameterWithActualScopeTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'AddParameterWithActualScopeTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'AddParameterWithActualScopeTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 AddParameterWithActualScopeTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #RemoveParameterWithActualScopeTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #RemoveParameterWithActualScopeTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 RefactoringTest subclass: #RemoveParameterWithActualScopeTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'RemoveParameterWithActualScopeTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'RemoveParameterWithActualScopeTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 RemoveParameterWithActualScopeTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #RenameSelectorWithActualScopeTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #RenameSelectorWithActualScopeTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 RefactoringTest subclass: #RenameSelectorWithActualScopeTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'RenameSelectorWithActualScopeTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'RenameSelectorWithActualScopeTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 RenameSelectorWithActualScopeTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #ActualImplementorsTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #ActualImplementorsTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #ActualImplementorsTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ActualImplementorsTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ActualImplementorsTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 ActualImplementorsTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #ActualSendersTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #ActualSendersTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #ActualSendersTest
 	instanceVariableNames: 'v1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ActualSendersTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ActualSendersTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 ActualSendersTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #AdditionalMethodStateTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #AdditionalMethodStateTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #AdditionalMethodStateTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'AdditionalMethodStateTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'AdditionalMethodStateTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 AdditionalMethodStateTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #ClosureVariablesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #ClosureVariablesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #ClosureVariablesTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ClosureVariablesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ClosureVariablesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 ClosureVariablesTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #DynamicTypesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #DynamicTypesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #DynamicTypesTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'DynamicTypesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'DynamicTypesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 DynamicTypesTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #InstanceVariableTypeInfoTest
 	instanceVariableNames: 'iv1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'InstanceVariableTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'InstanceVariableTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #InstanceVariablesTypesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #InstanceVariablesTypesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #InstanceVariablesTypesTest
 	instanceVariableNames: 'instVar1 instVar2 instVar3 instVar4'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'InstanceVariablesTypesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'InstanceVariablesTypesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceVariablesTypesTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #LiveTypingCodeSimulationTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #LiveTypingCodeSimulationTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #LiveTypingCodeSimulationTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'LiveTypingCodeSimulationTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'LiveTypingCodeSimulationTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 LiveTypingCodeSimulationTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #MethodNotAnnotatingTypesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #MethodNotAnnotatingTypesTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #MethodNotAnnotatingTypesTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'MethodNotAnnotatingTypesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodNotAnnotatingTypesTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 MethodNotAnnotatingTypesTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #MethodVariableTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #MethodVariableTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #MethodVariableTypeInfoTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'MethodVariableTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodVariableTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 MethodVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #NotImplementedMethodTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #NotImplementedMethodTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #NotImplementedMethodTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'NotImplementedMethodTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'NotImplementedMethodTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 NotImplementedMethodTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #PossibleSenderTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #PossibleSenderTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #PossibleSenderTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'PossibleSenderTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'PossibleSenderTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 PossibleSenderTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #ReturnTypeInfoTest
 	instanceVariableNames: 'iv1 iv2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ReturnTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ReturnTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 ReturnTypeInfoTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #VariableTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #VariableTypeInfoTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #VariableTypeInfoTest
 	instanceVariableNames: 'instVar1 instVar2 instVar3 instVar4'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'VariableTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'VariableTypeInfoTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 VariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #AutocompleteExample category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #AutocompleteExample category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #AutocompleteExample
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Playground'!
-!classDefinition: 'AutocompleteExample class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'AutocompleteExample class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 AutocompleteExample class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #CustomerTest category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #CustomerTest category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #CustomerTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Playground'!
-!classDefinition: 'CustomerTest class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'CustomerTest class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 CustomerTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #ManyMethodsTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #ManyMethodsTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #ManyMethodsTypeCheckerTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking-Tests'!
-!classDefinition: 'ManyMethodsTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ManyMethodsTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 ManyMethodsTypeCheckerTest class
 	instanceVariableNames: ''!
 
-!testClassDefinition: #MethodTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!testClassDefinition: #MethodTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TestCase subclass: #MethodTypeCheckerTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking-Tests'!
-!classDefinition: 'MethodTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 MethodTypeCheckerTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingSmalltalkCompleter category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #LiveTypingSmalltalkCompleter category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 SmalltalkCompleter subclass: #LiveTypingSmalltalkCompleter
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'LiveTypingSmalltalkCompleter class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'LiveTypingSmalltalkCompleter class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 LiveTypingSmalltalkCompleter class
 	instanceVariableNames: ''!
 
-!classDefinition: #AddParameterWithActualScope category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #AddParameterWithActualScope category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 AddParameter subclass: #AddParameterWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'AddParameterWithActualScope class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'AddParameterWithActualScope class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 AddParameterWithActualScope class
 	instanceVariableNames: ''!
 
-!classDefinition: #RenameSelectorWithActualScope category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #RenameSelectorWithActualScope category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 RenameSelector subclass: #RenameSelectorWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'RenameSelectorWithActualScope class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'RenameSelectorWithActualScope class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 RenameSelectorWithActualScope class
 	instanceVariableNames: ''!
 
-!classDefinition: #RemoveParameterWithActualScope category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #RemoveParameterWithActualScope category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 RemoveParameter subclass: #RemoveParameterWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'RemoveParameterWithActualScope class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'RemoveParameterWithActualScope class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 RemoveParameterWithActualScope class
 	instanceVariableNames: ''!
 
-!classDefinition: #AddParameterWithActualScopeApplier category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #AddParameterWithActualScopeApplier category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 AddParameterApplier subclass: #AddParameterWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'AddParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'AddParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 AddParameterWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #RenameSelectorWithActualScopeApplier category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #RenameSelectorWithActualScopeApplier category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 RenameSelectorApplier subclass: #RenameSelectorWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'RenameSelectorWithActualScopeApplier class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'RenameSelectorWithActualScopeApplier class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 RenameSelectorWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #RemoveParameterWithActualScopeApplier category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #RemoveParameterWithActualScopeApplier category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 RemoveParameterApplier subclass: #RemoveParameterWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'RemoveParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'RemoveParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring' stamp: 'HAW 10/28/2019 01:36:36'!
 RemoveParameterWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #ActualImplementorsFinder category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ActualImplementorsFinder category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #ActualImplementorsFinder
 	instanceVariableNames: 'selector types notImplemented implementors'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ActualImplementorsFinder class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ActualImplementorsFinder class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ActualImplementorsFinder class
 	instanceVariableNames: ''!
 
-!classDefinition: #AllActualImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #AllActualImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ActualImplementorsFinder subclass: #AllActualImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'AllActualImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'AllActualImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 AllActualImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #AllActualLocalImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #AllActualLocalImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ActualImplementorsFinder subclass: #AllActualLocalImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'AllActualLocalImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'AllActualLocalImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 AllActualLocalImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualSelectors category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #BrowseActualSelectors category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #BrowseActualSelectors
 	instanceVariableNames: 'methodNode class cursorPosition morph methodToLookUp incompleteTypeInfoReasons sentSelector types'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualSelectors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'BrowseActualSelectors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 BrowseActualSelectors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #BrowseActualImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 BrowseActualSelectors subclass: #BrowseActualImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'BrowseActualImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 BrowseActualImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualLocalImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #BrowseActualLocalImplementors category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 BrowseActualImplementors subclass: #BrowseActualLocalImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualLocalImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'BrowseActualLocalImplementors class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 BrowseActualLocalImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualSenders category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #BrowseActualSenders category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 BrowseActualSelectors subclass: #BrowseActualSenders
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualSenders class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'BrowseActualSenders class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 BrowseActualSenders class
 	instanceVariableNames: ''!
 
-!classDefinition: #DynamicType category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #DynamicType category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #DynamicType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'DynamicType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'DynamicType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 DynamicType class
 	instanceVariableNames: ''!
 
-!classDefinition: #ClassType category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ClassType category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 DynamicType subclass: #ClassType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ClassType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ClassType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ClassType class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceType category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #InstanceType category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 DynamicType subclass: #InstanceType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'InstanceType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceType class
 	instanceVariableNames: ''!
 
-!classDefinition: #SelfType category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #SelfType category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 DynamicType subclass: #SelfType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'SelfType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'SelfType class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 SelfType class
 	instanceVariableNames: ''!
 
-!classDefinition: #IncompleteTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #IncompleteTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #IncompleteTypeInfo
 	instanceVariableNames: 'methodReference reasonDescription'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'IncompleteTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'IncompleteTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 IncompleteTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #IncompleteTypeInfoError category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #IncompleteTypeInfoError category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 IncompleteTypeInfo subclass: #IncompleteTypeInfoError
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'IncompleteTypeInfoError class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'IncompleteTypeInfoError class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 IncompleteTypeInfoError class
 	instanceVariableNames: ''!
 
-!classDefinition: #IncompleteTypeInfoWarning category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #IncompleteTypeInfoWarning category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 IncompleteTypeInfo subclass: #IncompleteTypeInfoWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'IncompleteTypeInfoWarning class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'IncompleteTypeInfoWarning class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 IncompleteTypeInfoWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTyping category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #LiveTyping category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #LiveTyping
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'LiveTyping class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'LiveTyping class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 LiveTyping class
 	instanceVariableNames: ''!
 
-!classDefinition: #ParseNodeTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ParseNodeTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #ParseNodeTypeInfo
 	instanceVariableNames: 'parseNodeToAnalize typeInfo method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ParseNodeTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ParseNodeTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ParseNodeTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #ParseNodeTypesDisplay category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ParseNodeTypesDisplay category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #ParseNodeTypesDisplay
 	instanceVariableNames: 'parseNodeToAnalize methodNodeOwner definingClass methodToAnalyze types incompleteTypeInfoReasons typeInfo labels lines selectedIndex icons typesIndexLimit actions'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ParseNodeTypesDisplay class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ParseNodeTypesDisplay class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ParseNodeTypesDisplay class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypesDisplay category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #InstanceVariableTypesDisplay category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ParseNodeTypesDisplay subclass: #InstanceVariableTypesDisplay
 	instanceVariableNames: 'instVarTypeInfo'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariableTypesDisplay class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'InstanceVariableTypesDisplay class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceVariableTypesDisplay class
 	instanceVariableNames: ''!
 
-!classDefinition: #SenderInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #SenderInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #SenderInfo
 	instanceVariableNames: 'sender sureSenders possibleSenders sentImplementors'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'SenderInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'SenderInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 SenderInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #VariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #VariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #VariableTypeInfo
 	instanceVariableNames: 'rawTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'VariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'VariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 VariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #InstanceVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 VariableTypeInfo subclass: #InstanceVariableTypeInfo
 	instanceVariableNames: 'class variableName'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'InstanceVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #HierarchyInstanceVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #HierarchyInstanceVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceVariableTypeInfo subclass: #HierarchyInstanceVariableTypeInfo
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'HierarchyInstanceVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'HierarchyInstanceVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 HierarchyInstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #LocalInstanceVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #LocalInstanceVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceVariableTypeInfo subclass: #LocalInstanceVariableTypeInfo
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'LocalInstanceVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'LocalInstanceVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 LocalInstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #MethodVariableTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 VariableTypeInfo subclass: #MethodVariableTypeInfo
 	instanceVariableNames: 'method variableName'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MethodVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodVariableTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 MethodVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #ReturnTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ReturnTypeInfo category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 VariableTypeInfo subclass: #ReturnTypeInfo
 	instanceVariableNames: 'method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ReturnTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ReturnTypeInfo class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 ReturnTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #VariablesTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #VariablesTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #VariablesTypes
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'VariablesTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'VariablesTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 VariablesTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariablesTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #InstanceVariablesTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 VariablesTypes subclass: #InstanceVariablesTypes
 	instanceVariableNames: 'class rawTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariablesTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'InstanceVariablesTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 InstanceVariablesTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodVariablesTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #MethodVariablesTypes category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 VariablesTypes subclass: #MethodVariablesTypes
 	instanceVariableNames: 'method methodProperties'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MethodVariablesTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodVariablesTypes class' category: #LiveTyping stamp: 'HAW 10/28/2019 01:36:36'!
 MethodVariablesTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingTestFactory category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #LiveTypingTestFactory category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #LiveTypingTestFactory
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'LiveTypingTestFactory class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'LiveTypingTestFactory class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 LiveTypingTestFactory class
 	instanceVariableNames: ''!
 
-!classDefinition: #PerfomanceTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #PerfomanceTest category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #PerfomanceTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'PerfomanceTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'PerfomanceTest class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 PerfomanceTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeInfoRootTestClass category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeInfoRootTestClass category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeInfoRootTestClass
 	instanceVariableNames: 'ivroot'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'TypeInfoRootTestClass class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeInfoRootTestClass class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeInfoRootTestClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeInfoSibling1TestClass category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeInfoSibling1TestClass category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeInfoRootTestClass subclass: #TypeInfoSibling1TestClass
 	instanceVariableNames: 'ivsibling1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'TypeInfoSibling1TestClass class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeInfoSibling1TestClass class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeInfoSibling1TestClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeInfoSibling2TestClass category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeInfoSibling2TestClass category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeInfoRootTestClass subclass: #TypeInfoSibling2TestClass
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'TypeInfoSibling2TestClass class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeInfoSibling2TestClass class' category: #'LiveTyping-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeInfoSibling2TestClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #ClosureTypeExamples category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ClosureTypeExamples category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #ClosureTypeExamples
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Playground'!
-!classDefinition: 'ClosureTypeExamples class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ClosureTypeExamples class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 ClosureTypeExamples class
 	instanceVariableNames: ''!
 
-!classDefinition: #Customer category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #Customer category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #Customer
 	instanceVariableNames: 'firstName lastName dateOfBirth'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Playground'!
-!classDefinition: 'Customer class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'Customer class' category: #'LiveTyping-Playground' stamp: 'HAW 10/28/2019 01:36:36'!
 Customer class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeCast
 	instanceVariableNames: 'objetToCast'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #ManyTypesCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ManyTypesCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCast subclass: #ManyTypesCast
 	instanceVariableNames: 'typesToCastTo typesToReject'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'ManyTypesCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ManyTypesCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 ManyTypesCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #OneTypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #OneTypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCast subclass: #OneTypeCast
 	instanceVariableNames: 'typeToCastTo'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'OneTypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'OneTypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #EqualTypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #EqualTypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCast subclass: #EqualTypeCast
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EqualTypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'EqualTypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 EqualTypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #EqualTypeReject category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #EqualTypeReject category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCast subclass: #EqualTypeReject
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EqualTypeReject class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'EqualTypeReject class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 EqualTypeReject class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfTypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #IsKindOfTypeCast category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCast subclass: #IsKindOfTypeCast
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfTypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'IsKindOfTypeCast class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 IsKindOfTypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfTypeReject category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #IsKindOfTypeReject category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCast subclass: #IsKindOfTypeReject
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfTypeReject class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'IsKindOfTypeReject class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 IsKindOfTypeReject class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCastApplier category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCastApplier category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeCastApplier
 	instanceVariableNames: 'receiverTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCastApplier class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCastApplier class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCastApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #EffectiveTypeCastApplier category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #EffectiveTypeCastApplier category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCastApplier subclass: #EffectiveTypeCastApplier
 	instanceVariableNames: 'previous casts rejections'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EffectiveTypeCastApplier class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'EffectiveTypeCastApplier class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 EffectiveTypeCastApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #NoTypeCastApplier category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #NoTypeCastApplier category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCastApplier subclass: #NoTypeCastApplier
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'NoTypeCastApplier class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'NoTypeCastApplier class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 NoTypeCastApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #EffectiveTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #EffectiveTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCastApplierBuilder subclass: #EffectiveTypeCastApplierBuilder
 	instanceVariableNames: 'castingBlock rejectingBlock objectToCast afterMessageTypeCasts'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EffectiveTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'EffectiveTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 EffectiveTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfManyTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #IsKindOfManyTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 EffectiveTypeCastApplierBuilder subclass: #IsKindOfManyTypeCastApplierBuilder
 	instanceVariableNames: 'typesToCastTo typesToReject'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfManyTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'IsKindOfManyTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 IsKindOfManyTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #OneTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #OneTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 EffectiveTypeCastApplierBuilder subclass: #OneTypeCastApplierBuilder
 	instanceVariableNames: 'castType'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'OneTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'OneTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #EqualsTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #EqualsTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCastApplierBuilder subclass: #EqualsTypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EqualsTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'EqualsTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 EqualsTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #IsKindOfTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 OneTypeCastApplierBuilder subclass: #IsKindOfTypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'IsKindOfTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 IsKindOfTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #NoTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #NoTypeCastApplierBuilder category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCastApplierBuilder subclass: #NoTypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'NoTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'NoTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 NoTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeChecker category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeChecker category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeChecker
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeChecker class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeChecker class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeChecker class
 	instanceVariableNames: ''!
 
-!classDefinition: #ManyMethodsTypeChecker category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #ManyMethodsTypeChecker category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeChecker subclass: #ManyMethodsTypeChecker
 	instanceVariableNames: 'methodsToCheck typeCheckers'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'ManyMethodsTypeChecker class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'ManyMethodsTypeChecker class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 ManyMethodsTypeChecker class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodTypeChecker category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #MethodTypeChecker category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeChecker subclass: #MethodTypeChecker
 	instanceVariableNames: 'method errors warnings problems'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodTypeChecker class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodTypeChecker class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 MethodTypeChecker class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingProblemToMethodReferenceAdapter category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingProblemToMethodReferenceAdapter category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeCheckingProblemToMethodReferenceAdapter
 	instanceVariableNames: 'typeCheckingProblem prefix'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingProblemToMethodReferenceAdapter class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingProblemToMethodReferenceAdapter class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingProblemToMethodReferenceAdapter class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingResult category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingResult category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeCheckingResult
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResult class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingResult class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingResult class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodNotAnnotatingTypesProblem category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #MethodNotAnnotatingTypesProblem category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingResult subclass: #MethodNotAnnotatingTypesProblem
 	instanceVariableNames: 'method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodNotAnnotatingTypesProblem class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'MethodNotAnnotatingTypesProblem class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 MethodNotAnnotatingTypesProblem class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingError category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingError category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingResult subclass: #TypeCheckingError
 	instanceVariableNames: 'method messageNode notImplemented methodNode'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingError class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingError class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingError class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingIssue category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingIssue category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingResult subclass: #TypeCheckingIssue
 	instanceVariableNames: 'method messageNode reason methodNode'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingIssue class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingIssue class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingIssue class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingProblem category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingProblem category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingIssue subclass: #TypeCheckingProblem
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingProblem class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingProblem class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingProblem class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingWarning category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckingWarning category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingIssue subclass: #TypeCheckingWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingWarning class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckingWarning class' category: #'LiveTyping-TypeChecking' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckingWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckerTestMethods category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: #TypeCheckerTestMethods category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 Object subclass: #TypeCheckerTestMethods
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking-Tests'!
-!classDefinition: 'TypeCheckerTestMethods class' category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:09:07'!
+!classDefinition: 'TypeCheckerTestMethods class' category: #'LiveTyping-TypeChecking-Tests' stamp: 'HAW 10/28/2019 01:36:36'!
 TypeCheckerTestMethods class
 	instanceVariableNames: ''!
 
@@ -6518,10 +6518,10 @@ withMethodNodeDo: doBlock ifError: anErrorBlock
 				ifFalse: [ anErrorBlock value: anError ]]
 	! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 10/27/2019 19:31:18'!
+!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 10/28/2019 01:31:12'!
 withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
 
-	^ [[ doBlock value: (parser classOrMetaClass methodNodeFor: aSourceCode) ] 
+	^ [[ doBlock value: ((parser classOrMetaClass ifNil: [ UndefinedObject ]) methodNodeFor: aSourceCode) ] 
 		on: UndeclaredVariableReference 
 		do: [  :anUndeclareVariableReference | anUndeclareVariableReference declareTempAndResume ]]
 		on: Error - MessageNotUnderstood 
