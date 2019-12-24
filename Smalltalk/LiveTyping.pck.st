@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3963] on 4 December 2019 at 4:25:54 pm'!
-'Description Changes due to refactoring in autocompleter'!
-!provides: 'LiveTyping' 1 49!
+'From Cuis 5.0 [latest update: #3993] on 24 December 2019 at 3:59:34 pm'!
+'Description Browses UndefinedObject when Can be nil is selected in types menu'!
+!provides: 'LiveTyping' 1 50!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -8385,7 +8385,7 @@ addIncompleteTypesReasons
 	
 	! !
 
-!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 4/1/2019 15:25:03'!
+!ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 12/24/2019 15:58:24'!
 addTypesLabels
 
  	| typeIcon canBeNil |
@@ -8404,7 +8404,7 @@ addTypesLabels
 		canBeNil ifTrue: [
 			labels add: 'Can be nil'.
 			icons add: Theme current warningIcon.
-			actions add: []]].
+			actions add: [ self browseClassNamed: UndefinedObject name ]]].
 ! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 1/16/2019 20:01:02'!
@@ -13720,12 +13720,6 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons c
 	^value typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
 ! !
 
-!BlockNode methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:49:45'!
-typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
-	
-	"This will have to change when block return types are supported - Hernan"
-	^#()! !
-
 !BraceNode methodsFor: '*LiveTyping' stamp: 'HAW 7/18/2019 19:05:49'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
@@ -13745,6 +13739,81 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	^[ lastMessage typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ]
 		ensure: [ lastMessage receiver: nil ]
 	! !
+
+!BlockNode methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:49:45'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
+	
+	"This will have to change when block return types are supported - Hernan"
+	^#()! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:17:22'!
+actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParameterIndex of: aSelector ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
+	
+	^encoder 
+		actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods 
+		at: aParameterIndex 
+		of: aSelector
+		ifAbsent: absentBlock 
+		withPossibleMessageSends: shouldAddPossibleMessageSends 
+		using: self
+	
+	! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:12:28'!
+actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
+
+	^encoder actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
+! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:15:25'!
+actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends  
+
+	^encoder actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
+! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:16:57'!
+actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
+
+	^encoder actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
+! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2018 14:20:06'!
+identifierPrintString
+
+	^self selectorNode identifierPrintString .
+	! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 18:31:08'!
+nodeTypePrintString
+	
+	^'method'! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:50:17'!
+topBlockTempsMap
+	
+	self blockExtentsToTempsMap associationsDo: [ :anAssociation | anAssociation key first = 0 ifTrue: [ ^anAssociation value ]].
+	
+	self error: 'Should not happen, there is always a topContext'! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 13:35:04'!
+topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
+
+	^encoder topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
+! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2018 14:15:37'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
+ 
+	"I assume that if somebody wants the types of a method it is looking for the return types - Hernan"
+	^aCompiledMethod returnTypes ! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 13:32:43'!
+withTopParseNodeIncluding: aPosition do: aBlock ifAbsent: anAbsentBlock
+
+	| nodeAndPosition |
+	
+	nodeAndPosition :=self topParseNodeIncluding: aPosition ifAbsent: [ ^ anAbsentBlock value ].
+	^aBlock value: nodeAndPosition key.! !
 
 !LeafNode methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 17:24:10'!
 isSameAs: aParseNode
@@ -14040,75 +14109,6 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons c
 			messageReturnTypes ].
 		
 	^types! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:17:22'!
-actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParameterIndex of: aSelector ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
-	
-	^encoder 
-		actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods 
-		at: aParameterIndex 
-		of: aSelector
-		ifAbsent: absentBlock 
-		withPossibleMessageSends: shouldAddPossibleMessageSends 
-		using: self
-	
-	! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:12:28'!
-actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
-
-	^encoder actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
-! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:15:25'!
-actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends  
-
-	^encoder actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
-! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:16:57'!
-actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
-
-	^encoder actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: self
-! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2018 14:20:06'!
-identifierPrintString
-
-	^self selectorNode identifierPrintString .
-	! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 18:31:08'!
-nodeTypePrintString
-	
-	^'method'! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:50:17'!
-topBlockTempsMap
-	
-	self blockExtentsToTempsMap associationsDo: [ :anAssociation | anAssociation key first = 0 ifTrue: [ ^anAssociation value ]].
-	
-	self error: 'Should not happen, there is always a topContext'! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 13:35:04'!
-topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
-
-	^encoder topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
-! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2018 14:15:37'!
-typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
- 
-	"I assume that if somebody wants the types of a method it is looking for the return types - Hernan"
-	^aCompiledMethod returnTypes ! !
-
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 13:32:43'!
-withTopParseNodeIncluding: aPosition do: aBlock ifAbsent: anAbsentBlock
-
-	| nodeAndPosition |
-	
-	nodeAndPosition :=self topParseNodeIncluding: aPosition ifAbsent: [ ^ anAbsentBlock value ].
-	^aBlock value: nodeAndPosition key.! !
 
 !ReturnNode methodsFor: '*LiveTyping' stamp: 'HAW 11/27/2018 05:56:18'!
 identifierPrintString
