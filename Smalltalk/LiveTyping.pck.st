@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3993] on 24 December 2019 at 3:59:34 pm'!
-'Description Browses UndefinedObject when Can be nil is selected in types menu'!
-!provides: 'LiveTyping' 1 50!
+'From Cuis 5.0 [latest update: #3997] on 30 December 2019 at 6:31:01 pm'!
+'Description Fix errors with changing selector (refactoring) without implementors'!
+!provides: 'LiveTyping' 1 51!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -1633,17 +1633,19 @@ receiverTypesThatShouldRenameButAreNotIncludedInImplementorTypes: receiverTypes
 		(types noneSatisfy: [ :anImplementorType | aReceiverType includesBehavior: anImplementorType ]) and: [ aReceiverType canUnderstand: sentSelector] ].
 ! !
 
-!ReceiverTypesOfMessageSendsConform methodsFor: 'evaluation' stamp: 'HAW 3/14/2019 14:44:50'!
+!ReceiverTypesOfMessageSendsConform methodsFor: 'evaluation' stamp: 'HAW 12/30/2019 17:41:57'!
 value
 
-	sentSelector := implementors anyOne selector.
-	types := implementors collect: [ :anImplementor | anImplementor methodClass ].
 	notIncludedReceiverTypesInMessageSends := OrderedCollection new.
-	
-	senders do: [ :aSender | 
-		currentSender := aSender.
-		currentSenderMethodClass := aSender methodClass.
-		currentSender methodNode accept: self ].
+
+	implementors ifNotEmpty: [ 
+		sentSelector := implementors anyOne selector.
+		types := implementors collect: [ :anImplementor | anImplementor methodClass ].
+		
+		senders do: [ :aSender | 
+			currentSender := aSender.
+			currentSenderMethodClass := aSender methodClass.
+			currentSender methodNode accept: self ]].
 	
 	^notIncludedReceiverTypesInMessageSends! !
 
@@ -2541,6 +2543,21 @@ test13AddLastParameterCorrectly
 	
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m1: 1 m2: 2'.! !
 
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 12/30/2019 18:13:06'!
+test14CanNotRefactorWithoutImplementors
+
+	self 
+		assertCreation: [AddParameterWithActualScope 
+			named: 'p2' 
+			initializedWith: '2' 
+			using: #m2: 
+			toKeywordSelector: #m2:  
+			implementors: {}
+			senders: {}
+			withPossibleMessageSends: false.]
+		failsWith: [ ChangeSelector doesNotMakeSenseToApplyRefactoringWithOutImplementors ]
+	! !
+
 !AddParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 8/17/2019 11:40:33'!
 classOfOtherImplementorName
 	
@@ -2899,6 +2916,20 @@ test13RemovesOtherThanLastParameterCorrectly
 	
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m2: 2'.! !
 
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 12/30/2019 18:10:32'!
+test14CanNotRefactorWithoutImplementors
+
+	self 
+		assertCreation: [  
+		 	RemoveParameterWithActualScope 
+				named: 'p1' 
+				from: thisContext method 
+				implementors: {}
+				senders: {}
+				withPossibleMessageSends: false ]
+		failsWith: [ ChangeSelector doesNotMakeSenseToApplyRefactoringWithOutImplementors ]
+	! !
+
 !RemoveParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 8/18/2019 12:02:24'!
 classOfOtherImplementorName
 	
@@ -3242,6 +3273,20 @@ test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 	(ChangeSelectorKeepingParameters class organization listAtCategoryNamed: Categorizer instanceCreation) do: [ :anInstanceCreationSelector |
 		instanceCreationMethod := RenameSelectorWithActualScope class compiledMethodAt: anInstanceCreationSelector ifAbsent: [ self fail ].
 		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
+
+!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 12/30/2019 18:05:12'!
+test13ThereMustBeImplementorsToRename
+
+	self 
+		assertCreation: [
+			RenameSelectorWithActualScope 
+				from: #m1 
+				to: #m2 
+				implementors: {}
+				senders: {}
+				withPossibleMessageSends: false.]
+		failsWith: [ ChangeSelector doesNotMakeSenseToApplyRefactoringWithOutImplementors ]
+! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 3/14/2019 09:40:22'!
 classOfOtherImplementorName
@@ -14453,13 +14498,14 @@ typeInfoOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^aBlock value! !
 
-!ChangeSelector class methodsFor: '*LiveTyping' stamp: 'HAW 3/15/2019 15:02:24'!
+!ChangeSelector class methodsFor: '*LiveTyping' stamp: 'HAW 12/30/2019 17:50:57'!
 addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: aSystem
 
 	| actualImplementors actualSendersCollector |
 
 	receiverTypes do: [ :aType |
-		actualImplementors := (aSystem actualImplementorsOf: anOldSelector in: aType) collect: [ :anImplementor | anImplementor compiledMethod ].
+		actualImplementors := (aSystem actualImplementorsOf: anOldSelector in: aType) 
+			collect: [ :anImplementor | anImplementor compiledMethodIfAbsent: [ anImplementor ]].
 		implementors addAll: actualImplementors ].
 	
 	actualSendersCollector := MultiImplementorsActualMessageSendsCollector for: implementors.
@@ -14479,13 +14525,24 @@ addActualImplementorsOf: anOldSelector in: aPotentialClassToRefactor to: impleme
 		andActualSendersTo: senders 
 		inSystem: aSystem ! !
 
-!ChangeSelector class methodsFor: '*LiveTyping-pre-conditions' stamp: 'HAW 8/17/2019 15:32:57'!
+!ChangeSelector class methodsFor: '*LiveTyping-pre-conditions' stamp: 'HAW 12/30/2019 18:05:01'!
 assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors
 
 	| messageSendsWithInvalidReceiverTypes | 
-		
+	
+	self 
+		assertIsNotEmpty: aCollectionOfImplementors 
+		signalMessageText: self doesNotMakeSenseToApplyRefactoringWithOutImplementors.
+	
 	messageSendsWithInvalidReceiverTypes := (ReceiverTypesOfMessageSendsConform from: aCollectionOfSenders to: aCollectionOfImplementors) value.
 	messageSendsWithInvalidReceiverTypes notEmpty ifTrue: [ self signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes ].! !
+
+!ChangeSelector class methodsFor: '*LiveTyping-exceptions' stamp: 'HAW 12/30/2019 18:04:50'!
+doesNotMakeSenseToApplyRefactoringWithOutImplementors
+
+	^
+'It does not make sense to apply this refactorings withtout implementors
+because there are no types to look senders for'! !
 
 !ChangeSelector class methodsFor: '*LiveTyping-exceptions' stamp: 'HAW 8/17/2019 15:33:33'!
 errorDescriptionForReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes
