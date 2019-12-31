@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3997] on 30 December 2019 at 6:31:01 pm'!
-'Description Fix errors with changing selector (refactoring) without implementors'!
-!provides: 'LiveTyping' 1 51!
+'From Cuis 5.0 [latest update: #3997] on 31 December 2019 at 2:43:56 pm'!
+'Description Does not filters posible senders when asked for'!
+!provides: 'LiveTyping' 1 52!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -14615,11 +14615,11 @@ canNotRefactorWithoutTypeInfo
 		inform: 'Can not apply the refactoring because there is no receiver type information';
 		endRequest ! !
 
-!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/20/2019 23:31:53'!
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 12/31/2019 14:42:40'!
 filterSenders
 	
 	senders := (senders 
-		select: [ :aMethodReference | aMethodReference isValid and: [ aMethodReference isPossibleSender not ]]
+		select: [ :aMethodReference | aMethodReference isValid and: [ self shouldKeepIfPossibleSender: aMethodReference]]
 		thenCollect: [ :aMethodReference | aMethodReference compiledMethod ]) asIdentitySet ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:32:57'!
@@ -14673,4 +14673,9 @@ receiverTypes
 selectedSelector
 
 	self subclassResponsibility ! !
+
+!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 12/31/2019 14:42:30'!
+shouldKeepIfPossibleSender: aMethodReference
+
+	^ aMethodReference isPossibleSender not or: [ self isWithPossibleMessageSends ]! !
 LiveTyping initialize!
