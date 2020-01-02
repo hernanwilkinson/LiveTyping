@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3997] on 2 January 2020 at 7:29:17 am'!
-'Description Refactoring and bug fixing on ChangeSelector refactorings'!
-!provides: 'LiveTyping' 1 54!
+'From Cuis 5.0 [latest update: #3997] on 2 January 2020 at 4:48:03 pm'!
+'Description Show actual senders of not implemented methods'!
+!provides: 'LiveTyping' 1 55!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -1398,23 +1398,26 @@ in: toAnalizeCompiledMethod of: aSentCompiledMethod
 	^self new initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod 
 ! !
 
-!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 3/28/2019 17:39:42'!
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 1/2/2020 16:39:50'!
 addCompleteSureSendersToMessageList
 
-	completeSureSenders notEmpty ifTrue: [
-		sentImplementors size > 1 ifTrue: [
+	completeSureSenders ifNotEmpty: [
+		
+		sentImplementors ifNotEmpty: [
 			numberOfTitles := 1.
-			messageList add: (self methodReferenceForTitle: '-- Senders of all implementors --') ].
+			messageList add: (self methodReferenceForTitle: self allImplementorsTitle) ].
+		
 		messageList addAll: (completeSureSenders asSortedCollection: [ :left :right | left stringVersion < right stringVersion ]) ].
 	! !
 
-!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 3/13/2019 20:02:26'!
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 1/2/2020 16:27:57'!
 addPartialSureSendersToMessageList
 
 	(partialSureSenders keys asSortedCollection: [ :left :right | left size > right size ]) do: [ :implementors |
 		numberOfTitles := numberOfTitles + 1.
 		messageList add: (self methodReferenceTitleForImplementors: implementors).
-		messageList addAll: ((partialSureSenders at: implementors) asSortedCollection: [ :left :right | left stringVersion < right stringVersion ]) ].
+		messageList addAll: ((partialSureSenders at: implementors) 
+			asSortedCollection: [ :left :right | left stringVersion < right stringVersion ]) ].
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 3/13/2019 20:09:28'!
@@ -1441,7 +1444,7 @@ addToPartialSureSenders: aSenderInfo
 	sureSendersOfPartialImplementors := partialSureSenders at: aSenderInfo sureSenders ifAbsentPut: [ Set new ]. 
 	sureSendersOfPartialImplementors add: aSenderInfo sender ! !
 
-!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 3/18/2019 13:25:12'!
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 1/2/2020 16:27:42'!
 addToPossibleSenders: aSenderInfo
 
 	| possibleSender | 
@@ -1450,7 +1453,8 @@ addToPossibleSenders: aSenderInfo
 		at: aSenderInfo sender 
 		ifAbsentPut: [ PossibleSender in: aSenderInfo sender withPossibleMessageSends: #() ].
 	
-	aSenderInfo withPossibleMessageSendsDo: [:aPossibleMessageSend | possibleSender addPossibleMessageSends: aPossibleMessageSend ]! !
+	aSenderInfo withPossibleMessageSendsDo: [:aPossibleMessageSend | 
+		possibleSender addPossibleMessageSends: aPossibleMessageSend ]! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 3/18/2019 13:34:27'!
 calculatePossibleSendersOf: aSentImplementor from: aPossibleSenders
@@ -1535,25 +1539,6 @@ methodReferenceTitleForImplementors: implementors
 
 	^self methodReferenceForTitle: (self titleForImplementors: implementors)! !
 
-!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 3/13/2019 19:16:10'!
-sentImplementorsAsString
-	
-	| sentImplementorsClassNames |
-	
-	sentImplementorsClassNames := sentImplementors collect: [:aSentImplementor | aSentImplementor methodClass name ].
-	
-	^sentImplementorsClassNames asCommaStringAnd
-! !
-
-!MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 3/13/2019 20:12:43'!
-titleForImplementors: implementors
-
-	^String streamContents: [ :stream |
-		stream 
-			nextPutAll: '-- Sender(s) of ';
-			nextPutAll: implementors asCommaSeparated: [ :aMethod | aMethod printClassAndSelectorOn: stream ];
-			nextPutAll: ' --' ]! !
-
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating' stamp: 'HAW 3/13/2019 19:11:32'!
 value
 
@@ -1577,12 +1562,78 @@ messageListSize
 	
 	^messageList size - numberOfTitles ! !
 
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 1/2/2020 16:39:20'!
+allImplementorsTitle
+	
+	^String streamContents: [ :aStream |
+		aStream nextPutAll: '-- Senders of '.	
+		self allImplementorsTitleOn: aStream.
+		aStream nextPutAll: ' --'].! !
+
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 1/2/2020 16:45:36'!
+allImplementorsTitleOn: aStream
+
+	| sentImplementorsByIsValid |
+	
+	aStream nextPutAll: sentImplementors anyOne selector.
+	sentImplementorsByIsValid := sentImplementors groupBy: [ :anImplementor | anImplementor isValid ].
+	
+	self 
+		allValidImplementorsTitleOn: aStream from: sentImplementorsByIsValid;
+		allInvalidImplementorsTitleOn: aStream from: sentImplementorsByIsValid.	
+		! !
+
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 1/2/2020 16:45:44'!
+allInvalidImplementorsTitleOn: aStream from: sentImplementorsByIsValid
+		
+	sentImplementorsByIsValid 
+		at: false 
+		ifPresent: [ :notImplemented | 
+			aStream 
+				nextPutAll: ' and' when: (sentImplementorsByIsValid includesKey: true);
+				nextPutAll: ' not implemented in ';
+				nextPutAll: notImplemented asCommaSeparated: [ :aNotImplementor | 
+					aStream print: aNotImplementor methodClass ]]
+		ifAbsent: [].! !
+
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 1/2/2020 16:45:07'!
+allValidImplementorsTitleOn: aStream from: sentImplementorsByIsValid
+
+	sentImplementorsByIsValid 
+		at: true 
+		ifPresent: [ :implemented | 
+			aStream 
+				nextPutAll: ' implemented in ';
+				nextPutAll: implemented asCommaSeparated: [ :anImplementor | 
+					aStream print: anImplementor methodClass ]]
+		ifAbsent: [].
+! !
+
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 3/13/2019 19:16:10'!
+sentImplementorsAsString
+	
+	| sentImplementorsClassNames |
+	
+	sentImplementorsClassNames := sentImplementors collect: [:aSentImplementor | aSentImplementor methodClass name ].
+	
+	^sentImplementorsClassNames asCommaStringAnd
+! !
+
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 1/2/2020 16:34:49'!
+titleForImplementors: implementors
+
+	^String streamContents: [ :stream |
+		stream 
+			nextPutAll: '-- Senders of ';
+			nextPutAll: implementors asCommaSeparated: [ :aMethod | aMethod printClassAndSelectorOn: stream ];
+			nextPutAll: ' --' ]! !
+
 !MultiImplementorsActualMessageSendsCollector class methodsFor: 'instance creation' stamp: 'HAW 3/13/2019 19:40:28'!
 for: sentImplementors 
 
 	^self new initializeFor: sentImplementors ! !
 
-!MultiImplementorsActualMessageSendsCollector class methodsFor: 'instance creation' stamp: 'HAW 3/27/2019 14:57:54'!
+!MultiImplementorsActualMessageSendsCollector class methodsFor: 'instance creation' stamp: 'HAW 1/2/2020 14:57:21'!
 on: sentSelector forAll: types whenSomeAreNotImplemented: notImplementedBlock whenNoImplementors: noImplementorsBlock
 
 	| notImplemented sentImplementors |
@@ -1592,7 +1643,9 @@ on: sentSelector forAll: types whenSomeAreNotImplemented: notImplementedBlock wh
 		inject: Set new 
 		into: [ :sentCompiledMethods :type | 
 			(type lookupSelector: sentSelector) 
-				ifNil: [ notImplemented add: type name ] 
+				ifNil: [ 
+					notImplemented add: type name.
+					sentCompiledMethods add: (NotImplementedMethod class: type selector: sentSelector) ] 
 				ifNotNil: [ :implementor | sentCompiledMethods add: implementor ].
 			sentCompiledMethods ].
 	
@@ -2068,6 +2121,12 @@ hasVariableBindingTo: aClass
 referencesParameterAt: parameterIndex
 
 	^false! !
+
+!NotImplementedMethod methodsFor: 'printing' stamp: 'HAW 1/2/2020 15:12:09'!
+printClassAndSelectorOn: aStream
+
+	aStream nextPutAll: 'Not Implemented '.
+	super printClassAndSelectorOn: aStream ! !
 
 !NotImplementedMethod class methodsFor: 'string version' stamp: 'HAW 4/4/2019 08:45:11'!
 notImplementedStringVersionHeader
@@ -13551,7 +13610,7 @@ browseAllActualSendersOn: aSentCompiledMethod
 
 ! !
 
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 18:23:38'!
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 1/2/2020 16:30:54'!
 browseAllActualSendersOn: aSentSelector forAll: aReceiverTypes  
 	"
 	Smalltalk browseAllActualSendersOn: #digitLength forAll: (Array with: LargePositiveInteger with: SmallInteger)
@@ -13569,8 +13628,14 @@ browseAllActualSendersOn: aSentSelector forAll: aReceiverTypes
 	collector messageListSize = 0 ifTrue: [
 		^ PopUpMenu inform: ('There are no actual senders of ', aSentSelector, ' implemented at\', aReceiverTypes asCommaStringAnd) withNewLines ].
 
-	title := 'Actual Senders of ' , aSentSelector, ' implemented at ', collector sentImplementorsAsString.
-	collector messageListSize > 1 ifTrue: [ title := '[', collector messageListSize printString, '] ', title ].
+	title := String streamContents: [ :aStream |
+		collector messageListSize > 1 ifTrue: [ 
+			aStream 
+				nextPut: $[;
+				print: collector messageListSize;
+				nextPutAll: '] ' ].
+		aStream nextPutAll: 'Actual Senders of '.
+		collector allImplementorsTitleOn: aStream ].
 
 	MessageSetWindow 
 		openMessageList: collector messageList 
