@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3997] on 2 January 2020 at 4:48:03 pm'!
-'Description Show actual senders of not implemented methods'!
-!provides: 'LiveTyping' 1 55!
+'From Cuis 5.0 [latest update: #4057] on 5 March 2020 at 10:54:57 pm'!
+'Description Fix on removing senders on change selector refactoring. '!
+!provides: 'LiveTyping' 1 56!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -6925,6 +6925,11 @@ named: aParameterToRemove from: aMethod implementors: implementorsCollection sen
 
 	self shouldNotImplement ! !
 
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:02:41'!
+convertSendersToCompiledMethods
+
+	self filterSenders ! !
+
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:20:59'!
 createRefactoring
 
@@ -6932,10 +6937,9 @@ createRefactoring
 		ifTrue: [ self createRefactoringWithActualScope ]
 		ifFalse: [ super createRefactoring ]! !
 
-!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/17/2019 20:24:02'!
+!AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:02:51'!
 createRefactoringWithActualScope
 	
-	self filterSenders.
 	oldSelector isUnary ifTrue: [ ^self createRefactoringWithActualScopeForUnarySelector].
 	oldSelector isKeyword ifTrue: [ ^self createRefactoringWithActualScopeForKeywordSelector ].
 	
@@ -7034,6 +7038,11 @@ on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
+!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:00:13'!
+convertSendersToCompiledMethods
+
+	self filterSenders ! !
+
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 4/4/2019 08:28:23'!
 createRefactoring
 
@@ -7041,10 +7050,8 @@ createRefactoring
 		ifTrue: [ self createRefactoringWithActualScope ]
 		ifFalse: [ super createRefactoring ]! !
 
-!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 1/1/2020 19:49:51'!
+!RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:00:46'!
 createRefactoringWithActualScope
-	
-	self filterSenders.
 	
 	^self refactoringClass 
 		from: oldSelector 
@@ -7121,6 +7128,11 @@ on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:04:07'!
+convertSendersToCompiledMethods
+
+	self filterSenders ! !
+
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 8/18/2019 19:39:24'!
 createRefactoring
 
@@ -7128,10 +7140,8 @@ createRefactoring
 		ifTrue: [ self createRefactoringWithActualScope ]
 		ifFalse: [ super createRefactoring ]! !
 
-!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 1/1/2020 23:28:03'!
+!RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:04:05'!
 createRefactoringWithActualScope
-	
-	self filterSenders.
 	
 	^self refactoringClass 
 		atIndex: parameterToRemoveIndex 
@@ -14435,6 +14445,14 @@ openMessageList: messageList label: labelString types: aReceiverTypes selector: 
 codePane
 	
 	^codePane ! !
+
+!ChangeSelectorSendersStepWindow methodsFor: '*LiveTyping' stamp: 'HAW 3/5/2020 22:50:15'!
+remove
+
+	| selected |
+	
+	selected := model selection.
+	selected ifNotNil: [ selected isValid ifTrue: [ super remove ]]! !
 
 !ChangeSelectorSendersStepWindow class methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 11:19:04'!
 openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
