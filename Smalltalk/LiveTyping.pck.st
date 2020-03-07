@@ -1,6 +1,7 @@
-'From Cuis 5.0 [latest update: #4057] on 5 March 2020 at 10:54:57 pm'!
-'Description Fix on removing senders on change selector refactoring. '!
-!provides: 'LiveTyping' 1 56!
+'From Cuis 5.0 [latest update: #4058] on 7 March 2020 at 8:20:25 pm'!
+'Description Update for changes in compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
+'!
+!provides: 'LiveTyping' 1 57!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -8042,36 +8043,52 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/27/2019 20:11:47'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2020 20:18:03'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
 	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
-	| methodAndNode |
+	| methodAndNode selector isExistingMethod |
 	methodAndNode _ self basicCompile: text asString notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
+	selector _ methodAndNode selector.
+	isExistingMethod _ self includesSelector: selector.
+	isExistingMethod
+		ifTrue: [
+			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
+				ifFalse: [self error: ''Method modification not allowed'']]
+		ifFalse: [
+			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
+				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		self logMethodSource: text forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
-	self addAndClassifySelector: methodAndNode selector withMethod: methodAndNode 
+	self addAndClassifySelector: selector withMethod: methodAndNode 
 		method inProtocol: category notifying: requestor.
-	self theNonMetaClass noteCompilationOf: methodAndNode selector meta: self isMeta.
 	^ methodAndNode selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/27/2019 20:24:21'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2020 20:18:41'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
 	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
-	| methodAndNode |
+	| methodAndNode selector isExistingMethod |
 	methodAndNode _ self basicCompile: text asString notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
+	selector _ methodAndNode selector.
+	isExistingMethod _ self includesSelector: selector.
+	isExistingMethod
+		ifTrue: [
+			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
+				ifFalse: [self error: ''Method modification not allowed'']]
+		ifFalse: [
+			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
+				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		self logMethodSource: text forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
 	self addAndClassifySelector: methodAndNode node withMethod: methodAndNode 
 		method inProtocol: category notifying: requestor.
-	self theNonMetaClass noteCompilationOf: methodAndNode selector meta: self isMeta.
 	^ methodAndNode selector'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:10'!
