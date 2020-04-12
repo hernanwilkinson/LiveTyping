@@ -1,7 +1,6 @@
-'From Cuis 5.0 [latest update: #4058] on 7 March 2020 at 8:20:25 pm'!
-'Description Update for changes in compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
-'!
-!provides: 'LiveTyping' 1 57!
+'From Cuis 5.0 [latest update: #4076] on 12 April 2020 at 4:31:01 pm'!
+'Description MethodReference>>prefixVersionStringWith: moved to core'!
+!provides: 'LiveTyping' 1 58!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -14551,11 +14550,6 @@ methodNode
 methodReference
 	
 	^self! !
-
-!MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 10/28/2018 10:54:27'!
-prefixStringVersionWith: aString
-
-	stringVersion := aString, stringVersion ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 7/19/2019 17:40:57'!
 primitive
