@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4076] on 12 April 2020 at 4:31:01 pm'!
-'Description MethodReference>>prefixVersionStringWith: moved to core'!
-!provides: 'LiveTyping' 1 58!
+'From Cuis 5.0 [latest update: #4109] on 1 May 2020 at 10:38:03 pm'!
+'Description Types for temporaries new AST node'!
+!provides: 'LiveTyping' 1 59!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -14248,6 +14248,17 @@ identifierPrintString
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
 	^aCompiledMethod returnTypes
+! !
+
+!TemporariesDeclarationNode methodsFor: '*LiveTyping' stamp: 'HAW 4/30/2020 16:51:22'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
+
+	^#()! !
+
+!TemporaryDeclarationNode methodsFor: '*LiveTyping' stamp: 'HAW 4/30/2020 16:48:36'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
+
+	^variableNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 ! !
 
 !TextEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:18:54'!
