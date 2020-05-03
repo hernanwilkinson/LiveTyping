@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4129] on 3 May 2020 at 2:01:34 am'!
-'Description Autocomplete improvement and tests'!
-!provides: 'LiveTyping' 1 60!
+'From Cuis 5.0 [latest update: #4132] on 3 May 2020 at 12:26:46 pm'!
+'Description Autocomplete tests'!
+!provides: 'LiveTyping' 1 61!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2265,6 +2265,15 @@ test024_DoesNotSupportAutocompletingMessagesFor_RightParenthesis
 	
 	"It does not work for 'm1 1 + (1)' and it is very difficult to solve, but it is a really rare case, nobody
 	would write code like that :-) - Hernan"
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/3/2020 12:21:26'!
+test026_DoesNotSupportAutocompletingMessagesFor_CascadeSeparators
+
+	classToBrowse := self class.
+	self
+		assertEntriesWhenBrowsing: 'm1 self class; '
+		areSelectorsOf: self class
 	! !
 
 !LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 5/2/2020 20:19:07'!
