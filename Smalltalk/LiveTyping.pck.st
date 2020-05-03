@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4109] on 1 May 2020 at 10:38:03 pm'!
-'Description Types for temporaries new AST node'!
-!provides: 'LiveTyping' 1 59!
+'From Cuis 5.0 [latest update: #4129] on 3 May 2020 at 2:01:34 am'!
+'Description Autocomplete improvement and tests'!
+!provides: 'LiveTyping' 1 60!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -119,6 +119,16 @@ MethodReference subclass: #PossibleSender
 	category: 'LiveTyping'!
 !classDefinition: 'PossibleSender class' category: #LiveTyping!
 PossibleSender class
+	instanceVariableNames: ''!
+
+!classDefinition: #LiveTypingSmalltalkCompleterTest category: #'LiveTyping-Tests'!
+SmalltalkCompleterTest subclass: #LiveTypingSmalltalkCompleterTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'LiveTypingSmalltalkCompleterTest class' category: #'LiveTyping-Tests'!
+LiveTypingSmalltalkCompleterTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #AddParameterWithActualScopeTest category: #'LiveTyping-Tests'!
@@ -2186,6 +2196,132 @@ in: aSender withPossibleMessageSends: aPossibleMessageSends
 possibleSenderStringVersionHeader
 	
 	^'(Possible) - '! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:08:05'!
+test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrowsedClassDoesNotHaveASuperclass
+	
+	self browseClass: ProtoObject.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'm1 super '.
+	self 
+		assertEntriesWhenBrowsing: 'm1 1 < super '
+		areUnaryAndBinarySelectorsOf: nil.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:25:21'!
+test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsForUnknownClasses
+	
+	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
+	super test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsForUnknownClasses! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:25:12'!
+test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsOfInstVarTypes
+	
+	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
+	instanceVariable1 := 1.
+	
+	self
+		assertEntriesWhenBrowsing: 'm1 instanceVariable1 '
+		areSelectorsOf: SmallInteger.
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < instanceVariable1 '
+		areUnaryAndBinarySelectorsOf: SmallInteger.
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:40:33'!
+test014_AutocompletesMessagesFor_TemporaryVariables_WithSelectorsOfTempVarTypes
+	
+	classToBrowse := self class.
+	self methodWithTempVar.
+	self
+		assertEntriesWhenBrowsingMethod: self class >> #methodWithTempVar
+		areSelectorsOf: SmallInteger.
+
+	self methodWithBinaryMessageSendAndTempVar.
+	self
+		assertEntriesWhenBrowsingMethod: self class >> #methodWithBinaryMessageSendAndTempVar
+		areUnaryAndBinarySelectorsOf: SmallInteger.
+	
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 17:45:26'!
+test023_DoesNotSupportAutocompletingMessagesFor_UnaryMessages
+	
+	| classes |
+	
+	classes := { SmalltalkCompleterTest class. 
+		LiveTypingSmalltalkCompleterTest class. 
+		DynamicTypingSmalltalkCompleterTest class }.
+		
+	self assertEntriesWhenBrowsing: 'm1 self class ' areSelectorsOfAll: classes.
+	self assertEntriesWhenBrowsing: 'm1 1 + self class ' areSelectorsOfAll: classes.
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 18:03:46'!
+test024_DoesNotSupportAutocompletingMessagesFor_RightParenthesis
+ 	
+	self assertEntriesWhenBrowsing: 'm1 (1) ' areSelectorsOf: SmallInteger.
+	self assertEntriesWhenBrowsing: 'm1 1 + (1 ' areSelectorsOf: SmallInteger.
+	
+	"It does not work for 'm1 1 + (1)' and it is very difficult to solve, but it is a really rare case, nobody
+	would write code like that :-) - Hernan"
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 5/2/2020 20:19:07'!
+binaryMessageSendReturnTypes
+
+	^ Boolean withAllSubclasses! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 5/3/2020 01:58:19'!
+methodWithBinaryMessageSendAndTempVar 
+	"space at the end is important - Hernan"
+	|a| 
+	a := 1.
+	1 < a ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 5/3/2020 01:58:25'!
+methodWithTempVar 
+	"space at the end is important - Hernan"
+	|a| 
+	a := 1.
+	a ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 5/2/2020 21:10:54'!
+assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: aClass
+
+	| classes |
+	
+	classes := self binaryMessageSendReturnTypes.
+	aClass ifNotNil: [ classes add: aClass ].
+	
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: classes
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: #()
+		suggested: (self using: aCompleter addUnaryAndBinarySelectorsOf: aClass).
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 5/2/2020 21:00:51'!
+using: aCompleter addUnaryAndBinarySelectorsOf: aClass
+
+	| entries classes |
+	
+	entries := super using: aCompleter addUnaryAndBinarySelectorsOf: aClass.
+	
+	classes := self binaryMessageSendReturnTypes.
+	classes add: Object; add: ProtoObject.
+	
+	classes do: [ :aBooleanClass |
+		entries addAll: (aBooleanClass selectors select: [ :aSelector | aSelector isKeyword ]) ].
+	
+	^entries
+		! !
+
+!LiveTypingSmalltalkCompleterTest class methodsFor: 'testing' stamp: 'HAW 5/2/2020 17:04:06'!
+isAbstract
+
+	^false! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 15:28:35'!
 test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
@@ -6598,10 +6734,20 @@ withMethodNodeDo: doBlock ifError: anErrorBlock
 				ifFalse: [ anErrorBlock value: anError ]]
 	! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 10/28/2019 01:31:12'!
+!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 5/3/2020 01:55:57'!
 withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
 
-	^ [[ doBlock value: ((parser classOrMetaClass ifNil: [ UndefinedObject ]) methodNodeFor: aSourceCode) ] 
+	^ [[ | methodNode noPattern |
+
+		noPattern := (model is: #providesBindings) 
+			or: [(model is: #hasTextProvider) 
+				and: [ (model textProvider is: #providesBindings)
+					and: [ (model textProvider is: #CodeProvider) not]]].
+				
+		methodNode := (parser classOrMetaClass ifNil: [ UndefinedObject ]) 
+			methodNodeFor: aSourceCode
+			noPattern: noPattern .
+		doBlock value: methodNode ] 
 		on: UndeclaredVariableReference 
 		do: [  :anUndeclareVariableReference | anUndeclareVariableReference declareTempAndResume ]]
 		on: Error - MessageNotUnderstood 
@@ -6681,14 +6827,17 @@ computeMessageEntriesWithBinaryMessageForClass: aClass
 		collectingWith: (AutoCompleterSelectorsCollector for: prefix) 
 		asRoot: Object! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'message entries with binary as previos - private' stamp: 'HAW 12/4/2019 15:51:21'!
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries with binary as previos - private' stamp: 'HAW 5/2/2020 17:10:20'!
 computeMessageEntriesWithBinaryMessageForClass: aClass 
 	collectingWith: selectorsCollector 
 	asRoot: hierarchyRoot 
  
 	| classes |
 	
-	classes := Set with: aClass.
+	classes := Set new.
+	"In the case of sending a message to super in ProtoObject, aClass will be nil because 
+	ProtoObject has no superclass - Hernan"
+	aClass ifNotNil: [ classes add: aClass ].
 	selectorsCollector addUnaryAndBinarySelectorsOf: aClass.	
 	
 	self 
@@ -12589,16 +12738,15 @@ initializeEachInstanceVariableRawTypes
 
 	self instanceVariablesTypes initializeEachInstanceVariableRawTypes	! !
 
-!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/16/2018 08:41:39'!
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'Install-BaseImageTests 5/2/2020 17:02:21'!
 initializeInstanceVariablesRawTypes
 
 	"
 	self initializeInstanceVariablesTypes
 	"
-	
-	instanceVariablesRawTypes := self createInstanceVariablesRawTypes.
-	self initializeEachInstanceVariableRawTypes
-		! !
+	self isObsolete ifFalse: [
+		instanceVariablesRawTypes := self createInstanceVariablesRawTypes.
+		self initializeEachInstanceVariableRawTypes ]! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/16/2018 01:06:09'!
 initializeInstanceVariablesRawTypesWithAllInstances
