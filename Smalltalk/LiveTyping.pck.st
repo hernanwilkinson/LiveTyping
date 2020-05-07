@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4132] on 3 May 2020 at 12:26:46 pm'!
-'Description Autocomplete tests'!
-!provides: 'LiveTyping' 1 61!
+'From Cuis 5.0 [latest update: #4132] on 6 May 2020 at 11:45:56 pm'!
+'Description Autocomplete tests and changes'!
+!provides: 'LiveTyping' 1 63!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2197,6 +2197,12 @@ possibleSenderStringVersionHeader
 	
 	^'(Possible) - '! !
 
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:17:40'!
+README
+
+	"The tests names in some cases only talk about the setup and not the assertion
+	because if not they would be to long to read and understand - Hernan"! !
+
 !LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:08:05'!
 test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrowsedClassDoesNotHaveASuperclass
 	
@@ -2207,11 +2213,11 @@ test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrow
 		assertEntriesWhenBrowsing: 'm1 1 < super '
 		areUnaryAndBinarySelectorsOf: nil.! !
 
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:25:21'!
-test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsForUnknownClasses
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:42:33'!
+test012_AutocompletesMessagesFor_InstanceVariables
 	
 	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
-	super test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsForUnknownClasses! !
+	super test012_AutocompletesMessagesFor_InstanceVariables! !
 
 !LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:25:12'!
 test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsOfInstVarTypes
@@ -2244,37 +2250,331 @@ test014_AutocompletesMessagesFor_TemporaryVariables_WithSelectorsOfTempVarTypes
 	
 	! !
 
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 17:45:26'!
-test023_DoesNotSupportAutocompletingMessagesFor_UnaryMessages
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:43:31'!
+test023_AutocompletingMessagesFor_UnaryMessages
 	
-	| classes |
+	classToBrowse := self class.
+	self assertEntriesWhenBrowsing: 'm1 self class ' areSelectorsOf: self class class.
+	self assertEntriesWhenBrowsing: 'm1 1 < self class ' areUnaryAndBinarySelectorsOf: self class class.
 	
-	classes := { SmalltalkCompleterTest class. 
-		LiveTypingSmalltalkCompleterTest class. 
-		DynamicTypingSmalltalkCompleterTest class }.
-		
-	self assertEntriesWhenBrowsing: 'm1 self class ' areSelectorsOfAll: classes.
-	self assertEntriesWhenBrowsing: 'm1 1 + self class ' areSelectorsOfAll: classes.
 	! !
 
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 18:03:46'!
-test024_DoesNotSupportAutocompletingMessagesFor_RightParenthesis
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:44:50'!
+test024_AutocompletingMessagesFor_RightParenthesis
  	
 	self assertEntriesWhenBrowsing: 'm1 (1) ' areSelectorsOf: SmallInteger.
 	self assertEntriesWhenBrowsing: 'm1 1 + (1 ' areSelectorsOf: SmallInteger.
 	
-	"It does not work for 'm1 1 + (1)' and it is very difficult to solve, but it is a really rare case, nobody
-	would write code like that :-) - Hernan"
 	! !
 
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/3/2020 12:21:26'!
-test026_DoesNotSupportAutocompletingMessagesFor_CascadeSeparators
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:45:10'!
+test026_AutocompletingMessagesFor_Cascade
 
 	classToBrowse := self class.
 	self
 		assertEntriesWhenBrowsing: 'm1 self class; '
 		areSelectorsOf: self class
 	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:39'!
+test_Browser_ArrayWithArrayAndOtherObjects
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {{1 yourself} value. 2} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:38:21'!
+test_Browser_BinaryAndArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:34'!
+test_Browser_BinaryAndArrayOfArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {{1 yourself}} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:30'!
+test_Browser_BinaryAndArrayWithManyElements
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself. 2} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:25'!
+test_Browser_BinaryAndBinaryInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1^1) '
+		areUnaryAndBinarySelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:20'!
+test_Browser_BinaryAndBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [1 yourself] '
+		areUnaryAndBinarySelectorsOf: BlockClosure 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:15'!
+test_Browser_BinaryAndBlockOfBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [[1 yourself]] '
+		areUnaryAndBinarySelectorsOf: BlockClosure 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:11'!
+test_Browser_BinaryAndBlockOfEvaluatedBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [[1 yourself] value ] '
+		areUnaryAndBinarySelectorsOf: BlockClosure 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:07'!
+test_Browser_BinaryAndExpresionInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:01'!
+test_Browser_BinaryAndLiteralArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #(1) '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:56'!
+test_Browser_BinaryAndMoreThanOneUnaryAfterExpresionInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) yourself yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:52'!
+test_Browser_BinaryAndOneUnaryAfterBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [1 yourself] yourself '
+		areUnaryAndBinarySelectorsOf: BlockClosure 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:47'!
+test_Browser_BinaryAndOneUnaryAfterBrace
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself} yourself '
+		areUnaryAndBinarySelectorsOf: Array 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:42'!
+test_Browser_BinaryAndOneUnaryAfterCharacter
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < $a yourself '
+		areUnaryAndBinarySelectorsOf: Character 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:37'!
+test_Browser_BinaryAndOneUnaryAfterLiteralArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #(1 2) yourself '
+		areUnaryAndBinarySelectorsOf: Array 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:33'!
+test_Browser_BinaryAndOneUnaryAfterStringSymbol
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #''a'' yourself '
+		areUnaryAndBinarySelectorsOf: Symbol 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:29'!
+test_Browser_BinaryAndOneUnaryAfterSymbol
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #xx yourself '
+		areUnaryAndBinarySelectorsOf: Symbol 
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:38:29'!
+test_Browser_BinaryAndUnaryInProtoObject
+
+	classToBrowse := ProtoObject.
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < self initialize '
+		areUnaryAndBinarySelectorsOf: ProtoObject.
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:23'!
+test_Browser_BinaryAndUncompleteKeywordAfterParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) o'
+		areUnaryAndBinarySelectorsOf: SmallInteger
+		beginningWith: 'o'
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:18'!
+test_Browser_BinaryAndUncompleteKeywordAfterUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself o'
+		areUnaryAndBinarySelectorsOf: SmallInteger
+		beginningWith: 'o'
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:14'!
+test_Browser_BinaryAndUncompleteMessageAfterUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself an'
+		areUnaryAndBinarySelectorsOf: SmallInteger
+		beginningWith: 'an'
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:09'!
+test_Browser_BinaryInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 (1<1) '
+		areSelectorsOfAll: {True. False. }! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:40:04'!
+test_Browser_BinaryWithMoreThanOneUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:38:03'!
+test_Browser_BinaryWithOneUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:59'!
+test_Browser_ClosedAndUnclosedParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 ((1 yourself) '
+		areSelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:53'!
+test_Browser_ExpressionInManyParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 ((1 yourself)) '
+		areSelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:47'!
+test_Browser_ExpressionWithMoreThanOneParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < ((1 yourself)) '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:39'!
+test_Browser_LFBeforeParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 (1 yourself
+		 ) '
+		areSelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:33'!
+test_Browser_SpaceBeforeParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 (1 yourself ) '
+		areSelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:28'!
+test_Browser_UnaryAfterExpresionInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:24'!
+test_Browser_UnclosedArrayAfterClosedArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 {{1} '
+		areSelectorsOf: Array ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:14'!
+test_Browser_UnclosedBlockAfterBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 [[1] '
+		areSelectorsOf: BlockClosure ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:06'!
+test_Browser_UnclosedDoubleParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 ((1 yourself '
+		areSelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:38:36'!
+test_Browser_selfInProtoObject
+
+	classToBrowse := ProtoObject.
+	self
+		assertEntriesWhenBrowsing: 'm1 self initialize '
+		areSelectorsOf: ProtoObject .
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:39:01'!
+test_Workspace_ExpresionInParenthesis
+
+	self
+		assertEntriesForWorkspaceWith: '(1) '
+		binding: 'x'
+		to: 1
+		areSelectorsOf: SmallInteger.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:38:50'!
+test_Workspace_MoreThanOneUnaryMessage
+
+	self
+		assertEntriesForWorkspaceWith: '1 yourself yourself '
+		binding: 'x'
+		to: 1
+		areSelectorsOf: SmallInteger.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:38:43'!
+test_Workspace_OnlyRightParenthesis
+
+	self
+		shouldnt: [
+			self
+				autocompleteEntriesForWorkspaceWith: ') '
+				binding: 'x'
+				to: 1 ]
+		raise: Error! !
 
 !LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 5/2/2020 20:19:07'!
 binaryMessageSendReturnTypes
@@ -2309,6 +2609,41 @@ assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: aClass
 		canShowDocumentation: true
 		detectedPossibleInvalidSelector: #()
 		suggested: (self using: aCompleter addUnaryAndBinarySelectorsOf: aClass).
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 5/6/2020 23:08:48'!
+assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: class beginningWith: aPrefix
+
+	| suggested classes |
+	
+	classes := self binaryMessageSendReturnTypes.
+	suggested := classes
+		inject: Set new 
+		into: [ :suggestedCollector :aClass |
+			suggestedCollector 
+				addAll: (aClass allSelectors select: [ :aSelector | aSelector isKeyword and: [ aSelector beginsWith: aPrefix ]]);
+				yourself ].
+
+	class ifNotNil: [ 
+		classes add: class.
+		suggested addAll: 
+			(class allSelectors select: [ :aSelector | (aSelector isUnary or: [ aSelector isInfix ]) and: [ aSelector beginsWith: aPrefix ]])].
+
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: classes
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: #()
+		suggested: suggested.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 5/6/2020 23:09:06'!
+assertEntriesWhenBrowsing: sourceCode areUnaryAndBinarySelectorsOf: aClass beginningWith: aPrefix
+	
+	self
+		assertEntriesOf: (self autocompleteEntriesBrowsing: sourceCode)
+		areUnaryAndBinarySelectorsOf: aClass
+		beginningWith: aPrefix
+	
 	! !
 
 !LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 5/2/2020 21:00:51'!
@@ -6559,6 +6894,31 @@ typeCheck: aSelector andAssert: assertionsBlock
 	
 	! !
 
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 5/3/2020 19:30:12'!
+addCommonMessagesStartingWith: prefixedSelectors
+
+	| selectorsCollector |
+	
+	selectorsCollector := AutoCompleterSelectorsCollector for: prefix.
+	
+	entries := selectorsCollector 
+		addedSelectors: prefixedSelectors;
+		addSelectorsOfAll: selectorsClasses upTo: Object;
+		addSelectorsOf: Object;		
+		entriesToShow.
+		
+	self addCommonMessagesToEntries: prefixedSelectors.
+		
+	possibleInvalidSelectors := selectorsCollector possibleInvalidSelectors! !
+
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 5/3/2020 19:30:12'!
+addCommonMessagesToEntries: prefixedSelectors
+
+	^ prefixedSelectors notEmpty ifTrue: [
+		entries addAllFirst: prefixedSelectors asSortedCollection.
+		entries size > 1 ifTrue: [ entries addFirst: '-- common selectors excluding Object' ].
+	 ]! !
+
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 12/4/2019 15:59:48'!
 computeEntriesOfUnaryMessageReturnNamed: aSelector at: aRange   
 	
@@ -6588,30 +6948,27 @@ computeMessageEntriesForCommonSupertype: commonSupertype of: aVariableTypeInfo
 	self ifEmptyEntriesShowAllPrefixedSelectors
 ! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 2/21/2019 22:03:19'!
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 5/3/2020 13:33:45'!
 computeMessageEntriesForGenericSupertypeOf: aVariableTypeInfo
 			
-	 | prefixedSelectors selectorsCollector | 
+	 | prefixedSelectors protoObjectReached | 
 
 	selectorsClasses := aVariableTypeInfo types.
 	selectorsClasses isEmpty ifTrue: [ ^self computeMessageEntriesForUnknowClass ].
 	
-	prefixedSelectors := aVariableTypeInfo commonSelectorsPreviousToObject select: [ :aSelector | aSelector beginsWith: prefix ].
-	
-	selectorsCollector := AutoCompleterSelectorsCollector for: prefix.
-	
-	entries := selectorsCollector 
-		addedSelectors: prefixedSelectors;
-		addSelectorsOfAll: selectorsClasses upTo: Object;
-		addSelectorsOf: Object;		
-		entriesToShow.
-		
-	prefixedSelectors notEmpty ifTrue: [
-		entries addAllFirst: prefixedSelectors asSortedCollection.
-		entries size > 1 ifTrue: [ entries addFirst: '-- common selectors excluding Object' ].
-	 ].
-		
-	possibleInvalidSelectors := selectorsCollector possibleInvalidSelectors.
+	"If Object is not in the superclasses chain, then it means we are working with ProtoObject or any of its
+	subclasses outside the Object hierarchy, so the common selectors are ProtoObject ones - Hernan"
+	protoObjectReached := false.
+	prefixedSelectors := aVariableTypeInfo 
+		commonSelectorsPreviousTo: Object 
+		ifInvalidSupertype: [ :aType | 
+			protoObjectReached := true.
+			ProtoObject selectors ].
+	prefix notEmpty ifTrue: [ prefixedSelectors := prefixedSelectors select: [ :aSelector | aSelector beginsWith: prefix ]].
+
+	protoObjectReached 
+		ifTrue: [ entries := prefixedSelectors sorted ]
+		ifFalse: [ self addCommonMessagesStartingWith: prefixedSelectors.].
 	
 	self ifEmptyEntriesShowAllPrefixedSelectors
 		
@@ -6649,13 +7006,16 @@ computeMessageEntriesOfCascadeReceiverAt: aRange
 
 	self computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 12/4/2019 15:59:48'!
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 5/4/2020 16:12:03'!
 computeMessageEntriesOfEnclosedExpressionReturnAt: aRange   
 
 	 | typeInfo |
 
 	typeInfo := self 
-		withMethodNodeDo: [ :methodNode | self returnTypeOfEnclosedExpresionIn: methodNode at: aRange end - 1 ]
+		withMethodNodeDo: [ :methodNode |
+			self 
+				returnTypeOfEnclosedExpresionIn: methodNode 
+				at: (allRanges at: self indexOfNoRightParenthesis) end ]
 		ifError: [ :anError | nil ].
 
 	self computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
@@ -6680,33 +7040,38 @@ computeMessageEntriesWithBinaryMessageForCommonSupertype: commonSupertype of: aV
 	self ifEmptyEntriesShowAllPrefixedSelectors
 ! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 12/4/2019 15:54:32'!
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 5/3/2020 19:32:57'!
 computeMessageEntriesWithBinaryMessageForGenericSupertypeOf: aVariableTypeInfo 
 			
-	 | prefixedSelectors selectorsCollector classes | 
+	 | prefixedSelectors classes protoObjectReached selectorsCollector | 
 
 	classes := Set withAll: aVariableTypeInfo types.
 	classes isEmpty ifTrue: [ ^self computeMessageEntriesForUnknowClass ].
 
+	"If Object is not in the superclasses chain, then it means we are working with ProtoObject or any of its
+	subclasses outside the Object hierarchy, so the common selectors are ProtoObject ones - Hernan"
+	prefixedSelectors := aVariableTypeInfo 
+		commonSelectorsPreviousTo: Object 
+		ifInvalidSupertype: [ :aType | 
+			protoObjectReached := true.
+			ProtoObject selectors ].
+	prefixedSelectors := prefixedSelectors select: [ :aSelector | (aSelector beginsWith: prefix) and: [ aSelector isKeyword not ]].
+
 	selectorsCollector := AutoCompleterSelectorsCollector for: prefix.
-	prefixedSelectors := aVariableTypeInfo commonSelectorsPreviousToObject 
-		select: [ :aSelector | (aSelector beginsWith: prefix) and: [ aSelector isKeyword not ]].
-		
-	selectorsCollector 
-		addedSelectors: prefixedSelectors;
-		addUnaryAndBinarySelectorsOfAll: classes upTo: Object;
-		addUnaryAndBinarySelectorsOf: Object.		
+	selectorsCollector addedSelectors: prefixedSelectors.
+	
+	protoObjectReached ifFalse: [
+		selectorsCollector
+			addUnaryAndBinarySelectorsOfAll: classes upTo: Object;
+			addUnaryAndBinarySelectorsOf: Object ].
 	
 	self
 		computeMessageEntriesWithBinaryMessageForClasses: classes 
 		collectingWith: selectorsCollector 
 		asRoot: Object. 
  
-	prefixedSelectors notEmpty ifTrue: [
-		entries addAllFirst: prefixedSelectors asSortedCollection.
-		entries size > 1 ifTrue: [ entries addFirst: '-- common selectors excluding Object' ].
-	 ].
-			
+	self addCommonMessagesToEntries: prefixedSelectors.
+		
 	self ifEmptyEntriesShowAllPrefixedSelectors
 		
 	! !
@@ -6720,10 +7085,30 @@ computeMessageEntriesWithoutBinaryMessageForTypeInfo: aVariableTypeInfo
 		ifGeneric: [ :genericType | 
 			self computeMessageEntriesForGenericSupertypeOf: aVariableTypeInfo ]! !
 
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 5/4/2020 16:12:33'!
+indexOfNoRightParenthesis
+	
+	| currentIndex |
+	
+	currentIndex := allRanges size - 1.
+	[ currentIndex > 1 and: [
+	(allRanges at: currentIndex) rangeType beginsWith: #'rightParenthesis']] whileTrue: [ currentIndex := currentIndex - 1 ].
+
+	^currentIndex
+			! !
+
 !LiveTypingSmalltalkCompleter methodsFor: 'selector documentation' stamp: 'HAW 2/8/2019 18:13:33'!
 documentationOf: aMethod
 
 	^aMethod liveTypingAutoCompleterDocumentation! !
+
+!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 5/4/2020 15:05:40'!
+tryToRecoverFromSyntaxError: aSyntaxErrorNotification withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
+	
+	^ aSyntaxErrorNotification errorMessage = 'right parenthesis expected' 
+		ifTrue: [ self withMethodNodeOf: aSourceCode, ')' do: doBlock handlingSyntaxErrorOrIfError: anErrorBlock ]
+		ifFalse: [ self withMethodNodeOf: parser allSource do: doBlock ifError: anErrorBlock ]
+	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 2/10/2019 20:07:29'!
 tryToRecoverFromSyntaxErrorWithMethodNodeDo: doBlock ifError: anErrorBlock
@@ -6731,15 +7116,23 @@ tryToRecoverFromSyntaxErrorWithMethodNodeDo: doBlock ifError: anErrorBlock
 	^ self withMethodNodeOf: parser allSource do: doBlock ifError: anErrorBlock 
 	! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 2/10/2019 20:06:40'!
+!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 5/4/2020 14:55:17'!
 withMethodNodeDo: doBlock ifError: anErrorBlock
 
 	^ self 
 		withMethodNodeOf: parser source 
 		do: doBlock 
+		handlingSyntaxErrorOrIfError: anErrorBlock! !
+
+!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 5/4/2020 14:57:42'!
+withMethodNodeOf: aSourceCode do: doBlock handlingSyntaxErrorOrIfError: anErrorBlock
+
+	^self 
+		withMethodNodeOf: aSourceCode
+		do: doBlock 
 		ifError: [ :anError |
 			(anError isKindOf: SyntaxErrorNotification) 
-				ifTrue: [ self tryToRecoverFromSyntaxErrorWithMethodNodeDo: doBlock ifError: anErrorBlock ]
+				ifTrue: [ self tryToRecoverFromSyntaxError: anError withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock ]
 				ifFalse: [ anErrorBlock value: anError ]]
 	! !
 
@@ -6764,6 +7157,16 @@ withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
 		
 	! !
 
+!LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 5/4/2020 16:26:54'!
+argumentOf: nodeToAnalyze ifPreviousIsBinaryMessageIn: methodNode
+		
+	^(self isPreviousMessageSendBinary and: [ nodeToAnalyze isMessageNode and: [ nodeToAnalyze isInfix ]]) 
+		ifTrue: [ self handleArgumentOf: nodeToAnalyze whenPreviousIsBinaryMessage: methodNode ]
+		ifFalse: [ nodeToAnalyze ]
+
+			
+! !
+
 !LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 4/4/2019 08:02:59'!
 commonSupertypeOrSelectorsOf: aNodeUnderCursor in: aMethodNode  
 	
@@ -6778,13 +7181,27 @@ commonSupertypeOrSelectorsOf: aNodeUnderCursor in: aMethodNode
 	
 ! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 2/8/2019 16:30:55'!
+!LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 5/4/2020 16:27:17'!
+handleArgumentOf: nodeToAnalyze whenPreviousIsBinaryMessage: methodNode
+
+	| argument |
+
+	argument := nodeToAnalyze arguments first.
+	argument isMessageNode ifTrue: [ 
+		methodNode 
+			rangeForNode: argument selector 
+			ifAbsent: [  argument := argument receiver  ]].
+
+	^argument! !
+
+!LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 5/4/2020 16:26:54'!
 returnTypeOfEnclosedExpresionIn: methodNode at: aPosition
 
 	^ methodNode  
 		withTopParseNodeIncluding: aPosition
 		do: [ :aNodeUnderCursor | | nodeToAnalyze |
 			nodeToAnalyze := aNodeUnderCursor isReturn ifTrue: [ aNodeUnderCursor expr ] ifFalse: [ aNodeUnderCursor ].
+			nodeToAnalyze := self argumentOf: nodeToAnalyze ifPreviousIsBinaryMessageIn: methodNode.
 			self commonSupertypeOrSelectorsOf: nodeToAnalyze in: methodNode ]
 		ifAbsent: [ nil ]! !
 
@@ -6796,7 +7213,7 @@ returnTypeOfNodeUnderCursorIn: methodNode at: aPosition
 		do: [ :aNodeUnderCursor | self commonSupertypeOrSelectorsOf: aNodeUnderCursor in: methodNode ]
 		ifAbsent: [ nil ]! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 2/8/2019 16:30:55'!
+!LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 5/4/2020 16:14:44'!
 typeOfCascadeReceiverIn: methodNode at: aPosition 
 
 	^methodNode 
@@ -8312,7 +8729,7 @@ messageListKeyFromOriginalSourceCode
 		ifNil: [
 			aChar == $R ifTrue: [^ model renameClass]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/19/2019 06:27:12'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/3/2020 19:11:18'!
 messageListKeyFromSourceCode
 
 	^'messageListKey: aChar from: view
@@ -8331,7 +8748,6 @@ messageListKeyFromSourceCode
 
 	aChar == $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
 	aChar == $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
-	aChar == $T ifTrue: [ ^ self model typeCheckClass ].
 	aChar == $X ifTrue: [ ^ self model removeMessageCheckingActualSenders ].
 
 	"The following require a class selection"
@@ -8355,9 +8771,11 @@ messageListKeyFromSourceCode
 			aChar == $r ifTrue: [^ model debugMethodTest].
 			aChar == $R ifTrue: [^ self renameSelector].
 			aChar == $U ifTrue: [^ self addParameter ].
-			aChar == $I ifTrue: [^ self removeParameter ]]
+			aChar == $I ifTrue: [^ self removeParameter ].
+			aChar == $T ifTrue: [^ self model typeCheckMethod ]]
 		ifNil: [
-			aChar == $R ifTrue: [^ model renameClass]]'! !
+			aChar == $R ifTrue: [^ model renameClass].
+			aChar == $T ifTrue: [ ^ self model typeCheckClass ]]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/11/2019 17:13:27'!
 mouseMoveLocalPositionOriginalSourceCode
@@ -10829,13 +11247,12 @@ for: aBlockNode previous: aPreviousCastingApplier
 	when: x ifNil: [ ^... ] - Hernan"
 	^EffectiveTypeCastApplier previous: aPreviousCastingApplier ! !
 
-!TypeChecker methodsFor: 'showing results' stamp: 'HAW 12/4/2019 16:24:54'!
+!TypeChecker methodsFor: 'showing results' stamp: 'HAW 5/3/2020 18:56:18'!
 showResultsWith: aLabelTrail
 
 	| showProblems |
 
 	showProblems := self hasProblems and: [ self confirm: 'There were problems during the type check.\Do you want to see them' withNewLines ].
-	showProblems := false.
 	(showProblems not and: [ self hasNoErrorsAndWarnings ]) ifTrue: [  ^self inform: 'There are no type errors or warnings' ].
 		
 	TypeCheckingResultWindow openFor: self labelTrail: aLabelTrail showingProblems: showProblems ! !
@@ -14013,11 +14430,10 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 		ensure: [ lastMessage receiver: nil ]
 	! !
 
-!BlockNode methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 16:49:45'!
+!BlockNode methodsFor: '*LiveTyping' stamp: 'HAW 5/4/2020 00:00:12'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
-	"This will have to change when block return types are supported - Hernan"
-	^#()! !
+	^`{ BlockClosure }`! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:17:22'!
 actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParameterIndex of: aSelector ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
@@ -14093,13 +14509,15 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	"I assume that if somebody wants the types of a method it is looking for the return types - Hernan"
 	^aCompiledMethod returnTypes ! !
 
-!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 12/19/2018 13:32:43'!
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 5/4/2020 16:14:44'!
 withTopParseNodeIncluding: aPosition do: aBlock ifAbsent: anAbsentBlock
 
 	| nodeAndPosition |
 	
 	nodeAndPosition :=self topParseNodeIncluding: aPosition ifAbsent: [ ^ anAbsentBlock value ].
-	^aBlock value: nodeAndPosition key.! !
+
+	^aBlock value: nodeAndPosition key
+	! !
 
 !LeafNode methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 17:24:10'!
 isSameAs: aParseNode
@@ -14127,16 +14545,42 @@ identifierPrintString
 	
 	^key printString ! !
 
+!SelectorNode methodsFor: '*LiveTyping' stamp: 'HAW 5/3/2020 22:39:23'!
+isInfix
+	
+	^key isInfix ! !
+
 !VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:05:06'!
 nodeTypePrintString
 
 	^'pseudo var'! !
 
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 09:17:11'!
+!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 5/3/2020 18:51:29'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
-	self isSelfPseudoVariable ifTrue: [ ^aCompiledMethod methodClass withAllSubclasses ].
-	self isSuperPseudoVariable ifTrue: [ ^aCompiledMethod methodClass superclass withAllSubclasses ].
+	"This is other possible implementation... the problem is that self can be referenced in a method that
+	is being executed in a subclass, so self in that context is the subclass no the class where the method
+	is defined. 
+	If I use the below implementation, the Float>>#storeOn:base: version RNG 10/12/2018 05:43:39
+	passes the typecheck. If the above implementation is used, that version does not passes the type check
+	because 'self infinite' returns type will be True and not Boolean.
+	On the other hand, with the below implementation, if in ProtoObject I type 'self initialize ' and ask for the
+	autocompleter, it will look for selectors in all subclasses of ProtoObject, while with the above implementation
+	it does not.
+	In a statically typed language, self would 'statically' reference only to instances of the class where the method
+	is defined, in dynamically typed languages self it would be valid to send a message to self defined in a subclass
+	because self could be referencing an instance of a subclass. So the behavior of self when analized statically is 
+	different, although sending a message to self not defined in the method's class hierarchy is not really a good
+	practice.
+	This is something to continue thinking about. Maybe both strategies are valid and contextual to what we are
+	doing, if typechecking or autocompete, etc - Hernan "
+	
+	self isSelfPseudoVariable ifTrue: [ ^{aCompiledMethod methodClass} ].
+	"self isSelfPseudoVariable ifTrue: [ ^aCompiledMethod methodClass withAllSubclasses ]."
+	
+	self isSuperPseudoVariable ifTrue: [ ^{aCompiledMethod methodClass superclass} ].
+	"self isSuperPseudoVariable ifTrue: [ ^aCompiledMethod methodClass superclass withAllSubclasses ]."
+	
 	self isTruePseudoVariable ifTrue: [ ^`Array with: true class` ].
 	self isFalsePseudoVariable ifTrue: [ ^`Array with: false class` ].
 	self isThisContextPseudoVariable ifTrue: [ ^`Array with: thisContext class` ]. 
@@ -14268,6 +14712,11 @@ isIfNotNil
 isIfWithMessageNodeAsCondition
 	
 	^self isAnyKindOfIf and: [ self receiverOrCascadeReceiver isMessageNode ]! !
+
+!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 5/3/2020 22:39:07'!
+isInfix
+	
+	^selector isInfix! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 10:17:06'!
 isIsKindOfWithLiteralBehavior
