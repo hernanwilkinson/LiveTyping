@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4132] on 6 May 2020 at 11:45:56 pm'!
-'Description Autocomplete tests and changes'!
-!provides: 'LiveTyping' 1 63!
+'From Cuis 5.0 [latest update: #4137] on 7 June 2020 at 11:32:28 am'!
+'Description Fixes to make it work on Cuis image without University'!
+!provides: 'LiveTyping' 1 64!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -6043,12 +6043,10 @@ testExampleMessagesOfDifferentSubclasses
 	aCollection addAllFirst: #(1 2 3).
 	! !
 
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 7/16/2019 23:44:40'!
+!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 6/6/2020 12:19:48'!
 testExampleWithNoCommonSupertype
 
-	| oneHour today s |
-	
-	s :='hola'.
+	| oneHour today |
 	
 	"Chalten time measures"
 	oneHour := 1*hour.
@@ -6064,7 +6062,7 @@ testExampleWithNoCommonSupertype
 	self assert: February, 2019 equals: today monthOfYear.
 	today .
 	"Chronology date"
-	today := Date year: 2019 month: 2 day: 1.
+	today := Date year: 2019 month: 2 day: 1 timeZone: nil.
 	self assert: 'February' equals: today monthName.
 	self assert: (Month month: 'February' year: 2019) equals: today month 
 	
@@ -14435,6 +14433,11 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
 	^`{ BlockClosure }`! !
 
+!BlockNode class methodsFor: '*LiveTyping' stamp: 'RNG 1/19/2018 21:06:55'!
+empty
+
+	^ self statements: #() returns: false! !
+
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:17:22'!
 actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParameterIndex of: aSelector ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
 	
@@ -14549,6 +14552,11 @@ identifierPrintString
 isInfix
 	
 	^key isInfix ! !
+
+!SelectorNode methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 11:14:25'!
+isNamed: aSelectorName
+
+	^ self key = aSelectorName! !
 
 !VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:05:06'!
 nodeTypePrintString
