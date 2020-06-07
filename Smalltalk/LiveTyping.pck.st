@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4137] on 7 June 2020 at 11:32:28 am'!
+'From Cuis 5.0 [latest update: #4137] on 7 June 2020 at 11:45:27 am'!
 'Description Fixes to make it work on Cuis image without University'!
-!provides: 'LiveTyping' 1 64!
+!provides: 'LiveTyping' 1 65!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -299,26 +299,6 @@ TestCase subclass: #VariableTypeInfoTest
 	category: 'LiveTyping-Tests'!
 !classDefinition: 'VariableTypeInfoTest class' category: #'LiveTyping-Tests'!
 VariableTypeInfoTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #AutocompleteExample category: #'LiveTyping-Playground'!
-TestCase subclass: #AutocompleteExample
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Playground'!
-!classDefinition: 'AutocompleteExample class' category: #'LiveTyping-Playground'!
-AutocompleteExample class
-	instanceVariableNames: ''!
-
-!classDefinition: #CustomerTest category: #'LiveTyping-Playground'!
-TestCase subclass: #CustomerTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Playground'!
-!classDefinition: 'CustomerTest class' category: #'LiveTyping-Playground'!
-CustomerTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #ManyMethodsTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests'!
@@ -749,16 +729,6 @@ Object subclass: #ClosureTypeExamples
 	category: 'LiveTyping-Playground'!
 !classDefinition: 'ClosureTypeExamples class' category: #'LiveTyping-Playground'!
 ClosureTypeExamples class
-	instanceVariableNames: ''!
-
-!classDefinition: #Customer1 category: #'LiveTyping-Playground'!
-Object subclass: #Customer1
-	instanceVariableNames: 'firstName lastName dateOfBirth'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Playground'!
-!classDefinition: 'Customer1 class' category: #'LiveTyping-Playground'!
-Customer1 class
 	instanceVariableNames: ''!
 
 !classDefinition: #TypeCast category: #'LiveTyping-TypeChecking'!
@@ -6017,87 +5987,6 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: (types includes: 1 class).
 	self assert: (types includes: 1.0 class)! !
 
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 8/13/2019 19:24:11'!
-testAutoCompleteExample
-
-	 10 factorial isInteger not.
-	! !
-
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 8/14/2019 10:23:49'!
-testExample
-
-	| temp1 |
-	
-	temp1 := self doSomething.
-	
-	temp1 isInteger not ! !
-
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 2/14/2019 19:02:39'!
-testExampleMessagesOfDifferentSubclasses
-
-	| aCollection |
-	
-	aCollection := Array new.
-	aCollection := OrderedCollection new.
-	
-	aCollection addAllFirst: #(1 2 3).
-	! !
-
-!AutocompleteExample methodsFor: 'examples' stamp: 'HAW 6/6/2020 12:19:48'!
-testExampleWithNoCommonSupertype
-
-	| oneHour today |
-	
-	"Chalten time measures"
-	oneHour := 1*hour.
-	self assert: 2*hour equals: oneHour + oneHour.
-	 
-	"Chronology time measures"
-	oneHour := 1 hours.
-	self assert: 2 hours equals: oneHour + oneHour.
-	
-	"Chalten date"
-	today := February/1/ 2019.
-	self assert: February equals: today month.
-	self assert: February, 2019 equals: today monthOfYear.
-	today .
-	"Chronology date"
-	today := Date year: 2019 month: 2 day: 1 timeZone: nil.
-	self assert: 'February' equals: today monthName.
-	self assert: (Month month: 'February' year: 2019) equals: today month 
-	
-	
-	
-	
-	
-	
-	
-	
-	! !
-
-!AutocompleteExample methodsFor: 'as yet unclassified' stamp: 'HAW 8/14/2019 09:07:25'!
-doSomething
-	
-	^10 factorial ! !
-
-!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/13/2019 08:34:08'!
-test01
-
-	Customer1 named: 'Juan' with: 'Perez' bornOn: Date today.
-	Customer1 named: 1 with: 2 bornOn: DateAndTime now.! !
-
-!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/27/2018 16:44:12'!
-test02
-
-	(TestCase allSubclasses select: [:aTestCase | aTestCase category = 'Chronology-Tests']) 
-		do: [:aTestCase | aTestCase suite run ].! !
-
-!CustomerTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/27/2018 16:44:16'!
-test03
-
-	(TestCase allSubclasses select: [:aTestCase | aTestCase category =  'Regex-Tests-Core']) 
-		do: [:aTestCase | aTestCase suite run ].! !
-
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 21:56:12'!
 test01ManyMethodsCanBeTypeChecked
 
@@ -10714,140 +10603,6 @@ m5_many_temps_in_remote_vector_with_block_params_and_temps
 	t3 := t1 + t2 size.
 	
 	^t3! !
-
-!Customer1 methodsFor: 'xx' stamp: 'HAW 1/15/2019 22:59:13'!
-m0
-
-	1 yourself class.
-	$a yourself ! !
-
-!Customer1 methodsFor: 'xx' stamp: 'HAW 1/16/2019 00:11:15'!
-m0: p1
-
-	| c |
-"
-self new m0: 1.
-self new m0: 1.0
-self new m0: String
-"
-	1 yourself class.
-	$a class.
-	
-	p1 class class class class class. 
-	c := p1 class.
-	c class! !
-
-!Customer1 methodsFor: 'xx' stamp: 'HAW 12/21/2018 11:09:30'!
-m11
-"self new m11" 
-	| q1 t2 t3 t4 t5 t6 t7 t8 t9 t10 |
-	 
-	q1 := nil.
-	q1 := 1.
-	q1 := q1 + (1/3).
-	t2 := 2.0.
-	t3 := 3.
-	t4 := 4.
-	t5 := 5.
-	t6 := 6.
-	t7 := 7.
-	t8 := 8.
-	t9 := t2+t3+t4+t5+t6+t7+t8.
-	t10 := 'hola'.
-	q1 := 'x'.
-	t9 := t9+1.
-	
-	^t10! !
-
-!Customer1 methodsFor: 'initialization' stamp: 'HAW 12/24/2018 10:38:48'!
-initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth
-	
-	firstName := aFirstName. 
-	lastName := aLastName.
-	dateOfBirth := aDateOfBirth! !
-
-!Customer1 methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:22:52'!
-m2
-
-	self m1.
-	^nil! !
-
-!Customer1 methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:23:29'!
-m5
-
-	[ ^10 factorial ] value! !
-
-!Customer1 methodsFor: 'ppp' stamp: 'HAW 10/4/2018 16:23:36'!
-m6
-
-	^false or: [ false ]! !
-
-!Customer1 methodsFor: 'ppp' stamp: 'HAW 10/29/2018 05:46:50'!
-m7
-
-	^self! !
-
-!Customer1 methodsFor: 'ppp' stamp: 'HAW 10/29/2018 06:03:40'!
-m8: a
-
-	^a! !
-
-!Customer1 methodsFor: 'ppp' stamp: 'HAW 12/21/2018 11:07:25'!
-m8a
-
-	^true! !
-
-!Customer1 methodsFor: 'ppp' stamp: 'HAW 2/21/2019 12:04:39'!
-metodoClosure: p1
-
-	| t1 t2 |
-	
-	t2 := { 1. 2. 3. }.
-	t1 := t2 at: 1.
-	[ | qq | qq _ 2 ] value.
-	
-	^t1 + p1! !
-
-!Customer1 methodsFor: 'qqq' stamp: 'HAW 11/30/2018 14:46:58'!
-m1
-"self new m1"
-	| t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 |
-	 
-	t1 := nil.
-	t1 := 1.
-	t1 := t1 + (1/3).
-	t2 := 2.0.
-	t3 := 3.
-	t4 := 4.
-	t5 := 5.
-	t6 := 6.
-	t7 := 7.
-	t8 := 8.
-	t9 := t2+t3+t4+t5+t6+t7+t8.
-	t10 := 'hola'.
-	t1 := 'x'.
-	t9 := t9+1.
-	^t10! !
-
-!Customer1 methodsFor: 'apply primitives' stamp: 'HAW 10/4/2018 16:23:12'!
-m3
-
-	^true and: [ false ]
-	! !
-
-!Customer1 methodsFor: 'debugging' stamp: 'HAW 10/5/2018 18:00:31'!
-m4
-
-	[ :a | a factorial ] value: 10.
-	[ :a | a factorial ] value: 10.! !
-
-!Customer1 methodsFor: 'comparing' stamp: 'HAW 10/29/2018 05:50:07'!
-m8
-
-	^true! !
-
-!Customer1 class methodsFor: 'instance creation' stamp: 'HAW 9/17/2018 12:09'!
-named: aFirstName with: aLastName bornOn: aDateOfBirth	^self new initializeNamed: aFirstName with: aLastName bornOn: aDateOfBirth	! !
 
 !TypeCast methodsFor: 'applying' stamp: 'HAW 8/20/2019 19:47:03'!
 applyTo: aParseNode using: originalTypes
