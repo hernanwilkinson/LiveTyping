@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4137] on 7 June 2020 at 11:45:27 am'!
-'Description Fixes to make it work on Cuis image without University'!
-!provides: 'LiveTyping' 1 65!
+'From Cuis 5.0 [latest update: #4226] on 22 June 2020 at 7:44:46 pm'!
+'Description BacktickNode implementation'!
+!provides: 'LiveTyping' 1 66!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -1351,13 +1351,17 @@ hasSureMessageSends
 
 	^sureMessageSends notEmpty! !
 
-!ActualMessageSendsCollector methodsFor: 'collecting' stamp: 'HAW 3/14/2019 16:41:47'!
+!ActualMessageSendsCollector methodsFor: 'collecting' stamp: 'HAW 6/22/2020 19:42:22'!
 analizeMessageSend: aMessageNode
 	
 	 | receiverTypes incompleteTypeInfoReasons |
 
 	incompleteTypeInfoReasons := Set new.
-	receiverTypes := aMessageNode receiverOrCascadeReceiver typesIn: toAnalize addingIncompleteTypeInfoTo: incompleteTypeInfoReasons.			
+	receiverTypes := [ aMessageNode receiverOrCascadeReceiver 
+		typesIn: toAnalize 
+		addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ]
+			on: MethodNotAnnotatingTypes 
+			do: [ :anError | #() ].			
 	
 	receiverTypes isEmpty
 		ifTrue: [ possibleMessageSends add: aMessageNode->(Array with: 'Could not get receiver''s type info') ]
@@ -4077,6 +4081,31 @@ test21ActualSendersWorksWithCascadeMessageSends
 		
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class>>#m1)).
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class>>#m2)).! !
+
+!ActualSendersTest methodsFor: 'tests' stamp: 'HAW 6/22/2020 19:43:56'!
+test22ActualSendersDoesNotHangWhenReceiverIsTempVarInMethodWithoutTypes
+
+	| tempSelf possibleSender sendersCollector |
+	
+	(self class>>thisContext selector) removeProperties.
+	
+	tempSelf := self.
+	tempSelf m1.
+	
+	sendersCollector := (self class>>thisContext selector) actualSendersOf: (self class>>#m1).
+	
+	self deny: sendersCollector hasSureMessageSends.
+	
+	self assert: sendersCollector hasPossibleMessageSends.
+	self assert: sendersCollector possibleMessageSends size equals: 1.
+	possibleSender := sendersCollector possibleMessageSends anyOne key.
+	
+	self assert: possibleSender isMessageNode.
+	self assert: 'tempSelf' equals: possibleSender receiver key.
+	self assert: #m1 equals: possibleSender selector key
+	
+	
+	! !
 
 !ActualSendersTest methodsFor: 'test data' stamp: 'HAW 10/21/2018 01:32:19'!
 m1
@@ -14161,6 +14190,17 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
 
 	^value typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier 
+! !
+
+!BacktickNode methodsFor: '*LiveTyping' stamp: 'HAW 6/22/2020 15:45:04'!
+typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
+	
+	"This for sure will compile the source code... it would be better to get the literal from the compiled method
+	but theres is no way to map from here to the compiled method literals. To do it I would need to generate 
+	the code wich means to compile the source code anyway.
+	It could also happen that the compiled method does not exist yet...
+	Compiling the source code could signal an exception - Hernan"
+	^self literalNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 ! !
 
 !BraceNode methodsFor: '*LiveTyping' stamp: 'HAW 7/18/2019 19:05:49'!
