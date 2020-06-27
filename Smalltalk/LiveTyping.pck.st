@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4226] on 22 June 2020 at 7:44:46 pm'!
-'Description BacktickNode implementation'!
-!provides: 'LiveTyping' 1 66!
+'From Cuis 5.0 [latest update: #4226] on 27 June 2020 at 5:57:04 pm'!
+'Description thisContext can not be used inside backtick'!
+!provides: 'LiveTyping' 1 67!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -14358,7 +14358,7 @@ nodeTypePrintString
 
 	^'pseudo var'! !
 
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 5/3/2020 18:51:29'!
+!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 6/27/2020 17:55:44'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
 	"This is other possible implementation... the problem is that self can be referenced in a method that
@@ -14386,7 +14386,7 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
 	self isTruePseudoVariable ifTrue: [ ^`Array with: true class` ].
 	self isFalsePseudoVariable ifTrue: [ ^`Array with: false class` ].
-	self isThisContextPseudoVariable ifTrue: [ ^`Array with: thisContext class` ]. 
+	self isThisContextPseudoVariable ifTrue: [ ^`Array with: MethodContext` ]. 
 	self isNilPseudoVariable ifTrue: [ ^`Array with: nil class` ]. 
 	
 	self error: 'Unsupported variable node'! !
