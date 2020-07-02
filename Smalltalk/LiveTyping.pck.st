@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4226] on 27 June 2020 at 5:57:04 pm'!
-'Description thisContext can not be used inside backtick'!
-!provides: 'LiveTyping' 1 67!
+'From Cuis 5.0 [latest update: #4247] on 2 July 2020 at 5:02:34 pm'!
+'Description fix of class type'!
+!provides: 'LiveTyping' 1 68!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -1051,10 +1051,12 @@ printOn: aStream
 
 	aStream nextPutAll: self typeName ! !
 
-!ClassType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:24:48'!
+!ClassType methodsFor: 'type convertion' stamp: 'HAW 6/28/2020 17:27:55'!
 asTypeFor: aReceiverType
 
-	^aReceiverType class
+	^((`Set with: Behavior with: ClassDescription with: Class with: Metaclass`) includes: aReceiverType) 
+		ifTrue: [ Metaclass ]
+		ifFalse: [ aReceiverType class ]
 	! !
 
 !ClassType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:23'!
@@ -4411,6 +4413,15 @@ test08InstanceTypeErrorsWhenUsedWithNoBehavior
 		should: [ InstanceType new asTypeFor: Object ]
 		raise: Error - MessageNotUnderstood 
 		withMessageText: InstanceType onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription! !
+
+!DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 6/28/2020 18:17:15'!
+test09ClassTypeForMetamodelIsMetaclass
+
+	self assert: Metaclass equals: (ClassType new asTypeFor: Behavior ).
+	self assert: Metaclass equals: (ClassType new asTypeFor: ClassDescription ).
+	self assert: Metaclass equals: (ClassType new asTypeFor: Class).
+	self assert: Metaclass equals: (ClassType new asTypeFor: Metaclass ).
+	! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 15:36:25'!
 twoClassMessageSend
@@ -12756,18 +12767,20 @@ withAllSubclassesImplementing: aSelector addTo: implementors
 
 	^implementors! !
 
-!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 13:00:35'!
+!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 6/28/2020 11:31:14'!
 createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
 
-	anInstVarName = 'superclass' ifTrue: [^LocalInstanceVariableTypeInfo of: anInstVarName in: self are: {Metaclass. UndefinedObject }].
+	(self isSuperclassInstVarName: anInstVarName) ifTrue: [^self createSuperclassTypeInfo].
+	
 	^super createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	! !
 
-!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2019 12:50:45'!
+!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 6/28/2020 11:31:14'!
 createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 
-	anInstVarName = 'superclass' ifTrue: [^LocalInstanceVariableTypeInfo of: anInstVarName in: self are: {Metaclass. UndefinedObject}].
+	(self isSuperclassInstVarName: anInstVarName) ifTrue: [^self createSuperclassTypeInfo].
+	
 	^super createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	! !
@@ -12791,6 +12804,24 @@ createMethodReturnTypeInfoOf: aMethod
 	^super createMethodReturnTypeInfoOf: aMethod
 
 	! !
+
+!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 6/28/2020 11:31:01'!
+createSuperclassTypeInfo
+
+	^ LocalInstanceVariableTypeInfo 
+		of: self superclassInstVarName 
+		in: self 
+		are: `{Class. Metaclass. UndefinedObject }`! !
+
+!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 6/28/2020 11:31:14'!
+isSuperclassInstVarName: anInstVarName
+
+	^ anInstVarName = self superclassInstVarName! !
+
+!Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 6/28/2020 11:30:50'!
+superclassInstVarName
+
+	^ 'superclass'! !
 
 !ClassDescription methodsFor: '*LiveTyping-unload-private' stamp: 'HAW 2/22/2019 23:09:13'!
 allRawTypesUnload: aClassToUnload 
@@ -13168,11 +13199,29 @@ unloadFromAllRawTypesOf: aClass
 
 	aClass allRawTypesUnload: self! !
 
+!Class class methodsFor: '*LiveTyping' stamp: 'HAW 6/28/2020 11:31:50'!
+createSuperclassTypeInfo
+
+	^ LocalInstanceVariableTypeInfo 
+		of: self superclassInstVarName 
+		in: self 
+		are: `{Class. UndefinedObject }`
+	
+	! !
+
 !Metaclass methodsFor: '*LiveTyping' stamp: 'HAW 10/17/2018 20:31:37'!
 isSubclassesEmpty
 
 	self subclassesDo: [ :aSubclass | ^false ].
 	^true ! !
+
+!Metaclass class methodsFor: '*LiveTyping' stamp: 'HAW 6/28/2020 11:32:09'!
+createSuperclassTypeInfo
+
+	^ LocalInstanceVariableTypeInfo 
+		of: self superclassInstVarName 
+		in: self 
+		are: `{Class. Metaclass. }`! !
 
 !Number class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:24:59'!
 createMethodReturnRawTypesOf: aMethod
