@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4365] on 23 September 2020 at 6:39:52 pm'!
-'Description receiverOrCascadeReceiver in CascadeNode'!
-!provides: 'LiveTyping' 1 69!
+'From Cuis 5.0 [latest update: #4365] on 23 September 2020 at 7:22:30 pm'!
+'Description Fix some bugs with changes in StringRequestMorph'!
+!provides: 'LiveTyping' 1 70!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -9159,12 +9159,12 @@ typeInfo
 	
 	^typeInfo! !
 
-!ParseNodeTypesDisplay methodsFor: 'crud' stamp: 'HAW 12/6/2018 17:58:33'!
+!ParseNodeTypesDisplay methodsFor: 'crud' stamp: 'HAW 9/23/2020 18:54:37'!
 addTypeTo: aVariableTypeInfo
 
 	| className trimmedNamed |
 	
-	className := ClassNameRequestMorph request: 'Enter type to add' onCancel: [ ^self ].
+	className := ClassNameRequestMorph request: 'Enter type to add' orCancel: [ ^self ].
 	trimmedNamed := className withBlanksTrimmed.
 	
 	(Smalltalk classNamed: trimmedNamed) ifNotNil: [ :aType | 
