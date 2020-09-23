@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4247] on 2 July 2020 at 5:02:34 pm'!
-'Description fix of class type'!
-!provides: 'LiveTyping' 1 68!
+'From Cuis 5.0 [latest update: #4365] on 23 September 2020 at 6:39:52 pm'!
+'Description receiverOrCascadeReceiver in CascadeNode'!
+!provides: 'LiveTyping' 1 69!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -14259,6 +14259,11 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	"elements 
 		inject: Set new
 		addingAll: [ :aParseNode | aParseNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ]"! !
+
+!CascadeNode methodsFor: '*LiveTyping' stamp: 'HAW 9/23/2020 18:16:56'!
+receiverOrCascadeReceiver
+	
+	^receiver ! !
 
 !CascadeNode methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 22:22:19'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
