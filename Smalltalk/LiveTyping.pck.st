@@ -1,1013 +1,1013 @@
-'From Cuis 5.0 [latest update: #4365] on 23 September 2020 at 7:22:30 pm'!
-'Description Fix some bugs with changes in StringRequestMorph'!
-!provides: 'LiveTyping' 1 70!
+'From Cuis 5.0 [latest update: #4384] on 19 October 2020 at 3:37:32 pm'!
+'Description receiverOrCascadeReceiver implemented in ParseNode'!
+!provides: 'LiveTyping' 1 71!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
-SystemOrganization addCategory: #LiveTyping!
-SystemOrganization addCategory: #'LiveTyping-Tests'!
-SystemOrganization addCategory: #'LiveTyping-Playground'!
-SystemOrganization addCategory: #'LiveTyping-Refactoring'!
-SystemOrganization addCategory: #'LiveTyping-TypeChecking'!
-SystemOrganization addCategory: #'LiveTyping-TypeChecking-Tests'!
+SystemOrganization addCategory: 'LiveTyping'!
+SystemOrganization addCategory: 'LiveTyping-Tests'!
+SystemOrganization addCategory: 'LiveTyping-Playground'!
+SystemOrganization addCategory: 'LiveTyping-Refactoring'!
+SystemOrganization addCategory: 'LiveTyping-TypeChecking'!
+SystemOrganization addCategory: 'LiveTyping-TypeChecking-Tests'!
 
 
-!classDefinition: #ActualSendersMessageSet category: #LiveTyping!
+!classDefinition: #ActualSendersMessageSet category: 'LiveTyping'!
 MessageSet subclass: #ActualSendersMessageSet
 	instanceVariableNames: 'types'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ActualSendersMessageSet class' category: #LiveTyping!
+!classDefinition: 'ActualSendersMessageSet class' category: 'LiveTyping'!
 ActualSendersMessageSet class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingResultSet category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingResultSet category: 'LiveTyping-TypeChecking'!
 MessageSet subclass: #TypeCheckingResultSet
 	instanceVariableNames: 'methodTypeChecker showProblems'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResultSet class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingResultSet class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingResultSet class
 	instanceVariableNames: ''!
 
-!classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: #'LiveTyping-Refactoring'!
+!classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: 'LiveTyping-Refactoring'!
 RefactoringError subclass: #CanNotChangeSelectorWithNotIncludedTypes
 	instanceVariableNames: 'messageSendsWithInvalidReceiverTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'CanNotChangeSelectorWithNotIncludedTypes class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'CanNotChangeSelectorWithNotIncludedTypes class' category: 'LiveTyping-Refactoring'!
 CanNotChangeSelectorWithNotIncludedTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodNotAnnotatingTypes category: #LiveTyping!
+!classDefinition: #MethodNotAnnotatingTypes category: 'LiveTyping'!
 Error subclass: #MethodNotAnnotatingTypes
 	instanceVariableNames: 'method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MethodNotAnnotatingTypes class' category: #LiveTyping!
+!classDefinition: 'MethodNotAnnotatingTypes class' category: 'LiveTyping'!
 MethodNotAnnotatingTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #ActualMessageSendsCollector category: #LiveTyping!
+!classDefinition: #ActualMessageSendsCollector category: 'LiveTyping'!
 ParseNodeVisitor subclass: #ActualMessageSendsCollector
 	instanceVariableNames: 'sent toAnalize sentSelector sentMethodClass sureMessageSends possibleMessageSends toAnalizeMethodClass isToAnalizeInSuperclass'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ActualMessageSendsCollector class' category: #LiveTyping!
+!classDefinition: 'ActualMessageSendsCollector class' category: 'LiveTyping'!
 ActualMessageSendsCollector class
 	instanceVariableNames: ''!
 
-!classDefinition: #MultiImplementorsActualMessageSendsCollector category: #LiveTyping!
+!classDefinition: #MultiImplementorsActualMessageSendsCollector category: 'LiveTyping'!
 ParseNodeVisitor subclass: #MultiImplementorsActualMessageSendsCollector
 	instanceVariableNames: 'sentImplementors sendersInfo completeSureSenders partialSureSenders possibleSenders messageList numberOfTitles'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MultiImplementorsActualMessageSendsCollector class' category: #LiveTyping!
+!classDefinition: 'MultiImplementorsActualMessageSendsCollector class' category: 'LiveTyping'!
 MultiImplementorsActualMessageSendsCollector class
 	instanceVariableNames: ''!
 
-!classDefinition: #ReceiverTypesOfMessageSendsConform category: #'LiveTyping-Refactoring'!
+!classDefinition: #ReceiverTypesOfMessageSendsConform category: 'LiveTyping-Refactoring'!
 ParseNodeVisitor subclass: #ReceiverTypesOfMessageSendsConform
 	instanceVariableNames: 'senders implementors sentSelector types currentSender notIncludedReceiverTypesInMessageSends currentSenderMethodClass'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'ReceiverTypesOfMessageSendsConform class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'ReceiverTypesOfMessageSendsConform class' category: 'LiveTyping-Refactoring'!
 ReceiverTypesOfMessageSendsConform class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodTypeCheckerVisitor category: #'LiveTyping-TypeChecking'!
+!classDefinition: #MethodTypeCheckerVisitor category: 'LiveTyping-TypeChecking'!
 ParseNodeVisitor subclass: #MethodTypeCheckerVisitor
 	instanceVariableNames: 'errors warnings methodNode actualMethod problems methodReference blockCastingApplier castingApplierBuilder'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodTypeCheckerVisitor class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'MethodTypeCheckerVisitor class' category: 'LiveTyping-TypeChecking'!
 MethodTypeCheckerVisitor class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingResultWindow category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingResultWindow category: 'LiveTyping-TypeChecking'!
 MessageSetWindow subclass: #TypeCheckingResultWindow
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResultWindow class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingResultWindow class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingResultWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #NotImplementedMethod category: #LiveTyping!
+!classDefinition: #NotImplementedMethod category: 'LiveTyping'!
 MethodReference subclass: #NotImplementedMethod
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'NotImplementedMethod class' category: #LiveTyping!
+!classDefinition: 'NotImplementedMethod class' category: 'LiveTyping'!
 NotImplementedMethod class
 	instanceVariableNames: ''!
 
-!classDefinition: #PossibleSender category: #LiveTyping!
+!classDefinition: #PossibleSender category: 'LiveTyping'!
 MethodReference subclass: #PossibleSender
 	instanceVariableNames: 'possibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'PossibleSender class' category: #LiveTyping!
+!classDefinition: 'PossibleSender class' category: 'LiveTyping'!
 PossibleSender class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingSmalltalkCompleterTest category: #'LiveTyping-Tests'!
+!classDefinition: #LiveTypingSmalltalkCompleterTest category: 'LiveTyping-Tests'!
 SmalltalkCompleterTest subclass: #LiveTypingSmalltalkCompleterTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'LiveTypingSmalltalkCompleterTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'LiveTypingSmalltalkCompleterTest class' category: 'LiveTyping-Tests'!
 LiveTypingSmalltalkCompleterTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #AddParameterWithActualScopeTest category: #'LiveTyping-Tests'!
+!classDefinition: #AddParameterWithActualScopeTest category: 'LiveTyping-Tests'!
 RefactoringTest subclass: #AddParameterWithActualScopeTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'AddParameterWithActualScopeTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'AddParameterWithActualScopeTest class' category: 'LiveTyping-Tests'!
 AddParameterWithActualScopeTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #RemoveParameterWithActualScopeTest category: #'LiveTyping-Tests'!
+!classDefinition: #RemoveParameterWithActualScopeTest category: 'LiveTyping-Tests'!
 RefactoringTest subclass: #RemoveParameterWithActualScopeTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'RemoveParameterWithActualScopeTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'RemoveParameterWithActualScopeTest class' category: 'LiveTyping-Tests'!
 RemoveParameterWithActualScopeTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #RenameSelectorWithActualScopeTest category: #'LiveTyping-Tests'!
+!classDefinition: #RenameSelectorWithActualScopeTest category: 'LiveTyping-Tests'!
 RefactoringTest subclass: #RenameSelectorWithActualScopeTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'RenameSelectorWithActualScopeTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'RenameSelectorWithActualScopeTest class' category: 'LiveTyping-Tests'!
 RenameSelectorWithActualScopeTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #ActualImplementorsTest category: #'LiveTyping-Tests'!
+!classDefinition: #ActualImplementorsTest category: 'LiveTyping-Tests'!
 TestCase subclass: #ActualImplementorsTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ActualImplementorsTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'ActualImplementorsTest class' category: 'LiveTyping-Tests'!
 ActualImplementorsTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #ActualSendersTest category: #'LiveTyping-Tests'!
+!classDefinition: #ActualSendersTest category: 'LiveTyping-Tests'!
 TestCase subclass: #ActualSendersTest
 	instanceVariableNames: 'v1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ActualSendersTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'ActualSendersTest class' category: 'LiveTyping-Tests'!
 ActualSendersTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #AdditionalMethodStateTest category: #'LiveTyping-Tests'!
+!classDefinition: #AdditionalMethodStateTest category: 'LiveTyping-Tests'!
 TestCase subclass: #AdditionalMethodStateTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'AdditionalMethodStateTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'AdditionalMethodStateTest class' category: 'LiveTyping-Tests'!
 AdditionalMethodStateTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #ClosureVariablesTest category: #'LiveTyping-Tests'!
+!classDefinition: #ClosureVariablesTest category: 'LiveTyping-Tests'!
 TestCase subclass: #ClosureVariablesTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ClosureVariablesTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'ClosureVariablesTest class' category: 'LiveTyping-Tests'!
 ClosureVariablesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #DynamicTypesTest category: #'LiveTyping-Tests'!
+!classDefinition: #DynamicTypesTest category: 'LiveTyping-Tests'!
 TestCase subclass: #DynamicTypesTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'DynamicTypesTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'DynamicTypesTest class' category: 'LiveTyping-Tests'!
 DynamicTypesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests'!
+!classDefinition: #InstanceVariableTypeInfoTest category: 'LiveTyping-Tests'!
 TestCase subclass: #InstanceVariableTypeInfoTest
 	instanceVariableNames: 'iv1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'InstanceVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'InstanceVariableTypeInfoTest class' category: 'LiveTyping-Tests'!
 InstanceVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariablesTypesTest category: #'LiveTyping-Tests'!
+!classDefinition: #InstanceVariablesTypesTest category: 'LiveTyping-Tests'!
 TestCase subclass: #InstanceVariablesTypesTest
 	instanceVariableNames: 'instVar1 instVar2 instVar3 instVar4'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'InstanceVariablesTypesTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'InstanceVariablesTypesTest class' category: 'LiveTyping-Tests'!
 InstanceVariablesTypesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingCodeSimulationTest category: #'LiveTyping-Tests'!
+!classDefinition: #LiveTypingCodeSimulationTest category: 'LiveTyping-Tests'!
 TestCase subclass: #LiveTypingCodeSimulationTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'LiveTypingCodeSimulationTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'LiveTypingCodeSimulationTest class' category: 'LiveTyping-Tests'!
 LiveTypingCodeSimulationTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodNotAnnotatingTypesTest category: #'LiveTyping-Tests'!
+!classDefinition: #MethodNotAnnotatingTypesTest category: 'LiveTyping-Tests'!
 TestCase subclass: #MethodNotAnnotatingTypesTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'MethodNotAnnotatingTypesTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'MethodNotAnnotatingTypesTest class' category: 'LiveTyping-Tests'!
 MethodNotAnnotatingTypesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodVariableTypeInfoTest category: #'LiveTyping-Tests'!
+!classDefinition: #MethodVariableTypeInfoTest category: 'LiveTyping-Tests'!
 TestCase subclass: #MethodVariableTypeInfoTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'MethodVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'MethodVariableTypeInfoTest class' category: 'LiveTyping-Tests'!
 MethodVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #NotImplementedMethodTest category: #'LiveTyping-Tests'!
+!classDefinition: #NotImplementedMethodTest category: 'LiveTyping-Tests'!
 TestCase subclass: #NotImplementedMethodTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'NotImplementedMethodTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'NotImplementedMethodTest class' category: 'LiveTyping-Tests'!
 NotImplementedMethodTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #PossibleSenderTest category: #'LiveTyping-Tests'!
+!classDefinition: #PossibleSenderTest category: 'LiveTyping-Tests'!
 TestCase subclass: #PossibleSenderTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'PossibleSenderTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'PossibleSenderTest class' category: 'LiveTyping-Tests'!
 PossibleSenderTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests'!
+!classDefinition: #ReturnTypeInfoTest category: 'LiveTyping-Tests'!
 TestCase subclass: #ReturnTypeInfoTest
 	instanceVariableNames: 'iv1 iv2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'ReturnTypeInfoTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'ReturnTypeInfoTest class' category: 'LiveTyping-Tests'!
 ReturnTypeInfoTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #VariableTypeInfoTest category: #'LiveTyping-Tests'!
+!classDefinition: #VariableTypeInfoTest category: 'LiveTyping-Tests'!
 TestCase subclass: #VariableTypeInfoTest
 	instanceVariableNames: 'instVar1 instVar2 instVar3 instVar4'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'VariableTypeInfoTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'VariableTypeInfoTest class' category: 'LiveTyping-Tests'!
 VariableTypeInfoTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #ManyMethodsTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests'!
+!classDefinition: #ManyMethodsTypeCheckerTest category: 'LiveTyping-TypeChecking-Tests'!
 TestCase subclass: #ManyMethodsTypeCheckerTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking-Tests'!
-!classDefinition: 'ManyMethodsTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests'!
+!classDefinition: 'ManyMethodsTypeCheckerTest class' category: 'LiveTyping-TypeChecking-Tests'!
 ManyMethodsTypeCheckerTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodTypeCheckerTest category: #'LiveTyping-TypeChecking-Tests'!
+!classDefinition: #MethodTypeCheckerTest category: 'LiveTyping-TypeChecking-Tests'!
 TestCase subclass: #MethodTypeCheckerTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking-Tests'!
-!classDefinition: 'MethodTypeCheckerTest class' category: #'LiveTyping-TypeChecking-Tests'!
+!classDefinition: 'MethodTypeCheckerTest class' category: 'LiveTyping-TypeChecking-Tests'!
 MethodTypeCheckerTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingSmalltalkCompleter category: #LiveTyping!
+!classDefinition: #LiveTypingSmalltalkCompleter category: 'LiveTyping'!
 SmalltalkCompleter subclass: #LiveTypingSmalltalkCompleter
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'LiveTypingSmalltalkCompleter class' category: #LiveTyping!
+!classDefinition: 'LiveTypingSmalltalkCompleter class' category: 'LiveTyping'!
 LiveTypingSmalltalkCompleter class
 	instanceVariableNames: ''!
 
-!classDefinition: #AddParameterWithActualScope category: #'LiveTyping-Refactoring'!
+!classDefinition: #AddParameterWithActualScope category: 'LiveTyping-Refactoring'!
 AddParameter subclass: #AddParameterWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'AddParameterWithActualScope class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'AddParameterWithActualScope class' category: 'LiveTyping-Refactoring'!
 AddParameterWithActualScope class
 	instanceVariableNames: ''!
 
-!classDefinition: #RenameSelectorWithActualScope category: #'LiveTyping-Refactoring'!
+!classDefinition: #RenameSelectorWithActualScope category: 'LiveTyping-Refactoring'!
 RenameSelector subclass: #RenameSelectorWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'RenameSelectorWithActualScope class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'RenameSelectorWithActualScope class' category: 'LiveTyping-Refactoring'!
 RenameSelectorWithActualScope class
 	instanceVariableNames: ''!
 
-!classDefinition: #RemoveParameterWithActualScope category: #'LiveTyping-Refactoring'!
+!classDefinition: #RemoveParameterWithActualScope category: 'LiveTyping-Refactoring'!
 RemoveParameter subclass: #RemoveParameterWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'RemoveParameterWithActualScope class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'RemoveParameterWithActualScope class' category: 'LiveTyping-Refactoring'!
 RemoveParameterWithActualScope class
 	instanceVariableNames: ''!
 
-!classDefinition: #AddParameterWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+!classDefinition: #AddParameterWithActualScopeApplier category: 'LiveTyping-Refactoring'!
 AddParameterApplier subclass: #AddParameterWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'AddParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'AddParameterWithActualScopeApplier class' category: 'LiveTyping-Refactoring'!
 AddParameterWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #RenameSelectorWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+!classDefinition: #RenameSelectorWithActualScopeApplier category: 'LiveTyping-Refactoring'!
 RenameSelectorApplier subclass: #RenameSelectorWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'RenameSelectorWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'RenameSelectorWithActualScopeApplier class' category: 'LiveTyping-Refactoring'!
 RenameSelectorWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #RemoveParameterWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+!classDefinition: #RemoveParameterWithActualScopeApplier category: 'LiveTyping-Refactoring'!
 RemoveParameterApplier subclass: #RemoveParameterWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'RemoveParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+!classDefinition: 'RemoveParameterWithActualScopeApplier class' category: 'LiveTyping-Refactoring'!
 RemoveParameterWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #ActualImplementorsFinder category: #LiveTyping!
+!classDefinition: #ActualImplementorsFinder category: 'LiveTyping'!
 Object subclass: #ActualImplementorsFinder
 	instanceVariableNames: 'selector types notImplemented implementors'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ActualImplementorsFinder class' category: #LiveTyping!
+!classDefinition: 'ActualImplementorsFinder class' category: 'LiveTyping'!
 ActualImplementorsFinder class
 	instanceVariableNames: ''!
 
-!classDefinition: #AllActualImplementors category: #LiveTyping!
+!classDefinition: #AllActualImplementors category: 'LiveTyping'!
 ActualImplementorsFinder subclass: #AllActualImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'AllActualImplementors class' category: #LiveTyping!
+!classDefinition: 'AllActualImplementors class' category: 'LiveTyping'!
 AllActualImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #AllActualLocalImplementors category: #LiveTyping!
+!classDefinition: #AllActualLocalImplementors category: 'LiveTyping'!
 ActualImplementorsFinder subclass: #AllActualLocalImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'AllActualLocalImplementors class' category: #LiveTyping!
+!classDefinition: 'AllActualLocalImplementors class' category: 'LiveTyping'!
 AllActualLocalImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualSelectors category: #LiveTyping!
+!classDefinition: #BrowseActualSelectors category: 'LiveTyping'!
 Object subclass: #BrowseActualSelectors
 	instanceVariableNames: 'methodNode class cursorPosition morph methodToLookUp incompleteTypeInfoReasons sentSelector types'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualSelectors class' category: #LiveTyping!
+!classDefinition: 'BrowseActualSelectors class' category: 'LiveTyping'!
 BrowseActualSelectors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualImplementors category: #LiveTyping!
+!classDefinition: #BrowseActualImplementors category: 'LiveTyping'!
 BrowseActualSelectors subclass: #BrowseActualImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualImplementors class' category: #LiveTyping!
+!classDefinition: 'BrowseActualImplementors class' category: 'LiveTyping'!
 BrowseActualImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualLocalImplementors category: #LiveTyping!
+!classDefinition: #BrowseActualLocalImplementors category: 'LiveTyping'!
 BrowseActualImplementors subclass: #BrowseActualLocalImplementors
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualLocalImplementors class' category: #LiveTyping!
+!classDefinition: 'BrowseActualLocalImplementors class' category: 'LiveTyping'!
 BrowseActualLocalImplementors class
 	instanceVariableNames: ''!
 
-!classDefinition: #BrowseActualSenders category: #LiveTyping!
+!classDefinition: #BrowseActualSenders category: 'LiveTyping'!
 BrowseActualSelectors subclass: #BrowseActualSenders
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'BrowseActualSenders class' category: #LiveTyping!
+!classDefinition: 'BrowseActualSenders class' category: 'LiveTyping'!
 BrowseActualSenders class
 	instanceVariableNames: ''!
 
-!classDefinition: #DynamicType category: #LiveTyping!
+!classDefinition: #DynamicType category: 'LiveTyping'!
 Object subclass: #DynamicType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'DynamicType class' category: #LiveTyping!
+!classDefinition: 'DynamicType class' category: 'LiveTyping'!
 DynamicType class
 	instanceVariableNames: ''!
 
-!classDefinition: #ClassType category: #LiveTyping!
+!classDefinition: #ClassType category: 'LiveTyping'!
 DynamicType subclass: #ClassType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ClassType class' category: #LiveTyping!
+!classDefinition: 'ClassType class' category: 'LiveTyping'!
 ClassType class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceType category: #LiveTyping!
+!classDefinition: #InstanceType category: 'LiveTyping'!
 DynamicType subclass: #InstanceType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceType class' category: #LiveTyping!
+!classDefinition: 'InstanceType class' category: 'LiveTyping'!
 InstanceType class
 	instanceVariableNames: ''!
 
-!classDefinition: #SelfType category: #LiveTyping!
+!classDefinition: #SelfType category: 'LiveTyping'!
 DynamicType subclass: #SelfType
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'SelfType class' category: #LiveTyping!
+!classDefinition: 'SelfType class' category: 'LiveTyping'!
 SelfType class
 	instanceVariableNames: ''!
 
-!classDefinition: #IncompleteTypeInfo category: #LiveTyping!
+!classDefinition: #IncompleteTypeInfo category: 'LiveTyping'!
 Object subclass: #IncompleteTypeInfo
 	instanceVariableNames: 'methodReference reasonDescription'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'IncompleteTypeInfo class' category: #LiveTyping!
+!classDefinition: 'IncompleteTypeInfo class' category: 'LiveTyping'!
 IncompleteTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #IncompleteTypeInfoError category: #LiveTyping!
+!classDefinition: #IncompleteTypeInfoError category: 'LiveTyping'!
 IncompleteTypeInfo subclass: #IncompleteTypeInfoError
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'IncompleteTypeInfoError class' category: #LiveTyping!
+!classDefinition: 'IncompleteTypeInfoError class' category: 'LiveTyping'!
 IncompleteTypeInfoError class
 	instanceVariableNames: ''!
 
-!classDefinition: #IncompleteTypeInfoWarning category: #LiveTyping!
+!classDefinition: #IncompleteTypeInfoWarning category: 'LiveTyping'!
 IncompleteTypeInfo subclass: #IncompleteTypeInfoWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'IncompleteTypeInfoWarning class' category: #LiveTyping!
+!classDefinition: 'IncompleteTypeInfoWarning class' category: 'LiveTyping'!
 IncompleteTypeInfoWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTyping category: #LiveTyping!
+!classDefinition: #LiveTyping category: 'LiveTyping'!
 Object subclass: #LiveTyping
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'LiveTyping class' category: #LiveTyping!
+!classDefinition: 'LiveTyping class' category: 'LiveTyping'!
 LiveTyping class
 	instanceVariableNames: ''!
 
-!classDefinition: #ParseNodeTypeInfo category: #LiveTyping!
+!classDefinition: #ParseNodeTypeInfo category: 'LiveTyping'!
 Object subclass: #ParseNodeTypeInfo
 	instanceVariableNames: 'parseNodeToAnalize typeInfo method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ParseNodeTypeInfo class' category: #LiveTyping!
+!classDefinition: 'ParseNodeTypeInfo class' category: 'LiveTyping'!
 ParseNodeTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #ParseNodeTypesDisplay category: #LiveTyping!
+!classDefinition: #ParseNodeTypesDisplay category: 'LiveTyping'!
 Object subclass: #ParseNodeTypesDisplay
 	instanceVariableNames: 'parseNodeToAnalize methodNodeOwner definingClass methodToAnalyze types incompleteTypeInfoReasons typeInfo labels lines selectedIndex icons typesIndexLimit actions'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ParseNodeTypesDisplay class' category: #LiveTyping!
+!classDefinition: 'ParseNodeTypesDisplay class' category: 'LiveTyping'!
 ParseNodeTypesDisplay class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypesDisplay category: #LiveTyping!
+!classDefinition: #InstanceVariableTypesDisplay category: 'LiveTyping'!
 ParseNodeTypesDisplay subclass: #InstanceVariableTypesDisplay
 	instanceVariableNames: 'instVarTypeInfo'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariableTypesDisplay class' category: #LiveTyping!
+!classDefinition: 'InstanceVariableTypesDisplay class' category: 'LiveTyping'!
 InstanceVariableTypesDisplay class
 	instanceVariableNames: ''!
 
-!classDefinition: #SenderInfo category: #LiveTyping!
+!classDefinition: #SenderInfo category: 'LiveTyping'!
 Object subclass: #SenderInfo
 	instanceVariableNames: 'sender sureSenders possibleSenders sentImplementors'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'SenderInfo class' category: #LiveTyping!
+!classDefinition: 'SenderInfo class' category: 'LiveTyping'!
 SenderInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #VariableTypeInfo category: #LiveTyping!
+!classDefinition: #VariableTypeInfo category: 'LiveTyping'!
 Object subclass: #VariableTypeInfo
 	instanceVariableNames: 'rawTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'VariableTypeInfo class' category: #LiveTyping!
+!classDefinition: 'VariableTypeInfo class' category: 'LiveTyping'!
 VariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypeInfo category: #LiveTyping!
+!classDefinition: #InstanceVariableTypeInfo category: 'LiveTyping'!
 VariableTypeInfo subclass: #InstanceVariableTypeInfo
 	instanceVariableNames: 'class variableName'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariableTypeInfo class' category: #LiveTyping!
+!classDefinition: 'InstanceVariableTypeInfo class' category: 'LiveTyping'!
 InstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #HierarchyInstanceVariableTypeInfo category: #LiveTyping!
+!classDefinition: #HierarchyInstanceVariableTypeInfo category: 'LiveTyping'!
 InstanceVariableTypeInfo subclass: #HierarchyInstanceVariableTypeInfo
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'HierarchyInstanceVariableTypeInfo class' category: #LiveTyping!
+!classDefinition: 'HierarchyInstanceVariableTypeInfo class' category: 'LiveTyping'!
 HierarchyInstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #LocalInstanceVariableTypeInfo category: #LiveTyping!
+!classDefinition: #LocalInstanceVariableTypeInfo category: 'LiveTyping'!
 InstanceVariableTypeInfo subclass: #LocalInstanceVariableTypeInfo
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'LocalInstanceVariableTypeInfo class' category: #LiveTyping!
+!classDefinition: 'LocalInstanceVariableTypeInfo class' category: 'LiveTyping'!
 LocalInstanceVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodVariableTypeInfo category: #LiveTyping!
+!classDefinition: #MethodVariableTypeInfo category: 'LiveTyping'!
 VariableTypeInfo subclass: #MethodVariableTypeInfo
 	instanceVariableNames: 'method variableName'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MethodVariableTypeInfo class' category: #LiveTyping!
+!classDefinition: 'MethodVariableTypeInfo class' category: 'LiveTyping'!
 MethodVariableTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #ReturnTypeInfo category: #LiveTyping!
+!classDefinition: #ReturnTypeInfo category: 'LiveTyping'!
 VariableTypeInfo subclass: #ReturnTypeInfo
 	instanceVariableNames: 'method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'ReturnTypeInfo class' category: #LiveTyping!
+!classDefinition: 'ReturnTypeInfo class' category: 'LiveTyping'!
 ReturnTypeInfo class
 	instanceVariableNames: ''!
 
-!classDefinition: #VariablesTypes category: #LiveTyping!
+!classDefinition: #VariablesTypes category: 'LiveTyping'!
 Object subclass: #VariablesTypes
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'VariablesTypes class' category: #LiveTyping!
+!classDefinition: 'VariablesTypes class' category: 'LiveTyping'!
 VariablesTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariablesTypes category: #LiveTyping!
+!classDefinition: #InstanceVariablesTypes category: 'LiveTyping'!
 VariablesTypes subclass: #InstanceVariablesTypes
 	instanceVariableNames: 'class rawTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'InstanceVariablesTypes class' category: #LiveTyping!
+!classDefinition: 'InstanceVariablesTypes class' category: 'LiveTyping'!
 InstanceVariablesTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodVariablesTypes category: #LiveTyping!
+!classDefinition: #MethodVariablesTypes category: 'LiveTyping'!
 VariablesTypes subclass: #MethodVariablesTypes
 	instanceVariableNames: 'method methodProperties'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
-!classDefinition: 'MethodVariablesTypes class' category: #LiveTyping!
+!classDefinition: 'MethodVariablesTypes class' category: 'LiveTyping'!
 MethodVariablesTypes class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingTestFactory category: #'LiveTyping-Tests'!
+!classDefinition: #LiveTypingTestFactory category: 'LiveTyping-Tests'!
 Object subclass: #LiveTypingTestFactory
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'LiveTypingTestFactory class' category: #'LiveTyping-Tests'!
+!classDefinition: 'LiveTypingTestFactory class' category: 'LiveTyping-Tests'!
 LiveTypingTestFactory class
 	instanceVariableNames: ''!
 
-!classDefinition: #PerfomanceTest category: #'LiveTyping-Tests'!
+!classDefinition: #PerfomanceTest category: 'LiveTyping-Tests'!
 Object subclass: #PerfomanceTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'PerfomanceTest class' category: #'LiveTyping-Tests'!
+!classDefinition: 'PerfomanceTest class' category: 'LiveTyping-Tests'!
 PerfomanceTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeInfoRootTestClass category: #'LiveTyping-Tests'!
+!classDefinition: #TypeInfoRootTestClass category: 'LiveTyping-Tests'!
 Object subclass: #TypeInfoRootTestClass
 	instanceVariableNames: 'ivroot'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'TypeInfoRootTestClass class' category: #'LiveTyping-Tests'!
+!classDefinition: 'TypeInfoRootTestClass class' category: 'LiveTyping-Tests'!
 TypeInfoRootTestClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeInfoSibling1TestClass category: #'LiveTyping-Tests'!
+!classDefinition: #TypeInfoSibling1TestClass category: 'LiveTyping-Tests'!
 TypeInfoRootTestClass subclass: #TypeInfoSibling1TestClass
 	instanceVariableNames: 'ivsibling1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'TypeInfoSibling1TestClass class' category: #'LiveTyping-Tests'!
+!classDefinition: 'TypeInfoSibling1TestClass class' category: 'LiveTyping-Tests'!
 TypeInfoSibling1TestClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeInfoSibling2TestClass category: #'LiveTyping-Tests'!
+!classDefinition: #TypeInfoSibling2TestClass category: 'LiveTyping-Tests'!
 TypeInfoRootTestClass subclass: #TypeInfoSibling2TestClass
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Tests'!
-!classDefinition: 'TypeInfoSibling2TestClass class' category: #'LiveTyping-Tests'!
+!classDefinition: 'TypeInfoSibling2TestClass class' category: 'LiveTyping-Tests'!
 TypeInfoSibling2TestClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #ClosureTypeExamples category: #'LiveTyping-Playground'!
+!classDefinition: #ClosureTypeExamples category: 'LiveTyping-Playground'!
 Object subclass: #ClosureTypeExamples
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Playground'!
-!classDefinition: 'ClosureTypeExamples class' category: #'LiveTyping-Playground'!
+!classDefinition: 'ClosureTypeExamples class' category: 'LiveTyping-Playground'!
 ClosureTypeExamples class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCast category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCast category: 'LiveTyping-TypeChecking'!
 Object subclass: #TypeCast
 	instanceVariableNames: 'objetToCast'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCast class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCast class' category: 'LiveTyping-TypeChecking'!
 TypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #ManyTypesCast category: #'LiveTyping-TypeChecking'!
+!classDefinition: #ManyTypesCast category: 'LiveTyping-TypeChecking'!
 TypeCast subclass: #ManyTypesCast
 	instanceVariableNames: 'typesToCastTo typesToReject'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'ManyTypesCast class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'ManyTypesCast class' category: 'LiveTyping-TypeChecking'!
 ManyTypesCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #OneTypeCast category: #'LiveTyping-TypeChecking'!
+!classDefinition: #OneTypeCast category: 'LiveTyping-TypeChecking'!
 TypeCast subclass: #OneTypeCast
 	instanceVariableNames: 'typeToCastTo'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'OneTypeCast class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'OneTypeCast class' category: 'LiveTyping-TypeChecking'!
 OneTypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #EqualTypeCast category: #'LiveTyping-TypeChecking'!
+!classDefinition: #EqualTypeCast category: 'LiveTyping-TypeChecking'!
 OneTypeCast subclass: #EqualTypeCast
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EqualTypeCast class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'EqualTypeCast class' category: 'LiveTyping-TypeChecking'!
 EqualTypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #EqualTypeReject category: #'LiveTyping-TypeChecking'!
+!classDefinition: #EqualTypeReject category: 'LiveTyping-TypeChecking'!
 OneTypeCast subclass: #EqualTypeReject
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EqualTypeReject class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'EqualTypeReject class' category: 'LiveTyping-TypeChecking'!
 EqualTypeReject class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfTypeCast category: #'LiveTyping-TypeChecking'!
+!classDefinition: #IsKindOfTypeCast category: 'LiveTyping-TypeChecking'!
 OneTypeCast subclass: #IsKindOfTypeCast
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfTypeCast class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'IsKindOfTypeCast class' category: 'LiveTyping-TypeChecking'!
 IsKindOfTypeCast class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfTypeReject category: #'LiveTyping-TypeChecking'!
+!classDefinition: #IsKindOfTypeReject category: 'LiveTyping-TypeChecking'!
 OneTypeCast subclass: #IsKindOfTypeReject
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfTypeReject class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'IsKindOfTypeReject class' category: 'LiveTyping-TypeChecking'!
 IsKindOfTypeReject class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCastApplier category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCastApplier category: 'LiveTyping-TypeChecking'!
 Object subclass: #TypeCastApplier
 	instanceVariableNames: 'receiverTypes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCastApplier class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCastApplier class' category: 'LiveTyping-TypeChecking'!
 TypeCastApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #EffectiveTypeCastApplier category: #'LiveTyping-TypeChecking'!
+!classDefinition: #EffectiveTypeCastApplier category: 'LiveTyping-TypeChecking'!
 TypeCastApplier subclass: #EffectiveTypeCastApplier
 	instanceVariableNames: 'previous casts rejections'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EffectiveTypeCastApplier class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'EffectiveTypeCastApplier class' category: 'LiveTyping-TypeChecking'!
 EffectiveTypeCastApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #NoTypeCastApplier category: #'LiveTyping-TypeChecking'!
+!classDefinition: #NoTypeCastApplier category: 'LiveTyping-TypeChecking'!
 TypeCastApplier subclass: #NoTypeCastApplier
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'NoTypeCastApplier class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'NoTypeCastApplier class' category: 'LiveTyping-TypeChecking'!
 NoTypeCastApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCastApplierBuilder category: 'LiveTyping-TypeChecking'!
 Object subclass: #TypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCastApplierBuilder class' category: 'LiveTyping-TypeChecking'!
 TypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #EffectiveTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+!classDefinition: #EffectiveTypeCastApplierBuilder category: 'LiveTyping-TypeChecking'!
 TypeCastApplierBuilder subclass: #EffectiveTypeCastApplierBuilder
 	instanceVariableNames: 'castingBlock rejectingBlock objectToCast afterMessageTypeCasts'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EffectiveTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'EffectiveTypeCastApplierBuilder class' category: 'LiveTyping-TypeChecking'!
 EffectiveTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfManyTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+!classDefinition: #IsKindOfManyTypeCastApplierBuilder category: 'LiveTyping-TypeChecking'!
 EffectiveTypeCastApplierBuilder subclass: #IsKindOfManyTypeCastApplierBuilder
 	instanceVariableNames: 'typesToCastTo typesToReject'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfManyTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'IsKindOfManyTypeCastApplierBuilder class' category: 'LiveTyping-TypeChecking'!
 IsKindOfManyTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #OneTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+!classDefinition: #OneTypeCastApplierBuilder category: 'LiveTyping-TypeChecking'!
 EffectiveTypeCastApplierBuilder subclass: #OneTypeCastApplierBuilder
 	instanceVariableNames: 'castType'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'OneTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'OneTypeCastApplierBuilder class' category: 'LiveTyping-TypeChecking'!
 OneTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #EqualsTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+!classDefinition: #EqualsTypeCastApplierBuilder category: 'LiveTyping-TypeChecking'!
 OneTypeCastApplierBuilder subclass: #EqualsTypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'EqualsTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'EqualsTypeCastApplierBuilder class' category: 'LiveTyping-TypeChecking'!
 EqualsTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #IsKindOfTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+!classDefinition: #IsKindOfTypeCastApplierBuilder category: 'LiveTyping-TypeChecking'!
 OneTypeCastApplierBuilder subclass: #IsKindOfTypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'IsKindOfTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'IsKindOfTypeCastApplierBuilder class' category: 'LiveTyping-TypeChecking'!
 IsKindOfTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #NoTypeCastApplierBuilder category: #'LiveTyping-TypeChecking'!
+!classDefinition: #NoTypeCastApplierBuilder category: 'LiveTyping-TypeChecking'!
 TypeCastApplierBuilder subclass: #NoTypeCastApplierBuilder
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'NoTypeCastApplierBuilder class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'NoTypeCastApplierBuilder class' category: 'LiveTyping-TypeChecking'!
 NoTypeCastApplierBuilder class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeChecker category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeChecker category: 'LiveTyping-TypeChecking'!
 Object subclass: #TypeChecker
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeChecker class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeChecker class' category: 'LiveTyping-TypeChecking'!
 TypeChecker class
 	instanceVariableNames: ''!
 
-!classDefinition: #ManyMethodsTypeChecker category: #'LiveTyping-TypeChecking'!
+!classDefinition: #ManyMethodsTypeChecker category: 'LiveTyping-TypeChecking'!
 TypeChecker subclass: #ManyMethodsTypeChecker
 	instanceVariableNames: 'methodsToCheck typeCheckers'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'ManyMethodsTypeChecker class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'ManyMethodsTypeChecker class' category: 'LiveTyping-TypeChecking'!
 ManyMethodsTypeChecker class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodTypeChecker category: #'LiveTyping-TypeChecking'!
+!classDefinition: #MethodTypeChecker category: 'LiveTyping-TypeChecking'!
 TypeChecker subclass: #MethodTypeChecker
 	instanceVariableNames: 'method errors warnings problems'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodTypeChecker class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'MethodTypeChecker class' category: 'LiveTyping-TypeChecking'!
 MethodTypeChecker class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingProblemToMethodReferenceAdapter category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingProblemToMethodReferenceAdapter category: 'LiveTyping-TypeChecking'!
 Object subclass: #TypeCheckingProblemToMethodReferenceAdapter
 	instanceVariableNames: 'typeCheckingProblem prefix'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingProblemToMethodReferenceAdapter class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingProblemToMethodReferenceAdapter class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingProblemToMethodReferenceAdapter class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingResult category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingResult category: 'LiveTyping-TypeChecking'!
 Object subclass: #TypeCheckingResult
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResult class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingResult class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingResult class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodNotAnnotatingTypesProblem category: #'LiveTyping-TypeChecking'!
+!classDefinition: #MethodNotAnnotatingTypesProblem category: 'LiveTyping-TypeChecking'!
 TypeCheckingResult subclass: #MethodNotAnnotatingTypesProblem
 	instanceVariableNames: 'method'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'MethodNotAnnotatingTypesProblem class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'MethodNotAnnotatingTypesProblem class' category: 'LiveTyping-TypeChecking'!
 MethodNotAnnotatingTypesProblem class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingError category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingError category: 'LiveTyping-TypeChecking'!
 TypeCheckingResult subclass: #TypeCheckingError
 	instanceVariableNames: 'method messageNode notImplemented methodNode'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingError class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingError class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingError class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingIssue category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingIssue category: 'LiveTyping-TypeChecking'!
 TypeCheckingResult subclass: #TypeCheckingIssue
 	instanceVariableNames: 'method messageNode reason methodNode'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingIssue class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingIssue class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingIssue class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingProblem category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingProblem category: 'LiveTyping-TypeChecking'!
 TypeCheckingIssue subclass: #TypeCheckingProblem
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingProblem class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingProblem class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingProblem class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckingWarning category: #'LiveTyping-TypeChecking'!
+!classDefinition: #TypeCheckingWarning category: 'LiveTyping-TypeChecking'!
 TypeCheckingIssue subclass: #TypeCheckingWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingWarning class' category: #'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingWarning class' category: 'LiveTyping-TypeChecking'!
 TypeCheckingWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #TypeCheckerTestMethods category: #'LiveTyping-TypeChecking-Tests'!
+!classDefinition: #TypeCheckerTestMethods category: 'LiveTyping-TypeChecking-Tests'!
 Object subclass: #TypeCheckerTestMethods
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-TypeChecking-Tests'!
-!classDefinition: 'TypeCheckerTestMethods class' category: #'LiveTyping-TypeChecking-Tests'!
+!classDefinition: 'TypeCheckerTestMethods class' category: 'LiveTyping-TypeChecking-Tests'!
 TypeCheckerTestMethods class
 	instanceVariableNames: ''!
 
@@ -14127,6 +14127,20 @@ nodeTypeAndIdentifierPrintString
 nodeTypePrintString
 	
 	^''! !
+
+!ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 10/19/2020 15:35:41'!
+receiverOrCascadeReceiver
+	
+	"To contemplate cases like: 
+	a := Object
+		value;
+		va
+	Thanks Nico Papagna - Hernan"
+	
+	self nodesDo: [ :aNode | (aNode isCascadeNode or: [ aNode isMessageNode]) ifTrue: [ ^aNode receiverOrCascadeReceiver ]].
+	
+	"If there is no message node there is nothing valid I could return, but I return self for the rest to work - Hernan"
+	^self! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 12/3/2018 11:41:46'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
