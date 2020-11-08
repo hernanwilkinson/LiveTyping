@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4384] on 19 October 2020 at 3:37:32 pm'!
-'Description receiverOrCascadeReceiver implemented in ParseNode'!
-!provides: 'LiveTyping' 1 71!
+'From Cuis 5.0 [latest update: #4384] on 8 November 2020 at 3:00:24 pm'!
+'Description suport for types when sent to super from ProtoObject'!
+!provides: 'LiveTyping' 1 72!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -14426,7 +14426,7 @@ nodeTypePrintString
 
 	^'pseudo var'! !
 
-!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 6/27/2020 17:55:44'!
+!VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 11/6/2020 16:25:13'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
 	"This is other possible implementation... the problem is that self can be referenced in a method that
@@ -14449,7 +14449,9 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	self isSelfPseudoVariable ifTrue: [ ^{aCompiledMethod methodClass} ].
 	"self isSelfPseudoVariable ifTrue: [ ^aCompiledMethod methodClass withAllSubclasses ]."
 	
-	self isSuperPseudoVariable ifTrue: [ ^{aCompiledMethod methodClass superclass} ].
+	self isSuperPseudoVariable ifTrue: [ 
+		"If there is a message send to super in ProtoObject, the type is ProtoObject - Hernan"
+		^{aCompiledMethod methodClass superclass ifNil: [ aCompiledMethod methodClass ] ifNotNil: [ :aClass | aClass ]} ].
 	"self isSuperPseudoVariable ifTrue: [ ^aCompiledMethod methodClass superclass withAllSubclasses ]."
 	
 	self isTruePseudoVariable ifTrue: [ ^`Array with: true class` ].
