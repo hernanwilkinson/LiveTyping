@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4384] on 8 November 2020 at 3:00:24 pm'!
+'From Cuis 5.0 [latest update: #4532] on 2 May 2021 at 3:34:48 pm'!
 'Description suport for types when sent to super from ProtoObject'!
-!provides: 'LiveTyping' 1 72!
+!provides: 'LiveTyping' 1 73!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -1108,11 +1108,12 @@ printOn: aStream
 	self printTypesOn: aStream
 	! !
 
-!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 08:43:30'!
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 3/9/2021 16:40:49'!
 initializeEachInstanceVariableRawTypes
 
 	rawTypes ifNotNil: [ 
-		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
+		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | 
+			rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
 
 !InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 1/17/2019 12:49:21'!
 storeAllInstancesCurrentTypes
@@ -6967,14 +6968,15 @@ computeMessageEntriesWithBinaryMessageForCommonSupertype: commonSupertype of: aV
 	self ifEmptyEntriesShowAllPrefixedSelectors
 ! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 5/3/2020 19:32:57'!
+!LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 3/9/2021 17:05:18'!
 computeMessageEntriesWithBinaryMessageForGenericSupertypeOf: aVariableTypeInfo 
 			
 	 | prefixedSelectors classes protoObjectReached selectorsCollector | 
 
 	classes := Set withAll: aVariableTypeInfo types.
 	classes isEmpty ifTrue: [ ^self computeMessageEntriesForUnknowClass ].
-
+	protoObjectReached := false.
+	
 	"If Object is not in the superclasses chain, then it means we are working with ProtoObject or any of its
 	subclasses outside the Object hierarchy, so the common selectors are ProtoObject ones - Hernan"
 	prefixedSelectors := aVariableTypeInfo 
@@ -10006,9 +10008,15 @@ allWithNoCommonSupertype
 	
 ! !
 
-!VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 3/27/2019 11:35:33'!
+!VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 3/9/2021 18:06:38'!
 numberOfRawTypesForAll
 
+	"
+	InstanceVariablesTypes numberOfRawTypesForAll
+	MethodVariablesTypes numberOfRawTypesForAll
+	ReturnTypeInfo numberOfRawTypesForAll
+	"
+	
 	self subclassResponsibility ! !
 
 !VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 10/20/2018 17:45:10'!
@@ -14918,6 +14926,23 @@ showBalloonHelp
 
 	self setProperty: #showBalloonHelp toValue: true! !
 
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:20:30'!
+showBalloon: msgString hand: aHand
+
+	| localMousePosition mousePositionInText ballonTypeInfo |
+	
+	localMousePosition := self internalizeFromWorld: aHand location translation.
+	mousePositionInText := (textComposition characterBlockAtPoint: localMousePosition) stringIndex.
+	ballonTypeInfo := editor balloonTypeInfoAt: mousePositionInText.
+	
+	^super showBalloon: ballonTypeInfo hand: aHand
+! !
+
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:58:27'!
+wantsBalloon
+	
+	^self shouldShowBalloonHelp and: [ Preferences balloonHelpEnabled ]! !
+
 !TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:44:29'!
 doNotShowBalloonHelp
 
@@ -14978,23 +15003,6 @@ openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 	^window 
 
 ! !
-
-!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:20:30'!
-showBalloon: msgString hand: aHand
-
-	| localMousePosition mousePositionInText ballonTypeInfo |
-	
-	localMousePosition := self internalizeFromWorld: aHand location translation.
-	mousePositionInText := (textComposition characterBlockAtPoint: localMousePosition) stringIndex.
-	ballonTypeInfo := editor balloonTypeInfoAt: mousePositionInText.
-	
-	^super showBalloon: ballonTypeInfo hand: aHand
-! !
-
-!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:58:27'!
-wantsBalloon
-	
-	^self shouldShowBalloonHelp and: [ Preferences balloonHelpEnabled ]! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:10:57'!
 actualSendersOf: aCompiledMethod 
