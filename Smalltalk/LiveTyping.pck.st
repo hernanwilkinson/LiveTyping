@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4532] on 2 May 2021 at 3:34:48 pm'!
-'Description suport for types when sent to super from ProtoObject'!
-!provides: 'LiveTyping' 1 73!
+'From Cuis 5.0 [latest update: #4768] on 18 August 2021 at 8:09:47 pm'!
+'Description Upto date with new #return:from:'!
+!provides: 'LiveTyping' 1 74!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8134,12 +8134,12 @@ noReturnTypesDescriptionOf: aMethodReference
 	
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:23:16'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 8/18/2021 20:07:57'!
 checkRedefinedMethodsDidNotChange
 
 	self 
 		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 6/15/2008 11:34';
-		checkTimeStampOf: ContextPart>>#return:from: is: 'ajh 3/5/2004 03:44';
+		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 6/1/2021 12:14:16';
 		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:24:39'!
@@ -13534,27 +13534,26 @@ popIntoTemporaryVariable: offset
 	method annotateTemporaryTypeOf: value at: index 
 	! !
 
-!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:30:52'!
+!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2021 20:00:10'!
 return: value from: aSender 
-	
-	| newTop ctxt  |
+	"For simulation.  Roll back self to aSender and return value from it.  Execute any unwind blocks on the way.  ASSUMES aSender is a sender of self"
 
+	| newTop |
+	
 	aSender isDead ifTrue: [
 		"I do not have to keep the type because it does not return - Hernan"
 		^ self send: #cannotReturn: to: self with: {value} super: false].
 	newTop _ aSender sender.
-	ctxt _ self findNextUnwindContextUpTo: newTop.
-	ctxt ifNotNil: [
+	(self findNextUnwindContextUpTo: newTop) ifNotNil: [
 		"If #aboutToReturn:through: fails, I do not keep the type - Hernan"
-		newTop _ self send: #aboutToReturn:through: to: self with: {value. ctxt} super: false.
+		newTop _ self send: #aboutToReturn:through: to: self with: {value. nil} super: false.
 		method annotateReturnTypeOf: value.
 		^ newTop ].
 	self releaseTo: newTop.
 	newTop ifNotNil: [newTop push: value].
 	method annotateReturnTypeOf: value.
-	
-	^ newTop
-! !
+
+	^ newTop! !
 
 !MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:22'!
 storeIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex
