@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4768] on 18 August 2021 at 8:09:47 pm'!
-'Description Upto date with new #return:from:'!
-!provides: 'LiveTyping' 1 74!
+'From Cuis 5.0 [latest update: #4768] on 19 August 2021 at 3:48:55 pm'!
+'Description Fixes due to changes in #prefixStringVersionWith:'!
+!provides: 'LiveTyping' 1 77!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -2115,10 +2115,10 @@ printClassAndSelectorOn: aStream
 	aStream nextPutAll: 'Not Implemented '.
 	super printClassAndSelectorOn: aStream ! !
 
-!NotImplementedMethod class methodsFor: 'string version' stamp: 'HAW 4/4/2019 08:45:11'!
+!NotImplementedMethod class methodsFor: 'string version' stamp: 'HAW 8/19/2021 15:04:51'!
 notImplementedStringVersionHeader
 	
-	^'(Not implemented) - '! !
+	^'Not implemented'! !
 
 !PossibleSender methodsFor: 'initialization' stamp: 'HAW 4/4/2019 08:49:33'!
 initializeWithPossibleMessageSends: aPossibleMessageSends 
@@ -2169,10 +2169,10 @@ in: aSender withPossibleMessageSends: aPossibleMessageSends
 	newInstance := self method: aSender.
 	^newInstance initializeWithPossibleMessageSends: aPossibleMessageSends ! !
 
-!PossibleSender class methodsFor: 'string version' stamp: 'HAW 4/4/2019 08:49:26'!
+!PossibleSender class methodsFor: 'string version' stamp: 'HAW 8/19/2021 15:04:21'!
 possibleSenderStringVersionHeader
 	
-	^'(Possible) - '! !
+	^'Possible'! !
 
 !LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:17:40'!
 README
@@ -5278,18 +5278,18 @@ test10FailsWhenAsItsSourceCode
 		raise: Error
 		withMessageText: Dictionary keyNotFoundErrorDescription ! !
 
-!NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/4/2019 08:44:42'!
+!NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 8/19/2021 15:45:29'!
 test11StringVersionStartsWithNotImplemented
 
-	self assert: ((NotImplementedMethod class: self class selector: #none) stringVersion beginsWith: NotImplementedMethod notImplementedStringVersionHeader)
+	self assert: ((NotImplementedMethod class: self class selector: #none) stringVersion beginsWith: '[', NotImplementedMethod notImplementedStringVersionHeader)
 	! !
 
-!PossibleSenderTest methodsFor: 'tests' stamp: 'HAW 4/4/2019 08:48:49'!
+!PossibleSenderTest methodsFor: 'tests' stamp: 'HAW 8/19/2021 15:45:51'!
 test01StringVersionBeginsWithPossible
 
 	self assert: 
 		((PossibleSender in: self class>>thisContext selector withPossibleMessageSends: #()) stringVersion 
-		beginsWith: PossibleSender possibleSenderStringVersionHeader)! !
+		beginsWith: '[', PossibleSender possibleSenderStringVersionHeader)! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:48:50'!
 test01QuickReturnSelfMethodsReturnSelfTypeAsReturnType
@@ -7031,18 +7031,18 @@ documentationOf: aMethod
 
 	^aMethod liveTypingAutoCompleterDocumentation! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 5/4/2020 15:05:40'!
+!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'jmv 4/26/2021 19:35:38'!
 tryToRecoverFromSyntaxError: aSyntaxErrorNotification withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
 	
 	^ aSyntaxErrorNotification errorMessage = 'right parenthesis expected' 
 		ifTrue: [ self withMethodNodeOf: aSourceCode, ')' do: doBlock handlingSyntaxErrorOrIfError: anErrorBlock ]
-		ifFalse: [ self withMethodNodeOf: parser allSource do: doBlock ifError: anErrorBlock ]
+		ifFalse: [ self withMethodNodeOf: self allSource do: doBlock ifError: anErrorBlock ]
 	! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 2/10/2019 20:07:29'!
+!LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'jmv 4/26/2021 19:35:43'!
 tryToRecoverFromSyntaxErrorWithMethodNodeDo: doBlock ifError: anErrorBlock
 	
-	^ self withMethodNodeOf: parser allSource do: doBlock ifError: anErrorBlock 
+	^ self withMethodNodeOf: self allSource do: doBlock ifError: anErrorBlock 
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 5/4/2020 14:55:17'!
@@ -8616,7 +8616,7 @@ doneCompilingSourceCode
 	
 ! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/19/2019 06:06:02'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/18/2021 21:23:24'!
 messageListKeyFromOriginalSourceCode
 
 	^'messageListKey: aChar from: view
@@ -8637,7 +8637,7 @@ messageListKeyFromOriginalSourceCode
 	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
 	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
 	aChar == $N ifTrue: [^ self browseClassRefs].
-	aChar == $i ifTrue: [^ self methodHierarchy].
+	aChar == $i ifTrue: [^ self methodInheritance].
 	aChar == $h ifTrue: [^ self browseHierarchy].
 	aChar == $p ifTrue: [^ self browseFullProtocol].
 
@@ -8651,14 +8651,11 @@ messageListKeyFromOriginalSourceCode
 			aChar == $O ifTrue: [^ self openSingleMessageBrowser].
 			aChar == $x ifTrue: [^ model removeMessage].
 			aChar == $t ifTrue: [^ model runMethodTest].
-			aChar == $r ifTrue: [^ model debugMethodTest].
-			aChar == $R ifTrue: [^ self renameSelector].
-			aChar == $U ifTrue: [^ self addParameter ].
-			aChar == $I ifTrue: [^ self removeParameter ]]
+			aChar == $r ifTrue: [^ model debugMethodTest]]
 		ifNil: [
 			aChar == $R ifTrue: [^ model renameClass]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/3/2020 19:11:18'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/18/2021 21:25:55'!
 messageListKeyFromSourceCode
 
 	^'messageListKey: aChar from: view
@@ -8683,7 +8680,7 @@ messageListKeyFromSourceCode
 	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
 	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
 	aChar == $N ifTrue: [^ self browseClassRefs].
-	aChar == $i ifTrue: [^ self methodHierarchy].
+	aChar == $i ifTrue: [^ self methodInheritance].
 	aChar == $h ifTrue: [^ self browseHierarchy].
 	aChar == $p ifTrue: [^ self browseFullProtocol].
 
@@ -8698,9 +8695,6 @@ messageListKeyFromSourceCode
 			aChar == $x ifTrue: [^ model removeMessage].
 			aChar == $t ifTrue: [^ model runMethodTest].
 			aChar == $r ifTrue: [^ model debugMethodTest].
-			aChar == $R ifTrue: [^ self renameSelector].
-			aChar == $U ifTrue: [^ self addParameter ].
-			aChar == $I ifTrue: [^ self removeParameter ].
 			aChar == $T ifTrue: [^ self model typeCheckMethod ]]
 		ifNil: [
 			aChar == $R ifTrue: [^ model renameClass].
