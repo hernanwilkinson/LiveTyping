@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4768] on 19 August 2021 at 3:48:55 pm'!
-'Description Fixes due to changes in #prefixStringVersionWith:'!
-!provides: 'LiveTyping' 1 77!
+'From Cuis 5.0 [latest update: #4809] on 5 September 2021 at 11:24:02 pm'!
+'Description move asMethodReference and methodNode to core'!
+!provides: 'LiveTyping' 1 78!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -13711,11 +13711,6 @@ annotateTemporaryTypeOf: aValue at: aTemporaryIndex
 		ifSelector: [ :selector | ]
 		! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 10:19:52'!
-asMethodReference
-	
-	^MethodReference method: self! !
-
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:32:23'!
 caretAutoCompleterDocumentation
 
@@ -15031,11 +15026,6 @@ isPrimitive
 liveTypingAutoCompleterDocumentation
 	
 	^self compiledMethod liveTypingAutoCompleterDocumentation! !
-
-!MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 7/18/2019 17:55:24'!
-methodNode
-	
-	^self compiledMethod methodNode! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 3/13/2019 20:16:33'!
 methodReference
