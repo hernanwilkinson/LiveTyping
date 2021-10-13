@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4809] on 5 September 2021 at 11:24:02 pm'!
-'Description move asMethodReference and methodNode to core'!
-!provides: 'LiveTyping' 1 78!
+'From Cuis 5.0 [latest update: #4913] on 13 October 2021 at 1:01:42 pm'!
+'Description move method annotations setup to cuis university'!
+!provides: 'LiveTyping' 1 79!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8205,18 +8205,13 @@ registerRefactoringAppliers
 		registerRemoveParameterApplier: RemoveParameterWithActualScopeApplier
 		! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 3/1/2019 16:38:17'!
-setAnnotationInfoForLiveTyping
-
-	^ Preferences parameters at: #MethodAnnotations put: #(timeStamp messageCategory packages changeSets)! !
-
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 2/28/2019 22:12:26'!
 initialize
 
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
 	! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 7/16/2019 23:19:51'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 10/13/2021 12:59:00'!
 initializeLiveTyping
 
 	self 
@@ -8225,7 +8220,6 @@ initializeLiveTyping
 		checkRedefinedMethodsDidNotChange;
 		compileAfterInstallMethods;
 		initializeTypeInformation;
-		setAnnotationInfoForLiveTyping;
 		registerRefactoringAppliers! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/10/2019 18:50:29'!
