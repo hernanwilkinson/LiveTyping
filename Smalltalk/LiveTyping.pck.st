@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4913] on 3 November 2021 at 7:46:39 pm'!
-'Description ExtractAsParameterWithActualScope '!
-!provides: 'LiveTyping' 1 80!
+'From Cuis 5.0 [latest update: #4913] on 3 November 2021 at 8:14:47 pm'!
+'Description mouseMove: aMouseMoveEvent localPosition: localEventPosition updated to new version'!
+!provides: 'LiveTyping' 1 81!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8880,7 +8880,7 @@ messageListKeyFromSourceCode
 			aChar == $R ifTrue: [^ model renameClass].
 			aChar == $T ifTrue: [ ^ self model typeCheckClass ]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/11/2019 17:13:27'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 11/3/2021 20:13:15'!
 mouseMoveLocalPositionOriginalSourceCode
 
 	^'mouseMove: aMouseMoveEvent localPosition: localEventPosition
@@ -8889,9 +8889,10 @@ mouseMoveLocalPositionOriginalSourceCode
 		^ self enterClickableRegion: aMouseMoveEvent localPosition: localEventPosition ].
 	self handleInteraction: [
 		editor mouseMove: aMouseMoveEvent localPosition: localEventPosition].
-	owner scrollSelectionIntoView'! !
+	(owner is: #ScrollPane) ifTrue: [
+		owner scrollSelectionIntoView ].'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/17/2019 17:33:15'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 11/3/2021 20:11:58'!
 mouseMoveLocalPositionSourceCode
 
 	^'mouseMove: aMouseMoveEvent localPosition: localEventPosition
@@ -8905,7 +8906,8 @@ mouseMoveLocalPositionSourceCode
 		^ self enterClickableRegion: aMouseMoveEvent localPosition: localEventPosition ].
 	self handleInteraction: [
 		editor mouseMove: aMouseMoveEvent localPosition: localEventPosition].
-	owner scrollSelectionIntoView'! !
+	(owner is: #ScrollPane) ifTrue: [
+		owner scrollSelectionIntoView ].'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2019 17:01:14'!
 recompileFromOriginalSourceCode
