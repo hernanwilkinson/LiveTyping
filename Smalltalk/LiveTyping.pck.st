@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4972] on 30 November 2021 at 7:36:39 pm'!
-'Description Sync with changeset 4993'!
-!provides: 'LiveTyping' 1 82!
+'From Cuis 5.0 [latest update: #4993] on 6 December 2021 at 12:17:00 pm'!
+'Description Remove of isLiteralVariableNode'!
+!provides: 'LiveTyping' 1 83!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -1039,11 +1039,6 @@ Morphic view for MessageSet models. See category 'GUI building'.!
 typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^self actualClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
-
-!LiveTypingSmalltalkCompleterTest class methodsFor: 'testing' stamp: 'HAW 5/2/2020 17:04:06'!
-isAbstract
-
-	^false! !
 
 !InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:45:21'!
 instanceVariableRawTypesSizeFor: anInstVarName
@@ -2663,6 +2658,11 @@ using: aCompleter addUnaryAndBinarySelectorsOf: aClass
 	
 	^entries
 		! !
+
+!LiveTypingSmalltalkCompleterTest class methodsFor: 'testing' stamp: 'HAW 5/2/2020 17:04:06'!
+isAbstract
+
+	^false! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 15:28:35'!
 test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
@@ -14273,11 +14273,6 @@ identifierPrintString
 	
 	^String streamContents: [ :stream | self printOn: stream indent: 0 ]! !
 
-!ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 10/30/2018 11:45:32'!
-isLiteralVariableNode
-
-	^false! !
-
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 8/9/2019 20:27:21'!
 isNotNil
 	
@@ -14648,11 +14643,6 @@ nodeTypePrintString
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 	
 	^ aCompiledMethod typesOfInstanceVariableNamed: name ifAbsent: [ #() ]! !
-
-!LiteralVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 10/30/2018 11:45:00'!
-isLiteralVariableNode
-
-	^true! !
 
 !LiteralVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:03:23'!
 nodeTypePrintString
