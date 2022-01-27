@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4993] on 6 December 2021 at 12:17:00 pm'!
-'Description Remove of isLiteralVariableNode'!
-!provides: 'LiveTyping' 1 83!
+'From Cuis 5.0 [latest update: #5007] on 27 January 2022 at 4:00:21 pm'!
+'Description Silently add inst var to ClassDescrition due to changes in ClassBuilder'!
+!provides: 'LiveTyping' 1 84!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8373,10 +8373,10 @@ modifyAdditionalMethodStateShape
 	#('variablesRawTypes' 'returnRawTypes' 'remoteVectorRawTypes' 'variableNameToTypeIndex' 'variableNameToRemoteVectorTypeIndex') 
 		do: [ :aVariableName | self defineInstVarNamed: aVariableName  in: AdditionalMethodState ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 14:10:22'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/27/2022 15:59:41'!
 modifyClassDescriptionShape
 
-	[[ self defineInstVarNamed: 'instanceVariablesRawTypes' in: ClassDescription ] 
+	[[ SystemChangeNotifier uniqueInstance doSilently: [ self defineInstVarNamed: 'instanceVariablesRawTypes' in: ClassDescription ]]
 		on: Warning do: [ :aWarning | aWarning resume ]]
 		on: Error do: [ :anError | anError return: nil ]
 ! !
