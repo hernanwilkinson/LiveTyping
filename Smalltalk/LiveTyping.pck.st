@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #5007] on 27 January 2022 at 4:00:21 pm'!
-'Description Silently add inst var to ClassDescrition due to changes in ClassBuilder'!
-!provides: 'LiveTyping' 1 84!
+'From Cuis 6.0 [latest update: #5053] on 28 January 2022 at 6:54:31 pm'!
+'Description Initialization of return types of well know methods, for example SmallInteger>>#<'!
+!provides: 'LiveTyping' 1 85!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -1111,11 +1111,13 @@ typeName
 
 	^'self'! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 14:01:28'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:23:54'!
 initializeTypeInformation
 
 	InstanceVariablesTypes initializeForAllClassesWithAllInstances.    
 	MethodVariablesTypes initializeForAllClasses.
+	
+	self initializeWellKnownReturnTypes.
 ! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:08:24'!
@@ -8319,6 +8321,15 @@ noReturnTypesDescriptionOf: aMethodReference
 	
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:52:36'!
+addReturnTypes: types to: aSelector in: aClass
+
+	| methodReturnTypeInfo |
+	
+	methodReturnTypeInfo := (aClass compiledMethodAt: aSelector ifAbsent: [ ^self ]) returnTypeInfo.
+	"Abstract methods, quick return methods do not have a types array, that is the reason of the ifFull: .. - Hernan"
+	types do: [ :type | methodReturnTypeInfo addType: type ifFull: [] ]! !
+
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 8/18/2021 20:07:57'!
 checkRedefinedMethodsDidNotChange
 
@@ -8366,6 +8377,18 @@ compileAfterInstallMethods.
 defineInstVarNamed: anInstVarName in: aClass
 
 	(aClass definesInstanceVariableNamed: anInstVarName ) ifFalse: [ aClass addInstVarName: anInstVarName ]! !
+
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:42:56'!
+initializeWellKnownReturnTypes
+
+	Number allSubclassesDo: [ :aClass |
+		#(< <= = ~= >= >) do: [ :aSelector | self addReturnTypes: { True. False } to: aSelector in: aClass ].
+		self addReturnTypes: { Float } to: #asFloat in: aClass ].
+	
+	#(bitOr: bitAnd: bitXor: bitShift:) do: [ :aSelector | 
+		self addReturnTypes: { SmallInteger } to: aSelector in: SmallInteger ].
+	
+	! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/28/2019 18:51:53'!
 modifyAdditionalMethodStateShape
