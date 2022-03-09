@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5053] on 28 January 2022 at 6:54:31 pm'!
-'Description Initialization of return types of well know methods, for example SmallInteger>>#<'!
-!provides: 'LiveTyping' 1 85!
+'From Cuis 6.0 [latest update: #5092] on 8 March 2022 at 9:14:23 pm'!
+'Description Do not wrap balloon help types'!
+!provides: 'LiveTyping' 1 86!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -9485,7 +9485,7 @@ of: aSender for: aSentImplementors
 	
 	^self new initializeOf: aSender for: aSentImplementors! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 8/22/2019 16:13:15'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 3/8/2022 21:03:30'!
 print: originalTypes on: aStream upTo: aNumberOfTypes
 	
 	| types canBeNil |
@@ -9517,8 +9517,10 @@ print: originalTypes on: aStream upTo: aNumberOfTypes
 				ifFalse: [ 
 					self printAll: types on: aStream.
 					canBeNil ifTrue: [ aStream nextPutAll: ' | can be nil !!' ]]].
-			
-	aStream nextPut: $>.
+	
+	aStream 
+		nextPut: $>;
+		newLine "The newLine is necessary for the ballonhelp not to be wrapped... puag!!!! - Hernan"
 	
 	! !
 
