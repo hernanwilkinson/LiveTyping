@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5092] on 8 March 2022 at 9:14:23 pm'!
-'Description Do not wrap balloon help types'!
-!provides: 'LiveTyping' 1 86!
+'From Cuis 6.0 [latest update: #5096] on 21 May 2022 at 5:16:58 pm'!
+'Description Sync with 5171'!
+!provides: 'LiveTyping' 1 87!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8749,12 +8749,12 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2020 20:18:03'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/21/2022 17:15:16'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
 	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
 	| methodAndNode selector isExistingMethod |
-	methodAndNode _ self basicCompile: text asString notifying: requestor 
+	methodAndNode _ self basicCompile: text asPlainString notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector _ methodAndNode selector.
 	isExistingMethod _ self includesSelector: selector.
@@ -8773,12 +8773,12 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 		method inProtocol: category notifying: requestor.
 	^ methodAndNode selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2020 20:18:41'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/21/2022 17:16:21'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
 	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
 	| methodAndNode selector isExistingMethod |
-	methodAndNode _ self basicCompile: text asString notifying: requestor 
+	methodAndNode _ self basicCompile: text asPlainString notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector _ methodAndNode selector.
 	isExistingMethod _ self includesSelector: selector.
