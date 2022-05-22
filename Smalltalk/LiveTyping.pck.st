@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5096] on 21 May 2022 at 5:16:58 pm'!
-'Description Sync with 5171'!
-!provides: 'LiveTyping' 1 87!
+'From Cuis 6.0 [latest update: #5173] on 21 May 2022 at 8:10:48 pm'!
+'Description Sync with PreferenceNG'!
+!provides: 'LiveTyping' 1 88!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -1035,142 +1035,6 @@ TypeCheckerTestMethods class
 !TypeCheckingResultWindow commentStamp: '<historical>' prior: 0!
 Morphic view for MessageSet models. See category 'GUI building'.!
 
-!NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 7/16/2019 16:48:57'!
-typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
-
-	^self actualClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
-
-!InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:45:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	anInstVarName = 'instVar3' ifTrue: [ ^ 1 ].
-	anInstVarName = 'instVar4' ifTrue: [ ^ 0 ].
-	
-	^super instanceVariableRawTypesSizeFor: anInstVarName! !
-
-!VariableTypeInfoTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 00:07:49'!
-createInstanceVariableRawTypesFor: anInstVarName
-
-	anInstVarName = 'instVar3' ifTrue: [ ^ Array new: 1 ].
-	anInstVarName = 'instVar4' ifTrue: [ ^ nil ].
-
-	^super createInstanceVariableRawTypesFor: anInstVarName! !
-
-!DynamicType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:03'!
-typeName
-
-	self subclassResponsibility ! !
-
-!DynamicType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:26:07'!
-asTypeFor: aReceiverType
-
-	self subclassResponsibility ! !
-
-!DynamicType methodsFor: 'printing' stamp: 'HAW 2/19/2019 18:03:09'!
-printOn: aStream
-
-	aStream nextPutAll: self typeName ! !
-
-!ClassType methodsFor: 'type convertion' stamp: 'HAW 6/28/2020 17:27:55'!
-asTypeFor: aReceiverType
-
-	^((`Set with: Behavior with: ClassDescription with: Class with: Metaclass`) includes: aReceiverType) 
-		ifTrue: [ Metaclass ]
-		ifFalse: [ aReceiverType class ]
-	! !
-
-!ClassType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:23'!
-typeName
-
-	^'class'! !
-
-!InstanceType methodsFor: 'type convertion' stamp: 'HAW 8/12/2019 15:13:17'!
-asTypeFor: aReceiverType
-
-	^aReceiverType isMeta 
-		ifTrue: [ aReceiverType soleInstance ]
-		ifFalse: [ 
-			(aReceiverType = Behavior or: [ aReceiverType = ClassDescription or: [ aReceiverType = Class or: [ aReceiverType = Metaclass ]]])
-				ifTrue: [ aReceiverType ]
-				ifFalse: [ self error: self class onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription ]]
-			
-			! !
-
-!InstanceType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:48'!
-typeName
-
-	^'instance'! !
-
-!SelfType methodsFor: 'type convertion' stamp: 'HAW 1/15/2019 22:56:59'!
-asTypeFor: aReceiverType
-
-	^aReceiverType ! !
-
-!SelfType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:02:15'!
-typeName
-
-	^'self'! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:23:54'!
-initializeTypeInformation
-
-	InstanceVariablesTypes initializeForAllClassesWithAllInstances.    
-	MethodVariablesTypes initializeForAllClasses.
-	
-	self initializeWellKnownReturnTypes.
-! !
-
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:08:24'!
-printOn: aStream
-
-	aStream 
-		nextPutAll: self variableName;
-		nextPutAll: ' : '.
-		
-	self printTypesOn: aStream
-	! !
-
-!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 3/9/2021 16:40:49'!
-initializeEachInstanceVariableRawTypes
-
-	rawTypes ifNotNil: [ 
-		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | 
-			rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
-
-!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 1/17/2019 12:49:21'!
-storeAllInstancesCurrentTypes
-
-	| instVarTypes |
-	
-	rawTypes isNil ifTrue: [ ^self ].
-	
-	instVarTypes := class allInstVarNames collect: [ :anInstVarName | self localTypeInfoOf: anInstVarName ].
-	class allInstancesDo: [ :anInstance | self addTypeInformationOf: anInstance using: instVarTypes ] 
-	! !
-
-!TypeInfoRootTestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 2! !
-
-!TypeInfoSibling1TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 3! !
-
-!TypeInfoSibling2TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
-instanceVariableRawTypesSizeFor: anInstVarName
-
-	^ 3! !
-
-!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:13:02'!
-typeCheck
-	
-	method isPrimitive ifTrue: [ ^self ].
-	method isAnnotatingTypes
-		ifTrue: [ self typeCheckWhenAnnotatingTypes ]
-	 	ifFalse: [ self typeCheckWhenNotAnnotatingTypes ]! !
-
 !ActualSendersMessageSet methodsFor: 'message sends ranges' stamp: 'HAW 4/30/2019 18:07:03'!
 messageSendsRangesOf: aSelector
 	
@@ -2088,6 +1952,11 @@ openFor: aTypeChecker labelTrail: aLabelTrail showingProblems: showingProblems
 returnTypes
 	
 	^#()! !
+
+!NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 7/16/2019 16:48:57'!
+typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
+
+	^self actualClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
 
 !NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/24/2018 20:09:43'!
 typesOfVariableNamed: aVarName ifAbsent: aBlockClosure 
@@ -4846,6 +4715,14 @@ test09EvaluatesIfAbsentBlockWhenAskTypeInfoForNonExistingInstVar
 	self class instanceVariablesTypes typeInfoOf: 'xyz' ifAbsent: [ ^self ].
 	self fail! !
 
+!InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:45:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	anInstVarName = 'instVar3' ifTrue: [ ^ 1 ].
+	anInstVarName = 'instVar4' ifTrue: [ ^ 0 ].
+	
+	^super instanceVariableRawTypesSizeFor: anInstVarName! !
+
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 18:42:27'!
 test01KeepTypesOfLocalTemporariesI
 
@@ -6049,6 +5926,14 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: types size equals: 2.
 	self assert: (types includes: 1 class).
 	self assert: (types includes: 1.0 class)! !
+
+!VariableTypeInfoTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 00:07:49'!
+createInstanceVariableRawTypesFor: anInstVarName
+
+	anInstVarName = 'instVar3' ifTrue: [ ^ Array new: 1 ].
+	anInstVarName = 'instVar4' ifTrue: [ ^ nil ].
+
+	^super createInstanceVariableRawTypesFor: anInstVarName! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 8/11/2019 21:56:12'!
 test01ManyMethodsCanBeTypeChecked
@@ -8241,6 +8126,21 @@ showBrowseActualAnywayLabel
 	
 	^'Show actual senders anyway' ! !
 
+!DynamicType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:03'!
+typeName
+
+	self subclassResponsibility ! !
+
+!DynamicType methodsFor: 'type convertion' stamp: 'HAW 1/16/2019 00:26:07'!
+asTypeFor: aReceiverType
+
+	self subclassResponsibility ! !
+
+!DynamicType methodsFor: 'printing' stamp: 'HAW 2/19/2019 18:03:09'!
+printOn: aStream
+
+	aStream nextPutAll: self typeName ! !
+
 !DynamicType methodsFor: 'to do' stamp: 'HAW 1/16/2019 00:38:10'!
 TO_DO
 
@@ -8250,10 +8150,50 @@ Should I call it MetaReturnType?
 
 "! !
 
+!ClassType methodsFor: 'type convertion' stamp: 'HAW 6/28/2020 17:27:55'!
+asTypeFor: aReceiverType
+
+	^((`Set with: Behavior with: ClassDescription with: Class with: Metaclass`) includes: aReceiverType) 
+		ifTrue: [ Metaclass ]
+		ifFalse: [ aReceiverType class ]
+	! !
+
+!ClassType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:23'!
+typeName
+
+	^'class'! !
+
+!InstanceType methodsFor: 'type convertion' stamp: 'HAW 8/12/2019 15:13:17'!
+asTypeFor: aReceiverType
+
+	^aReceiverType isMeta 
+		ifTrue: [ aReceiverType soleInstance ]
+		ifFalse: [ 
+			(aReceiverType = Behavior or: [ aReceiverType = ClassDescription or: [ aReceiverType = Class or: [ aReceiverType = Metaclass ]]])
+				ifTrue: [ aReceiverType ]
+				ifFalse: [ self error: self class onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription ]]
+			
+			! !
+
+!InstanceType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:01:48'!
+typeName
+
+	^'instance'! !
+
 !InstanceType class methodsFor: 'error description' stamp: 'HAW 8/12/2019 15:03:16'!
 onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription
 	
 	^'Only behaviors can be converted by instance type'! !
+
+!SelfType methodsFor: 'type convertion' stamp: 'HAW 1/15/2019 22:56:59'!
+asTypeFor: aReceiverType
+
+	^aReceiverType ! !
+
+!SelfType methodsFor: 'name' stamp: 'HAW 2/19/2019 18:02:15'!
+typeName
+
+	^'self'! !
 
 !IncompleteTypeInfo methodsFor: 'initialization' stamp: 'HAW 12/3/2018 11:53:42'!
 initializeOf: aMethodReference describedAs: aReasonDescription
@@ -8377,6 +8317,15 @@ compileAfterInstallMethods.
 defineInstVarNamed: anInstVarName in: aClass
 
 	(aClass definesInstanceVariableNamed: anInstVarName ) ifFalse: [ aClass addInstVarName: anInstVarName ]! !
+
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:23:54'!
+initializeTypeInformation
+
+	InstanceVariablesTypes initializeForAllClassesWithAllInstances.    
+	MethodVariablesTypes initializeForAllClasses.
+	
+	self initializeWellKnownReturnTypes.
+! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:42:56'!
 initializeWellKnownReturnTypes
@@ -9533,6 +9482,16 @@ printAll: types on: aStream.
 				
 ! !
 
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 10/23/2018 16:08:24'!
+printOn: aStream
+
+	aStream 
+		nextPutAll: self variableName;
+		nextPutAll: ' : '.
+		
+	self printTypesOn: aStream
+	! !
+
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 1/20/2019 20:06:40'!
 printReducedTypes
 	
@@ -10284,11 +10243,29 @@ of: aClass do: aBlock
 
 	self subclassResponsibility ! !
 
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 3/9/2021 16:40:49'!
+initializeEachInstanceVariableRawTypes
+
+	rawTypes ifNotNil: [ 
+		class allInstVarNames withIndexDo: [ :instVarName :instVarIndex | 
+			rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
+
 !InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 10/16/2018 06:43:18'!
 initializeOf: aClass rawTypes: aRawTypes
 	
 	class := aClass.
 	rawTypes := aRawTypes.
+	! !
+
+!InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 1/17/2019 12:49:21'!
+storeAllInstancesCurrentTypes
+
+	| instVarTypes |
+	
+	rawTypes isNil ifTrue: [ ^self ].
+	
+	instVarTypes := class allInstVarNames collect: [ :anInstVarName | self localTypeInfoOf: anInstVarName ].
+	class allInstancesDo: [ :anInstance | self addTypeInformationOf: anInstance using: instVarTypes ] 
 	! !
 
 !InstanceVariablesTypes methodsFor: 'collect info' stamp: 'HAW 1/17/2019 12:49:21'!
@@ -10644,6 +10621,11 @@ ivroot: anObject
 
 	ivroot := anObject ! !
 
+!TypeInfoRootTestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 2! !
+
 !TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 2/19/2019 14:52:40'!
 implementedOnAll: p1
 
@@ -10668,6 +10650,11 @@ ivsibling1: anObject
 	"
 	ivsibling1 := anObject ! !
 
+!TypeInfoSibling1TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 3! !
+
 !TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 2/19/2019 14:53:01'!
 implementedOnAll: p1
 
@@ -10675,6 +10662,11 @@ implementedOnAll: p1
 
 !TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 2/19/2019 14:51:11'!
 implementedOnSibling1AndSibling2: p1! !
+
+!TypeInfoSibling2TestClass class methodsFor: 'raw types size' stamp: 'HAW 10/16/2018 01:07:21'!
+instanceVariableRawTypesSizeFor: anInstVarName
+
+	^ 3! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 12/31/2018 15:36:06'!
 inject: thisValue into: binaryBlock 
@@ -11539,6 +11531,14 @@ forAllClasses: classes
 forClass: aClass 
 	
 	^self forAll: aClass theNonMetaClass methodDictionary values, aClass theMetaClass methodDictionary values! !
+
+!MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/9/2019 19:13:02'!
+typeCheck
+	
+	method isPrimitive ifTrue: [ ^self ].
+	method isAnnotatingTypes
+		ifTrue: [ self typeCheckWhenAnnotatingTypes ]
+	 	ifFalse: [ self typeCheckWhenNotAnnotatingTypes ]! !
 
 !MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 8/20/2019 21:10:22'!
 typeCheckWhenAnnotatingTypes
@@ -15118,10 +15118,10 @@ showBalloon: msgString hand: aHand
 	^super showBalloon: ballonTypeInfo hand: aHand
 ! !
 
-!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:58:27'!
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 5/21/2022 19:59:52'!
 wantsBalloon
 	
-	^self shouldShowBalloonHelp and: [ Preferences balloonHelpEnabled ]! !
+	^self shouldShowBalloonHelp and: [ PreferenceNG at: #balloonHelpEnabled ]! !
 
 !TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:44:29'!
 doNotShowBalloonHelp
