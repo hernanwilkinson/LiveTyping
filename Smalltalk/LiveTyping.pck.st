@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5173] on 21 May 2022 at 8:10:48 pm'!
-'Description Sync with PreferenceNG'!
-!provides: 'LiveTyping' 1 88!
+'From Cuis 6.0 [latest update: #5234] on 12 June 2022 at 12:16:17 am'!
+'Description Inline method and temp var integration'!
+!provides: 'LiveTyping' 1 91!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -371,6 +371,16 @@ ExtractAsParameter subclass: #ExtractAsParameterWithActualScope
 ExtractAsParameterWithActualScope class
 	instanceVariableNames: ''!
 
+!classDefinition: #InlineMethodWithActualScope category: 'LiveTyping-Refactoring'!
+InlineMethod subclass: #InlineMethodWithActualScope
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'InlineMethodWithActualScope class' category: 'LiveTyping-Refactoring'!
+InlineMethodWithActualScope class
+	instanceVariableNames: ''!
+
 !classDefinition: #AddParameterWithActualScopeApplier category: 'LiveTyping-Refactoring'!
 AddParameterApplier subclass: #AddParameterWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
@@ -409,6 +419,16 @@ RemoveParameterApplier subclass: #RemoveParameterWithActualScopeApplier
 	category: 'LiveTyping-Refactoring'!
 !classDefinition: 'RemoveParameterWithActualScopeApplier class' category: 'LiveTyping-Refactoring'!
 RemoveParameterWithActualScopeApplier class
+	instanceVariableNames: ''!
+
+!classDefinition: #InlineMethodWithActualScopeApplier category: 'LiveTyping-Refactoring'!
+InlineMethodApplier subclass: #InlineMethodWithActualScopeApplier
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'InlineMethodWithActualScopeApplier class' category: 'LiveTyping-Refactoring'!
+InlineMethodWithActualScopeApplier class
 	instanceVariableNames: ''!
 
 !classDefinition: #ActualImplementorsFinder category: 'LiveTyping'!
@@ -7404,6 +7424,53 @@ named: aNewParameter
 			
 ! !
 
+!InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 3/20/2022 18:51:20'!
+addActualImplementorsOf: aSelectorToInline forTypes: receiverTypes to: implementors 
+	andActualMessageSendsTo: messageSends inSystem: aSystem
+
+	| actualImplementors actualSendersCollector |
+
+	receiverTypes do: [ :aType |
+		actualImplementors := (aSystem actualImplementorsOf: aSelectorToInline in: aType) 
+			collect: [ :anImplementor | anImplementor compiledMethodIfAbsent: [ anImplementor ]].
+		implementors addAll: actualImplementors ].
+	
+	actualSendersCollector := MultiImplementorsActualMessageSendsCollector for: implementors.
+	actualSendersCollector value.
+	
+	actualSendersCollector messageList do: [:aMethodNodeReference | 
+		"The message list contains a mix of dummy method references (that work as separator titles
+		in the message list window), actual real method node references and possible senders"
+		
+	aMethodNodeReference isMessageListTitle 
+			ifTrue: [ | titleMessageNode |
+				titleMessageNode := MessageNodeReference messageNode: nil selector: aMethodNodeReference selector 
+					class: aMethodNodeReference actualClass completeSourceRange: #().
+				titleMessageNode stringVersion: aMethodNodeReference stringVersion.
+				messageSends add: titleMessageNode 
+			] 
+			ifFalse: [ | messageNodeReferences |
+				messageNodeReferences _ self findReferencesToSelector: aSelectorToInline in: aMethodNodeReference.
+				messageSends addAll: ((aMethodNodeReference isPossibleSender)
+					ifTrue: [messageNodeReferences collect: [:messageNodeReference | 
+							messageNodeReference asPossibleMessageNodeReference ]]
+					ifFalse: [messageNodeReferences])
+				].
+	].
+	
+	! !
+
+!InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 11/24/2021 20:43:07'!
+addActualImplementorsOf: aSelectorToInline in: aPotentialClassToRefactor to: implementors 
+	andActualMessageSendsTo: messageSends inSystem: aSystem 
+	
+	self 
+		addActualImplementorsOf: aSelectorToInline 
+		forTypes: { aPotentialClassToRefactor }
+		to: implementors 
+		andActualMessageSendsTo: messageSends 
+		inSystem: aSystem ! !
+
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:02:41'!
 convertSendersToCompiledMethods
 
@@ -7794,6 +7861,131 @@ on: aMessageNode createAndValueHandlingExceptionsOn: aModel in: aSelectedClass a
 on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'FB 11/24/2021 20:09:04'!
+isActualScopeChoice
+	"TODO: Duplicated code"
+	^scopeChoice isNil or: [ scopeChoice >= 6 ]! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'FB 11/24/2021 20:09:34'!
+refactoringClass
+	
+	^self isActualScopeChoice 
+		ifTrue: [ InlineMethodWithActualScope ]
+		ifFalse: [ super refactoringClass ]! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'FB 11/24/2021 20:31:01'!
+valueHandlingRefactoringExceptions: aBlock
+	"TODO: change?"
+	
+	^super valueHandlingRefactoringExceptions: [ aBlock 
+		on: CanNotChangeSelectorWithNotIncludedTypes
+		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 20:41:43'!
+actualImplementorsAndMessageSends 
+
+	"TODO: duplicated code"
+
+	self refactoringRequestedFromUsage
+		ifTrue: [ self actualImplementorsAndMessageSendsWhenOnMessageSend ]
+		ifFalse: [ self actualImplementorsAndMessageSendsWhenNotOnMessageSend ]
+! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 20:42:07'!
+actualImplementorsAndMessageSendsWhenNotOnMessageSend 
+	"TODO: duplicated code"
+	self refactoringClass 
+		addActualImplementorsOf: selectorToInline 
+		in: selectedClass 
+		to: self implementorsOrDiscardCollection 
+		andActualMessageSendsTo: self messageSendsOrDiscardCollection
+		inSystem: Smalltalk ! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/31/2022 23:15:17'!
+actualImplementorsAndMessageSendsWhenOnMessageSend
+
+	"TODO: duplicated code"
+
+	| incompleteTypeInfo receiverTypes |
+	
+	incompleteTypeInfo := Set new.
+	receiverTypes := triggeringMessageSend messageNode receiverOrCascadeReceiver 
+		typesIn: selectedClass>> triggeringMessageSend methodSymbol addingIncompleteTypeInfoTo: incompleteTypeInfo.
+	
+	receiverTypes isEmpty ifTrue: [ self canNotRefactorWithoutTypeInfo ].
+	incompleteTypeInfo notEmpty ifTrue: [ self canNotRefactorWithIncompleteTypeInfo ].
+	
+	self refactoringClass 
+		addActualImplementorsOf: selectorToInline
+		forTypes: receiverTypes 
+		to: self implementorsOrDiscardCollection 
+		andActualMessageSendsTo: self messageSendsOrDiscardCollection
+		inSystem: Smalltalk ! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/25/2021 00:34:50'!
+actualScopeOptionLabels
+	"TODO: Duplicated code"
+	^{ 'Actual/Possible Scope'. 'Actual Scope' } ! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 20:41:29'!
+calculateImplementorsAndMessageSends
+
+	"TODO: duplicated code"
+
+	self isActualScopeChoice 
+		ifTrue: [ self actualImplementorsAndMessageSends ]
+		ifFalse: [ super calculateImplementorsAndMessageSends ]! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 00:21:34'!
+canNotRefactorWithIncompleteTypeInfo
+	"TODO: duplicated code"
+	self 
+		inform: 'Can not apply the refactoring because there are errors getting receiver types';
+		endRequest 
+! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 00:21:13'!
+canNotRefactorWithoutTypeInfo
+	"TODO: duplicated code"
+	self 
+		inform: 'Can not apply the refactoring because there is no receiver type information';
+		endRequest 
+
+! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/19/2022 19:45:55'!
+createAndApplyRefactoring
+
+	self filterSenders.
+	super createAndApplyRefactoring.! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/20/2022 19:07:50'!
+filterSenders
+	
+	"Removes possible senders if user selected Actual scope"
+	
+	self isActualAndPossibleScope ifFalse: [
+		messageSends := messageSends select: [:aMessageNodeReference | aMessageNodeReference isPossibleMessageSend not]
+	].
+	! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/19/2022 19:53:02'!
+isActualAndPossibleScope
+	
+	^scopeChoice = 6
+	! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/27/2021 17:22:43'!
+scopeOptionLabels
+	"TODO: Duplicated code"
+	^super scopeOptionLabels, self actualScopeOptionLabels.! !
+
+!InlineMethodWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'FB 3/13/2022 17:48:46'!
+initialize
+
+	RefactoringApplier 
+		registerInlineMethodApplier: InlineMethodWithActualScopeApplier.! !
 
 !ActualImplementorsFinder methodsFor: 'implementors' stamp: 'HAW 4/4/2019 10:07:09'!
 implementorsIsEmpty
@@ -8768,7 +8960,7 @@ doneCompilingSourceCode
 	
 ! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/18/2021 21:23:24'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2022 17:16:41'!
 messageListKeyFromOriginalSourceCode
 
 	^'messageListKey: aChar from: view
@@ -8777,37 +8969,37 @@ messageListKeyFromOriginalSourceCode
 	the list and selection."
 
 	| sel class |
-	aChar == $D ifTrue: [^ model toggleDiffing].
+	aChar = $D ifTrue: [^ model toggleDiffing].
 
 	sel _ model selectedMessageName.
-	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
+	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
 		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
-	aChar == $n ifTrue: [
+	aChar = $n ifTrue: [
 		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
 
 	"The following require a class selection"
 	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
-	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
-	aChar == $N ifTrue: [^ self browseClassRefs].
-	aChar == $i ifTrue: [^ self methodInheritance].
-	aChar == $h ifTrue: [^ self browseHierarchy].
-	aChar == $p ifTrue: [^ self browseFullProtocol].
+	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar = $N ifTrue: [^ self browseClassRefs].
+	aChar = $i ifTrue: [^ self methodInheritance].
+	aChar = $h ifTrue: [^ self browseHierarchy].
+	aChar = $p ifTrue: [^ self browseFullProtocol].
 
 	sel
 		ifNotNil: [
 			"The following require a method selection"
-			aChar == $o ifTrue: [^ model fileOutMessage].
-			aChar == $c ifTrue: [^ model copySelector].
-			aChar == $v ifTrue: [^ self browseVersions].
-			aChar == $C ifTrue: [^ model showHomeCategory].
-			aChar == $O ifTrue: [^ self openSingleMessageBrowser].
-			aChar == $x ifTrue: [^ model removeMessage].
-			aChar == $t ifTrue: [^ model runMethodTest].
-			aChar == $r ifTrue: [^ model debugMethodTest]]
+			aChar = $o ifTrue: [^ model fileOutMessage].
+			aChar = $c ifTrue: [^ model copySelector].
+			aChar = $v ifTrue: [^ self browseVersions].
+			aChar = $C ifTrue: [^ model showHomeCategory].
+			aChar = $O ifTrue: [^ self openSingleMessageBrowser].
+			aChar = $x ifTrue: [^ model removeMessage].
+			aChar = $t ifTrue: [^ model runMethodTest].
+			aChar = $r ifTrue: [^ model debugMethodTest]]
 		ifNil: [
-			aChar == $R ifTrue: [^ model renameClass]]'! !
+			aChar = $R ifTrue: [^ model renameClass]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/18/2021 21:25:55'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2022 17:17:18'!
 messageListKeyFromSourceCode
 
 	^'messageListKey: aChar from: view
@@ -8816,41 +9008,41 @@ messageListKeyFromSourceCode
 	the list and selection."
 
 	| sel class |
-	aChar == $D ifTrue: [^ model toggleDiffing].
+	aChar = $D ifTrue: [^ model toggleDiffing].
 
 	sel _ model selectedMessageName.
-	aChar == $m ifTrue: [  "These next two put up a type in if no message selected"
+	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
 		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
-	aChar == $n ifTrue: [
+	aChar = $n ifTrue: [
 		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
 
-	aChar == $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
-	aChar == $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
-	aChar == $X ifTrue: [ ^ self model removeMessageCheckingActualSenders ].
+	aChar = $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
+	aChar = $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
+	aChar = $X ifTrue: [ ^ self model removeMessageCheckingActualSenders ].
 
 	"The following require a class selection"
 	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
-	aChar == $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
-	aChar == $N ifTrue: [^ self browseClassRefs].
-	aChar == $i ifTrue: [^ self methodInheritance].
-	aChar == $h ifTrue: [^ self browseHierarchy].
-	aChar == $p ifTrue: [^ self browseFullProtocol].
+	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar = $N ifTrue: [^ self browseClassRefs].
+	aChar = $i ifTrue: [^ self methodInheritance].
+	aChar = $h ifTrue: [^ self browseHierarchy].
+	aChar = $p ifTrue: [^ self browseFullProtocol].
 
 	sel
 		ifNotNil: [
 			"The following require a method selection"
-			aChar == $o ifTrue: [^ model fileOutMessage].
-			aChar == $c ifTrue: [^ model copySelector].
-			aChar == $v ifTrue: [^ self browseVersions].
-			aChar == $C ifTrue: [^ model showHomeCategory].
-			aChar == $O ifTrue: [^ self openSingleMessageBrowser].
-			aChar == $x ifTrue: [^ model removeMessage].
-			aChar == $t ifTrue: [^ model runMethodTest].
-			aChar == $r ifTrue: [^ model debugMethodTest].
-			aChar == $T ifTrue: [^ self model typeCheckMethod ]]
+			aChar = $o ifTrue: [^ model fileOutMessage].
+			aChar = $c ifTrue: [^ model copySelector].
+			aChar = $v ifTrue: [^ self browseVersions].
+			aChar = $C ifTrue: [^ model showHomeCategory].
+			aChar = $O ifTrue: [^ self openSingleMessageBrowser].
+			aChar = $x ifTrue: [^ model removeMessage].
+			aChar = $t ifTrue: [^ model runMethodTest].
+			aChar = $r ifTrue: [^ model debugMethodTest].
+			aChar = $T ifTrue: [^ self model typeCheckMethod ]]
 		ifNil: [
-			aChar == $R ifTrue: [^ model renameClass].
-			aChar == $T ifTrue: [ ^ self model typeCheckClass ]]'! !
+			aChar = $R ifTrue: [^ model renameClass].
+			aChar = $T ifTrue: [ ^ self model typeCheckClass ]]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 11/3/2021 20:13:15'!
 mouseMoveLocalPositionOriginalSourceCode
@@ -14609,11 +14801,6 @@ identifierPrintString
 	
 	^key printString ! !
 
-!SelectorNode methodsFor: '*LiveTyping' stamp: 'HAW 5/3/2020 22:39:23'!
-isInfix
-	
-	^key isInfix ! !
-
 !SelectorNode methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 11:14:25'!
 isNamed: aSelectorName
 
@@ -14774,11 +14961,6 @@ isIfWithMessageNodeAsCondition
 	
 	^self isAnyKindOfIf and: [ self receiverOrCascadeReceiver isMessageNode ]! !
 
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 5/3/2020 22:39:07'!
-isInfix
-	
-	^selector isInfix! !
-
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 10:17:06'!
 isIsKindOfWithLiteralBehavior
 	
@@ -14850,11 +15032,6 @@ isReceiverNil
 	
 	^receiver isNilPseudoVariable 
 ! !
-
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 10:31:57'!
-isUnaryMessageSend
-	
-	^self selectorSymbol isUnary ! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 12/14/2018 06:40:34'!
 nodeTypePrintString
@@ -15435,4 +15612,5 @@ selectedSelector
 shouldKeepIfPossibleSender: aMethodReference
 
 	^ aMethodReference isPossibleSender not or: [ self isWithPossibleMessageSends ]! !
+InlineMethodWithActualScopeApplier initialize!
 LiveTyping initialize!
