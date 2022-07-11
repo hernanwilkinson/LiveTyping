@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5234] on 12 June 2022 at 12:16:17 am'!
-'Description Inline method and temp var integration'!
-!provides: 'LiveTyping' 1 91!
+'From Cuis 6.0 [latest update: #5324] on 11 July 2022 at 8:04:39 pm'!
+'Description Sync with PreferenceSet'!
+!provides: 'LiveTyping' 1 92!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -15295,10 +15295,10 @@ showBalloon: msgString hand: aHand
 	^super showBalloon: ballonTypeInfo hand: aHand
 ! !
 
-!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 5/21/2022 19:59:52'!
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2022 20:04:11'!
 wantsBalloon
 	
-	^self shouldShowBalloonHelp and: [ PreferenceNG at: #balloonHelpEnabled ]! !
+	^self shouldShowBalloonHelp and: [ Preferences at: #balloonHelpEnabled ]! !
 
 !TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 17:44:29'!
 doNotShowBalloonHelp
