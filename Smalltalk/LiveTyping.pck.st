@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5324] on 11 July 2022 at 8:04:39 pm'!
-'Description Sync with PreferenceSet'!
-!provides: 'LiveTyping' 1 92!
+'From Cuis 6.0 [latest update: #5443] on 13 August 2022 at 4:35:18 pm'!
+'Description Use of submenus'!
+!provides: 'LiveTyping' 1 93!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8572,12 +8572,20 @@ initializeLiveTyping
 		initializeTypeInformation;
 		registerRefactoringAppliers! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/10/2019 18:50:29'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:29:02'!
 classListMenuOptions
 
 	^ `{
 			{
-				#itemGroup 	-> 		5.
+				#itemGroup 		-> 		5.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping menuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 	-> 		10.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'type check (T)'.
 				#selector 		-> 		#typeCheckClass.
@@ -8585,7 +8593,8 @@ classListMenuOptions
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#itemGroup 	-> 		5.
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 	-> 		10.
 				#itemOrder 		-> 		30.
 				#label 			-> 		'reset types'.
 				#selector 		-> 		#resetClassType.
@@ -8595,25 +8604,66 @@ classListMenuOptions
 		}`.
 	! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/10/2019 18:55:05'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:07:15'!
+menuLabel
+
+	^'LiveTyping'! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:31:46'!
 messageListMenuOptions
 
 	^`{{
 				#itemGroup 		-> 		5.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping menuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+		} asDictionary.
+		{
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		10.
+				#label 			-> 		'actual senders of it (B)'.
+				#selector 		-> 		#browseActualSendersOfSelectedMethod.
+				#icon 			-> 		#mailForwardIcon
+		} asDictionary.
+		{
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		20.
+				#label 			-> 		'actual implementors of it (M)'.
+				#selector 		-> 		#browseActualImplementorsOfSelectedMethod.
+				#icon 			-> 		#developmentIcon
+		} asDictionary.
+		{
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		30.
+				#label 			-> 		'remove method checking actual senders (X)'.
+				#object 			-> 		#model.
+				#selector 		-> 		#removeMessageCheckingActualSenders.
+				#icon 			-> 		#deleteIcon
+		} asDictionary.	
+		{
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		10.
 				#label 			-> 		'Type Check (T)'.
 				#selector 		-> 		#typeCheckMethod.
 				#object 			-> 		#model.
 				#icon 			-> 		#acceptIcon
 		} asDictionary.
 		{
-				#itemGroup 		-> 		5.
-				#itemOrder 		-> 		30.
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		20.
 				#label 			-> 		'Reset types'.
 				#selector 		-> 		#resetMethodTypes.
 				#object 			-> 		#model.
 				#icon 			-> 		#deleteIcon
-		} asDictionary.
+		} asDictionary.		
+
+
 		{
 				#itemGroup 		-> 		40.
 				#itemOrder 		-> 		15.
@@ -8651,48 +8701,61 @@ smalltalkEditorCmdShortcutsSpec
 		)
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/18/2019 20:44:35'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:34:18'!
 smalltalkEditorMenuOptions
 
 	^`{
 			{
-				#itemGroup 		-> 		37.
+				#itemGroup 		-> 		35.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping menuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf ->				LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'Show type info (P)'.
 				#selector 		-> 		#showSelectionTypeInfo.
 				#icon 			-> 		#helpIcon
 			} asDictionary.
 			{
-				#itemGroup 		-> 		37.
+				#submenuOf ->				LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		30.
 				#label 			-> 		'Actual Senders of it (B)'.
 				#selector 		-> 		#actualSendersOfIt.
 				#icon 			-> 		#mailForwardIcon
 			} asDictionary.
 			{
-				#itemGroup 		-> 		37.
+				#submenuOf ->				LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		40.
 				#label 			-> 		'Actual Implementors of it (M)'.
 				#selector 		-> 		#actualImplementorsOfIt.
 				#icon 			-> 		#developmentIcon
 			} asDictionary.
 			{
-				#itemGroup 		-> 		37.
+				#submenuOf ->				LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		50.
 				#label 			-> 		'Actual Local Implementors of it (L)'.
 				#selector 		-> 		#actualLocalImplementorsOfIt.
 				#icon 			-> 		#developmentIcon
 			} asDictionary.
 			{
-				#itemGroup 		-> 		37.
-				#itemOrder 		-> 		60.
+				#submenuOf ->				LiveTyping menuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		10.
 				#label 			-> 		'Type Check (T)'.
 				#selector 		-> 		#typeCheckMethod.
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#itemGroup 		-> 		37.
-				#itemOrder 		-> 		70.
+				#submenuOf ->				LiveTyping menuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		20.
 				#label 			-> 		'Reset types'.
 				#selector 		-> 		#resetMethodTypes.
 				#object 			-> 		#codeProvider.
@@ -8702,12 +8765,20 @@ smalltalkEditorMenuOptions
 		}`
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/9/2019 20:20:47'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:07:38'!
 systemCategoryMenuOptions
 
 	^`{
 			{
 				#itemGroup 		-> 		5.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping menuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		10.
 				#label 			-> 		'Type Check'.
 				#selector 		-> 		#typeCheckCategory.
@@ -8715,7 +8786,8 @@ systemCategoryMenuOptions
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#itemGroup 		-> 		5.
+				#submenuOf -> LiveTyping menuLabel.
+				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'reset types'.
 				#selector 		-> 		#resetCategoryTypes.
@@ -13014,16 +13086,17 @@ removeMethod: aCompiledMethod
 		setClassOrganizer.
 	! !
 
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 11:23:11'!
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/13/2022 16:18:05'!
 resetCategoryTypes
 	
 	| initializeWithInstances classes increment progressBar |
 	
 	selectedSystemCategory ifNotNil: [ 
 		initializeWithInstances := self confirm: 'Do you want to initialize instance variables types with current instances?'.
+		classes := systemOrganizer allClassesAt: selectedSystemCategory.
+		classes size = 0 ifTrue: [ ^self ].
 		progressBar := ProgressMorph label: 'Reseting types' subLabel: ''.
 		progressBar openInWorld.
-		classes := systemOrganizer classesAt: selectedSystemCategory.
 		increment := 1/classes size.
 		[ classes do: [ :aClass | 
 			progressBar subLabel: aClass name.
@@ -13045,13 +13118,13 @@ resetClassType
 			ifTrue: [ aSelectedClass initializeTypeInformationWithAllInstances ]
 			ifFalse: [ aSelectedClass initializeTypeInformation ] ]! !
 
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/9/2019 20:24:30'!
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/13/2022 16:20:46'!
 typeCheckCategory
 
 	| typeChecker |
 	
 	selectedSystemCategory ifNotNil: [ 
-		typeChecker := ManyMethodsTypeChecker forAllClasses: (systemOrganizer classesAt: selectedSystemCategory).
+		typeChecker := ManyMethodsTypeChecker forAllClasses: (systemOrganizer allClassesAt: selectedSystemCategory).
 		typeChecker value.
 		typeChecker showResultsWith: selectedSystemCategory name ]
 	
