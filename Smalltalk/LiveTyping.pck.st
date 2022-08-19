@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5443] on 13 August 2022 at 4:35:18 pm'!
-'Description Use of submenus'!
-!provides: 'LiveTyping' 1 93!
+'From Cuis 6.0 [latest update: #5443] on 19 August 2022 at 6:24:56 pm'!
+'Description rename menuLabel with aMenuLabel'!
+!provides: 'LiveTyping' 1 94!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8572,19 +8572,26 @@ initializeLiveTyping
 		initializeTypeInformation;
 		registerRefactoringAppliers! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:29:02'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:24:20'!
+aMenuLabel
+
+	"I had to call it aMenuLabel and not just menuLabel because it has to be loaded before classListMenuOptions for
+	it compile - Hernan"
+	^'LiveTyping'! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
 classListMenuOptions
 
 	^ `{
 			{
 				#itemGroup 		-> 		5.
 				#itemOrder 		-> 		10.
-				#label 			-> 	LiveTyping menuLabel. 
+				#label 			-> 	LiveTyping aMenuLabel. 
 				#selector 		-> 		#yourself.
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 	-> 		10.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'type check (T)'.
@@ -8593,7 +8600,7 @@ classListMenuOptions
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 	-> 		10.
 				#itemOrder 		-> 		30.
 				#label 			-> 		'reset types'.
@@ -8604,23 +8611,18 @@ classListMenuOptions
 		}`.
 	! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:07:15'!
-menuLabel
-
-	^'LiveTyping'! !
-
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:31:46'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
 messageListMenuOptions
 
 	^`{{
 				#itemGroup 		-> 		5.
 				#itemOrder 		-> 		10.
-				#label 			-> 	LiveTyping menuLabel. 
+				#label 			-> 	LiveTyping aMenuLabel. 
 				#selector 		-> 		#yourself.
 				#icon 			-> 		#acceptIcon
 		} asDictionary.
 		{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		10.
 				#label 			-> 		'actual senders of it (B)'.
@@ -8628,7 +8630,7 @@ messageListMenuOptions
 				#icon 			-> 		#mailForwardIcon
 		} asDictionary.
 		{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'actual implementors of it (M)'.
@@ -8636,7 +8638,7 @@ messageListMenuOptions
 				#icon 			-> 		#developmentIcon
 		} asDictionary.
 		{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		30.
 				#label 			-> 		'remove method checking actual senders (X)'.
@@ -8645,7 +8647,7 @@ messageListMenuOptions
 				#icon 			-> 		#deleteIcon
 		} asDictionary.	
 		{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 		-> 		20.
 				#itemOrder 		-> 		10.
 				#label 			-> 		'Type Check (T)'.
@@ -8654,7 +8656,7 @@ messageListMenuOptions
 				#icon 			-> 		#acceptIcon
 		} asDictionary.
 		{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 		-> 		20.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'Reset types'.
@@ -8701,19 +8703,19 @@ smalltalkEditorCmdShortcutsSpec
 		)
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:34:18'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
 smalltalkEditorMenuOptions
 
 	^`{
 			{
 				#itemGroup 		-> 		35.
 				#itemOrder 		-> 		10.
-				#label 			-> 	LiveTyping menuLabel. 
+				#label 			-> 	LiveTyping aMenuLabel. 
 				#selector 		-> 		#yourself.
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#submenuOf ->				LiveTyping menuLabel.
+				#submenuOf ->				LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'Show type info (P)'.
@@ -8721,7 +8723,7 @@ smalltalkEditorMenuOptions
 				#icon 			-> 		#helpIcon
 			} asDictionary.
 			{
-				#submenuOf ->				LiveTyping menuLabel.
+				#submenuOf ->				LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		30.
 				#label 			-> 		'Actual Senders of it (B)'.
@@ -8729,7 +8731,7 @@ smalltalkEditorMenuOptions
 				#icon 			-> 		#mailForwardIcon
 			} asDictionary.
 			{
-				#submenuOf ->				LiveTyping menuLabel.
+				#submenuOf ->				LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		40.
 				#label 			-> 		'Actual Implementors of it (M)'.
@@ -8737,7 +8739,7 @@ smalltalkEditorMenuOptions
 				#icon 			-> 		#developmentIcon
 			} asDictionary.
 			{
-				#submenuOf ->				LiveTyping menuLabel.
+				#submenuOf ->				LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		50.
 				#label 			-> 		'Actual Local Implementors of it (L)'.
@@ -8745,7 +8747,7 @@ smalltalkEditorMenuOptions
 				#icon 			-> 		#developmentIcon
 			} asDictionary.
 			{
-				#submenuOf ->				LiveTyping menuLabel.
+				#submenuOf ->				LiveTyping aMenuLabel.
 				#itemGroup 		-> 		20.
 				#itemOrder 		-> 		10.
 				#label 			-> 		'Type Check (T)'.
@@ -8753,7 +8755,7 @@ smalltalkEditorMenuOptions
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#submenuOf ->				LiveTyping menuLabel.
+				#submenuOf ->				LiveTyping aMenuLabel.
 				#itemGroup 		-> 		20.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'Reset types'.
@@ -8765,19 +8767,19 @@ smalltalkEditorMenuOptions
 		}`
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/13/2022 16:07:38'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
 systemCategoryMenuOptions
 
 	^`{
 			{
 				#itemGroup 		-> 		5.
 				#itemOrder 		-> 		10.
-				#label 			-> 	LiveTyping menuLabel. 
+				#label 			-> 	LiveTyping aMenuLabel. 
 				#selector 		-> 		#yourself.
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		10.
 				#label 			-> 		'Type Check'.
@@ -8786,7 +8788,7 @@ systemCategoryMenuOptions
 				#icon 			-> 		#acceptIcon
 			} asDictionary.
 			{
-				#submenuOf -> LiveTyping menuLabel.
+				#submenuOf -> LiveTyping aMenuLabel.
 				#itemGroup 		-> 		10.
 				#itemOrder 		-> 		20.
 				#label 			-> 		'reset types'.
