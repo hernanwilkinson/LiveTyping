@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5443] on 19 August 2022 at 6:24:56 pm'!
-'Description rename menuLabel with aMenuLabel'!
-!provides: 'LiveTyping' 1 94!
+'From Cuis 6.0 [latest update: #5466] on 24 August 2022 at 6:59:17 pm'!
+'Description NotImplementedMethod>>#isTestMethod '!
+!provides: 'LiveTyping' 1 96!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -2012,6 +2012,11 @@ doesOnlySurelySend: aCompiledMethod
 
 !NotImplementedMethod methodsFor: 'testing' stamp: 'HAW 1/2/2020 07:11:54'!
 hasVariableBindingTo: aClass 
+	
+	^false! !
+
+!NotImplementedMethod methodsFor: 'testing' stamp: 'HAW 8/24/2022 18:55:27'!
+isTestMethod
 	
 	^false! !
 
