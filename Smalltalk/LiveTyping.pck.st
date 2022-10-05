@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5466] on 24 August 2022 at 6:59:17 pm'!
-'Description NotImplementedMethod>>#isTestMethod '!
-!provides: 'LiveTyping' 1 96!
+'From Cuis 6.0 [latest update: #5494] on 5 October 2022 at 11:45:15 am'!
+'Description Changes to InlineMethodWithActualScope'!
+!provides: 'LiveTyping' 1 97!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -7429,12 +7429,12 @@ named: aNewParameter
 			
 ! !
 
-!InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 3/20/2022 18:51:20'!
+!InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 8/23/2022 18:19:05'!
 addActualImplementorsOf: aSelectorToInline forTypes: receiverTypes to: implementors 
 	andActualMessageSendsTo: messageSends inSystem: aSystem
 
 	| actualImplementors actualSendersCollector |
-
+	
 	receiverTypes do: [ :aType |
 		actualImplementors := (aSystem actualImplementorsOf: aSelectorToInline in: aType) 
 			collect: [ :anImplementor | anImplementor compiledMethodIfAbsent: [ anImplementor ]].
@@ -7455,7 +7455,8 @@ addActualImplementorsOf: aSelectorToInline forTypes: receiverTypes to: implement
 				messageSends add: titleMessageNode 
 			] 
 			ifFalse: [ | messageNodeReferences |
-				messageNodeReferences _ self findReferencesToSelector: aSelectorToInline in: aMethodNodeReference.
+				messageNodeReferences _ self findReferencesToSelector: aSelectorToInline in: aMethodNodeReference 
+					whenSentTo: receiverTypes.
 				messageSends addAll: ((aMethodNodeReference isPossibleSender)
 					ifTrue: [messageNodeReferences collect: [:messageNodeReference | 
 							messageNodeReference asPossibleMessageNodeReference ]]
@@ -7475,6 +7476,25 @@ addActualImplementorsOf: aSelectorToInline in: aPotentialClassToRefactor to: imp
 		to: implementors 
 		andActualMessageSendsTo: messageSends 
 		inSystem: aSystem ! !
+
+!InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 10/4/2022 02:10:32'!
+findReferencesToSelector: aSelectorToInline in: aMethodReference whenSentTo: receiverTypes
+	
+	^(aMethodReference rangesOf: aSelectorToInline whenSendTo: receiverTypes)
+		collect: [ :range | 
+			| messageNode methodNode completeSourceRange |
+			
+			methodNode := aMethodReference compiledMethod methodNode.
+			messageNode := (methodNode parseNodesPathAt: range first 	
+				ifAbsent: [self shouldNotHappen ]) first key.
+			completeSourceRange := (methodNode completeSourceRangesOf: messageNode 
+				ifAbsent: [self shouldNotHappen]) detect: [:sourceRange | sourceRange includesAllOf: range].
+			
+			MessageNodeReference messageNode: messageNode
+				selector: aMethodReference methodSymbol class: aMethodReference methodClass completeSourceRange: completeSourceRange
+		].
+
+	! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/5/2020 22:02:41'!
 convertSendersToCompiledMethods
