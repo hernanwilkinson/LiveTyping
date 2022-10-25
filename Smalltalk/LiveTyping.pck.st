@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5494] on 5 October 2022 at 11:45:15 am'!
-'Description Changes to InlineMethodWithActualScope'!
-!provides: 'LiveTyping' 1 97!
+'From Cuis 6.0 [latest update: #5509] on 25 October 2022 at 5:29:51 pm'!
+'Description Sync with 5509'!
+!provides: 'LiveTyping' 1 98!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8989,12 +8989,13 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/21/2022 17:15:16'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 10/25/2022 17:27:50'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
-	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
-	| methodAndNode selector isExistingMethod |
-	methodAndNode _ self basicCompile: text asPlainString notifying: requestor 
+	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
+	
+	| methodAndNode selector isExistingMethod updatedCode |	
+	methodAndNode _ self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector _ methodAndNode selector.
 	isExistingMethod _ self includesSelector: selector.
@@ -9006,19 +9007,22 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
-		self logMethodSource: text forMethodWithNode: methodAndNode 
+		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
+		updatedCode _ requestor ifNil: [code] ifNotNil: [CodeProvider normalizeCode: requestor text].
+		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
 	self addAndClassifySelector: selector withMethod: methodAndNode 
 		method inProtocol: category notifying: requestor.
 	^ methodAndNode selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/21/2022 17:16:21'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 10/25/2022 17:29:23'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
-	^'compile: text classified: category withStamp: changeStamp notifying: requestor logSource: logSource
-	| methodAndNode selector isExistingMethod |
-	methodAndNode _ self basicCompile: text asPlainString notifying: requestor 
+	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
+	
+	| methodAndNode selector isExistingMethod updatedCode |	
+	methodAndNode _ self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector _ methodAndNode selector.
 	isExistingMethod _ self includesSelector: selector.
@@ -9030,7 +9034,9 @@ compileClassifiedWithStampNotifyingLogSourceSourceCode
 			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
-		self logMethodSource: text forMethodWithNode: methodAndNode 
+		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
+		updatedCode _ requestor ifNil: [code] ifNotNil: [CodeProvider normalizeCode: requestor text].
+		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
 	self addAndClassifySelector: methodAndNode node withMethod: methodAndNode 
