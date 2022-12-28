@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5509] on 25 October 2022 at 5:29:51 pm'!
-'Description Sync with 5509'!
-!provides: 'LiveTyping' 1 98!
+'From Cuis 6.0 [latest update: #5609] on 28 December 2022 at 4:52:06 pm'!
+'Description Sync with 5609'!
+!provides: 'LiveTyping' 1 99!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8989,7 +8989,7 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 10/25/2022 17:27:50'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 12/28/2022 16:51:03'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
@@ -9008,7 +9008,7 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode _ requestor ifNil: [code] ifNotNil: [CodeProvider normalizeCode: requestor text].
+		updatedCode _ CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
@@ -9016,7 +9016,7 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 		method inProtocol: category notifying: requestor.
 	^ methodAndNode selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 10/25/2022 17:29:23'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 12/28/2022 16:51:19'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
@@ -9035,7 +9035,7 @@ compileClassifiedWithStampNotifyingLogSourceSourceCode
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode _ requestor ifNil: [code] ifNotNil: [CodeProvider normalizeCode: requestor text].
+		updatedCode _ CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
@@ -13188,6 +13188,20 @@ createMethodReturnTypeInfoOf: aMethod
 
 	^super createMethodReturnTypeInfoOf: aMethod ! !
 
+!Number class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:24:59'!
+createMethodReturnRawTypesOf: aMethod
+
+	^(aMethod selector = #@ and: [ aMethod methodClass = Number ]) 
+		ifTrue: [ nil ]
+		ifFalse: [ super createMethodReturnRawTypesOf: aMethod ]! !
+
+!Number class methodsFor: '*LiveTyping' stamp: 'HAW 3/16/2019 12:08:37'!
+createMethodReturnTypeInfoOf: aMethod
+
+	^(aMethod selector = #@ and: [ aMethod methodClass = Number ]) 
+		ifTrue: [ ReturnTypeInfo of: aMethod are: `{ Point }` ]
+		ifFalse: [ super createMethodReturnTypeInfoOf: aMethod ]! !
+
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:26:03'!
 addType: aType ifFull: aFullBlock
 
@@ -13729,20 +13743,6 @@ createSuperclassTypeInfo
 		of: self superclassInstVarName 
 		in: self 
 		are: `{Class. Metaclass. }`! !
-
-!Number class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:24:59'!
-createMethodReturnRawTypesOf: aMethod
-
-	^(aMethod selector = #@ and: [ aMethod methodClass = Number ]) 
-		ifTrue: [ nil ]
-		ifFalse: [ super createMethodReturnRawTypesOf: aMethod ]! !
-
-!Number class methodsFor: '*LiveTyping' stamp: 'HAW 3/16/2019 12:08:37'!
-createMethodReturnTypeInfoOf: aMethod
-
-	^(aMethod selector = #@ and: [ aMethod methodClass = Number ]) 
-		ifTrue: [ ReturnTypeInfo of: aMethod are: `{ Point }` ]
-		ifFalse: [ super createMethodReturnTypeInfoOf: aMethod ]! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:31:04'!
 add: variableRawTypes to: anArrayOfRawTypes mapping: variableName to: variableTypeIndex in: variableNameToIndex
