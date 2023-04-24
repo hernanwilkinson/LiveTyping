@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5609] on 28 December 2022 at 4:52:06 pm'!
-'Description Sync with 5609'!
-!provides: 'LiveTyping' 1 99!
+'From Cuis 6.0 [latest update: #5734] on 24 April 2023 at 1:35:10 pm'!
+'Description Disable LiveTyping for Morph and Graphics '!
+!provides: 'LiveTyping' 1 101!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -8535,11 +8535,15 @@ defineInstVarNamed: anInstVarName in: aClass
 
 	(aClass definesInstanceVariableNamed: anInstVarName ) ifFalse: [ aClass addInstVarName: anInstVarName ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:23:54'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 4/24/2023 10:24:59'!
 initializeTypeInformation
 
-	InstanceVariablesTypes initializeForAllClassesWithAllInstances.    
-	MethodVariablesTypes initializeForAllClasses.
+	ProtoObject withAllSubclassesDo: [ :aClass | 
+		aClass shouldLiveTypingBeDisabled
+			ifTrue: [ aClass disableLiveTypingForAll ]
+			ifFalse: [ 
+				aClass initializeInstanceVariablesRawTypesWithAllInstances.
+				aClass initializeMethodsTypeInformation]].
 	
 	self initializeWellKnownReturnTypes.
 ! !
@@ -13493,6 +13497,26 @@ defaultRawTypesSize
 
 	^10! !
 
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:40:25'!
+disableLiveTyping
+	
+	Smalltalk isLiveTypingInstalled ifTrue: [ instanceVariablesRawTypes := nil ]! !
+
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:40:38'!
+disableLiveTypingForAll
+
+	"Disables collecting types for inst var and methods - Hernan"
+	
+	self disableLiveTyping.
+	self methodsDo: [ :aCompiledMethod | aCompiledMethod disableLiveTyping ].! !
+
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:41:16'!
+doNotCheckForUnload
+
+	self class
+		compileSilently: #unloadFromAllRawTypes
+		classified: Categorizer default! !
+
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/16/2018 08:43:30'!
 initializeEachInstanceVariableRawTypes
 
@@ -13654,6 +13678,11 @@ returnTypesAt: aSelector ifAbsent: anAbsentBlock
 		ifPresent: [ :aReturnTypeInfo | aReturnTypeInfo types ]
 		ifAbsent: anAbsentBlock! !
 
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:31:38'!
+shouldLiveTypingBeDisabled
+
+	^#('Morphic' 'Graphics') anySatisfy: [ :aCategoryPrefix | self category beginsWith: aCategoryPrefix ]! !
+
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/5/2018 15:13:39'!
 storeAllInstancesCurrentTypes
 
@@ -13784,6 +13813,18 @@ copyTypeInformationFrom: anotherAdditionalMethodState
 	variableNameToTypeIndex := anotherAdditionalMethodState variableNameToTypeIndex.
 	variableNameToRemoteVectorTypeIndex := anotherAdditionalMethodState variableNameToRemoteVectorTypeIndex.
 	! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:49:35'!
+disableLiveTyping
+
+	self 
+		initializeVariablesRawTypesWhenMethodHasNoVariables;
+		disableLiveTypingForReturnTypes ! !
+
+!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:48:23'!
+disableLiveTypingForReturnTypes
+
+	returnRawTypes := nil ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:39:28'!
 doesPointToLocalSlot: variableIndexOrRemoteVectorInfo
@@ -14241,6 +14282,12 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 	aMethodForSameSelectorAndClass 
 		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:49:05'!
+disableLiveTyping
+	
+	Smalltalk isLiveTypingInstalled
+		ifTrue: [ self penultimateLiteral disableLiveTyping ]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:21:27'!
 doesOnlySurelySend: aCompiledMethod 
