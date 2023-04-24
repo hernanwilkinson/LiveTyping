@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5734] on 24 April 2023 at 2:14:43 pm'!
+'From Cuis 6.0 [latest update: #5734] on 24 April 2023 at 3:12:06 pm'!
 'Description Disable LiveTyping for Morph and Graphics '!
-!provides: 'LiveTyping' 1 102!
+!provides: 'LiveTyping' 1 103!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -14283,14 +14283,14 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 14:14:34'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 15:11:59'!
 disableLiveTyping
 	
 	Smalltalk isLiveTypingInstalled
 		ifTrue: [
 			self 
 				withPropertiesDo: [:additionalMethodState | additionalMethodState disableLiveTyping ]
-				ifSelector: []]! !
+				ifSelector: [ :aSelector | ]]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:21:27'!
 doesOnlySurelySend: aCompiledMethod 
