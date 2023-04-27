@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5734] on 24 April 2023 at 3:12:06 pm'!
-'Description Disable LiveTyping for Morph and Graphics '!
-!provides: 'LiveTyping' 1 103!
+'From Cuis 6.0 [latest update: #5778] on 27 April 2023 at 6:21:22 pm'!
+'Description Update to autoHighlightString:allOccurrences:'!
+!provides: 'LiveTyping' 1 104!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -1104,7 +1104,7 @@ messageSendsRangesOf: aSelector
 		ifNotNil: [ selectedMessage sourceCodeRange ]
 ! !
 
-!TypeCheckingResultSet methodsFor: 'initialization' stamp: 'HAW 8/9/2019 10:35:15'!
+!TypeCheckingResultSet methodsFor: 'initialization' stamp: 'HAW 4/27/2023 18:14:48'!
 initializeFor: aMethodTypeChecker showingProblems: showingProblems 
 	
 	methodTypeChecker := aMethodTypeChecker.
@@ -1112,7 +1112,7 @@ initializeFor: aMethodTypeChecker showingProblems: showingProblems
 	self calculateList.
 	
 	"It does not matter the methodSelector, it is just a symbol that flags that ranges should be look for selecting - Hernan"
-	self autoSelectString: methodTypeChecker methodSelector ! !
+	self autoHighlightString: methodTypeChecker methodSelector allOccurrences: false! !
 
 !TypeCheckingResultSet class methodsFor: 'instance creation' stamp: 'HAW 8/9/2019 10:29:20'!
 for: aMethodTypeChecker showingProblems: showingProblems 
@@ -15474,13 +15474,13 @@ browseActualSendersOfSelectedMethod
 	self model currentCompiledMethod ifNotNil: [ :aSentCompileMethod |
 		Smalltalk browseAllActualSendersOn: aSentCompileMethod ]! !
 
-!MessageSetWindow class methodsFor: '*LiveTyping' stamp: 'HAW 4/30/2019 18:13:04'!
+!MessageSetWindow class methodsFor: '*LiveTyping' stamp: 'HAW 4/27/2023 18:17:51'!
 openMessageList: messageList label: labelString types: aReceiverTypes selector: aSentSelector
 
 	| messageSet |
 
 	messageSet := ActualSendersMessageSet messageList: messageList types: aReceiverTypes.
-	messageSet autoSelectString: aSentSelector.
+	messageSet autoHighlightString: aSentSelector allOccurrences: false.
 
 	^self open: messageSet label: labelString 
 ! !
