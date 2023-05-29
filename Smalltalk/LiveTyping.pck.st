@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5778] on 27 April 2023 at 6:21:22 pm'!
-'Description Update to autoHighlightString:allOccurrences:'!
-!provides: 'LiveTyping' 1 104!
+'From Cuis 6.0 [latest update: #5818] on 28 May 2023 at 11:03:57 pm'!
+'Description move compiledMethodAt:ifPresent:ifAbsent: to core'!
+!provides: 'LiveTyping' 1 105!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 SystemOrganization addCategory: 'LiveTyping'!
@@ -13254,11 +13254,6 @@ typesSize
 	
 	^0 ! !
 
-!Behavior methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 12:55:26'!
-compiledMethodAt: aSelector ifPresent: aFoundBlock ifAbsent: anAbsentBlock 
-	
-	^self methodDict at: aSelector ifPresent: aFoundBlock ifAbsent: anAbsentBlock.! !
-
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 10/4/2018 21:07:29'!
 indexOfInstanceVariable: anInstVarName ifAbsent: aBlock
 
@@ -13496,11 +13491,6 @@ createRawTypesOfSize: aSize
 defaultRawTypesSize
 
 	^10! !
-
-!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:40:25'!
-disableLiveTyping
-	
-	Smalltalk isLiveTypingInstalled ifTrue: [ instanceVariablesRawTypes := nil ]! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:40:38'!
 disableLiveTypingForAll
@@ -14282,15 +14272,6 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 	aMethodForSameSelectorAndClass 
 		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 15:11:59'!
-disableLiveTyping
-	
-	Smalltalk isLiveTypingInstalled
-		ifTrue: [
-			self 
-				withPropertiesDo: [:additionalMethodState | additionalMethodState disableLiveTyping ]
-				ifSelector: [ :aSelector | ]]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:21:27'!
 doesOnlySurelySend: aCompiledMethod 
