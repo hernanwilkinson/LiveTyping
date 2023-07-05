@@ -1,8 +1,9 @@
-'From Cuis 6.0 [latest update: #5818] on 28 May 2023 at 11:03:57 pm'!
-'Description move compiledMethodAt:ifPresent:ifAbsent: to core'!
-!provides: 'LiveTyping' 1 105!
+'From Cuis 6.0 [latest update: #5894] on 5 July 2023 at 8:30:54 am'!
+'Description changes to shurtcuts'!
+!provides: 'LiveTyping' 1 107!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
+!requires: 'CodeCoverage' 1 68 nil!
 SystemOrganization addCategory: 'LiveTyping'!
 SystemOrganization addCategory: 'LiveTyping-Tests'!
 SystemOrganization addCategory: 'LiveTyping-Playground'!
@@ -9069,7 +9070,7 @@ doneCompilingSourceCode
 	
 ! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2022 17:16:41'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/5/2023 08:22:48'!
 messageListKeyFromOriginalSourceCode
 
 	^'messageListKey: aChar from: view
@@ -9078,16 +9079,17 @@ messageListKeyFromOriginalSourceCode
 	the list and selection."
 
 	| sel class |
+	self flag: #definesKeyboardShortcuts.
 	aChar = $D ifTrue: [^ model toggleDiffing].
 
-	sel _ model selectedMessageName.
+	sel := model selectedMessageName.
 	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
 		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
 	aChar = $n ifTrue: [
 		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
 
 	"The following require a class selection"
-	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
+	(class := model selectedClassOrMetaClass) ifNil: [^ self ].
 	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
 	aChar = $N ifTrue: [^ self browseClassRefs].
 	aChar = $i ifTrue: [^ self methodInheritance].
@@ -9108,7 +9110,7 @@ messageListKeyFromOriginalSourceCode
 		ifNil: [
 			aChar = $R ifTrue: [^ model renameClass]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2022 17:17:18'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/5/2023 08:27:46'!
 messageListKeyFromSourceCode
 
 	^'messageListKey: aChar from: view
@@ -9117,9 +9119,10 @@ messageListKeyFromSourceCode
 	the list and selection."
 
 	| sel class |
+	self flag: #definesKeyboardShortcuts.
 	aChar = $D ifTrue: [^ model toggleDiffing].
 
-	sel _ model selectedMessageName.
+	sel := model selectedMessageName.
 	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
 		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
 	aChar = $n ifTrue: [
@@ -9130,7 +9133,7 @@ messageListKeyFromSourceCode
 	aChar = $X ifTrue: [ ^ self model removeMessageCheckingActualSenders ].
 
 	"The following require a class selection"
-	(class _ model selectedClassOrMetaClass) ifNil: [^ self ].
+	(class := model selectedClassOrMetaClass) ifNil: [^ self ].
 	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
 	aChar = $N ifTrue: [^ self browseClassRefs].
 	aChar = $i ifTrue: [^ self methodInheritance].
