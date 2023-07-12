@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5894] on 5 July 2023 at 8:30:54 am'!
-'Description changes to shurtcuts'!
-!provides: 'LiveTyping' 1 107!
+'From Cuis 6.0 [latest update: #5908] on 12 July 2023 at 7:42:40 pm'!
+'Description CompiledMethod>>isAbstract moved to Cuis Core'!
+!provides: 'LiveTyping' 1 108!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -14299,11 +14299,6 @@ initializeTypeInformationUsing: aMethodNode
 	"I have to set it because #properties creates a new AdditionaMethodState but does not set it - Hernan"
 	self penultimateLiteral: properties.
 	properties initializeTypeInformationUsing: aMethodNode ! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 12:35:04'!
-isAbstract
-	
-	^self sendsSelector: #subclassResponsibility! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 18:31:17'!
 isAnnotatingTypes
