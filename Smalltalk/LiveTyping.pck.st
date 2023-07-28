@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5908] on 12 July 2023 at 7:42:40 pm'!
-'Description CompiledMethod>>isAbstract moved to Cuis Core'!
-!provides: 'LiveTyping' 1 108!
+'From Cuis 6.0 [latest update: #5950] on 28 July 2023 at 3:07:40 pm'!
+'Description Use of notCompiledMethodNode'!
+!provides: 'LiveTyping' 1 109!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -1580,7 +1580,7 @@ receiverTypesThatShouldRenameButAreNotIncludedInImplementorTypes: receiverTypes
 		(types noneSatisfy: [ :anImplementorType | aReceiverType includesBehavior: anImplementorType ]) and: [ aReceiverType canUnderstand: sentSelector] ].
 ! !
 
-!ReceiverTypesOfMessageSendsConform methodsFor: 'evaluation' stamp: 'HAW 12/30/2019 17:41:57'!
+!ReceiverTypesOfMessageSendsConform methodsFor: 'evaluation' stamp: 'HAW 7/27/2023 15:25:24'!
 value
 
 	notIncludedReceiverTypesInMessageSends := OrderedCollection new.
@@ -1592,7 +1592,7 @@ value
 		senders do: [ :aSender | 
 			currentSender := aSender.
 			currentSenderMethodClass := aSender methodClass.
-			currentSender methodNode accept: self ]].
+			currentSender notOptimizedMethodNode accept: self ]].
 	
 	^notIncludedReceiverTypesInMessageSends! !
 
@@ -1831,9 +1831,12 @@ initializeFor: aMethodReference collectingErrorsInto: aCollectionOfErrors warnin
 	problems := aCollectionOfProblems 
 	! !
 
-!MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 8/21/2019 14:25:58'!
+!MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 7/27/2023 15:47:30'!
 prepareToValue
 	
+	"I'm using methodNode instead of notOptimizedMethodNode because notOptimizeMethoNode was
+	developed after the type cheker and all the type cheker assumes the method is optimized.
+	Change methodNode for notOptimizedMethodNode and run the tests to see the impact - Hernan"
 	methodNode := methodReference methodNode.
 	actualMethod := methodReference compiledMethod.
 	
@@ -2053,11 +2056,11 @@ withPossibleMessageSendsDo: aBlock
 	
 	possibleMessageSends do: aBlock! !
 
-!PossibleSender methodsFor: 'message sends ranges' stamp: 'HAW 1/1/2020 19:55:46'!
+!PossibleSender methodsFor: 'message sends ranges' stamp: 'HAW 7/27/2023 16:47:35'!
 rangesOf: aSentSelector whenSendTo: aReceiverTypes
 
 	| compiledMethod possibleMessageSendsAsStrings ranges |
-	
+
 	ranges := Set new.
 	compiledMethod := self compiledMethodIfAbsent: [ ^#() ].
 	
@@ -2068,7 +2071,7 @@ rangesOf: aSentSelector whenSendTo: aReceiverTypes
 	If the compiledMethod would keep the methodNode all this would not be necesary... - Hernan"
 	possibleMessageSendsAsStrings := possibleMessageSends collect: [ :possibleMessageSend | 
 		possibleMessageSend key printString ].
-	compiledMethod methodNode encoder rawSourceRanges keysAndValuesDo: [ :parseNode :range |
+	compiledMethod notOptimizedMethodNode encoder rawSourceRanges keysAndValuesDo: [ :parseNode :range |
 		(possibleMessageSendsAsStrings includes: parseNode printString) ifTrue: [ ranges add: range ]].
 	
 	^ranges! !
@@ -7478,14 +7481,16 @@ addActualImplementorsOf: aSelectorToInline in: aPotentialClassToRefactor to: imp
 		andActualMessageSendsTo: messageSends 
 		inSystem: aSystem ! !
 
-!InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 10/4/2022 02:10:32'!
+!InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'HAW 7/27/2023 16:47:26'!
 findReferencesToSelector: aSelectorToInline in: aMethodReference whenSentTo: receiverTypes
 	
-	^(aMethodReference rangesOf: aSelectorToInline whenSendTo: receiverTypes)
-		collect: [ :range | 
-			| messageNode methodNode completeSourceRange |
+	| methodNode |
+	
+	methodNode := aMethodReference compiledMethod notOptimizedMethodNode.
 			
-			methodNode := aMethodReference compiledMethod methodNode.
+	^(aMethodReference rangesOf: aSelectorToInline whenSendTo: receiverTypes)
+		collect: [ :range | | messageNode completeSourceRange |
+			
 			messageNode := (methodNode parseNodesPathAt: range first 	
 				ifAbsent: [self shouldNotHappen ]) first key.
 			completeSourceRange := (methodNode completeSourceRangesOf: messageNode 
