@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6068] on 22 November 2023 at 9:26:46 pm'!
-'Description LiveTypingSmalltalkCompleter refactoring'!
-!provides: 'LiveTyping' 1 110!
+'From Cuis 6.0 [latest update: #6092] on 27 November 2023 at 4:32:23 pm'!
+'Description Change to wordAt:'!
+!provides: 'LiveTyping' 1 111!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -15334,12 +15334,12 @@ balloonTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
 		do: [ :anError | 'Could not get type because: ', anError messageText ]
 ! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:41:44'!
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 11/27/2023 11:48:57'!
 balloonTypeInfoOfInstanceVariableAt: mousePositionInText
 
 	| instVarName typeInfo |
 	
-	instVarName := (self wordUnder: mousePositionInText) asString.
+	instVarName := (self wordAt: mousePositionInText) asString.
 	typeInfo := self codeProvider selectedClass typeInfoOfInstanceVariableNamed: instVarName ifAbsent: [^''].
 
 	^typeInfo printTypesUpTo: 5! !
