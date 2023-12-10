@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6092] on 27 November 2023 at 4:32:23 pm'!
-'Description Change to wordAt:'!
-!provides: 'LiveTyping' 1 111!
+'From Cuis 6.0 [latest update: #6115] on 10 December 2023 at 11:13:27 am'!
+'Description receiverOrCascadeReceiver moved to core'!
+!provides: 'LiveTyping' 1 112!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -14658,20 +14658,6 @@ nodeTypePrintString
 	
 	^''! !
 
-!ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 10/19/2020 15:35:41'!
-receiverOrCascadeReceiver
-	
-	"To contemplate cases like: 
-	a := Object
-		value;
-		va
-	Thanks Nico Papagna - Hernan"
-	
-	self nodesDo: [ :aNode | (aNode isCascadeNode or: [ aNode isMessageNode]) ifTrue: [ ^aNode receiverOrCascadeReceiver ]].
-	
-	"If there is no message node there is nothing valid I could return, but I return self for the rest to work - Hernan"
-	^self! !
-
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 12/3/2018 11:41:46'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
@@ -14803,11 +14789,6 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	"elements 
 		inject: Set new
 		addingAll: [ :aParseNode | aParseNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ]"! !
-
-!CascadeNode methodsFor: '*LiveTyping' stamp: 'HAW 9/23/2020 18:16:56'!
-receiverOrCascadeReceiver
-	
-	^receiver ! !
 
 !CascadeNode methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 22:22:19'!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
@@ -15177,13 +15158,6 @@ isReceiverNil
 nodeTypePrintString
 
 	^'message'! !
-
-!MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 12/6/2018 17:47:34'!
-receiverOrCascadeReceiver
-	
-	"When in cascade, receiver is nil and originalReceiver is the cascade receiver - Hernan"
-	
-	^receiver ifNil: [ originalReceiver ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 14:19:01'!
 receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
