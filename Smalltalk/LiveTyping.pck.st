@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6115] on 17 January 2024 at 9:39:14 pm'!
-'Description Update changes of MethodContext>>#return:from:'!
-!provides: 'LiveTyping' 1 113!
+'From Cuis6.3 [latest update: #6165] on 18 January 2024 at 12:56:58 pm'!
+'Description Original source code now uses := instead of _'!
+!provides: 'LiveTyping' 1 114!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -8834,13 +8834,13 @@ systemCategoryMenuOptions
 		}`.
 	! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:11:53'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:49:27'!
 addAndClassifySelectorOriginalSourceCode
 
 	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category notifying: requestor
 	| priorMethodOrNil priorProtocolOrNil |
-	priorMethodOrNil _ self compiledMethodAt: selector ifAbsent: nil.
-	priorProtocolOrNil _ self whichCategoryIncludesSelector: selector.
+	priorMethodOrNil := self compiledMethodAt: selector ifAbsent: nil.
+	priorProtocolOrNil := self whichCategoryIncludesSelector: selector.
 	self addSelectorSilently: selector withMethod: compiledMethod.
 	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
 	priorMethodOrNil
@@ -8999,16 +8999,16 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 12/28/2022 16:51:03'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:53:16'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
 	
 	| methodAndNode selector isExistingMethod updatedCode |	
-	methodAndNode _ self basicCompile: code notifying: requestor 
+	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
-	selector _ methodAndNode selector.
-	isExistingMethod _ self includesSelector: selector.
+	selector := methodAndNode selector.
+	isExistingMethod := self includesSelector: selector.
 	isExistingMethod
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
@@ -9018,7 +9018,7 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode _ CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
+		updatedCode := CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
@@ -9190,16 +9190,16 @@ mouseMoveLocalPositionSourceCode
 	(owner is: #ScrollPane) ifTrue: [
 		owner scrollSelectionIntoView ].'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/7/2019 17:01:14'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:55:17'!
 recompileFromOriginalSourceCode
 
 	^'recompile: selector from: oldClass
 	"Compile the method associated with selector in the receiver''s method dictionary."
 	"ar 7/10/1999: Use oldClass compiledMethodAt: not self compiledMethodAt:"
 	| method trailer methodNode |
-	method _ oldClass compiledMethodAt: selector.
-	trailer _ method trailer.
-	methodNode _ self compilerClass new
+	method := oldClass compiledMethodAt: selector.
+	trailer := method trailer.
+	methodNode := self compilerClass new
 				compile: (oldClass sourceCodeAt: selector)
 				in: self
 				notifying: nil
