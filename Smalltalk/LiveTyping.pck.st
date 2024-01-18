@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6115] on 10 December 2023 at 11:13:27 am'!
-'Description receiverOrCascadeReceiver moved to core'!
-!provides: 'LiveTyping' 1 112!
+'From Cuis 6.0 [latest update: #6115] on 17 January 2024 at 9:39:14 pm'!
+'Description Update changes of MethodContext>>#return:from:'!
+!provides: 'LiveTyping' 1 113!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -8493,12 +8493,12 @@ addReturnTypes: types to: aSelector in: aClass
 	"Abstract methods, quick return methods do not have a types array, that is the reason of the ifFull: .. - Hernan"
 	types do: [ :type | methodReturnTypeInfo addType: type ifFull: [] ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 8/18/2021 20:07:57'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/17/2024 21:36:24'!
 checkRedefinedMethodsDidNotChange
 
 	self 
 		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 6/15/2008 11:34';
-		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 6/1/2021 12:14:16';
+		checkTimeStampOf: ContextPart>>#return:from: is: 'HAW 1/17/2024 20:30:55';
 		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:24:39'!
@@ -14072,19 +14072,20 @@ popIntoTemporaryVariable: offset
 	method annotateTemporaryTypeOf: value at: index 
 	! !
 
-!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2021 20:00:10'!
+!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2024 21:38:20'!
 return: value from: aSender 
 	"For simulation.  Roll back self to aSender and return value from it.  Execute any unwind blocks on the way.  ASSUMES aSender is a sender of self"
 
 	| newTop |
 	
-	aSender isDead ifTrue: [
+	newTop := aSender sender.
+	(aSender isDead or: [newTop isNil or: [newTop isDead]]) ifTrue: [
 		"I do not have to keep the type because it does not return - Hernan"
-		^ self send: #cannotReturn: to: self with: {value} super: false].
-	newTop _ aSender sender.
+		^ self pc: nil; send: #cannotReturn: to: self with: {value} super: false].
+	newTop := aSender sender.
 	(self findNextUnwindContextUpTo: newTop) ifNotNil: [
 		"If #aboutToReturn:through: fails, I do not keep the type - Hernan"
-		newTop _ self send: #aboutToReturn:through: to: self with: {value. nil} super: false.
+		newTop := self send: #aboutToReturn:through: to: self with: {value. nil} super: false.
 		method annotateReturnTypeOf: value.
 		^ newTop ].
 	self releaseTo: newTop.
