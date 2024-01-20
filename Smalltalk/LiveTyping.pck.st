@@ -1,6 +1,6 @@
-'From Cuis6.3 [latest update: #6165] on 18 January 2024 at 12:56:58 pm'!
-'Description Original source code now uses := instead of _'!
-!provides: 'LiveTyping' 1 114!
+'From Cuis6.3 [latest update: #6165] on 20 January 2024 at 12:24:16 pm'!
+'Description update MethodContext>>return:from:'!
+!provides: 'LiveTyping' 1 115!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -8493,12 +8493,12 @@ addReturnTypes: types to: aSelector in: aClass
 	"Abstract methods, quick return methods do not have a types array, that is the reason of the ifFull: .. - Hernan"
 	types do: [ :type | methodReturnTypeInfo addType: type ifFull: [] ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/17/2024 21:36:24'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/20/2024 12:23:51'!
 checkRedefinedMethodsDidNotChange
 
 	self 
 		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 6/15/2008 11:34';
-		checkTimeStampOf: ContextPart>>#return:from: is: 'HAW 1/17/2024 20:30:55';
+		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 1/18/2024 17:52:20' ;
 		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:24:39'!
@@ -14072,7 +14072,7 @@ popIntoTemporaryVariable: offset
 	method annotateTemporaryTypeOf: value at: index 
 	! !
 
-!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 1/17/2024 21:38:20'!
+!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 1/20/2024 12:22:32'!
 return: value from: aSender 
 	"For simulation.  Roll back self to aSender and return value from it.  Execute any unwind blocks on the way.  ASSUMES aSender is a sender of self"
 
@@ -14089,10 +14089,11 @@ return: value from: aSender
 		method annotateReturnTypeOf: value.
 		^ newTop ].
 	self releaseTo: newTop.
-	newTop ifNotNil: [newTop push: value].
-	method annotateReturnTypeOf: value.
 
-	^ newTop! !
+	method annotateReturnTypeOf: value.
+	
+	^newTop push: value
+! !
 
 !MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:22'!
 storeIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex
