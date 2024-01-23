@@ -1,6 +1,6 @@
-'From Cuis6.3 [latest update: #6165] on 22 January 2024 at 9:05:25 pm'!
-'Description NotImplementedMethodTest updated '!
-!provides: 'LiveTyping' 1 116!
+'From Cuis6.3 [latest update: #6167] on 23 January 2024 at 3:50:20 pm'!
+'Description Moved some methods to base'!
+!provides: 'LiveTyping' 1 117!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -14809,11 +14809,6 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	
 	^`{ BlockClosure }`! !
 
-!BlockNode class methodsFor: '*LiveTyping' stamp: 'RNG 1/19/2018 21:06:55'!
-empty
-
-	^ self statements: #() returns: false! !
-
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 12:17:22'!
 actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParameterIndex of: aSelector ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends 
 	
@@ -14923,11 +14918,6 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 identifierPrintString
 	
 	^key printString ! !
-
-!SelectorNode methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 11:14:25'!
-isNamed: aSelectorName
-
-	^ self key = aSelectorName! !
 
 !VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 1/16/2019 20:05:06'!
 nodeTypePrintString
