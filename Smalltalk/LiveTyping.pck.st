@@ -1,6 +1,6 @@
-'From Cuis6.3 [latest update: #6165] on 20 January 2024 at 12:24:16 pm'!
-'Description update MethodContext>>return:from:'!
-!provides: 'LiveTyping' 1 115!
+'From Cuis6.3 [latest update: #6165] on 22 January 2024 at 9:05:25 pm'!
+'Description NotImplementedMethodTest updated '!
+!provides: 'LiveTyping' 1 116!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -5148,7 +5148,7 @@ test02CategoryIsNil
 
 	self assert: (NotImplementedMethod class: self class selector: #none) category isNil! !
 
-!NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/4/2019 08:19:41'!
+!NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 1/22/2024 20:58:13'!
 test03CompiledMethodSignalsError
 
 	| notImplementedMethod |
@@ -5157,7 +5157,7 @@ test03CompiledMethodSignalsError
 	self 
 		should: [ notImplementedMethod compiledMethod ]
 		raise: Error
-		withMessageText: Dictionary keyNotFoundErrorDescription ! !
+		withMessageText: (Dictionary keyNotFoundErrorDescriptionFor: notImplementedMethod selector)! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/4/2019 08:20:50'!
 test04CompiledMethodIfAbsentEvaluatesIfAbsentBlock
@@ -5195,7 +5195,7 @@ test09rangesOASentSelectorWhenSendToReceiverTypesIsEmpty
 	self assert: ((NotImplementedMethod class: self class selector: #none) rangesOf: #size whenSendTo: { OrderedCollection })
  isEmpty! !
 
-!NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/4/2019 08:37:42'!
+!NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 1/22/2024 20:58:57'!
 test10FailsWhenAsItsSourceCode
 
 	| notImplementedMethod |
@@ -5204,7 +5204,7 @@ test10FailsWhenAsItsSourceCode
 	self 
 		should: [ notImplementedMethod sourceCode ]
 		raise: Error
-		withMessageText: Dictionary keyNotFoundErrorDescription ! !
+		withMessageText: (Dictionary keyNotFoundErrorDescriptionFor: notImplementedMethod selector)! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 8/19/2021 15:45:29'!
 test11StringVersionStartsWithNotImplemented
