@@ -1,6 +1,6 @@
-'From Cuis6.3 [latest update: #6167] on 23 January 2024 at 3:50:20 pm'!
-'Description Moved some methods to base'!
-!provides: 'LiveTyping' 1 117!
+'From Cuis6.3 [latest update: #6200] on 30 January 2024 at 4:52:29 pm'!
+'Description Aligment with Cuis 6200'!
+!provides: 'LiveTyping' 1 118!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -3930,15 +3930,15 @@ test15RecognizeTypeSendersToVariablesReferencingClasses
 	
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class class lookupSelector: #m1))! !
 
-!ActualSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:24:59'!
+!ActualSendersTest methodsFor: 'tests' stamp: 'HAW 1/30/2024 16:51:11'!
 test16RecognizeTypeSendersToAnyLiteral
 	
 	"
 	self class initializeMethodsTypeInformation.
 	"
-	$a asCharacter.
+	$a asString.
 	
-	self assert: (self class>>thisContext selector doesOnlySurelySend: ($a class lookupSelector: #asCharacter))! !
+	self assert: (self class>>thisContext selector doesOnlySurelySend: ($a class lookupSelector: #asString))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 3/14/2019 09:55:02'!
 test17CanRecognizePossibleTypeSenders
@@ -14528,7 +14528,7 @@ allActualSendersOn: sentSelector forAll: types whenSomeAreNotImplemented: someNo
 	^collector 
 	! !
 
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 10:03:00'!
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 1/30/2024 12:02:53'!
 browseActualImplementorsFinder: anActualImplementorsFinder
 
 	| label |
@@ -14537,11 +14537,11 @@ browseActualImplementorsFinder: anActualImplementorsFinder
 	
 	(anActualImplementorsFinder implementorsIsEmpty or: [ anActualImplementorsFinder notImplementedIsEmpty ]) 
 		ifTrue: [ 
-			Smalltalk 
+			self 
 				browseMessageList: anActualImplementorsFinder implementorsSorted
 				name: label ]
 		ifFalse: [
-			Smalltalk 
+			self 
 				browseMessageList: anActualImplementorsFinder implementorsSorted, anActualImplementorsFinder notImplementedSorted 
 				name: label
 				prefixedWith: '[', anActualImplementorsFinder implementorsSize printString, '/', anActualImplementorsFinder totalSize printString, '] '
