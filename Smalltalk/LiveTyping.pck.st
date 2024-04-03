@@ -1,6 +1,6 @@
-'From Cuis6.3 [latest update: #6200] on 30 January 2024 at 4:52:29 pm'!
-'Description Aligment with Cuis 6200'!
-!provides: 'LiveTyping' 1 118!
+'From Cuis6.3 [latest update: #6311] on 3 April 2024 at 3:42:32 pm'!
+'Description Aligned with 6311'!
+!provides: 'LiveTyping' 1 119!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -11,26 +11,6 @@ SystemOrganization addCategory: #'LiveTyping-Refactoring'!
 SystemOrganization addCategory: #'LiveTyping-TypeChecking'!
 SystemOrganization addCategory: #'LiveTyping-TypeChecking-Tests'!
 
-
-!classDefinition: #ActualSendersMessageSet category: #LiveTyping!
-MessageSet subclass: #ActualSendersMessageSet
-	instanceVariableNames: 'types'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'ActualSendersMessageSet class' category: #LiveTyping!
-ActualSendersMessageSet class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeCheckingResultSet category: #'LiveTyping-TypeChecking'!
-MessageSet subclass: #TypeCheckingResultSet
-	instanceVariableNames: 'methodTypeChecker showProblems'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResultSet class' category: #'LiveTyping-TypeChecking'!
-TypeCheckingResultSet class
-	instanceVariableNames: ''!
 
 !classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: #'LiveTyping-Refactoring'!
 RefactoringError subclass: #CanNotChangeSelectorWithNotIncludedTypes
@@ -90,16 +70,6 @@ ParseNodeVisitor subclass: #MethodTypeCheckerVisitor
 	category: 'LiveTyping-TypeChecking'!
 !classDefinition: 'MethodTypeCheckerVisitor class' category: #'LiveTyping-TypeChecking'!
 MethodTypeCheckerVisitor class
-	instanceVariableNames: ''!
-
-!classDefinition: #TypeCheckingResultWindow category: #'LiveTyping-TypeChecking'!
-MessageSetWindow subclass: #TypeCheckingResultWindow
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-TypeChecking'!
-!classDefinition: 'TypeCheckingResultWindow class' category: #'LiveTyping-TypeChecking'!
-TypeCheckingResultWindow class
 	instanceVariableNames: ''!
 
 !classDefinition: #NotImplementedMethod category: #LiveTyping!
@@ -1052,74 +1022,39 @@ Object subclass: #TypeCheckerTestMethods
 TypeCheckerTestMethods class
 	instanceVariableNames: ''!
 
+!classDefinition: #ActualSendersMessageSet category: #LiveTyping!
+ProtoObject subclass: #ActualSendersMessageSet
+	instanceVariableNames: 'types'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'ActualSendersMessageSet class' category: #LiveTyping!
+ActualSendersMessageSet class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckingResultSet category: #'LiveTyping-TypeChecking'!
+ProtoObject subclass: #TypeCheckingResultSet
+	instanceVariableNames: 'methodTypeChecker showProblems'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingResultSet class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingResultSet class
+	instanceVariableNames: ''!
+
+!classDefinition: #TypeCheckingResultWindow category: #'LiveTyping-TypeChecking'!
+ProtoObject subclass: #TypeCheckingResultWindow
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-TypeChecking'!
+!classDefinition: 'TypeCheckingResultWindow class' category: #'LiveTyping-TypeChecking'!
+TypeCheckingResultWindow class
+	instanceVariableNames: ''!
+
 
 !TypeCheckingResultWindow commentStamp: '<historical>' prior: 0!
 Morphic view for MessageSet models. See category 'GUI building'.!
-
-!ActualSendersMessageSet methodsFor: 'message sends ranges' stamp: 'HAW 4/30/2019 18:07:03'!
-messageSendsRangesOf: aSelector
-	
-	^ selectedMessage 
-		ifNil: [ #() ]
-		ifNotNil: [selectedMessage rangesOf: aSelector whenSendTo: types ]
-! !
-
-!ActualSendersMessageSet methodsFor: 'initialization' stamp: 'HAW 4/30/2019 18:10:18'!
-initializeTypes: aReceiverTypes 
-
-	types := aReceiverTypes.
-! !
-
-!ActualSendersMessageSet class methodsFor: 'instance creation' stamp: 'HAW 8/10/2019 12:00:20'!
-messageList: messageList types: aReceiverTypes 
-
-	| newInstance |
-	
-	newInstance := self messageList: messageList.
-	^newInstance initializeTypes: aReceiverTypes ! !
-
-!TypeCheckingResultSet methodsFor: 'list' stamp: 'HAW 8/9/2019 10:36:26'!
-calculateList
-
-	messageList := methodTypeChecker errorsAndWarningsAsMethodReferencesWithProblems: showProblems.
-	self reformulateList.
-	! !
-
-!TypeCheckingResultSet methodsFor: 'accessing' stamp: 'HAW 7/18/2019 19:27:36'!
-contents: aString notifying: aRequestor 
-
-	| result |
-
-	result := super contents: aString notifying: aRequestor.
-	methodTypeChecker := methodTypeChecker value.
-	self calculateList.
-	
-	^result 
-! !
-
-!TypeCheckingResultSet methodsFor: 'source code ranges' stamp: 'HAW 7/18/2019 00:13:44'!
-messageSendsRangesOf: aSelector
-
-	^ selectedMessage 
-		ifNil: [ #() ]
-		ifNotNil: [ selectedMessage sourceCodeRange ]
-! !
-
-!TypeCheckingResultSet methodsFor: 'initialization' stamp: 'HAW 4/27/2023 18:14:48'!
-initializeFor: aMethodTypeChecker showingProblems: showingProblems 
-	
-	methodTypeChecker := aMethodTypeChecker.
-	showProblems := showingProblems.
-	self calculateList.
-	
-	"It does not matter the methodSelector, it is just a symbol that flags that ranges should be look for selecting - Hernan"
-	self autoHighlightString: methodTypeChecker methodSelector allOccurrences: false! !
-
-!TypeCheckingResultSet class methodsFor: 'instance creation' stamp: 'HAW 8/9/2019 10:29:20'!
-for: aMethodTypeChecker showingProblems: showingProblems 
-	
-	^self new initializeFor: aMethodTypeChecker showingProblems: showingProblems 
-! !
 
 !CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 18:49:19'!
 messageSendWithInvalidReceiverTypesLabelFor: array
@@ -1939,37 +1874,6 @@ addWarning: anIncompleteTypeInfoError node: aMessageNode
 for: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
 
 	^self new initializeFor: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
-	! !
-
-!TypeCheckingResultWindow methodsFor: 'menu building' stamp: 'HAW 7/18/2019 00:41:43'!
-messageListMenu
-
-	| aMenu |
-	
-	aMenu _ MenuMorph new defaultTarget: self.
-	aMenu addTitle: 'Errors & Warnings'.
-	aMenu
-		addItemsFromDictionaries: `{
-			{
-				#label 			-> 		'remove'.
-				#object 			-> 		#model.
-				#selector 		-> 		#removeMessageFromBrowserKeepingLabel.
-				#icon 			-> 		#listRemoveIcon
-			} asDictionary.
-		}`.
-		
-	^ aMenu! !
-
-!TypeCheckingResultWindow class methodsFor: 'instance creation' stamp: 'HAW 8/11/2019 23:28:38'!
-openFor: aTypeChecker labelTrail: aLabelTrail showingProblems: showingProblems 
-
-	| window model |
-	
-	model := TypeCheckingResultSet for: aTypeChecker showingProblems: showingProblems.
-	window := super open: model label: 'Type checking result for ', aLabelTrail.
-	model messageListIndex: 1.
-	
-	^window
 	! !
 
 !NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 10/24/2018 20:12:40'!
@@ -4618,15 +4522,21 @@ initializeHierarchyForTestingInstanceVariablesTypes
 	
 	TypeInfoRootTestClass withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
 
-!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:05:51'!
+!InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 4/3/2024 15:42:13'!
 test01InstanceVariablesTypesIsInitializedWithAnArrayOfClassInstSize
 
 	self class initializeInstanceVariablesRawTypes.
 	
 	self assert: self class instanceVariablesRawTypes size equals: self class instSize.
-	self class instanceVariablesRawTypes allButLastDo: [ :instVarTypes |
-		self assert: (instVarTypes allSatisfy: [ :aType | aType isNil ])].
-	self assert: self class instanceVariablesRawTypes last isNil! !
+	self class instanceVariablesRawTypes withIndexDo: [ :instVarTypes :index |
+		index = 4 "assertCount"
+			ifTrue: [ 
+				self assert: instVarTypes first equals: SmallInteger.
+				instVarTypes allButFirst allSatisfy: [ :aType | aType isNil ]]
+			ifFalse: [ index = self class instSize 
+				ifTrue: [ self assert: instVarTypes isNil ]
+				ifFalse: [ self assert: (instVarTypes allSatisfy: [ :aType | aType isNil ])]]]
+	! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 10/16/2018 01:06:09'!
 test02InitializeInstanceVariablesTypesWithAllInstancesStoreCurrentClassInstancesTypes
@@ -4744,7 +4654,7 @@ test09EvaluatesIfAbsentBlockWhenAskTypeInfoForNonExistingInstVar
 	self class instanceVariablesTypes typeInfoOf: 'xyz' ifAbsent: [ ^self ].
 	self fail! !
 
-!InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 10/16/2018 08:45:21'!
+!InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 4/3/2024 15:38:01'!
 instanceVariableRawTypesSizeFor: anInstVarName
 
 	anInstVarName = 'instVar3' ifTrue: [ ^ 1 ].
@@ -12961,6 +12871,102 @@ classMethodWithTypeError
 	
 	1 date! !
 
+!ActualSendersMessageSet methodsFor: 'message sends ranges' stamp: 'HAW 4/30/2019 18:07:03'!
+messageSendsRangesOf: aSelector
+	
+	^ selectedMessage 
+		ifNil: [ #() ]
+		ifNotNil: [selectedMessage rangesOf: aSelector whenSendTo: types ]
+! !
+
+!ActualSendersMessageSet methodsFor: 'initialization' stamp: 'HAW 4/30/2019 18:10:18'!
+initializeTypes: aReceiverTypes 
+
+	types := aReceiverTypes.
+! !
+
+!ActualSendersMessageSet class methodsFor: 'instance creation' stamp: 'HAW 8/10/2019 12:00:20'!
+messageList: messageList types: aReceiverTypes 
+
+	| newInstance |
+	
+	newInstance := self messageList: messageList.
+	^newInstance initializeTypes: aReceiverTypes ! !
+
+!TypeCheckingResultSet methodsFor: 'list' stamp: 'HAW 8/9/2019 10:36:26'!
+calculateList
+
+	messageList := methodTypeChecker errorsAndWarningsAsMethodReferencesWithProblems: showProblems.
+	self reformulateList.
+	! !
+
+!TypeCheckingResultSet methodsFor: 'accessing' stamp: 'HAW 7/18/2019 19:27:36'!
+contents: aString notifying: aRequestor 
+
+	| result |
+
+	result := super contents: aString notifying: aRequestor.
+	methodTypeChecker := methodTypeChecker value.
+	self calculateList.
+	
+	^result 
+! !
+
+!TypeCheckingResultSet methodsFor: 'source code ranges' stamp: 'HAW 7/18/2019 00:13:44'!
+messageSendsRangesOf: aSelector
+
+	^ selectedMessage 
+		ifNil: [ #() ]
+		ifNotNil: [ selectedMessage sourceCodeRange ]
+! !
+
+!TypeCheckingResultSet methodsFor: 'initialization' stamp: 'HAW 4/27/2023 18:14:48'!
+initializeFor: aMethodTypeChecker showingProblems: showingProblems 
+	
+	methodTypeChecker := aMethodTypeChecker.
+	showProblems := showingProblems.
+	self calculateList.
+	
+	"It does not matter the methodSelector, it is just a symbol that flags that ranges should be look for selecting - Hernan"
+	self autoHighlightString: methodTypeChecker methodSelector allOccurrences: false! !
+
+!TypeCheckingResultSet class methodsFor: 'instance creation' stamp: 'HAW 8/9/2019 10:29:20'!
+for: aMethodTypeChecker showingProblems: showingProblems 
+	
+	^self new initializeFor: aMethodTypeChecker showingProblems: showingProblems 
+! !
+
+!TypeCheckingResultWindow methodsFor: 'menu building' stamp: 'HAW 7/18/2019 00:41:43'!
+messageListMenu
+
+	| aMenu |
+	
+	aMenu _ MenuMorph new defaultTarget: self.
+	aMenu addTitle: 'Errors & Warnings'.
+	aMenu
+		addItemsFromDictionaries: `{
+			{
+				#label 			-> 		'remove'.
+				#object 			-> 		#model.
+				#selector 		-> 		#removeMessageFromBrowserKeepingLabel.
+				#icon 			-> 		#listRemoveIcon
+			} asDictionary.
+		}`.
+		
+	^ aMenu! !
+
+!TypeCheckingResultWindow class methodsFor: 'instance creation' stamp: 'HAW 8/11/2019 23:28:38'!
+openFor: aTypeChecker labelTrail: aLabelTrail showingProblems: showingProblems 
+
+	| window model |
+	
+	model := TypeCheckingResultSet for: aTypeChecker showingProblems: showingProblems.
+	window := super open: model label: 'Type checking result for ', aLabelTrail.
+	model messageListIndex: 1.
+	
+	^window
+	! !
+
 !ProtoObject class methodsFor: '*LiveTyping-private' stamp: 'HAW 7/19/2019 17:22:29'!
 createMethodReturnRawTypesOf: aCompiledMethod 
 	
@@ -13242,6 +13248,17 @@ isTypesEmpty
 	
 	^true! !
 
+!UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 4/27/2023 18:17:51'!
+openMessageList: messageList label: labelString types: aReceiverTypes selector: aSentSelector
+
+	| messageSet |
+
+	messageSet := ActualSendersMessageSet messageList: messageList types: aReceiverTypes.
+	messageSet autoHighlightString: aSentSelector allOccurrences: false.
+
+	^self open: messageSet label: labelString 
+! !
+
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:34:52'!
 removeAllTypes
 	
@@ -13508,12 +13525,12 @@ disableLiveTypingForAll
 	self disableLiveTyping.
 	self methodsDo: [ :aCompiledMethod | aCompiledMethod disableLiveTyping ].! !
 
-!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:41:16'!
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/3/2024 15:39:12'!
 doNotCheckForUnload
 
 	self class
 		compileSilently: #unloadFromAllRawTypes
-		classified: Categorizer default! !
+		classified: ClassOrganizer defaultMethodCategory ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 10/16/2018 08:43:30'!
 initializeEachInstanceVariableRawTypes
@@ -15423,17 +15440,6 @@ browseActualSendersOfSelectedMethod
 	
 	self model currentCompiledMethod ifNotNil: [ :aSentCompileMethod |
 		Smalltalk browseAllActualSendersOn: aSentCompileMethod ]! !
-
-!MessageSetWindow class methodsFor: '*LiveTyping' stamp: 'HAW 4/27/2023 18:17:51'!
-openMessageList: messageList label: labelString types: aReceiverTypes selector: aSentSelector
-
-	| messageSet |
-
-	messageSet := ActualSendersMessageSet messageList: messageList types: aReceiverTypes.
-	messageSet autoHighlightString: aSentSelector allOccurrences: false.
-
-	^self open: messageSet label: labelString 
-! !
 
 !ChangeSelectorSendersStepWindow methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 18:48:53'!
 codePane
