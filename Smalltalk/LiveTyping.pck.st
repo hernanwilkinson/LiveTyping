@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6578] on 10 August 2024 at 4:40:49 pm'!
-'Description Udated to Cuis 7.1'!
-!provides: 'LiveTyping' 1 123!
+'From Cuis7.1 [latest update: #6580] on 11 August 2024 at 9:04:08 pm'!
+'Description Udated to Cuis 7.1 - Menu changes'!
+!provides: 'LiveTyping' 1 124!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2925,7 +2925,7 @@ classListMenuSpec
 		#(3080		'Reset types' 					nil 	model 			resetClassType 					deleteIcon)
 	)! !
 
-!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'jmv 7/30/2024 14:44:45'!
+!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'HAW 8/11/2024 20:47:17'!
 messageListMenuSpec
 	"
 	BrowserWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
@@ -2933,8 +2933,7 @@ messageListMenuSpec
 	Do this in LiveTyping class >> initializeLiveTyping
 	"
 	^#(
-		#(5		'LiveTyping' 											nil 	nil 			3000 													acceptIcon)
-		#(6 		'-----')
+		#(145		'LiveTyping' 											nil 	nil 			3000 													acceptIcon)
 		#(161		'actual senders of it (B)' 											$B 	window 			browseActualSendersOfSelectedMethod 													mailForwardIcon)
 		#(171		'actual implementors of it (M)' 											$M 	window 			browseActualImplementorsOfSelectedMethod 													developmentIcon)
 		#(271		'remove method checking actual senders (X)' 											$X 	model 			removeMessageCheckingActualSenders 													deleteIcon)
@@ -2942,13 +2941,13 @@ messageListMenuSpec
 		" 'LiveTyping' SubMenu"
 		#(3030		'Actual Senders of it (B)' 											$B 	window 			browseActualSendersOfSelectedMethod 													mailForwardIcon)
 		#(3040		'Actual Implementors of it (M)' 											$M 	window			browseActualImplementorsOfSelectedMethod 													developmentIcon)
-		#(3050		'Remove method checking actual senders (X)' 											$X 	model 			removeMessageCheckingActualSenders 													developmentIcon)
+		#(3050		'Remove method checking actual senders (X)' 											$X 	model 			removeMessageCheckingActualSenders 													deleteIcon)
 		#(3060 		'-----')
 		#(3070		'Type Check (T)' 											$T 	model 			typeCheckMethod 													acceptIcon)
-		#(3080		'Reset types' 											nil 	model 			resetMethodTypes 													deleteIcon)
+		#(3080		'Reset types' 											nil 	model 			resetMethodTypes 													)
 	)! !
 
-!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'jmv 7/30/2024 14:45:13'!
+!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'HAW 8/11/2024 20:45:57'!
 smalltalkEditorMenuSpec
 	"
 	BrowserWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
@@ -2956,8 +2955,7 @@ smalltalkEditorMenuSpec
 	Do this in LiveTyping class >> initializeLiveTyping
 	"
 	^#(
-		#(5		'LiveTyping' 									nil 	nil 		3000 								acceptIcon)
-		#(6 		'-----')
+		#(175		'LiveTyping' 									nil 	nil 		3000 								acceptIcon)
 
 		" 'LiveTyping' SubMenu"
 		#(3020		'Show type info (P)' 									$P 	editor 		showSelectionTypeInfo 								helpIcon)
