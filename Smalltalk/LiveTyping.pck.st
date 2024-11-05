@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6580] on 11 August 2024 at 9:04:08 pm'!
-'Description Udated to Cuis 7.1 - Menu changes'!
-!provides: 'LiveTyping' 1 124!
+'From Cuis6.3 [latest update: #6350] on 5 November 2024 at 12:37:54 pm'!
+'Description Implementation of removing method using actual senders on method set'!
+!provides: 'LiveTyping' 1 122!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2442,21 +2442,21 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 8/10/2024 16:40:18'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:15:47'!
 compileAfterInstallMethods.
 
-	"I do not use cascade messages becuase when this method fails it is better to try colaboration by colaboration"
-	
-	self compile: self addAndClassifySelectorStep1SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode.
-	self compile: self compileClassifiedWithStampNotifyingLogSourceSourceCode in: ClassDescription ifOriginalSourceCodeIs: self compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode.
-	self compile: self addAndClassifySelectorStep2SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorStep1SourceCode.
-	self compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode.
-	self compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode.
-	self compile: self recompileFromSourceCode in: Behavior ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode.
-	self compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode.
-	self compile: self setSenderReceiverMethodArgumentsSourceCode in: MethodContext 
-			ifOriginalSourceCodeIs: self setSenderReceiverMethodArgumentsOriginalSourceCode.
-	self compile: self blockReturnTopSourceCode in: MethodContext ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
+	self 
+		compile: self addAndClassifySelectorStep1SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode;
+		compile: self compileClassifiedWithStampNotifyingLogSourceSourceCode in: ClassDescription ifOriginalSourceCodeIs: self compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode;
+		compile: self addAndClassifySelectorStep2SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorStep1SourceCode;
+		compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode;
+		compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode;
+		compile: self recompileFromSourceCode in: Behavior ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode;
+		compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode;
+		compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode;
+		compile: self setSenderReceiverMethodArgumentsSourceCode in: MethodContext 
+			ifOriginalSourceCodeIs: self setSenderReceiverMethodArgumentsOriginalSourceCode;
+		compile: self blockReturnTopSourceCode in: MethodContext ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
 ! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
@@ -2519,38 +2519,243 @@ initialize
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
 	! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 8/10/2024 16:38:58'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 8/9/2024 18:03:21'!
 initializeLiveTyping
 
 	self 
 		modifyClassDescriptionShape;
 		modifyAdditionalMethodStateShape;
 		checkRedefinedMethodsDidNotChange;
-		compileAfterInstallMethods;
+		"compileAfterInstallMethods;"
 		initializeTypeInformation;
-		registerRefactoringAppliers;
-		registerMenuesAndShortcuts.! !
+		registerRefactoringAppliers! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 8/10/2024 16:38:52'!
-registerMenuesAndShortcuts
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:24:20'!
+aMenuLabel
 
-	BrowserWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
+	"I had to call it aMenuLabel and not just menuLabel because it has to be loaded before classListMenuOptions for
+	it compile - Hernan"
+	^'LiveTyping'! !
 
-	BrowserWindow at: #systemCategoriesListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #systemCategoriesListMenuSpec).
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
+classListMenuOptions
 
-	BrowserWindow at: #classListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #classListMenuSpec).
+	^ `{
+			{
+				#itemGroup 		-> 		5.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping aMenuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 	-> 		10.
+				#itemOrder 		-> 		20.
+				#label 			-> 		'type check (T)'.
+				#selector 		-> 		#typeCheckClass.
+				#object 			-> 		#model.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 	-> 		10.
+				#itemOrder 		-> 		30.
+				#label 			-> 		'reset types'.
+				#selector 		-> 		#resetClassType.
+				#object 			-> 		#model.
+				#icon 			-> 		#deleteIcon
+			} asDictionary.
+		}`.
+	! !
 
-	BrowserWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #messageListMenuSpec).
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
+messageListMenuOptions
 
-	MethodSetWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #messageListMenuSpec).
+	^`{{
+				#itemGroup 		-> 		5.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping aMenuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+		} asDictionary.
+		{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		10.
+				#label 			-> 		'actual senders of it (B)'.
+				#selector 		-> 		#browseActualSendersOfSelectedMethod.
+				#icon 			-> 		#mailForwardIcon
+		} asDictionary.
+		{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		20.
+				#label 			-> 		'actual implementors of it (M)'.
+				#selector 		-> 		#browseActualImplementorsOfSelectedMethod.
+				#icon 			-> 		#developmentIcon
+		} asDictionary.
+		{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		30.
+				#label 			-> 		'remove method checking actual senders (X)'.
+				#object 			-> 		#model.
+				#selector 		-> 		#removeMessageCheckingActualSenders.
+				#icon 			-> 		#deleteIcon
+		} asDictionary.	
+		{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		10.
+				#label 			-> 		'Type Check (T)'.
+				#selector 		-> 		#typeCheckMethod.
+				#object 			-> 		#model.
+				#icon 			-> 		#acceptIcon
+		} asDictionary.
+		{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		20.
+				#label 			-> 		'Reset types'.
+				#selector 		-> 		#resetMethodTypes.
+				#object 			-> 		#model.
+				#icon 			-> 		#deleteIcon
+		} asDictionary.		
 
-	MethodSetWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec)! !
+
+		{
+				#itemGroup 		-> 		40.
+				#itemOrder 		-> 		15.
+				#label 			-> 		'actual senders of it (B)'.
+				#selector 		-> 		#browseActualSendersOfSelectedMethod.
+				#icon 			-> 		#mailForwardIcon
+		} asDictionary.
+		{
+				#itemGroup 		-> 		40.
+				#itemOrder 		-> 		25.
+				#label 			-> 		'actual implementors of it (M)'.
+				#selector 		-> 		#browseActualImplementorsOfSelectedMethod.
+				#icon 			-> 		#developmentIcon
+		} asDictionary.
+		{
+				#itemGroup 		-> 		60.
+				#itemOrder 		-> 		15.
+				#label 			-> 		'remove method checking actual senders (X)'.
+				#object 			-> 		#model.
+				#selector 		-> 		#removeMessageCheckingActualSenders.
+				#icon 			-> 		#deleteIcon
+		} asDictionary.			
+		}`
+! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 7/18/2019 15:54:01'!
+smalltalkEditorCmdShortcutsSpec
+
+	^#(
+			#(		$P	#showSelectionTypeInfo:		'Prints type info of selection')
+			#(		$B	#actualSendersOfIt:				'Actual senders of message under cursor')
+			#(		$M	#actualImplementorsOfIt:			'Actual implementors of message under cursor')
+			#(		$L  #actualLocalImplementorsOfIt:  'Actual Local implementros of message under cursor')
+			#(		$T  #typeCheckMethod:  'Type check the selected method')
+		)
+! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
+smalltalkEditorMenuOptions
+
+	^`{
+			{
+				#itemGroup 		-> 		35.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping aMenuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf ->				LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		20.
+				#label 			-> 		'Show type info (P)'.
+				#selector 		-> 		#showSelectionTypeInfo.
+				#icon 			-> 		#helpIcon
+			} asDictionary.
+			{
+				#submenuOf ->				LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		30.
+				#label 			-> 		'Actual Senders of it (B)'.
+				#selector 		-> 		#actualSendersOfIt.
+				#icon 			-> 		#mailForwardIcon
+			} asDictionary.
+			{
+				#submenuOf ->				LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		40.
+				#label 			-> 		'Actual Implementors of it (M)'.
+				#selector 		-> 		#actualImplementorsOfIt.
+				#icon 			-> 		#developmentIcon
+			} asDictionary.
+			{
+				#submenuOf ->				LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		50.
+				#label 			-> 		'Actual Local Implementors of it (L)'.
+				#selector 		-> 		#actualLocalImplementorsOfIt.
+				#icon 			-> 		#developmentIcon
+			} asDictionary.
+			{
+				#submenuOf ->				LiveTyping aMenuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		10.
+				#label 			-> 		'Type Check (T)'.
+				#selector 		-> 		#typeCheckMethod.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf ->				LiveTyping aMenuLabel.
+				#itemGroup 		-> 		20.
+				#itemOrder 		-> 		20.
+				#label 			-> 		'Reset types'.
+				#selector 		-> 		#resetMethodTypes.
+				#object 			-> 		#codeProvider.
+				#icon 			-> 		#deleteIcon
+			} asDictionary.
+
+		}`
+! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:23:27'!
+systemCategoryMenuOptions
+
+	^`{
+			{
+				#itemGroup 		-> 		5.
+				#itemOrder 		-> 		10.
+				#label 			-> 	LiveTyping aMenuLabel. 
+				#selector 		-> 		#yourself.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		10.
+				#label 			-> 		'Type Check'.
+				#selector 		-> 		#typeCheckCategory.
+				#object 			-> 		#model.
+				#icon 			-> 		#acceptIcon
+			} asDictionary.
+			{
+				#submenuOf -> LiveTyping aMenuLabel.
+				#itemGroup 		-> 		10.
+				#itemOrder 		-> 		20.
+				#label 			-> 		'reset types'.
+				#selector 		-> 		#resetCategoryTypes.
+				#object 			-> 		#model.
+				#icon 			-> 		#deleteIcon
+			} asDictionary.
+		}`.
+	! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:49:27'!
 addAndClassifySelectorOriginalSourceCode
@@ -2717,7 +2922,7 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/9/2024 18:08:50'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:53:16'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
@@ -2736,7 +2941,7 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
+		updatedCode := CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
@@ -2744,7 +2949,7 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 		method inProtocol: category notifying: requestor.
 	^ methodAndNode selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/9/2024 18:09:03'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 12/28/2022 16:51:19'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
@@ -2763,7 +2968,7 @@ compileClassifiedWithStampNotifyingLogSourceSourceCode
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
+		updatedCode _ CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
@@ -2792,6 +2997,92 @@ doneCompilingSourceCode
 	self withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes ]'
 	
 ! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/5/2023 08:22:48'!
+messageListKeyFromOriginalSourceCode
+
+	^'messageListKey: aChar from: view
+	"Respond to a Command key.  I am a model with a code pane, and I also
+	have a listView that has a list of methods.  The view knows how to get
+	the list and selection."
+
+	| sel class |
+	self flag: #definesKeyboardShortcuts.
+	aChar = $D ifTrue: [^ model toggleDiffing].
+
+	sel := model selectedMessageName.
+	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
+	aChar = $n ifTrue: [
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
+
+	"The following require a class selection"
+	(class := model selectedClassOrMetaClass) ifNil: [^ self ].
+	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar = $N ifTrue: [^ self browseClassRefs].
+	aChar = $i ifTrue: [^ self methodInheritance].
+	aChar = $h ifTrue: [^ self browseHierarchy].
+	aChar = $p ifTrue: [^ self browseFullProtocol].
+
+	sel
+		ifNotNil: [
+			"The following require a method selection"
+			aChar = $o ifTrue: [^ model fileOutMessage].
+			aChar = $c ifTrue: [^ model copySelector].
+			aChar = $v ifTrue: [^ self browseVersions].
+			aChar = $C ifTrue: [^ model showHomeCategory].
+			aChar = $O ifTrue: [^ self openSingleMessageBrowser].
+			aChar = $x ifTrue: [^ model removeMessage].
+			aChar = $t ifTrue: [^ model runMethodTest].
+			aChar = $r ifTrue: [^ model debugMethodTest]]
+		ifNil: [
+			aChar = $R ifTrue: [^ model renameClass]]'! !
+
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/5/2023 08:27:46'!
+messageListKeyFromSourceCode
+
+	^'messageListKey: aChar from: view
+	"Respond to a Command key.  I am a model with a code pane, and I also
+	have a listView that has a list of methods.  The view knows how to get
+	the list and selection."
+
+	| sel class |
+	self flag: #definesKeyboardShortcuts.
+	aChar = $D ifTrue: [^ model toggleDiffing].
+
+	sel := model selectedMessageName.
+	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
+	aChar = $n ifTrue: [
+		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
+
+	aChar = $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
+	aChar = $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
+	aChar = $X ifTrue: [ ^ self model removeMessageCheckingActualSenders ].
+
+	"The following require a class selection"
+	(class := model selectedClassOrMetaClass) ifNil: [^ self ].
+	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
+	aChar = $N ifTrue: [^ self browseClassRefs].
+	aChar = $i ifTrue: [^ self methodInheritance].
+	aChar = $h ifTrue: [^ self browseHierarchy].
+	aChar = $p ifTrue: [^ self browseFullProtocol].
+
+	sel
+		ifNotNil: [
+			"The following require a method selection"
+			aChar = $o ifTrue: [^ model fileOutMessage].
+			aChar = $c ifTrue: [^ model copySelector].
+			aChar = $v ifTrue: [^ self browseVersions].
+			aChar = $C ifTrue: [^ model showHomeCategory].
+			aChar = $O ifTrue: [^ self openSingleMessageBrowser].
+			aChar = $x ifTrue: [^ model removeMessage].
+			aChar = $t ifTrue: [^ model runMethodTest].
+			aChar = $r ifTrue: [^ model debugMethodTest].
+			aChar = $T ifTrue: [^ self model typeCheckMethod ]]
+		ifNil: [
+			aChar = $R ifTrue: [^ model renameClass].
+			aChar = $T ifTrue: [ ^ self model typeCheckClass ]]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 11/3/2021 20:13:15'!
 mouseMoveLocalPositionOriginalSourceCode
@@ -2908,80 +3199,6 @@ unloadSourceCode
 	"Sent when a the class is removed.  Does nothing, but may be overridden by (class-side) subclasses."
 
 	self unloadFromAllRawTypes'! !
-
-!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'jmv 7/30/2024 14:43:55'!
-classListMenuSpec
-	"
-	BrowserWindow at: #classListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: LiveTyping selector: #classListMenuSpec).
-	Do this in LiveTyping class >> initializeLiveTyping
-	"
-	^#(
-		#(5		'LiveTyping' 					nil 	nil 			3000 					acceptIcon)
-		#(6 		'-----')
-
-		" 'LiveTyping' SubMenu"
-		#(3070		'Type Check (T)' 					$T 	model 			typeCheckClass 					acceptIcon)
-		#(3080		'Reset types' 					nil 	model 			resetClassType 					deleteIcon)
-	)! !
-
-!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'HAW 8/11/2024 20:47:17'!
-messageListMenuSpec
-	"
-	BrowserWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: LiveTyping selector: #messageListMenuSpec).
-	Do this in LiveTyping class >> initializeLiveTyping
-	"
-	^#(
-		#(145		'LiveTyping' 											nil 	nil 			3000 													acceptIcon)
-		#(161		'actual senders of it (B)' 											$B 	window 			browseActualSendersOfSelectedMethod 													mailForwardIcon)
-		#(171		'actual implementors of it (M)' 											$M 	window 			browseActualImplementorsOfSelectedMethod 													developmentIcon)
-		#(271		'remove method checking actual senders (X)' 											$X 	model 			removeMessageCheckingActualSenders 													deleteIcon)
-
-		" 'LiveTyping' SubMenu"
-		#(3030		'Actual Senders of it (B)' 											$B 	window 			browseActualSendersOfSelectedMethod 													mailForwardIcon)
-		#(3040		'Actual Implementors of it (M)' 											$M 	window			browseActualImplementorsOfSelectedMethod 													developmentIcon)
-		#(3050		'Remove method checking actual senders (X)' 											$X 	model 			removeMessageCheckingActualSenders 													deleteIcon)
-		#(3060 		'-----')
-		#(3070		'Type Check (T)' 											$T 	model 			typeCheckMethod 													acceptIcon)
-		#(3080		'Reset types' 											nil 	model 			resetMethodTypes 													)
-	)! !
-
-!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'HAW 8/11/2024 20:45:57'!
-smalltalkEditorMenuSpec
-	"
-	BrowserWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: LiveTyping selector: #smalltalkEditorMenuSpec).
-	Do this in LiveTyping class >> initializeLiveTyping
-	"
-	^#(
-		#(175		'LiveTyping' 									nil 	nil 		3000 								acceptIcon)
-
-		" 'LiveTyping' SubMenu"
-		#(3020		'Show type info (P)' 									$P 	editor 		showSelectionTypeInfo 								helpIcon)
-		#(3030		'Actual Senders of it (B)' 									$B 	editor 		actualSendersOfIt 								mailForwardIcon)
-		#(3040		'Actual Implementors of it (M)' 									$M 	editor 		actualImplementorsOfIt 								developmentIcon)
-		#(3050		'Actual Local Implementors of it (L)' 									$L 	editor 		actualLocalImplementorsOfIt 								developmentIcon)
-		#(3060 		'-----')
-		#(3070		'Type Check (T)' 									$T 	editor 		typeCheckMethod 								acceptIcon)
-		#(3080		'Reset types' 									nil 	editor 		resetMethodTypes 								deleteIcon)
-	)! !
-
-!LiveTyping class methodsFor: 'menu & kbd shortcuts' stamp: 'jmv 7/30/2024 14:45:38'!
-systemCategoriesListMenuSpec
-	"
-	BrowserWindow at: #systemCategoriesListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: LiveTyping selector: #systemCategoriesListMenuSpec).
-	Do this in LiveTyping class >> initializeLiveTyping
-	"
-	^#(
-		#(5		'LiveTyping' 					nil 	nil 			3000 						acceptIcon)
-		#(6 		'-----')
-
-		" 'LiveTyping' SubMenu"
-		#(3070		'Type Check' 					nil 	model 			typeCheckCategory 						acceptIcon)
-		#(3080		'Reset types' 					nil 	model 			resetCategoryTypes 						deleteIcon)
-	)! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 12/6/2018 12:52:52'!
 visitAssignmentNode: anAssignmentNode
@@ -4543,6 +4760,15 @@ m1
 	
 	! !
 
+!ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 09:51:51'!
+m10
+   | t1 |
+
+   t1 := 0.   "<-- it will save SmallInteger in (method additionalState contextTypesAt: 1) at: 2."
+   [ | t2 | t2 := 'hello' ] value. "<-- it will save String in (method additionalState contextTypesAt: 2) at: 1"
+
+   [ | t3 | t3 := 3.14 ] value. "<-- it will save Float in (method additionalState contextTypesAt: 3) at: 1"! !
+
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 09:51:14'!
 m1: p1
    | t1 |
@@ -4609,15 +4835,6 @@ m1_write_temp_outside_block
 	t1 := 2.
 	
 	^t1! !
-
-!ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 1/2/2019 09:51:51'!
-m10
-   | t1 |
-
-   t1 := 0.   "<-- it will save SmallInteger in (method additionalState contextTypesAt: 1) at: 2."
-   [ | t2 | t2 := 'hello' ] value. "<-- it will save String in (method additionalState contextTypesAt: 2) at: 1"
-
-   [ | t3 | t3 := 3.14 ] value. "<-- it will save Float in (method additionalState contextTypesAt: 3) at: 1"! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 12/31/2018 12:11:06'!
 m2
@@ -6032,13 +6249,13 @@ methodWithoutTypeErrors
 	
 	1 + 1! !
 
-!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/9/2019 11:47:55'!
-returnParameter: anObject
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/21/2019 19:17:41'!
+returnParameter2: anObject
 
 	^anObject ! !
 
-!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/21/2019 19:17:41'!
-returnParameter2: anObject
+!TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 8/9/2019 11:47:55'!
+returnParameter: anObject
 
 	^anObject ! !
 
@@ -6590,6 +6807,16 @@ typeCheckMessageNestedInsideIfNotNil
 	temp1 ifNotNil: [ temp1 hasModel ifTrue: [ temp1 model ]]
 	! !
 
+!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 16:13:51'!
+typeCheckMessageWithFalseInSubclass
+
+	| temp1  |
+	
+	temp1 := OrderedCollection new.
+	temp1 := Color new.
+	
+	temp1 isCollection ifTrue: [ temp1 add: 1 ] ifFalse: [ temp1 alpha ]! !
+
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 18:36:11'!
 typeCheckMessageWithFalse_True_False_InSubclasses
 
@@ -6604,16 +6831,6 @@ typeCheckMessageWithFalse_True_False_InSubclasses
 		ifFalse: [ temp1 isNumber 
 			ifTrue: [ temp1 + 1 ]
 			ifFalse: [ temp1 alpha ]]! !
-
-!TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 16:13:51'!
-typeCheckMessageWithFalseInSubclass
-
-	| temp1  |
-	
-	temp1 := OrderedCollection new.
-	temp1 := Color new.
-	
-	temp1 isCollection ifTrue: [ temp1 add: 1 ] ifFalse: [ temp1 alpha ]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 8/20/2019 18:46:19'!
 typeCheckMessageWithReturnOnIfFalse
@@ -6667,16 +6884,24 @@ classMethodWithTypeError
 	
 	1 date! !
 
-!TypeCheckingResultWindow methodsFor: 'menu & kbd shortcuts' stamp: 'jmv 7/19/2024 15:26:55'!
-messageListMenuSpec
-	"Spec for the menu and shortcut keys for the messages list.
-	See coment at Morph >> #getMenu
-	"
-	^#(
-		#(0 		'Errors & Warnings' 					false)
-		#(10		'remove' 			nil 		model 			removeMessageFromBrowserKeepingLabel 												listRemoveIcon)
-	).
-! !
+!TypeCheckingResultWindow methodsFor: 'menu building' stamp: 'HAW 7/18/2019 00:41:43'!
+messageListMenu
+
+	| aMenu |
+	
+	aMenu _ MenuMorph new defaultTarget: self.
+	aMenu addTitle: 'Errors & Warnings'.
+	aMenu
+		addItemsFromDictionaries: `{
+			{
+				#label 			-> 		'remove'.
+				#object 			-> 		#model.
+				#selector 		-> 		#removeMessageFromBrowserKeepingLabel.
+				#icon 			-> 		#listRemoveIcon
+			} asDictionary.
+		}`.
+		
+	^ aMenu! !
 
 !TypeCheckingResultWindow class methodsFor: 'instance creation' stamp: 'HAW 8/11/2019 23:28:38'!
 openFor: aTypeChecker labelTrail: aLabelTrail showingProblems: showingProblems 
@@ -8078,6 +8303,79 @@ README
 	"The tests names in some cases only talk about the setup and not the assertion
 	because if not they would be to long to read and understand - Hernan"! !
 
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:08:05'!
+test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrowsedClassDoesNotHaveASuperclass
+	
+	self browseClass: ProtoObject.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'm1 super '.
+	self 
+		assertEntriesWhenBrowsing: 'm1 1 < super '
+		areUnaryAndBinarySelectorsOf: nil.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:42:33'!
+test012_AutocompletesMessagesFor_InstanceVariables
+	
+	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
+	super test012_AutocompletesMessagesFor_InstanceVariables! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:25:12'!
+test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsOfInstVarTypes
+	
+	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
+	instanceVariable1 := 1.
+	
+	self
+		assertEntriesWhenBrowsing: 'm1 instanceVariable1 '
+		areSelectorsOf: SmallInteger.
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < instanceVariable1 '
+		areUnaryAndBinarySelectorsOf: SmallInteger.
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:40:33'!
+test014_AutocompletesMessagesFor_TemporaryVariables_WithSelectorsOfTempVarTypes
+	
+	classToBrowse := self class.
+	self methodWithTempVar.
+	self
+		assertEntriesWhenBrowsingMethod: self class >> #methodWithTempVar
+		areSelectorsOf: SmallInteger.
+
+	self methodWithBinaryMessageSendAndTempVar.
+	self
+		assertEntriesWhenBrowsingMethod: self class >> #methodWithBinaryMessageSendAndTempVar
+		areUnaryAndBinarySelectorsOf: SmallInteger.
+	
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:43:31'!
+test023_AutocompletingMessagesFor_UnaryMessages
+	
+	classToBrowse := self class.
+	self assertEntriesWhenBrowsing: 'm1 self class ' areSelectorsOf: self class class.
+	self assertEntriesWhenBrowsing: 'm1 1 < self class ' areUnaryAndBinarySelectorsOf: self class class.
+	
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:44:50'!
+test024_AutocompletingMessagesFor_RightParenthesis
+ 	
+	self assertEntriesWhenBrowsing: 'm1 (1) ' areSelectorsOf: SmallInteger.
+	self assertEntriesWhenBrowsing: 'm1 1 + (1 ' areSelectorsOf: SmallInteger.
+	
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:45:10'!
+test026_AutocompletingMessagesFor_Cascade
+
+	classToBrowse := self class.
+	self
+		assertEntriesWhenBrowsing: 'm1 self class; '
+		areSelectorsOf: self class
+	! !
+
 !LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:41:39'!
 test_Browser_ArrayWithArrayAndOtherObjects
 
@@ -8378,79 +8676,6 @@ test_Workspace_OnlyRightParenthesis
 				to: 1 ]
 		raise: Error! !
 
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:08:05'!
-test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrowsedClassDoesNotHaveASuperclass
-	
-	self browseClass: ProtoObject.
-	
-	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'm1 super '.
-	self 
-		assertEntriesWhenBrowsing: 'm1 1 < super '
-		areUnaryAndBinarySelectorsOf: nil.! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:42:33'!
-test012_AutocompletesMessagesFor_InstanceVariables
-	
-	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
-	super test012_AutocompletesMessagesFor_InstanceVariables! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:25:12'!
-test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsOfInstVarTypes
-	
-	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
-	instanceVariable1 := 1.
-	
-	self
-		assertEntriesWhenBrowsing: 'm1 instanceVariable1 '
-		areSelectorsOf: SmallInteger.
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < instanceVariable1 '
-		areUnaryAndBinarySelectorsOf: SmallInteger.
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/2/2020 21:40:33'!
-test014_AutocompletesMessagesFor_TemporaryVariables_WithSelectorsOfTempVarTypes
-	
-	classToBrowse := self class.
-	self methodWithTempVar.
-	self
-		assertEntriesWhenBrowsingMethod: self class >> #methodWithTempVar
-		areSelectorsOf: SmallInteger.
-
-	self methodWithBinaryMessageSendAndTempVar.
-	self
-		assertEntriesWhenBrowsingMethod: self class >> #methodWithBinaryMessageSendAndTempVar
-		areUnaryAndBinarySelectorsOf: SmallInteger.
-	
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:43:31'!
-test023_AutocompletingMessagesFor_UnaryMessages
-	
-	classToBrowse := self class.
-	self assertEntriesWhenBrowsing: 'm1 self class ' areSelectorsOf: self class class.
-	self assertEntriesWhenBrowsing: 'm1 1 < self class ' areUnaryAndBinarySelectorsOf: self class class.
-	
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:44:50'!
-test024_AutocompletingMessagesFor_RightParenthesis
- 	
-	self assertEntriesWhenBrowsing: 'm1 (1) ' areSelectorsOf: SmallInteger.
-	self assertEntriesWhenBrowsing: 'm1 1 + (1 ' areSelectorsOf: SmallInteger.
-	
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 5/6/2020 23:45:10'!
-test026_AutocompletingMessagesFor_Cascade
-
-	classToBrowse := self class.
-	self
-		assertEntriesWhenBrowsing: 'm1 self class; '
-		areSelectorsOf: self class
-	! !
-
 !LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 5/2/2020 20:19:07'!
 binaryMessageSendReturnTypes
 
@@ -8542,6 +8767,32 @@ isAbstract
 
 	^false! !
 
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 15:28:35'!
+test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
+
+	| classToRefactor oldSelector senderToChange refactor |
+	
+	oldSelector := #m1.
+	senderToChange := #m3.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | self ', oldSelector, '. false ifTrue: [ x ', oldSelector, ' ]'.
+	classToRefactor new perform: senderToChange.
+	
+	refactor := AddParameterWithActualScope 
+		named: 'p1' 
+		initializedWith: '1' 
+		toUnarySelector: oldSelector 
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+		
+	refactor apply.
+	
+	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1: 1. false ifTrue: [ x ', oldSelector, ' ]'.
+	! !
+
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 15:45:17'!
 test01_01_DoesNotChangePossibleMessageSendWhenInstructedToDoSoWithKeywordMessages
 
@@ -8570,30 +8821,39 @@ test01_01_DoesNotChangePossibleMessageSendWhenInstructedToDoSoWithKeywordMessage
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1: 1 m2: 2 m3: 3. false ifTrue: [ x m1: 1 m3: 3 ]'.
 	! !
 
-!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 15:28:35'!
-test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:24:04'!
+test02CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementors
 
-	| classToRefactor oldSelector senderToChange refactor |
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
 	
 	oldSelector := #m1.
 	senderToChange := #m3.
 	
 	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
 	classToRefactor compile: oldSelector asString.
-	classToRefactor compile: senderToChange, ' | x | self ', oldSelector, '. false ifTrue: [ x ', oldSelector, ' ]'.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', oldSelector.
 	classToRefactor new perform: senderToChange.
 	
-	refactor := AddParameterWithActualScope 
-		named: 'p1' 
-		initializedWith: '1' 
-		toUnarySelector: oldSelector 
-		implementors: { classToRefactor>>oldSelector }
-		senders: { classToRefactor>>senderToChange }
-		withPossibleMessageSends: false.
-		
-	refactor apply.
-	
-	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | self m1: 1. false ifTrue: [ x ', oldSelector, ' ]'.
+	self 
+		should: [  
+		 	AddParameterWithActualScope 
+				named: 'p1' 
+				initializedWith: '1' 
+				toUnarySelector: oldSelector 
+				implementors: { classToRefactor>>oldSelector }
+				senders: { classToRefactor>>senderToChange }
+				withPossibleMessageSends: false. ]
+		raise: CanNotChangeSelectorWithNotIncludedTypes
+		withExceptionDo: [ :anError |
+			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
+			messageSendWithInvalidReceiverTypes := anError messageSendsWithInvalidReceiverTypes anyOne.
+			self assert: classToRefactor>>senderToChange equals: messageSendWithInvalidReceiverTypes first.
+			self assert: 'x' equals: messageSendWithInvalidReceiverTypes second receiver name.
+			self assert: (messageSendWithInvalidReceiverTypes second selector isNamed: oldSelector).
+			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
+			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
 	! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:26:59'!
@@ -8622,41 +8882,6 @@ test02_01_CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplemento
 				implementors: { classToRefactor>>oldSelector }
 				senders: { classToRefactor>>senderToChange }
 				withPossibleMessageSends: false ]
-		raise: CanNotChangeSelectorWithNotIncludedTypes
-		withExceptionDo: [ :anError |
-			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
-			messageSendWithInvalidReceiverTypes := anError messageSendsWithInvalidReceiverTypes anyOne.
-			self assert: classToRefactor>>senderToChange equals: messageSendWithInvalidReceiverTypes first.
-			self assert: 'x' equals: messageSendWithInvalidReceiverTypes second receiver name.
-			self assert: (messageSendWithInvalidReceiverTypes second selector isNamed: oldSelector).
-			self assert: 1 equals: messageSendWithInvalidReceiverTypes third size.
-			self assert: (messageSendWithInvalidReceiverTypes third includes: classOfOtherImplementor) ]
-	! !
-
-!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 8/17/2019 16:24:04'!
-test02CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementors
-
-	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
-	
-	oldSelector := #m1.
-	senderToChange := #m3.
-	
-	classToRefactor := self createClassNamed: self classToRefactorName.
-	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
-	classToRefactor compile: oldSelector asString.
-	classOfOtherImplementor compile: oldSelector asString.
-	classToRefactor compile: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', oldSelector.
-	classToRefactor new perform: senderToChange.
-	
-	self 
-		should: [  
-		 	AddParameterWithActualScope 
-				named: 'p1' 
-				initializedWith: '1' 
-				toUnarySelector: oldSelector 
-				implementors: { classToRefactor>>oldSelector }
-				senders: { classToRefactor>>senderToChange }
-				withPossibleMessageSends: false. ]
 		raise: CanNotChangeSelectorWithNotIncludedTypes
 		withExceptionDo: [ :anError |
 			self assert: 1 equals: anError messageSendsWithInvalidReceiverTypes size.
@@ -9841,6 +10066,13 @@ test08RecognizeTypeSendersToSelf
 	
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #m1))! !
 
+!ActualSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:15:17'!
+test09RecognizeTypeSendersToSuper
+	
+	super selector.
+	
+	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #selector))! !
+
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 10/21/2018 01:16:33'!
 test09_01
 	
@@ -9851,13 +10083,6 @@ test09_01
 	2) Array with: aCompiledMethod methodClass 
 	
 	when receiver is super?"! !
-
-!ActualSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:15:17'!
-test09RecognizeTypeSendersToSuper
-	
-	super selector.
-	
-	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #selector))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:17:13'!
 test10RecognizeTypeSendersToSelfOfMessageImplementedInSuperclass
@@ -12293,15 +12518,15 @@ test31nilEqualsToIfTrueOrIfFalseWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #nilEqualsToIfTrueOrIfFalse! !
 
-!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/20/2019 23:13:39'!
-test32_01_nilNotIdenticalOrEqualToWorksAsExpected
-
-	self assertHasNoTypeErrorsAndWarnings: #nilNotEqualOrIdenticalIdenticalTo! !
-
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:17:53'!
 test32nilIdenticalToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #nilIdenticalTo! !
+
+!MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/20/2019 23:13:39'!
+test32_01_nilNotIdenticalOrEqualToWorksAsExpected
+
+	self assertHasNoTypeErrorsAndWarnings: #nilNotEqualOrIdenticalIdenticalTo! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 8/2/2019 16:26:51'!
 test33NotEqualToNilWorksAsExpected
@@ -13196,7 +13421,7 @@ allActualSendersOn: sentSelector forAll: types whenSomeAreNotImplemented: someNo
 	^collector 
 	! !
 
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 1/30/2024 12:02:53'!
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 10:31:43'!
 browseActualImplementorsFinder: anActualImplementorsFinder
 
 	| label |
@@ -13209,11 +13434,11 @@ browseActualImplementorsFinder: anActualImplementorsFinder
 				browseMessageList: anActualImplementorsFinder implementorsSorted
 				name: label ]
 		ifFalse: [
-			self 
-				browseMessageList: anActualImplementorsFinder implementorsSorted, anActualImplementorsFinder notImplementedSorted 
-				name: label
-				prefixedWith: '[', anActualImplementorsFinder implementorsSize printString, '/', anActualImplementorsFinder totalSize printString, '] '
-				autoSelect: nil ]
+			MethodSetWindow 
+				openMessageList: anActualImplementorsFinder implementorsSorted, anActualImplementorsFinder notImplementedSorted
+				label: '[', anActualImplementorsFinder implementorsSize printString, '/', anActualImplementorsFinder totalSize printString, '] ', label
+				types: anActualImplementorsFinder types 
+				selector: nil ]
 
 ! !
 
@@ -13283,16 +13508,6 @@ browseAllActualSendersOn: aSentSelector forAll: aReceiverTypes
 browseAllActualmplementorsOf: aMethod
 
 	self browseAllActualImplementorsOf: aMethod selector for: aMethod methodClass
-! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/16/2024 12:51:55'!
-browseMessageList: messageList name: label prefixedWith: labelPrefix autoSelect: autoSelectString
-
-	^MethodSetWindow
-		openMessageList: messageList
-		label: labelPrefix, label
-		autoSelect: autoSelectString
-
 ! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 11/27/2018 05:56:18'!
@@ -14728,6 +14943,72 @@ selectedClassOrMetaClass
 	
 	^UndefinedObject ! !
 
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:51'!
+browseActualSendersOf: aCompiledMethod 
+	
+	Smalltalk browseAllActualSendersOn: aCompiledMethod ! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:29'!
+confirmActualRemovalOf: aCompiledMethod 
+	
+	^ (self hasNoActualSendersOrIsItself: aCompiledMethod)
+		ifTrue: [self confirmRemovalWhenNoSenders ]
+		ifFalse: [self confirmRemovalWhenHasSenders ].
+! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:12'!
+confirmRemovalWhenHasSenders
+
+	| menu |
+	
+	menu := PopUpMenu 
+		labels: 'Remove it
+Remove, then browse senders
+Don''t remove, but show me those senders
+Forget it -- do nothing -- sorry I asked'
+		icons: #(acceptIcon acceptIcon cancelIcon cancelIcon).
+			
+	^menu startUpWithCaption: 'This message has real or posible sender(s)' ! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:32:29'!
+confirmRemovalWhenNoSenders
+	
+	^ (self confirm: 'This message has no actual senders. Remove it anyway?') ifTrue: [1] ifFalse: [0]! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:32:07'!
+hasNoActualSendersOrIsItself: aCompiledMethod 
+	
+	| realSendersCount allSenders posibleSenders realSenders |
+
+	allSenders := Smalltalk allActualSendersOn: aCompiledMethod.
+	realSenders := allSenders first.
+	posibleSenders := allSenders second.
+	realSendersCount := realSenders size.
+
+	^posibleSenders isEmpty 
+		and: [ realSendersCount = 0 
+			or: [ realSendersCount = 1 
+				and: [(realSenders first actualClass == aCompiledMethod methodClass and: [realSenders first methodSymbol == aCompiledMethod selector])]]]
+! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:29:56'!
+removeMessageCheckingActualSenders
+	
+	| confirmation |
+
+	self currentCompiledMethod ifNotNil: [ :aCompiledMethod |
+		confirmation := self confirmActualRemovalOf: aCompiledMethod.
+
+		(confirmation = 1 or: [ confirmation = 2 ]) ifTrue: [self removeMethod: aCompiledMethod ].
+		(confirmation = 2 or: [ confirmation = 3 ]) ifTrue: [self browseActualSendersOf: aCompiledMethod ]].
+
+	! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:42:40'!
+removeMethod: aMethod
+
+	self subclassResponsibility ! !
+
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:47:52'!
 resetMethodTypes
 	
@@ -14742,11 +15023,6 @@ typeCheckMethod
 	typeChecker := self currentCompiledMethod typeCheck.
 	typeChecker showResultsWith:  typeChecker method classAndSelector 
 	! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/11/2019 20:17:56'!
-browseActualSendersOf: aCompiledMethod 
-	
-	Smalltalk browseAllActualSendersOn: aCompiledMethod ! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:47'!
 computeMessageEntriesIn: anAutocompleter ofBlockArgNamed: aName  
@@ -14795,63 +15071,7 @@ computeMessageEntriesIn: anAutocompleter ofTempVarNamed: aName
 	
 ! !
 
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 23:48:41'!
-confirmActualRemovalOf: aCompiledMethod 
-	
-	^ (self hasNoActualSendersOrIsItself: aCompiledMethod)
-		ifTrue: [self confirmRemovalWhenNoSenders ]
-		ifFalse: [self confirmRemovalWhenHasSenders ].
-! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/11/2019 20:17:08'!
-confirmRemovalWhenHasSenders
-
-	| menu |
-	
-	menu := PopUpMenu 
-		labels: 'Remove it
-Remove, then browse senders
-Don''t remove, but show me those senders
-Forget it -- do nothing -- sorry I asked'
-		icons: #(acceptIcon acceptIcon cancelIcon cancelIcon).
-			
-	^menu startUpWithCaption: 'This message has real or posible sender(s)' ! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/11/2019 20:15:28'!
-confirmRemovalWhenNoSenders
-	
-	^ (self confirm: 'This message has no actual senders. Remove it anyway?') ifTrue: [1] ifFalse: [0]! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/11/2019 20:14:32'!
-hasNoActualSendersOrIsItself: aCompiledMethod 
-	
-	| realSendersCount allSenders posibleSenders realSenders |
-
-	allSenders := Smalltalk allActualSendersOn: aCompiledMethod.
-	realSenders := allSenders first.
-	posibleSenders := allSenders second.
-	realSendersCount := realSenders size.
-
-	^posibleSenders isEmpty 
-		and: [ realSendersCount = 0 
-			or: [ realSendersCount = 1 
-				and: [(realSenders first actualClass == aCompiledMethod methodClass and: [realSenders first methodSymbol == aCompiledMethod selector])]]]
-! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 23:47:26'!
-removeMessageCheckingActualSenders
-	
-	| confirmation |
-
-	self currentCompiledMethod ifNotNil: [ :aCompiledMethod |
-		confirmation := self confirmActualRemovalOf: aCompiledMethod.
-
-		(confirmation = 1 or: [ confirmation = 2 ]) ifTrue: [self removeMethod: aCompiledMethod ].
-		(confirmation = 2 or: [ confirmation = 3 ]) ifTrue: [self browseActualSendersOf: aCompiledMethod ]].
-
-	! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/11/2019 20:20:30'!
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:42:30'!
 removeMethod: aCompiledMethod 
 
 	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
@@ -14915,6 +15135,14 @@ typeCheckClass
 		typeChecker showResultsWith: aSelectedClass name ]
 	
 	! !
+
+!MethodSet methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:43:38'!
+removeMethod: aCompiledMethod 
+
+	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
+	self deleteFromMessageList: self selection.
+	self reformulateList.
+! !
 
 !Boolean class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:32:15'!
 createMethodReturnRawTypesOf: aMethod
@@ -15100,6 +15328,12 @@ actualImplementorsOfIt
 
 		! !
 
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 2/18/2019 19:06:39'!
+actualImplementorsOfIt: aKeyboardEvent
+
+	self actualImplementorsOfIt.
+	^true! !
+
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:44:22'!
 actualLocalImplementorsOfIt
 
@@ -15109,6 +15343,12 @@ actualLocalImplementorsOfIt
 		ifErrorsParsing: [ :anError | morph flash ].
 
 		! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/2/2019 10:18:33'!
+actualLocalImplementorsOfIt: aKeyboardEvent
+
+	self actualLocalImplementorsOfIt.
+	^true! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 2/18/2019 19:06:43'!
 actualSendersOfIt
@@ -15121,6 +15361,12 @@ actualSendersOfIt
 
 	
 ! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 2/18/2019 19:06:46'!
+actualSendersOfIt: aKeyboardEvent
+
+	self actualSendersOfIt.
+	^true! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 7/11/2019 17:20:41'!
 balloonTypeInfoAt: mousePositionInText
@@ -15167,16 +15413,18 @@ balloonTypeInfoOfInstanceVariableAt: mousePositionInText
 
 	^typeInfo printTypesUpTo: 5! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'jmv 7/29/2024 16:24:28'!
-resetMethodTypes
-	self codeProvider resetMethodTypes! !
-
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/15/2019 14:45:54'!
 showSelectionTypeInfo
 
 	self isEditingClassDefinition 
 		ifTrue: [ self showTypeInfoOfInstanceVariable ]
 		ifFalse: [ self showSelectionTypeInfoInMethod ]! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 11/29/2018 19:16:35'!
+showSelectionTypeInfo: aKeyboardEvent
+
+	self showSelectionTypeInfo.
+	^true! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 4/15/2019 14:46:13'!
 showSelectionTypeInfoInMethod
@@ -15221,6 +15469,12 @@ typeCheckMethod
 	
 	self codeProvider typeCheckMethod.
 ! !
+
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:42:30'!
+typeCheckMethod: aKeyboardEvent 
+	
+	self typeCheckMethod.
+	^true! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:10:57'!
 actualSendersOf: aCompiledMethod 
