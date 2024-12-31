@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #6959] on 30 December 2024 at 8:15:18 pm'!
-'Description Udated to Cuis 7.3'!
-!provides: 'LiveTyping' 1 123!
+'From Cuis7.3 [latest update: #6960] on 31 December 2024 at 7:05:53 pm'!
+'Description Udated to Cuis 7.3 - Menu changes'!
+!provides: 'LiveTyping' 1 124!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2531,7 +2531,7 @@ initializeLiveTyping
 		registerRefactoringAppliers;
 		initializeMenues ! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 12/30/2024 19:56:37'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 12/31/2024 18:24:46'!
 initializeMenues
 
 	BrowserWindow at: #systemCatListMenuSpec registerMenuAndShortcutsSpecProvider:
@@ -2545,6 +2545,13 @@ initializeMenues
 
 	BrowserWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
 		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
+	
+	MethodSetWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
+		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
+		
+	DebuggerWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
+		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
+	
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:24:20'!
@@ -2554,21 +2561,21 @@ aMenuLabel
 	it compile - Hernan"
 	^'LiveTyping'! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/30/2024 20:13:19'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/31/2024 18:26:39'!
 classListMenuSpec
 	
 	^{
-		{135.		LiveTyping aMenuLabel.				nil. 	nil.			3000. 								#acceptIcon}. 
+		{145.		LiveTyping aMenuLabel.				nil. 	nil.			3000. 								#acceptIcon}. 
 		{3010. 	'Type Check'.						nil.  #model. 	#typeCheckClass.					#acceptIcon}.
 		{3020. 	'Reset Types'.						nil.  #model. 	#resetClassType.					#deleteIcon}.
 	}
 	! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/30/2024 20:13:42'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/31/2024 18:27:38'!
 messageListMenuSpec
 
 	^{
-		{95.		LiveTyping aMenuLabel.				nil. 	nil.			4000. 								#acceptIcon}.
+		{105.		LiveTyping aMenuLabel.				nil. 	nil.			4000. 								#acceptIcon}.
 		{4010.	'Actual Senders of it (B)'.				$B.	#window.	#browseActualSendersOfSelectedMethod. #mailForwardIcon}.
 		{4020.	'Actual Implementors of it (M)'.		$M.	#window.	#browseActualImplementorsOfSelectedMethod. #developmentIcon}.
 		{4030.	'Remove Method Cheking Actual Senders (X)'.	$X.		#model.	#removeMessageCheckingActualSenders. #deleteIcon}.
@@ -2579,17 +2586,18 @@ messageListMenuSpec
 	
 ! !
 
-!LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/30/2024 20:05:41'!
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/31/2024 18:26:00'!
 smalltalkEditorMenuSpec
 		
 	^{
-		{205.	self aMenuLabel.					nil. 	nil. 			9000.							#acceptIcon}.
+		{215.	self aMenuLabel.					nil. 	nil. 			9000.							#acceptIcon}.
 		{9010.	'Show Type Info (P)'.				$P. 	#editor. 	#showSelectionTypeInfo.		#helpIcon}.
 		{9020.	'Actual Senders of it (B)'.			$B. 	#editor. 	#actualSendersOfIt.			#mailForwardIcon}.
 		{9030.	'Actual Implementors of it (M)'.	$M. 	#editor. 	#actualImplementorsOfIt.		#developmentIcon}.
 		{9040.	'Actual Local Implementors of it (L)'.	$L. 	#editor. 	#actualLocalImplementorsOfIt.		#developmentIcon}.
-		{9050.	'Type Check (T)'.					$T. 	#editor. 	#typeCheckMethod.			#acceptIcon}.
-		{9060.	'Reset Types'.					nil. 	#codeProvider. 	#resetMethodTypes.			#deleteIcon}.
+		{9050.	'----' }.
+		{9060.	'Type Check (T)'.					$T. 	#editor. 	#typeCheckMethod.			#acceptIcon}.
+		{9070.	'Reset Types'.					nil. 	#codeProvider. 	#resetMethodTypes.			#deleteIcon}.
 	}
 ! !
 
