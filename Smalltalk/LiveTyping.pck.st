@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #6960] on 31 December 2024 at 7:05:53 pm'!
+'From Cuis7.3 [latest update: #6960] on 14 January 2025 at 12:41:07 pm'!
 'Description Udated to Cuis 7.3 - Menu changes'!
-!provides: 'LiveTyping' 1 124!
+!provides: 'LiveTyping' 1 125!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2442,21 +2442,20 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:15:47'!
-compileAfterInstallMethods.
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/14/2025 12:39:49'!
+compileAfterInstallMethods
 
-	self 
-		compile: self addAndClassifySelectorStep1SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode;
-		compile: self compileClassifiedWithStampNotifyingLogSourceSourceCode in: ClassDescription ifOriginalSourceCodeIs: self compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode;
-		compile: self addAndClassifySelectorStep2SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorStep1SourceCode;
-		compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode;
-		compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode;
-		compile: self recompileFromSourceCode in: Behavior ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode;
-		compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode;
-		compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode;
-		compile: self setSenderReceiverMethodArgumentsSourceCode in: MethodContext 
-			ifOriginalSourceCodeIs: self setSenderReceiverMethodArgumentsOriginalSourceCode;
-		compile: self blockReturnTopSourceCode in: MethodContext ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
+	"I do not use cascade message to be able to evaluate each collaboration separately for debugging pourposes - Hernan"
+	self  compile: self addAndClassifySelectorStep1SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode.
+	self compile: self compileClassifiedWithStampNotifyingLogSourceSourceCode in: ClassDescription ifOriginalSourceCodeIs: self compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode.
+	self compile: self addAndClassifySelectorStep2SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorStep1SourceCode.
+	self compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode.
+	self compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode.
+	self compile: self recompileFromSourceCode in: Behavior ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode.
+	"self compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode."
+	self compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode.
+	self compile: self setSenderReceiverMethodArgumentsSourceCode in: MethodContext ifOriginalSourceCodeIs: self setSenderReceiverMethodArgumentsOriginalSourceCode.
+	self compile: self blockReturnTopSourceCode in: MethodContext ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
 ! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
@@ -2776,7 +2775,7 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:53:16'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/14/2025 12:17:52'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
@@ -2795,7 +2794,7 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode := CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
+		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
@@ -2803,16 +2802,16 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 		method inProtocol: category notifying: requestor.
 	^ methodAndNode selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 12/28/2022 16:51:19'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/14/2025 12:18:38'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
 	
 	| methodAndNode selector isExistingMethod updatedCode |	
-	methodAndNode _ self basicCompile: code notifying: requestor 
+	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
-	selector _ methodAndNode selector.
-	isExistingMethod _ self includesSelector: selector.
+	selector := methodAndNode selector.
+	isExistingMethod := self includesSelector: selector.
 	isExistingMethod
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
@@ -2822,7 +2821,7 @@ compileClassifiedWithStampNotifyingLogSourceSourceCode
 				ifFalse: [self error: ''Method addition not allowed'']].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode _ CodeProvider normalizeCodeForCodeFiles: (requestor ifNil: [code] ifNotNil: [requestor text]).
+		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
 			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
