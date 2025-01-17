@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #6960] on 14 January 2025 at 12:41:07 pm'!
+'From Cuis7.3 [latest update: #6960] on 17 January 2025 at 1:52:08 pm'!
 'Description Udated to Cuis 7.3 - Menu changes'!
-!provides: 'LiveTyping' 1 125!
+!provides: 'LiveTyping' 1 126!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2442,20 +2442,45 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/14/2025 12:39:49'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/17/2025 13:51:39'!
 compileAfterInstallMethods
 
 	"I do not use cascade message to be able to evaluate each collaboration separately for debugging pourposes - Hernan"
-	self  compile: self addAndClassifySelectorStep1SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode.
-	self compile: self compileClassifiedWithStampNotifyingLogSourceSourceCode in: ClassDescription ifOriginalSourceCodeIs: self compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode.
-	self compile: self addAndClassifySelectorStep2SourceCode in: ClassDescription ifOriginalSourceCodeIs: self addAndClassifySelectorStep1SourceCode.
-	self compile: self doneCompilingSourceCode in: ClassDescription ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode.
-	self compile: self unloadSourceCode in: Class ifOriginalSourceCodeIs: self unloadOriginalSourceCode.
-	self compile: self recompileFromSourceCode in: Behavior ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode.
-	"self compile: self messageListKeyFromSourceCode in: CodeWindow ifOriginalSourceCodeIs: self messageListKeyFromOriginalSourceCode."
-	self compile: self mouseMoveLocalPositionSourceCode in: InnerTextMorph ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode.
-	self compile: self setSenderReceiverMethodArgumentsSourceCode in: MethodContext ifOriginalSourceCodeIs: self setSenderReceiverMethodArgumentsOriginalSourceCode.
-	self compile: self blockReturnTopSourceCode in: MethodContext ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
+	self 
+		compile: self addAndClassifySelectorStep1SourceCode 
+		in: ClassDescription 
+		ifOriginalSourceCodeIs: self addAndClassifySelectorOriginalSourceCode.		
+	self 
+		compile: self compileClassifiedWithStampNotifyingLogSourceSourceCode 
+		in: ClassDescription 
+		ifOriginalSourceCodeIs: self compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode.		
+	self 
+		compile: self addAndClassifySelectorStep2SourceCode 
+		in: ClassDescription 
+		ifOriginalSourceCodeIs: self addAndClassifySelectorStep1SourceCode.
+	self compile: self doneCompilingSourceCode 
+		in: ClassDescription 
+		ifOriginalSourceCodeIs: self doneCompilingOriginalSourceCode.
+	self 
+		compile: self unloadSourceCode 
+		in: Class 
+		ifOriginalSourceCodeIs: self unloadOriginalSourceCode.
+	self 
+		compile: self recompileFromSourceCode 
+		in: Behavior
+		ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode.
+	self 
+		compile: self mouseMoveLocalPositionSourceCode 
+		in: InnerTextMorph 
+		ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode.
+	self 
+		compile: self setSenderReceiverMethodArgumentsSourceCode 
+		in: MethodContext 
+		ifOriginalSourceCodeIs: self setSenderReceiverMethodArgumentsOriginalSourceCode.
+	self 
+		compile: self blockReturnTopSourceCode 
+		in: MethodContext 
+		ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
 ! !
 
 !LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
@@ -2530,7 +2555,7 @@ initializeLiveTyping
 		registerRefactoringAppliers;
 		initializeMenues ! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 12/31/2024 18:24:46'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 1/17/2025 13:46:42'!
 initializeMenues
 
 	BrowserWindow at: #systemCatListMenuSpec registerMenuAndShortcutsSpecProvider:
@@ -2541,13 +2566,13 @@ initializeMenues
 
 	BrowserWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
 		(MessageSend receiver: self selector: #messageListMenuSpec).
+	MethodSetWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
+		(MessageSend receiver: self selector: #messageListMenuSpec).
 
 	BrowserWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
 		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
-	
 	MethodSetWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
-		
+		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).	
 	DebuggerWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
 		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
 	
@@ -2850,92 +2875,6 @@ doneCompilingSourceCode
 	self withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes ]'
 	
 ! !
-
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/5/2023 08:22:48'!
-messageListKeyFromOriginalSourceCode
-
-	^'messageListKey: aChar from: view
-	"Respond to a Command key.  I am a model with a code pane, and I also
-	have a listView that has a list of methods.  The view knows how to get
-	the list and selection."
-
-	| sel class |
-	self flag: #definesKeyboardShortcuts.
-	aChar = $D ifTrue: [^ model toggleDiffing].
-
-	sel := model selectedMessageName.
-	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
-	aChar = $n ifTrue: [
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
-
-	"The following require a class selection"
-	(class := model selectedClassOrMetaClass) ifNil: [^ self ].
-	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
-	aChar = $N ifTrue: [^ self browseClassRefs].
-	aChar = $i ifTrue: [^ self methodInheritance].
-	aChar = $h ifTrue: [^ self browseHierarchy].
-	aChar = $p ifTrue: [^ self browseFullProtocol].
-
-	sel
-		ifNotNil: [
-			"The following require a method selection"
-			aChar = $o ifTrue: [^ model fileOutMessage].
-			aChar = $c ifTrue: [^ model copySelector].
-			aChar = $v ifTrue: [^ self browseVersions].
-			aChar = $C ifTrue: [^ model showHomeCategory].
-			aChar = $O ifTrue: [^ self openSingleMessageBrowser].
-			aChar = $x ifTrue: [^ model removeMessage].
-			aChar = $t ifTrue: [^ model runMethodTest].
-			aChar = $r ifTrue: [^ model debugMethodTest]]
-		ifNil: [
-			aChar = $R ifTrue: [^ model renameClass]]'! !
-
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/5/2023 08:27:46'!
-messageListKeyFromSourceCode
-
-	^'messageListKey: aChar from: view
-	"Respond to a Command key.  I am a model with a code pane, and I also
-	have a listView that has a list of methods.  The view knows how to get
-	the list and selection."
-
-	| sel class |
-	self flag: #definesKeyboardShortcuts.
-	aChar = $D ifTrue: [^ model toggleDiffing].
-
-	sel := model selectedMessageName.
-	aChar = $m ifTrue: [  "These next two put up a type in if no message selected"
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllImplementorsOf: to: Smalltalk].
-	aChar = $n ifTrue: [
-		^ self useSelector: sel orGetSelectorAndSendQuery: #browseAllCallsOn: to: Smalltalk].
-
-	aChar = $M ifTrue: [ ^ self browseActualImplementorsOfSelectedMethod ].
-	aChar = $B ifTrue: [ ^ self browseActualSendersOfSelectedMethod ].
-	aChar = $X ifTrue: [ ^ self model removeMessageCheckingActualSenders ].
-
-	"The following require a class selection"
-	(class := model selectedClassOrMetaClass) ifNil: [^ self ].
-	aChar = $b ifTrue: [^ BrowserWindow fullOnClass: class selector: sel].
-	aChar = $N ifTrue: [^ self browseClassRefs].
-	aChar = $i ifTrue: [^ self methodInheritance].
-	aChar = $h ifTrue: [^ self browseHierarchy].
-	aChar = $p ifTrue: [^ self browseFullProtocol].
-
-	sel
-		ifNotNil: [
-			"The following require a method selection"
-			aChar = $o ifTrue: [^ model fileOutMessage].
-			aChar = $c ifTrue: [^ model copySelector].
-			aChar = $v ifTrue: [^ self browseVersions].
-			aChar = $C ifTrue: [^ model showHomeCategory].
-			aChar = $O ifTrue: [^ self openSingleMessageBrowser].
-			aChar = $x ifTrue: [^ model removeMessage].
-			aChar = $t ifTrue: [^ model runMethodTest].
-			aChar = $r ifTrue: [^ model debugMethodTest].
-			aChar = $T ifTrue: [^ self model typeCheckMethod ]]
-		ifNil: [
-			aChar = $R ifTrue: [^ model renameClass].
-			aChar = $T ifTrue: [ ^ self model typeCheckClass ]]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 11/3/2021 20:13:15'!
 mouseMoveLocalPositionOriginalSourceCode
