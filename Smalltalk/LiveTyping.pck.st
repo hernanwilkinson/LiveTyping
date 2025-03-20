@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #6960] on 17 January 2025 at 1:52:08 pm'!
-'Description Udated to Cuis 7.3 - Menu changes'!
-!provides: 'LiveTyping' 1 126!
+'From Cuis7.3 [latest update: #7081] on 20 March 2025 at 7:05:45 pm'!
+'Description Udated to Cuis 7.3-7081'!
+!provides: 'LiveTyping' 1 127!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2416,11 +2416,11 @@ addReturnTypes: types to: aSelector in: aClass
 	"Abstract methods, quick return methods do not have a types array, that is the reason of the ifFull: .. - Hernan"
 	types do: [ :type | methodReturnTypeInfo addType: type ifFull: [] ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/20/2024 12:23:51'!
+!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 3/20/2025 18:56:45'!
 checkRedefinedMethodsDidNotChange
 
 	self 
-		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 6/15/2008 11:34';
+		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 3/29/2017 12:48';
 		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 1/18/2024 17:52:20' ;
 		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
 
@@ -2543,14 +2543,14 @@ initialize
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
 	! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 12/30/2024 19:41:32'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 3/20/2025 18:28:42'!
 initializeLiveTyping
 
 	self 
 		modifyClassDescriptionShape;
 		modifyAdditionalMethodStateShape;
 		checkRedefinedMethodsDidNotChange;
-		"compileAfterInstallMethods;"
+		compileAfterInstallMethods;
 		initializeTypeInformation;
 		registerRefactoringAppliers;
 		initializeMenues ! !
@@ -14684,7 +14684,7 @@ variablesRawTypesUnload: aClassToUnload
 		unload: aClassToUnload fromAllRawTypesOf: remoteVectorRawTypes 
 		! !
 
-!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:45'!
+!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 3/20/2025 18:55:17'!
 popIntoTemporaryVariable: offset 
 
 	| index value |
@@ -14692,7 +14692,7 @@ popIntoTemporaryVariable: offset
 	index := offset + 1.
 	value := self pop.
 		
-	self contextForLocalVariables at: index put: value.
+	self at: index put: value.
 	method annotateTemporaryTypeOf: value at: index 
 	! !
 
