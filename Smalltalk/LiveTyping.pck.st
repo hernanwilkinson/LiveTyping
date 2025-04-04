@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7081] on 20 March 2025 at 7:05:45 pm'!
-'Description Udated to Cuis 7.3-7081'!
-!provides: 'LiveTyping' 1 127!
+'From Cuis7.3 [latest update: #7095] on 4 April 2025 at 3:59:38 pm'!
+'Description Do not generate changes when running tests'!
+!provides: 'LiveTyping' 1 128!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -382,16 +382,6 @@ Object subclass: #ClosureTypeExamples
 ClosureTypeExamples class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingTestFactory category: #'LiveTyping-Tests'!
-Object subclass: #LiveTypingTestFactory
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Tests'!
-!classDefinition: 'LiveTypingTestFactory class' category: #'LiveTyping-Tests'!
-LiveTypingTestFactory class
-	instanceVariableNames: ''!
-
 !classDefinition: #PerfomanceTest category: #'LiveTyping-Tests'!
 Object subclass: #PerfomanceTest
 	instanceVariableNames: ''
@@ -752,16 +742,6 @@ MethodReference subclass: #PossibleSender
 PossibleSender class
 	instanceVariableNames: ''!
 
-!classDefinition: #AddParameterWithActualScope category: #'LiveTyping-Refactoring'!
-AddParameter subclass: #AddParameterWithActualScope
-	instanceVariableNames: 'shouldChangePossibleMessageSends'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'AddParameterWithActualScope class' category: #'LiveTyping-Refactoring'!
-AddParameterWithActualScope class
-	instanceVariableNames: ''!
-
 !classDefinition: #RenameSelectorWithActualScope category: #'LiveTyping-Refactoring'!
 RenameSelector subclass: #RenameSelectorWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
@@ -770,6 +750,16 @@ RenameSelector subclass: #RenameSelectorWithActualScope
 	category: 'LiveTyping-Refactoring'!
 !classDefinition: 'RenameSelectorWithActualScope class' category: #'LiveTyping-Refactoring'!
 RenameSelectorWithActualScope class
+	instanceVariableNames: ''!
+
+!classDefinition: #AddParameterWithActualScope category: #'LiveTyping-Refactoring'!
+AddParameter subclass: #AddParameterWithActualScope
+	instanceVariableNames: 'shouldChangePossibleMessageSends'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'AddParameterWithActualScope class' category: #'LiveTyping-Refactoring'!
+AddParameterWithActualScope class
 	instanceVariableNames: ''!
 
 !classDefinition: #RemoveParameterWithActualScope category: #'LiveTyping-Refactoring'!
@@ -892,6 +882,36 @@ RefactoringTest subclass: #RenameSelectorWithActualScopeTest
 RenameSelectorWithActualScopeTest class
 	instanceVariableNames: ''!
 
+!classDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests'!
+DynamicallyCodeCreationTest subclass: #InstanceVariableTypeInfoTest
+	instanceVariableNames: 'iv1'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'InstanceVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
+InstanceVariableTypeInfoTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #MethodVariableTypeInfoTest category: #'LiveTyping-Tests'!
+DynamicallyCodeCreationTest subclass: #MethodVariableTypeInfoTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'MethodVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
+MethodVariableTypeInfoTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests'!
+DynamicallyCodeCreationTest subclass: #ReturnTypeInfoTest
+	instanceVariableNames: 'iv1 iv2'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'ReturnTypeInfoTest class' category: #'LiveTyping-Tests'!
+ReturnTypeInfoTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #ActualImplementorsTest category: #'LiveTyping-Tests'!
 TestCase subclass: #ActualImplementorsTest
 	instanceVariableNames: ''
@@ -942,16 +962,6 @@ TestCase subclass: #DynamicTypesTest
 DynamicTypesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests'!
-TestCase subclass: #InstanceVariableTypeInfoTest
-	instanceVariableNames: 'iv1'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Tests'!
-!classDefinition: 'InstanceVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
-InstanceVariableTypeInfoTest class
-	instanceVariableNames: ''!
-
 !classDefinition: #InstanceVariablesTypesTest category: #'LiveTyping-Tests'!
 TestCase subclass: #InstanceVariablesTypesTest
 	instanceVariableNames: 'instVar1 instVar2 instVar3 instVar4'
@@ -982,16 +992,6 @@ TestCase subclass: #MethodNotAnnotatingTypesTest
 MethodNotAnnotatingTypesTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #MethodVariableTypeInfoTest category: #'LiveTyping-Tests'!
-TestCase subclass: #MethodVariableTypeInfoTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Tests'!
-!classDefinition: 'MethodVariableTypeInfoTest class' category: #'LiveTyping-Tests'!
-MethodVariableTypeInfoTest class
-	instanceVariableNames: ''!
-
 !classDefinition: #NotImplementedMethodTest category: #'LiveTyping-Tests'!
 TestCase subclass: #NotImplementedMethodTest
 	instanceVariableNames: ''
@@ -1010,16 +1010,6 @@ TestCase subclass: #PossibleSenderTest
 	category: 'LiveTyping-Tests'!
 !classDefinition: 'PossibleSenderTest class' category: #'LiveTyping-Tests'!
 PossibleSenderTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests'!
-TestCase subclass: #ReturnTypeInfoTest
-	instanceVariableNames: 'iv1 iv2'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Tests'!
-!classDefinition: 'ReturnTypeInfoTest class' category: #'LiveTyping-Tests'!
-ReturnTypeInfoTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #VariableTypeInfoTest category: #'LiveTyping-Tests'!
@@ -4702,44 +4692,6 @@ m5_many_temps_in_remote_vector_with_block_params_and_temps
 	
 	^t3! !
 
-!LiveTypingTestFactory methodsFor: 'classes' stamp: 'HAW 2/22/2019 08:55:07'!
-createClassToBeRemoved
-	
-	^ Object 
-		subclass: self nameOfClassToBeRemoved
-		instanceVariableNames: ''  
-		classVariableNames: '' 
-		poolDictionaries: '' 
-		category: self testDataClassCategoryName
-		! !
-
-!LiveTypingTestFactory methodsFor: 'classes' stamp: 'HAW 2/22/2019 08:54:44'!
-nameOfClassToBeRemoved
-	
-	^#LiveTypingClassToBeRemoved! !
-
-!LiveTypingTestFactory methodsFor: 'class categories' stamp: 'HAW 2/22/2019 08:56:27'!
-removeTestDataClassCategory
-	
-	SystemOrganization removeSystemCategory: self testDataClassCategoryName.
-	Browser allInstancesDo: [:aBrowser | aBrowser changed: #systemCategoryList ]! !
-
-!LiveTypingTestFactory methodsFor: 'class categories' stamp: 'HAW 2/22/2019 08:55:25'!
-testDataClassCategoryName
-	
-	^'__LiveTyping-TestData__'.! !
-
-!LiveTypingTestFactory class methodsFor: 'class category' stamp: 'HAW 2/22/2019 08:59:10'!
-removeTestDataClassCategoryAfter: aBlock
-	
-	| factory |
-	
-	factory := self new.
-	[ aBlock value: factory ] ensure: [ factory removeTestDataClassCategory ]
-
-	
-	! !
-
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 11/1/2018 12:24:48'!
 aconcaguaTime
 
@@ -7244,6 +7196,59 @@ possibleSenderStringVersionHeader
 	
 	^'Possible'! !
 
+!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 1/1/2020 19:57:00'!
+messageSendSelectorKeywordPositionsIn: aMethodNode 
+	
+	^aMethodNode 
+		actualMessageSendsSelectorPositionsOfAll: implementors 
+		ifAbsent: [ #() ] 
+		withPossibleMessageSends: shouldChangePossibleMessageSends.
+	
+! !
+
+!RenameSelectorWithActualScope methodsFor: 'initialization' stamp: 'HAW 1/1/2020 19:50:27'!
+initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
+
+	shouldChangePossibleMessageSends := aShouldRenamePossibleMessageSends ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 3/14/2019 13:45:50'!
+from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders withPossibleMessageSends: shouldRenamePossibleMessageSends
+
+	self assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors. 
+	
+	^(super from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders)
+		initilaizeWithPossibleMessageSends: shouldRenamePossibleMessageSends! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:15'!
+from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:34'!
+from: anOldSelector to: aNewSelector in: aClassToRefactor
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:51'!
+from: anOldSelector to: aNewSelector inCategoriesAndHierarchyOf: aClass organizedBy: anOrganization
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:17'!
+from: anOldSelector to: aNewSelector inCategoryOf: aClass organizedBy: anOrganization
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:39'!
+from: anOldSelector to: aNewSelector inHierarchyOf: aClass
+
+	self shouldNotImplement ! !
+
+!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:51'!
+from: anOldSelector to: aNewSelector inSystem: aSystem
+
+	self shouldNotImplement ! !
+
 !AddParameterWithActualScope methodsFor: 'initialization' stamp: 'HAW 8/17/2019 15:29:04'!
 initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends 
 	
@@ -7346,59 +7351,6 @@ named: aNewParameter
 	toKeywordSelector: anOldSelector  
 	implementors: implementorsCollection 
 	senders: sendersCollection
-
-	self shouldNotImplement ! !
-
-!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 1/1/2020 19:57:00'!
-messageSendSelectorKeywordPositionsIn: aMethodNode 
-	
-	^aMethodNode 
-		actualMessageSendsSelectorPositionsOfAll: implementors 
-		ifAbsent: [ #() ] 
-		withPossibleMessageSends: shouldChangePossibleMessageSends.
-	
-! !
-
-!RenameSelectorWithActualScope methodsFor: 'initialization' stamp: 'HAW 1/1/2020 19:50:27'!
-initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
-
-	shouldChangePossibleMessageSends := aShouldRenamePossibleMessageSends ! !
-
-!RenameSelectorWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 3/14/2019 13:45:50'!
-from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders withPossibleMessageSends: shouldRenamePossibleMessageSends
-
-	self assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors. 
-	
-	^(super from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders)
-		initilaizeWithPossibleMessageSends: shouldRenamePossibleMessageSends! !
-
-!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:15'!
-from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders
-
-	self shouldNotImplement ! !
-
-!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:34'!
-from: anOldSelector to: aNewSelector in: aClassToRefactor
-
-	self shouldNotImplement ! !
-
-!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:01:51'!
-from: anOldSelector to: aNewSelector inCategoriesAndHierarchyOf: aClass organizedBy: anOrganization
-
-	self shouldNotImplement ! !
-
-!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:17'!
-from: anOldSelector to: aNewSelector inCategoryOf: aClass organizedBy: anOrganization
-
-	self shouldNotImplement ! !
-
-!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:39'!
-from: anOldSelector to: aNewSelector inHierarchyOf: aClass
-
-	self shouldNotImplement ! !
-
-!RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 8/17/2019 12:02:51'!
-from: anOldSelector to: aNewSelector inSystem: aSystem
 
 	self shouldNotImplement ! !
 
@@ -9709,6 +9661,554 @@ classToRefactorName
 
 	^#ClassToRenameSelector! !
 
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:27:10'!
+assertTypesAreCollectedCorrectlyFor: anInstVarTypeInfoCreator
+
+	| root sibling1 sibling2 ivrootTypeInfo |
+	
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+	sibling2 := TypeInfoSibling2TestClass new.
+	
+	root ivroot: 1/2.
+	sibling1 ivroot: 1.
+	sibling2 ivroot: 1.0.
+
+	ivrootTypeInfo := anInstVarTypeInfoCreator value.
+	
+	self assert: 3 equals: ivrootTypeInfo typesSize.
+	self assert: (ivrootTypeInfo typesIncludes: (1/2) class).
+	self assert: (ivrootTypeInfo typesIncludes: 1 class).
+	self assert: (ivrootTypeInfo typesIncludes: 1.0 class)! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:32:03'!
+test01TypeCollectionOfInstanceVariableDefinedInLeafClassDoesNotTraverseHierarchy
+
+	| sibling1 ivsibling1TypeInfo |
+	
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivsibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivsibling1'.
+	
+	sibling1 := TypeInfoSibling1TestClass new.
+	sibling1 ivsibling1: 1.
+	
+	self assert: 1 equals: ivsibling1TypeInfo typesSize.
+	self assert: (ivsibling1TypeInfo typesIncludes: 1 class)! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 11:53:23'!
+test02TypeCollectionIncludesSubclasses
+
+	| root sibling1 sibling2 ivrootTypeInfo |
+	
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+	sibling2 := TypeInfoSibling2TestClass new.
+	
+	root ivroot: 1/2.
+	sibling1 ivroot: 1.
+	sibling2 ivroot: 1.0.
+
+	ivrootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	
+	self assert: 3 equals: ivrootTypeInfo typesSize.
+	self assert: (ivrootTypeInfo typesIncludes: (1/2) class).
+	self assert: (ivrootTypeInfo typesIncludes: 1 class).
+	self assert: (ivrootTypeInfo typesIncludes: 1.0 class)	! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 11:54:36'!
+test03TypeCollectionDoesNotIncludeSuperclassesAndSiblings
+
+	| root sibling1 sibling2 ivrootTypeInfo |
+	
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+	sibling2 := TypeInfoSibling2TestClass new.
+	
+	root ivroot: 1/2.
+	sibling1 ivroot: 1.
+	sibling2 ivroot: 1.0.
+
+	ivrootTypeInfo :=  TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'. 
+	
+	self assert: 1 equals: ivrootTypeInfo typesSize.
+	self assert: (ivrootTypeInfo typesIncludes: 1 class).
+! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:34:47'!
+test05TypeCollectionIncludesAllSubclasses
+
+	| root sibling1 sibling2 ivrootInRootTypeInfo |
+	
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+	sibling2 := TypeInfoSibling2TestClass new.
+	
+	root ivroot: 1/2.
+	root ivroot: 1.
+	sibling1 ivroot: 1.
+	sibling1 ivroot: 1.0.
+	sibling2 ivroot: 1.0.	
+	sibling2 ivroot: 1/2.
+	
+	self assert: 3 equals: ivrootInRootTypeInfo typesSize.
+	self assert: (ivrootInRootTypeInfo typesIncludes: (1/2) class).
+	self assert: (ivrootInRootTypeInfo typesIncludes: 1 class).
+	self assert: (ivrootInRootTypeInfo typesIncludes: 1.0 class)! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:41:56'!
+test06IsNotMegamorphicIfTypesSizeIsLessToTheMaxOfWithAllSubclassesRawTypesSize
+
+	| root ivrootInRootTypeInfo |
+	
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+	
+	root ivroot: 1/2.
+	root ivroot: 1.
+	
+	self deny: ivrootInRootTypeInfo isMegamorphic ! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:42:16'!
+test07IsMegamorphicIfTypesSizeIsEqualToTheMaxOfWithAllSubclassesRawTypesSize
+
+	| sibling1 ivrootInRootTypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	
+	sibling1 := TypeInfoSibling1TestClass new.
+	
+	sibling1 ivroot: 1/2.
+	sibling1 ivroot: 1.
+	sibling1 ivroot: 1.0.
+	
+	self assert: ivrootInRootTypeInfo isMegamorphic.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:49:21'!
+test08IsNotMegamorphicIfDoesNotFillRawTypesForLocalTypeInfo
+
+	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+
+	root ivroot: 1.0.	
+	sibling1 ivroot: 1/2.
+	sibling1 ivroot: 1.
+	
+	self deny: ivrootInRootTypeInfo isMegamorphic.
+	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:53:03'!
+test09IsMegamorphicIfFillsRawTypesOfDefiningClassForLocalTypeInfo
+
+	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+
+	root ivroot: 1.0.	
+	root ivroot: 1.	
+	sibling1 ivroot: 1/2.
+	sibling1 ivroot: 1.
+	
+	self assert: ivrootInRootTypeInfo isMegamorphic.
+	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:53:31'!
+test10IsMegamorphicIfFillsRawTypesOfNotDefiningClassForLocalTypeInfo
+
+	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+	sibling1 := TypeInfoSibling1TestClass new.
+
+	root ivroot: 1.0.	
+	sibling1 ivroot: 1/2.
+	sibling1 ivroot: 1.
+	sibling1 ivroot: 1.0.
+	
+	self deny: ivrootInRootTypeInfo isMegamorphic.
+	self assert: ivrootInSibling1TypeInfo isMegamorphic.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 11:56:34'!
+test11IsTypesEmptyOfNonLocalTypeInfoTakesCareOfHierarchy
+
+	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+
+	root ivroot: 1.0.	
+	
+	self deny: ivrootInRootTypeInfo isTypesEmpty.
+	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:57:28'!
+test12IsTypesEmptyForLocalTypeInfoOnlyCheckOnLocalRawTypes
+
+	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
+
+	self initializeHierarchyForTestingInstanceVariablesTypes.
+	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
+	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
+	
+	root := TypeInfoRootTestClass new.
+
+	root ivroot: 1.0.	
+	
+	self deny: ivrootInRootTypeInfo isTypesEmpty.
+	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 4/3/2025 20:34:21'!
+test13RemovingAClassRemovesItAndItsClassFromInstanceVariableRawTypes
+
+	| classToRemove typeInfo |
+
+	classToRemove := self createClassNamed: #LiveTypingClassToBeRemoved.
+	self class initializeInstanceVariablesRawTypes.
+	iv1 := classToRemove new.
+	iv1 := classToRemove.
+
+	typeInfo := self class typeInfoOfInstanceVariableNamed: 'iv1'.
+	
+	self assert: typeInfo typesSize equals: 2.
+	self assert: (typeInfo typesIncludes: classToRemove).
+	self assert: (typeInfo typesIncludes: classToRemove class).
+	
+	classToRemove removeFromSystem.
+	
+	self assert: typeInfo isTypesEmpty ! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 20:29:11'!
+test14InstVarAtPutKeepTypeInfo
+
+	| types |
+	
+	self class initializeInstanceVariablesRawTypes.
+	self instVarAt: (self class indexOfInstanceVariable: 'iv1') put: 10.
+	
+	types := self class typesOfInstanceVariableNamed: 'iv1'.
+	
+	self assert: 1 equals: types size.
+	self assert: (types includes: SmallInteger)! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 11/27/2018 15:04:54'!
+initializeHierarchyForTestingInstanceVariablesTypes
+	
+	TypeInfoRootTestClass withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 4/3/2025 20:36:21'!
+assertTypeIsRemovedFor: aVariableName
+
+	| classToRemove typeInfo methodUnderTest |
+
+	classToRemove := self createClassNamed: #LiveTypingClassToBeRemoved.
+	methodUnderTest := self class >> #methodWithParameterOfClassToRemove:.
+	methodUnderTest initializeTypeInformation.
+	self methodWithParameterOfClassToRemove: classToRemove new.
+	self methodWithParameterOfClassToRemove: classToRemove.
+
+	typeInfo := methodUnderTest typeInfoOfVariableNamed: aVariableName.
+	
+	self assert: typeInfo typesSize equals: 2.
+	self assert: (typeInfo typesIncludes: classToRemove).
+	self assert: (typeInfo typesIncludes: classToRemove class).
+	
+	classToRemove removeFromSystem.
+	
+	self assert: typeInfo isTypesEmpty ! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:21:54'!
+test01RemovingAClassRemovesItFromMethodVariableRawTypesForParameter
+
+	self assertTypeIsRemovedFor: 'p1'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 4/3/2025 20:37:45'!
+test02RemovingAClassRemovesItsClassFromMethodVariableRawTypesForParameter
+
+	| classToRemove typeInfo |
+
+	classToRemove := self createClassNamed: #LiveTypingClassToBeRemoved.
+	self methodWithParameterOfClassToRemove: classToRemove.
+
+	typeInfo := (self class compiledMethodAt: #methodWithParameterOfClassToRemove:) typeInfoOfVariableNamed: 'p1'.
+	
+	self assert: typeInfo typesSize equals: 1.
+	self assert: (typeInfo typesIncludes: classToRemove class).
+	
+	classToRemove removeFromSystem.
+	
+	self assert: typeInfo isTypesEmpty ! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:23:53'!
+test03RemovingAClassRemovesItFromMethodVariablesRawTypes
+
+	self assertTypeIsRemovedFor: 'tempNotInRemoteVector'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:24:09'!
+test04RemovingAClassRemovesItFromMethodVariableRemoteVectorRawTypes
+
+	self assertTypeIsRemovedFor: 'tempInRemoteVector'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/28/2019 18:23:21'!
+methodWithParameterOfClassToRemove: p1
+
+	| tempNotInRemoteVector tempInRemoteVector |
+	
+	tempNotInRemoteVector := p1.
+	[ tempInRemoteVector := p1 ] value.
+	
+	^10! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:48:50'!
+test01QuickReturnSelfMethodsReturnSelfTypeAsReturnType
+
+	| method returnTypes |
+	
+	method := self class >> #quickReturnSelf.
+	returnTypes := method returnTypes.
+	
+	self assert: returnTypes size equals: 1.
+	self assert: returnTypes anyOne class equals: SelfType 
+! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:39:17'!
+test02QuickReturnTrueMethodsReturnTrueReturnType
+
+	self assertReturnTypeOf: #quickReturnTrue is: true class.
+	! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:40:42'!
+test03QuickReturnFalseMethodsReturnFalseAsReturnType
+
+	self assertReturnTypeOf: #quickReturnFalse is: false class.
+	! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:42:36'!
+test04QuickReturnNilMethodsReturnUndefinedObjectAsReturnType
+
+	self assertReturnTypeOf: #quickReturnNil is: nil class.
+	! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:44:02'!
+test05QuickReturnMinusOneMethodsReturnSmallIntegerAsReturnType
+
+	self assertReturnTypeOf: #quickReturnMinusOne is: -1 class.
+	! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:45:51'!
+test06QuickReturnZeroMethodsReturnSmallIntegerAsReturnType
+
+	self assertReturnTypeOf: #quickReturnZero is: 0 class.
+	! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:45:38'!
+test07QuickReturnOneMethodsReturnSmallIntegerAsReturnType
+
+	self assertReturnTypeOf: #quickReturnOne is: 1 class.
+	! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:51:55'!
+test08QuickReturnTwoMethodsReturnSmallIntegerAsReturnType
+
+	self assertReturnTypeOf: #quickReturnTwo is: 2 class.
+	! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 22:00:09'!
+test09QuickReturnOfFirstInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
+
+	self class initializeInstanceVariablesRawTypes.
+	iv1 := 'hello'.
+	iv1 := 1.
+	
+	self assertReturnTypeOf: #quickReturnFirstInstanceVariable are: (Array with: 'hello' class with: 1 class)! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 22:13:24'!
+test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
+
+	self class initializeInstanceVariablesRawTypes.
+	iv2 := 1.0.
+	iv2 := 1.
+	
+	self assertReturnTypeOf: #quickReturnSecondInstanceVariable are: (Array with: 1.0 class with: 1 class)! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:10:49'!
+test11classMethodReturnsClassTypeAsReturnType
+
+	| method returnTypes |
+	
+	method := Object >> #class.
+	returnTypes := method returnTypes.
+	
+	self assert: returnTypes size equals: 1.
+	self assert: returnTypes anyOne class equals: ClassType 
+! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:12:19'!
+test12newMethodReturnsInstanceTypeAsReturnType
+
+	| method returnTypes |
+	
+	method := Behavior >> #new.
+	returnTypes := method returnTypes.
+	
+	self assert: returnTypes size equals: 1.
+	self assert: returnTypes anyOne class equals: InstanceType ! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:10:32'!
+test13yourselfMethodReturnsSelfTypeAsReturnType
+
+	| method returnTypes |
+	
+	method := Object >> #yourself.
+	returnTypes := method returnTypes.
+	
+	self assert: returnTypes size equals: 1.
+	self assert: returnTypes anyOne class equals: SelfType ! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 4/3/2025 20:37:09'!
+test14RemovingAClassRemovesItAndItsClassFromMethodReturnType
+
+	| classToRemove typeInfo methodUnderTest |
+
+	classToRemove := self createClassNamed: #LiveTypingClassToBeRemoved.
+	methodUnderTest := self class compiledMethodAt: #methodReturningInstanceOfClassToRemove:.
+	methodUnderTest initializeTypeInformation.
+	
+	self methodReturningInstanceOfClassToRemove: classToRemove new.
+	self methodReturningInstanceOfClassToRemove: classToRemove.
+
+	typeInfo := methodUnderTest returnTypeInfo.
+	
+	self assert: typeInfo typesSize equals: 2.
+	self assert: (typeInfo typesIncludes: classToRemove).
+	self assert: (typeInfo typesIncludes: classToRemove class).
+	
+	classToRemove removeFromSystem.
+	
+	self assert: typeInfo isTypesEmpty ! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 12:45:14'!
+test15ReturnTypesOfAbstractMethodsIncludesSubclassesImplementationsTypes
+
+	| returnTypes |
+	
+	TypeInfoRootTestClass allSubclassesDo: [ :aSubclass | aSubclass new implementedOnAll: 1 ].
+	
+	returnTypes := TypeInfoRootTestClass returnTypesAt: #implementedOnAll:.
+	
+	self assert: 2 equals: returnTypes size.
+	TypeInfoRootTestClass allSubclassesDo: [ :aSubclass |
+		self assert: (returnTypes includesAllOf: (aSubclass returnTypesAt: #implementedOnAll:)) ].! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 12:50:08'!
+test16ReturnTypesOfAbstractMethodWorksWhenNotImplementedInAllSubclasses
+
+	| returnTypes |
+	
+	returnTypes := TypeInfoRootTestClass returnTypesAt: #implementedOnSibling1Only.
+	
+	self assert: 1 equals: returnTypes size.
+	self assert: (returnTypes includesAllOf: (TypeInfoSibling1TestClass returnTypesAt: #implementedOnSibling1Only)) ! !
+
+!ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 1/17/2019 11:46:48'!
+assertReturnTypeOf: aSelector are: types
+
+	| method methodReturnTypeInfo |
+	
+	method := self class >> aSelector.
+	methodReturnTypeInfo := method returnTypeInfo.
+	
+	self assert: types size equals: methodReturnTypeInfo typesSize.
+	self assert: (methodReturnTypeInfo typesIncludesAllOf: types)! !
+
+!ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 10/29/2018 21:58:16'!
+assertReturnTypeOf: aSelector is: aType
+
+	self assertReturnTypeOf: aSelector are: (Array with: aType)! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/22/2019 21:57:58'!
+methodReturningInstanceOfClassToRemove: aClassToRemoveInstance
+
+	^aClassToRemoveInstance! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:40:21'!
+quickReturnFalse
+
+	^false! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:51:45'!
+quickReturnFirstInstanceVariable
+
+	^iv1! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:43:30'!
+quickReturnMinusOne
+
+	^-1! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:42:16'!
+quickReturnNil
+
+	^nil! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:44:40'!
+quickReturnOne
+
+	^1! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 22:12:20'!
+quickReturnSecondInstanceVariable
+
+	^iv2! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:24:29'!
+quickReturnSelf
+
+	^self! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:36:02'!
+quickReturnTrue
+
+	^true! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:50:11'!
+quickReturnTwo
+
+	^2! !
+
+!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:49:22'!
+quickReturnZero
+
+	^0! !
+
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 2/19/2019 14:50:51'!
 test01WhenIsImplementedOnlyInRootReturnsThatImplementorOnly
 
@@ -10349,270 +10849,6 @@ createNewInstance
 	
 	^self class new! !
 
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:27:10'!
-assertTypesAreCollectedCorrectlyFor: anInstVarTypeInfoCreator
-
-	| root sibling1 sibling2 ivrootTypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-	sibling2 := TypeInfoSibling2TestClass new.
-	
-	root ivroot: 1/2.
-	sibling1 ivroot: 1.
-	sibling2 ivroot: 1.0.
-
-	ivrootTypeInfo := anInstVarTypeInfoCreator value.
-	
-	self assert: 3 equals: ivrootTypeInfo typesSize.
-	self assert: (ivrootTypeInfo typesIncludes: (1/2) class).
-	self assert: (ivrootTypeInfo typesIncludes: 1 class).
-	self assert: (ivrootTypeInfo typesIncludes: 1.0 class)! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:32:03'!
-test01TypeCollectionOfInstanceVariableDefinedInLeafClassDoesNotTraverseHierarchy
-
-	| sibling1 ivsibling1TypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivsibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivsibling1'.
-	
-	sibling1 := TypeInfoSibling1TestClass new.
-	sibling1 ivsibling1: 1.
-	
-	self assert: 1 equals: ivsibling1TypeInfo typesSize.
-	self assert: (ivsibling1TypeInfo typesIncludes: 1 class)! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 11:53:23'!
-test02TypeCollectionIncludesSubclasses
-
-	| root sibling1 sibling2 ivrootTypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-	sibling2 := TypeInfoSibling2TestClass new.
-	
-	root ivroot: 1/2.
-	sibling1 ivroot: 1.
-	sibling2 ivroot: 1.0.
-
-	ivrootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	
-	self assert: 3 equals: ivrootTypeInfo typesSize.
-	self assert: (ivrootTypeInfo typesIncludes: (1/2) class).
-	self assert: (ivrootTypeInfo typesIncludes: 1 class).
-	self assert: (ivrootTypeInfo typesIncludes: 1.0 class)	! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 11:54:36'!
-test03TypeCollectionDoesNotIncludeSuperclassesAndSiblings
-
-	| root sibling1 sibling2 ivrootTypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-	sibling2 := TypeInfoSibling2TestClass new.
-	
-	root ivroot: 1/2.
-	sibling1 ivroot: 1.
-	sibling2 ivroot: 1.0.
-
-	ivrootTypeInfo :=  TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'. 
-	
-	self assert: 1 equals: ivrootTypeInfo typesSize.
-	self assert: (ivrootTypeInfo typesIncludes: 1 class).
-! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:34:47'!
-test05TypeCollectionIncludesAllSubclasses
-
-	| root sibling1 sibling2 ivrootInRootTypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-	sibling2 := TypeInfoSibling2TestClass new.
-	
-	root ivroot: 1/2.
-	root ivroot: 1.
-	sibling1 ivroot: 1.
-	sibling1 ivroot: 1.0.
-	sibling2 ivroot: 1.0.	
-	sibling2 ivroot: 1/2.
-	
-	self assert: 3 equals: ivrootInRootTypeInfo typesSize.
-	self assert: (ivrootInRootTypeInfo typesIncludes: (1/2) class).
-	self assert: (ivrootInRootTypeInfo typesIncludes: 1 class).
-	self assert: (ivrootInRootTypeInfo typesIncludes: 1.0 class)! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:41:56'!
-test06IsNotMegamorphicIfTypesSizeIsLessToTheMaxOfWithAllSubclassesRawTypesSize
-
-	| root ivrootInRootTypeInfo |
-	
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-	
-	root ivroot: 1/2.
-	root ivroot: 1.
-	
-	self deny: ivrootInRootTypeInfo isMegamorphic ! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:42:16'!
-test07IsMegamorphicIfTypesSizeIsEqualToTheMaxOfWithAllSubclassesRawTypesSize
-
-	| sibling1 ivrootInRootTypeInfo |
-
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	
-	sibling1 := TypeInfoSibling1TestClass new.
-	
-	sibling1 ivroot: 1/2.
-	sibling1 ivroot: 1.
-	sibling1 ivroot: 1.0.
-	
-	self assert: ivrootInRootTypeInfo isMegamorphic.! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:49:21'!
-test08IsNotMegamorphicIfDoesNotFillRawTypesForLocalTypeInfo
-
-	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
-
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
-	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-
-	root ivroot: 1.0.	
-	sibling1 ivroot: 1/2.
-	sibling1 ivroot: 1.
-	
-	self deny: ivrootInRootTypeInfo isMegamorphic.
-	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:53:03'!
-test09IsMegamorphicIfFillsRawTypesOfDefiningClassForLocalTypeInfo
-
-	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
-
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
-	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-
-	root ivroot: 1.0.	
-	root ivroot: 1.	
-	sibling1 ivroot: 1/2.
-	sibling1 ivroot: 1.
-	
-	self assert: ivrootInRootTypeInfo isMegamorphic.
-	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:53:31'!
-test10IsMegamorphicIfFillsRawTypesOfNotDefiningClassForLocalTypeInfo
-
-	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
-
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
-	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-	sibling1 := TypeInfoSibling1TestClass new.
-
-	root ivroot: 1.0.	
-	sibling1 ivroot: 1/2.
-	sibling1 ivroot: 1.
-	sibling1 ivroot: 1.0.
-	
-	self deny: ivrootInRootTypeInfo isMegamorphic.
-	self assert: ivrootInSibling1TypeInfo isMegamorphic.! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 11:56:34'!
-test11IsTypesEmptyOfNonLocalTypeInfoTakesCareOfHierarchy
-
-	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
-
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-
-	root ivroot: 1.0.	
-	
-	self deny: ivrootInRootTypeInfo isTypesEmpty.
-	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 12:57:28'!
-test12IsTypesEmptyForLocalTypeInfoOnlyCheckOnLocalRawTypes
-
-	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
-
-	self initializeHierarchyForTestingInstanceVariablesTypes.
-	ivrootInRootTypeInfo := TypeInfoRootTestClass instanceVariablesTypes typeInfoOf: 'ivroot'.
-	ivrootInSibling1TypeInfo := TypeInfoSibling1TestClass instanceVariablesTypes localTypeInfoOf: 'ivroot'.
-	
-	root := TypeInfoRootTestClass new.
-
-	root ivroot: 1.0.	
-	
-	self deny: ivrootInRootTypeInfo isTypesEmpty.
-	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:31:47'!
-test13RemovingAClassRemovesItAndItsClassFromInstanceVariableRawTypes
-
-	| classToRemove typeInfo |
-
-	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
-		classToRemove := testFactory createClassToBeRemoved.
-		self class initializeInstanceVariablesRawTypes.
-		iv1 := classToRemove new.
-		iv1 := classToRemove.
-	
-		typeInfo := self class typeInfoOfInstanceVariableNamed: 'iv1'.
-		
-		self assert: typeInfo typesSize equals: 2.
-		self assert: (typeInfo typesIncludes: classToRemove).
-		self assert: (typeInfo typesIncludes: classToRemove class).
-		
-		classToRemove removeFromSystem.
-		
-		self assert: typeInfo isTypesEmpty ]! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 7/16/2019 20:29:11'!
-test14InstVarAtPutKeepTypeInfo
-
-	| types |
-	
-	self class initializeInstanceVariablesRawTypes.
-	self instVarAt: (self class indexOfInstanceVariable: 'iv1') put: 10.
-	
-	types := self class typesOfInstanceVariableNamed: 'iv1'.
-	
-	self assert: 1 equals: types size.
-	self assert: (types includes: SmallInteger)! !
-
-!InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 11/27/2018 15:04:54'!
-initializeHierarchyForTestingInstanceVariablesTypes
-	
-	TypeInfoRootTestClass withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
-
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 4/3/2024 15:42:13'!
 test01InstanceVariablesTypesIsInitializedWithAnArrayOfClassInstSize
 
@@ -11074,71 +11310,6 @@ test02IsResumable
 		
 	self assert: 3 equals: result! !
 
-!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:25:09'!
-assertTypeIsRemovedFor: aVariableName
-
-	| classToRemove typeInfo methodUnderTest |
-
-	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
-		classToRemove := testFactory createClassToBeRemoved.
-		methodUnderTest := self class >> #methodWithParameterOfClassToRemove:.
-		methodUnderTest initializeTypeInformation.
-		self methodWithParameterOfClassToRemove: classToRemove new.
-		self methodWithParameterOfClassToRemove: classToRemove.
-	
-		typeInfo := methodUnderTest typeInfoOfVariableNamed: aVariableName.
-		
-		self assert: typeInfo typesSize equals: 2.
-		self assert: (typeInfo typesIncludes: classToRemove).
-		self assert: (typeInfo typesIncludes: classToRemove class).
-		
-		classToRemove removeFromSystem.
-		
-		self assert: typeInfo isTypesEmpty ]! !
-
-!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:21:54'!
-test01RemovingAClassRemovesItFromMethodVariableRawTypesForParameter
-
-	self assertTypeIsRemovedFor: 'p1'! !
-
-!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/22/2019 20:28:09'!
-test02RemovingAClassRemovesItsClassFromMethodVariableRawTypesForParameter
-
-	| classToRemove typeInfo |
-
-	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
-		classToRemove := testFactory createClassToBeRemoved.
-		self methodWithParameterOfClassToRemove: classToRemove.
-	
-		typeInfo := (self class compiledMethodAt: #methodWithParameterOfClassToRemove:) typeInfoOfVariableNamed: 'p1'.
-		
-		self assert: typeInfo typesSize equals: 1.
-		self assert: (typeInfo typesIncludes: classToRemove class).
-		
-		classToRemove removeFromSystem.
-		
-		self assert: typeInfo isTypesEmpty ]! !
-
-!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:23:53'!
-test03RemovingAClassRemovesItFromMethodVariablesRawTypes
-
-	self assertTypeIsRemovedFor: 'tempNotInRemoteVector'! !
-
-!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:24:09'!
-test04RemovingAClassRemovesItFromMethodVariableRemoteVectorRawTypes
-
-	self assertTypeIsRemovedFor: 'tempInRemoteVector'! !
-
-!MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/28/2019 18:23:21'!
-methodWithParameterOfClassToRemove: p1
-
-	| tempNotInRemoteVector tempInRemoteVector |
-	
-	tempNotInRemoteVector := p1.
-	[ tempInRemoteVector := p1 ] value.
-	
-	^10! !
-
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/4/2019 08:08:39'!
 test01ActualSendersIsEmpty
 
@@ -11219,229 +11390,6 @@ test01StringVersionBeginsWithPossible
 	self assert: 
 		((PossibleSender in: self class>>thisContext selector withPossibleMessageSends: #()) stringVersion 
 		beginsWith: '[', PossibleSender possibleSenderStringVersionHeader)! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/17/2019 11:48:50'!
-test01QuickReturnSelfMethodsReturnSelfTypeAsReturnType
-
-	| method returnTypes |
-	
-	method := self class >> #quickReturnSelf.
-	returnTypes := method returnTypes.
-	
-	self assert: returnTypes size equals: 1.
-	self assert: returnTypes anyOne class equals: SelfType 
-! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:39:17'!
-test02QuickReturnTrueMethodsReturnTrueReturnType
-
-	self assertReturnTypeOf: #quickReturnTrue is: true class.
-	! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:40:42'!
-test03QuickReturnFalseMethodsReturnFalseAsReturnType
-
-	self assertReturnTypeOf: #quickReturnFalse is: false class.
-	! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:42:36'!
-test04QuickReturnNilMethodsReturnUndefinedObjectAsReturnType
-
-	self assertReturnTypeOf: #quickReturnNil is: nil class.
-	! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:44:02'!
-test05QuickReturnMinusOneMethodsReturnSmallIntegerAsReturnType
-
-	self assertReturnTypeOf: #quickReturnMinusOne is: -1 class.
-	! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:45:51'!
-test06QuickReturnZeroMethodsReturnSmallIntegerAsReturnType
-
-	self assertReturnTypeOf: #quickReturnZero is: 0 class.
-	! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:45:38'!
-test07QuickReturnOneMethodsReturnSmallIntegerAsReturnType
-
-	self assertReturnTypeOf: #quickReturnOne is: 1 class.
-	! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 21:51:55'!
-test08QuickReturnTwoMethodsReturnSmallIntegerAsReturnType
-
-	self assertReturnTypeOf: #quickReturnTwo is: 2 class.
-	! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 22:00:09'!
-test09QuickReturnOfFirstInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
-
-	self class initializeInstanceVariablesRawTypes.
-	iv1 := 'hello'.
-	iv1 := 1.
-	
-	self assertReturnTypeOf: #quickReturnFirstInstanceVariable are: (Array with: 'hello' class with: 1 class)! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/29/2018 22:13:24'!
-test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
-
-	self class initializeInstanceVariablesRawTypes.
-	iv2 := 1.0.
-	iv2 := 1.
-	
-	self assertReturnTypeOf: #quickReturnSecondInstanceVariable are: (Array with: 1.0 class with: 1 class)! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:10:49'!
-test11classMethodReturnsClassTypeAsReturnType
-
-	| method returnTypes |
-	
-	method := Object >> #class.
-	returnTypes := method returnTypes.
-	
-	self assert: returnTypes size equals: 1.
-	self assert: returnTypes anyOne class equals: ClassType 
-! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:12:19'!
-test12newMethodReturnsInstanceTypeAsReturnType
-
-	| method returnTypes |
-	
-	method := Behavior >> #new.
-	returnTypes := method returnTypes.
-	
-	self assert: returnTypes size equals: 1.
-	self assert: returnTypes anyOne class equals: InstanceType ! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 1/18/2019 10:10:32'!
-test13yourselfMethodReturnsSelfTypeAsReturnType
-
-	| method returnTypes |
-	
-	method := Object >> #yourself.
-	returnTypes := method returnTypes.
-	
-	self assert: returnTypes size equals: 1.
-	self assert: returnTypes anyOne class equals: SelfType ! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 2/28/2019 18:29:48'!
-test14RemovingAClassRemovesItAndItsClassFromMethodReturnType
-
-	| classToRemove typeInfo methodUnderTest |
-
-	LiveTypingTestFactory removeTestDataClassCategoryAfter: [ :testFactory |
-		classToRemove := testFactory createClassToBeRemoved.
-		methodUnderTest := self class compiledMethodAt: #methodReturningInstanceOfClassToRemove:.
-		methodUnderTest initializeTypeInformation.
-		
-		self methodReturningInstanceOfClassToRemove: classToRemove new.
-		self methodReturningInstanceOfClassToRemove: classToRemove.
-	
-		typeInfo := methodUnderTest returnTypeInfo.
-		
-		self assert: typeInfo typesSize equals: 2.
-		self assert: (typeInfo typesIncludes: classToRemove).
-		self assert: (typeInfo typesIncludes: classToRemove class).
-		
-		classToRemove removeFromSystem.
-		
-		self assert: typeInfo isTypesEmpty ]! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 12:45:14'!
-test15ReturnTypesOfAbstractMethodsIncludesSubclassesImplementationsTypes
-
-	| returnTypes |
-	
-	TypeInfoRootTestClass allSubclassesDo: [ :aSubclass | aSubclass new implementedOnAll: 1 ].
-	
-	returnTypes := TypeInfoRootTestClass returnTypesAt: #implementedOnAll:.
-	
-	self assert: 2 equals: returnTypes size.
-	TypeInfoRootTestClass allSubclassesDo: [ :aSubclass |
-		self assert: (returnTypes includesAllOf: (aSubclass returnTypesAt: #implementedOnAll:)) ].! !
-
-!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 8/10/2019 12:50:08'!
-test16ReturnTypesOfAbstractMethodWorksWhenNotImplementedInAllSubclasses
-
-	| returnTypes |
-	
-	returnTypes := TypeInfoRootTestClass returnTypesAt: #implementedOnSibling1Only.
-	
-	self assert: 1 equals: returnTypes size.
-	self assert: (returnTypes includesAllOf: (TypeInfoSibling1TestClass returnTypesAt: #implementedOnSibling1Only)) ! !
-
-!ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 1/17/2019 11:46:48'!
-assertReturnTypeOf: aSelector are: types
-
-	| method methodReturnTypeInfo |
-	
-	method := self class >> aSelector.
-	methodReturnTypeInfo := method returnTypeInfo.
-	
-	self assert: types size equals: methodReturnTypeInfo typesSize.
-	self assert: (methodReturnTypeInfo typesIncludesAllOf: types)! !
-
-!ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 10/29/2018 21:58:16'!
-assertReturnTypeOf: aSelector is: aType
-
-	self assertReturnTypeOf: aSelector are: (Array with: aType)! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 2/22/2019 21:57:58'!
-methodReturningInstanceOfClassToRemove: aClassToRemoveInstance
-
-	^aClassToRemoveInstance! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:40:21'!
-quickReturnFalse
-
-	^false! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:51:45'!
-quickReturnFirstInstanceVariable
-
-	^iv1! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:43:30'!
-quickReturnMinusOne
-
-	^-1! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:42:16'!
-quickReturnNil
-
-	^nil! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:44:40'!
-quickReturnOne
-
-	^1! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 22:12:20'!
-quickReturnSecondInstanceVariable
-
-	^iv2! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:24:29'!
-quickReturnSelf
-
-	^self! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:36:02'!
-quickReturnTrue
-
-	^true! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:50:11'!
-quickReturnTwo
-
-	^2! !
-
-!ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 10/29/2018 21:49:22'!
-quickReturnZero
-
-	^0! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/15/2018 22:48:38'!
 test01IsEmptyWhenAllTypesAreNil
