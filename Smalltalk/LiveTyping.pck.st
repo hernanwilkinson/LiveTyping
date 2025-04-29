@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7095] on 4 April 2025 at 3:59:38 pm'!
-'Description Do not generate changes when running tests'!
-!provides: 'LiveTyping' 1 128!
+'From Cuis7.3 [latest update: #7102] on 29 April 2025 at 8:31:09 am'!
+'Description Unload menues'!
+!provides: 'LiveTyping' 1 129!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2545,27 +2545,26 @@ initializeLiveTyping
 		registerRefactoringAppliers;
 		initializeMenues ! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 1/17/2025 13:46:42'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 4/28/2025 21:17:35'!
 initializeMenues
 
-	BrowserWindow at: #systemCatListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #systemCatListMenuSpec).
+	BrowserWindow registerAll: self browserWindowMenuSpecs.
+	MethodSetWindow registerAll: self methodSetWindowMenuSpecs.
+	DebuggerWindow registerAll: self debuggerWindowMenuSpecs.
+	! !
 
-	BrowserWindow at: #classListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #classListMenuSpec).
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 4/28/2025 21:24:04'!
+unload
 
-	BrowserWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #messageListMenuSpec).
-	MethodSetWindow at: #messageListMenuSpec registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #messageListMenuSpec).
+	"Old method should be restored - Hernan"
+	self unloadMenues! !
 
-	BrowserWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
-	MethodSetWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).	
-	DebuggerWindow at: #SmalltalkEditor registerMenuAndShortcutsSpecProvider:
-		(MessageSend receiver: self selector: #smalltalkEditorMenuSpec).
-	
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 4/28/2025 21:24:14'!
+unloadMenues
+
+	BrowserWindow unregisterAll: self browserWindowMenuSpecs.
+	MethodSetWindow unregisterAll: self methodSetWindowMenuSpecs.
+	DebuggerWindow unregisterAll: self debuggerWindowMenuSpecs.
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 8/19/2022 18:24:20'!
@@ -2575,6 +2574,16 @@ aMenuLabel
 	it compile - Hernan"
 	^'LiveTyping'! !
 
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 4/28/2025 21:21:45'!
+browserWindowMenuSpecs
+	
+	^{ 	{ #systemCatListMenuSpec. self systemCatListMenuSpecSend }.
+		{ #classListMenuSpec. self classListMenuSpecSend }.
+		{ #messageListMenuSpec. self messageListMenuSpecSend }.
+		{ #SmalltalkEditor. self smalltalkEditorMenuSpecSend }}
+	
+	! !
+
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/31/2024 18:26:39'!
 classListMenuSpec
 	
@@ -2583,6 +2592,19 @@ classListMenuSpec
 		{3010. 	'Type Check'.						nil.  #model. 	#typeCheckClass.					#acceptIcon}.
 		{3020. 	'Reset Types'.						nil.  #model. 	#resetClassType.					#deleteIcon}.
 	}
+	! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 4/28/2025 21:20:02'!
+classListMenuSpecSend
+
+	^ MessageSend receiver: self selector: #classListMenuSpec! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 4/28/2025 21:19:38'!
+debuggerWindowMenuSpecs
+
+	^{ { #SmalltalkEditor. self smalltalkEditorMenuSpecSend } }.
+	
+	
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/31/2024 18:27:38'!
@@ -2600,6 +2622,19 @@ messageListMenuSpec
 	
 ! !
 
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 4/28/2025 21:20:23'!
+messageListMenuSpecSend
+
+	^ MessageSend receiver: self selector: #messageListMenuSpec! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 4/28/2025 21:23:05'!
+methodSetWindowMenuSpecs
+	
+	^ { { #messageListMenuSpec. self messageListMenuSpecSend }.
+		{ #SmalltalkEditor. self smalltalkEditorMenuSpecSend }}	
+	
+	! !
+
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/31/2024 18:26:00'!
 smalltalkEditorMenuSpec
 		
@@ -2615,6 +2650,11 @@ smalltalkEditorMenuSpec
 	}
 ! !
 
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 4/28/2025 21:19:31'!
+smalltalkEditorMenuSpecSend
+
+	^ MessageSend receiver: self selector: #smalltalkEditorMenuSpec! !
+
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 12/30/2024 19:31:06'!
 systemCatListMenuSpec
 	
@@ -2624,6 +2664,11 @@ systemCatListMenuSpec
 		{2020. 	'Reset Types'.						nil.  #model. 	#resetCategoryTypes.				#deleteIcon}.
 	}
 	! !
+
+!LiveTyping class methodsFor: 'menues' stamp: 'HAW 4/28/2025 21:19:51'!
+systemCatListMenuSpecSend
+
+	^ MessageSend receiver: self selector: #systemCatListMenuSpec! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:49:27'!
 addAndClassifySelectorOriginalSourceCode
