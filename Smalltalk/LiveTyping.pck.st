@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7102] on 29 April 2025 at 8:31:09 am'!
-'Description Unload menues'!
-!provides: 'LiveTyping' 1 129!
+'From Cuis7.3 [latest update: #7108] on 1 May 2025 at 8:07:05 pm'!
+'Description Morphic and Graphics initialization - Browser anotations'!
+!provides: 'LiveTyping' 1 130!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 127 nil!
 !requires: 'CodeCoverage' 1 68 nil!
@@ -2397,16 +2397,7 @@ noReturnTypesDescriptionOf: aMethodReference
 	
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:52:36'!
-addReturnTypes: types to: aSelector in: aClass
-
-	| methodReturnTypeInfo |
-	
-	methodReturnTypeInfo := (aClass compiledMethodAt: aSelector ifAbsent: [ ^self ]) returnTypeInfo.
-	"Abstract methods, quick return methods do not have a types array, that is the reason of the ifFull: .. - Hernan"
-	types do: [ :type | methodReturnTypeInfo addType: type ifFull: [] ]! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 3/20/2025 18:56:45'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 3/20/2025 18:56:45'!
 checkRedefinedMethodsDidNotChange
 
 	self 
@@ -2414,12 +2405,12 @@ checkRedefinedMethodsDidNotChange
 		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 1/18/2024 17:52:20' ;
 		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 7/16/2019 23:24:39'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 7/16/2019 23:24:39'!
 checkTimeStampOf: aMethod is: expectedTimeStamp
 
 	aMethod timeStamp = expectedTimeStamp ifFalse: [ self error: aMethod classAndSelector, ' has changed' ].! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/20/2019 23:07:37'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 2/20/2019 23:07:37'!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	| newSourceCodeMethodNode originalSourceMethodNode |
@@ -2432,7 +2423,7 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/17/2025 13:51:39'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 1/17/2025 13:51:39'!
 compileAfterInstallMethods
 
 	"I do not use cascade message to be able to evaluate each collaboration separately for debugging pourposes - Hernan"
@@ -2473,43 +2464,18 @@ compileAfterInstallMethods
 		ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode 
 ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/28/2018 13:24:26'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 11/28/2018 13:24:26'!
 defineInstVarNamed: anInstVarName in: aClass
 
 	(aClass definesInstanceVariableNamed: anInstVarName ) ifFalse: [ aClass addInstVarName: anInstVarName ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 4/24/2023 10:24:59'!
-initializeTypeInformation
-
-	ProtoObject withAllSubclassesDo: [ :aClass | 
-		aClass shouldLiveTypingBeDisabled
-			ifTrue: [ aClass disableLiveTypingForAll ]
-			ifFalse: [ 
-				aClass initializeInstanceVariablesRawTypesWithAllInstances.
-				aClass initializeMethodsTypeInformation]].
-	
-	self initializeWellKnownReturnTypes.
-! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/28/2022 18:42:56'!
-initializeWellKnownReturnTypes
-
-	Number allSubclassesDo: [ :aClass |
-		#(< <= = ~= >= >) do: [ :aSelector | self addReturnTypes: { True. False } to: aSelector in: aClass ].
-		self addReturnTypes: { Float } to: #asFloat in: aClass ].
-	
-	#(bitOr: bitAnd: bitXor: bitShift:) do: [ :aSelector | 
-		self addReturnTypes: { SmallInteger } to: aSelector in: SmallInteger ].
-	
-	! !
-
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 2/28/2019 18:51:53'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 2/28/2019 18:51:53'!
 modifyAdditionalMethodStateShape
 
 	#('variablesRawTypes' 'returnRawTypes' 'remoteVectorRawTypes' 'variableNameToTypeIndex' 'variableNameToRemoteVectorTypeIndex') 
 		do: [ :aVariableName | self defineInstVarNamed: aVariableName  in: AdditionalMethodState ]! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 1/27/2022 15:59:41'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 1/27/2022 15:59:41'!
 modifyClassDescriptionShape
 
 	[[ SystemChangeNotifier uniqueInstance doSilently: [ self defineInstVarNamed: 'instanceVariablesRawTypes' in: ClassDescription ]]
@@ -2517,7 +2483,7 @@ modifyClassDescriptionShape
 		on: Error do: [ :anError | anError return: nil ]
 ! !
 
-!LiveTyping class methodsFor: 'initialization-private' stamp: 'HAW 11/3/2021 18:32:20'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 11/3/2021 18:32:20'!
 registerRefactoringAppliers
 
 	RefactoringApplier 
@@ -3026,6 +2992,76 @@ unloadSourceCode
 	"Sent when a the class is removed.  Does nothing, but may be overridden by (class-side) subclasses."
 
 	self unloadFromAllRawTypes'! !
+
+!LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 1/28/2022 18:52:36'!
+addReturnTypes: types to: aSelector in: aClass
+
+	| methodReturnTypeInfo |
+	
+	methodReturnTypeInfo := (aClass compiledMethodAt: aSelector ifAbsent: [ ^self ]) returnTypeInfo.
+	"Abstract methods, quick return methods do not have a types array, that is the reason of the ifFull: .. - Hernan"
+	types do: [ :type | methodReturnTypeInfo addType: type ifFull: [] ]! !
+
+!LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 5/1/2025 19:41:46'!
+initializeGraphicsTypeInformation
+
+	self initializeTypeInformationOf: 'Graphics'! !
+
+!LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 5/1/2025 19:50:33'!
+initializeMorphicTypeInformation
+
+	self initializeTypeInformationOf: 'Morphic'  
+	! !
+
+!LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 4/24/2023 10:24:59'!
+initializeTypeInformation
+
+	ProtoObject withAllSubclassesDo: [ :aClass | 
+		aClass shouldLiveTypingBeDisabled
+			ifTrue: [ aClass disableLiveTypingForAll ]
+			ifFalse: [ 
+				aClass initializeInstanceVariablesRawTypesWithAllInstances.
+				aClass initializeMethodsTypeInformation]].
+	
+	self initializeWellKnownReturnTypes.
+! !
+
+!LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 5/1/2025 19:42:23'!
+initializeTypeInformationOf: aCategory
+
+	(SystemOrganization allClassesAt: aCategory) do: [ :aClass | 
+		aClass initializeTypeInformation.
+		aClass class initializeTypeInformation ]
+! !
+
+!LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 1/28/2022 18:42:56'!
+initializeWellKnownReturnTypes
+
+	Number allSubclassesDo: [ :aClass |
+		#(< <= = ~= >= >) do: [ :aSelector | self addReturnTypes: { True. False } to: aSelector in: aClass ].
+		self addReturnTypes: { Float } to: #asFloat in: aClass ].
+	
+	#(bitOr: bitAnd: bitXor: bitShift:) do: [ :aSelector | 
+		self addReturnTypes: { SmallInteger } to: aSelector in: SmallInteger ].
+	
+	! !
+
+!LiveTyping class methodsFor: 'initialization-browser' stamp: 'HAW 5/1/2025 19:58:29'!
+initializeBrowserAnnotations
+
+	Preferences 
+		name: #methodAnnotations 
+		category: #programming 
+		value: #(timeStamp messageCategory packages changeSets).
+	Preferences 
+		name: #classAnnotations 
+		category: #programming 
+		value: #(instanceMethodsCount classMethodsCount).
+	Preferences 
+		name: #systemCategoryAnnotations 
+		category: #programming 
+		value: #(classCount instanceMethodsCount classMethodsCount).
+! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 12/6/2018 12:52:52'!
 visitAssignmentNode: anAssignmentNode
