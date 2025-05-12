@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7146] on 12 May 2025 at 2:34:08 pm'!
+'From Cuis7.3 [latest update: #7146] on 12 May 2025 at 2:52:51 pm'!
 'Description disableLiveTyping implementation'!
-!provides: 'LiveTyping' 1 132!
+!provides: 'LiveTyping' 1 133!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -13847,6 +13847,11 @@ defaultRawTypesSize
 
 	^10! !
 
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 5/12/2025 14:51:36'!
+disableLiveTyping
+	
+	instanceVariablesRawTypes := nil! !
+
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/24/2023 12:40:38'!
 disableLiveTypingForAll
 
@@ -14294,6 +14299,13 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 	aMethodForSameSelectorAndClass 
 		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 5/12/2025 14:52:09'!
+disableLiveTyping
+
+	self
+		withPropertiesDo: [:additionalMethodState | additionalMethodState disableLiveTyping ]
+		ifSelector: [ :aSelector | ]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:21:27'!
 doesOnlySurelySend: aCompiledMethod 
