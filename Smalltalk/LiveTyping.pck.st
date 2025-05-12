@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7146] on 12 May 2025 at 11:42:21 am'!
-'Description No requierements but the really need ones'!
-!provides: 'LiveTyping' 1 131!
+'From Cuis7.3 [latest update: #7146] on 12 May 2025 at 2:34:08 pm'!
+'Description disableLiveTyping implementation'!
+!provides: 'LiveTyping' 1 132!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
