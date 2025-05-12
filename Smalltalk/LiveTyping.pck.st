@@ -1,9 +1,8 @@
-'From Cuis7.3 [latest update: #7108] on 1 May 2025 at 8:07:05 pm'!
-'Description Morphic and Graphics initialization - Browser anotations'!
-!provides: 'LiveTyping' 1 130!
+'From Cuis7.3 [latest update: #7146] on 12 May 2025 at 11:42:21 am'!
+'Description No requierements but the really need ones'!
+!provides: 'LiveTyping' 1 131!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
-!requires: 'BaseImageTests' 1 127 nil!
-!requires: 'CodeCoverage' 1 68 nil!
+!requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
 SystemOrganization addCategory: #'LiveTyping-Refactoring'!
@@ -50,26 +49,6 @@ ParseNodeVisitor subclass: #MethodTypeCheckerVisitor
 	category: 'LiveTyping-TypeChecking'!
 !classDefinition: 'MethodTypeCheckerVisitor class' category: #'LiveTyping-TypeChecking'!
 MethodTypeCheckerVisitor class
-	instanceVariableNames: ''!
-
-!classDefinition: #MethodNotAnnotatingTypes category: #LiveTyping!
-Error subclass: #MethodNotAnnotatingTypes
-	instanceVariableNames: 'method'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'MethodNotAnnotatingTypes class' category: #LiveTyping!
-MethodNotAnnotatingTypes class
-	instanceVariableNames: ''!
-
-!classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: #'LiveTyping-Refactoring'!
-RefactoringError subclass: #CanNotChangeSelectorWithNotIncludedTypes
-	instanceVariableNames: 'messageSendsWithInvalidReceiverTypes'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'CanNotChangeSelectorWithNotIncludedTypes class' category: #'LiveTyping-Refactoring'!
-CanNotChangeSelectorWithNotIncludedTypes class
 	instanceVariableNames: ''!
 
 !classDefinition: #ActualSendersMessageSet category: #LiveTyping!
@@ -700,6 +679,26 @@ Object subclass: #TypeCheckerTestMethods
 	category: 'LiveTyping-TypeChecking-Tests'!
 !classDefinition: 'TypeCheckerTestMethods class' category: #'LiveTyping-TypeChecking-Tests'!
 TypeCheckerTestMethods class
+	instanceVariableNames: ''!
+
+!classDefinition: #MethodNotAnnotatingTypes category: #LiveTyping!
+Error subclass: #MethodNotAnnotatingTypes
+	instanceVariableNames: 'method'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'MethodNotAnnotatingTypes class' category: #LiveTyping!
+MethodNotAnnotatingTypes class
+	instanceVariableNames: ''!
+
+!classDefinition: #CanNotChangeSelectorWithNotIncludedTypes category: #'LiveTyping-Refactoring'!
+RefactoringError subclass: #CanNotChangeSelectorWithNotIncludedTypes
+	instanceVariableNames: 'messageSendsWithInvalidReceiverTypes'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'CanNotChangeSelectorWithNotIncludedTypes class' category: #'LiveTyping-Refactoring'!
+CanNotChangeSelectorWithNotIncludedTypes class
 	instanceVariableNames: ''!
 
 !classDefinition: #TypeCheckingResultWindow category: #'LiveTyping-TypeChecking'!
@@ -1779,92 +1778,6 @@ for: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: a
 
 	^self new initializeFor: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems 
 	! !
-
-!MethodNotAnnotatingTypes methodsFor: 'private' stamp: 'HAW 3/27/2019 10:51:58'!
-isResumable
-	
-	^ true! !
-
-!MethodNotAnnotatingTypes methodsFor: 'initialization' stamp: 'HAW 3/27/2019 10:55:53'!
-initializeFor: aMethod
-
-	method := aMethod! !
-
-!MethodNotAnnotatingTypes methodsFor: 'exceptionDescription' stamp: 'HAW 3/27/2019 10:56:33'!
-messageText
-
-	messageText ifNil: [ messageText := method classAndSelector, ' is not anottating types' ].
-	^messageText! !
-
-!MethodNotAnnotatingTypes methodsFor: 'method' stamp: 'HAW 3/27/2019 10:59:59'!
-method
-	
-	^method! !
-
-!MethodNotAnnotatingTypes class methodsFor: 'signaling' stamp: 'HAW 3/27/2019 10:55:36'!
-signalFor: aMethod
-
-	^(self for: aMethod) signal! !
-
-!MethodNotAnnotatingTypes class methodsFor: 'instance creation' stamp: 'HAW 3/27/2019 10:55:18'!
-for: aMethod
-
-	^self new initializeFor: aMethod! !
-
-!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 18:49:19'!
-messageSendWithInvalidReceiverTypesLabelFor: array
-
-	^String streamContents: [ :stream |
-		array first printClassAndSelectorOn: stream.
-		stream 
-			nextPutAll: ' - Message send: '; 
-			print: array second;
-			nextPutAll: ' - Missing Types: ';
-			nextPutAll: array third asCommaSeparated: [ :type | stream nextPutAll: type name ]]	! !
-
-!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 11:10:11'!
-messageSendsWithInvalidReceiverTypes
-	
-	^messageSendsWithInvalidReceiverTypes! !
-
-!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 18:48:05'!
-messageSendsWithInvalidReceiverTypesAsLabels
-	
-	^messageSendsWithInvalidReceiverTypes collect: [ :array | self messageSendWithInvalidReceiverTypesLabelFor: array ].
-		! !
-
-!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'initialization' stamp: 'HAW 3/14/2019 11:09:13'!
-initializeWith: aMessageSendsWithInvalidReceiverTypes 
-	
-	messageSendsWithInvalidReceiverTypes := aMessageSendsWithInvalidReceiverTypes ! !
-
-!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'exceptionDescription' stamp: 'HAW 3/14/2019 18:30:24'!
-messageText
-
-	^'There are receiver types of message sends not included in implementor types'
-	"^String streamContents: [ :stream |
-		stream nextPutAll: 'There are receiver types of message sends not included in implementor types'; newLine.
-		messageSendsWithInvalidReceiverTypes 
-			do: [ :array |
-				array first printClassAndSelectorOn: stream.
-				stream 
-					nextPutAll: ' - Message send: '; 
-					print: array second;
-					nextPutAll: ' - Types: ';
-					nextPutAll: array third asCommaSeparated: [ :type | stream nextPutAll: type name ];
-					newLine]
-			separatedBy: [ stream newLine ]] 
-		" ! !
-
-!CanNotChangeSelectorWithNotIncludedTypes class methodsFor: 'signaling' stamp: 'HAW 3/14/2019 11:08:34'!
-signalWith: messageSendsWithInvalidReceiverTypes 
-	
-	(self with: messageSendsWithInvalidReceiverTypes) signal! !
-
-!CanNotChangeSelectorWithNotIncludedTypes class methodsFor: 'instance creation' stamp: 'HAW 3/14/2019 11:08:56'!
-with: messageSendsWithInvalidReceiverTypes
- 
-	^self new initializeWith: messageSendsWithInvalidReceiverTypes! !
 
 !ActualSendersMessageSet methodsFor: 'message sends ranges' stamp: 'HAW 4/30/2019 18:07:03'!
 messageSendsRangesOf: aSelector
@@ -6708,6 +6621,92 @@ methodWithWarningForError
 classMethodWithTypeError
 	
 	1 date! !
+
+!MethodNotAnnotatingTypes methodsFor: 'private' stamp: 'HAW 3/27/2019 10:51:58'!
+isResumable
+	
+	^ true! !
+
+!MethodNotAnnotatingTypes methodsFor: 'initialization' stamp: 'HAW 3/27/2019 10:55:53'!
+initializeFor: aMethod
+
+	method := aMethod! !
+
+!MethodNotAnnotatingTypes methodsFor: 'exceptionDescription' stamp: 'HAW 3/27/2019 10:56:33'!
+messageText
+
+	messageText ifNil: [ messageText := method classAndSelector, ' is not anottating types' ].
+	^messageText! !
+
+!MethodNotAnnotatingTypes methodsFor: 'method' stamp: 'HAW 3/27/2019 10:59:59'!
+method
+	
+	^method! !
+
+!MethodNotAnnotatingTypes class methodsFor: 'signaling' stamp: 'HAW 3/27/2019 10:55:36'!
+signalFor: aMethod
+
+	^(self for: aMethod) signal! !
+
+!MethodNotAnnotatingTypes class methodsFor: 'instance creation' stamp: 'HAW 3/27/2019 10:55:18'!
+for: aMethod
+
+	^self new initializeFor: aMethod! !
+
+!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 18:49:19'!
+messageSendWithInvalidReceiverTypesLabelFor: array
+
+	^String streamContents: [ :stream |
+		array first printClassAndSelectorOn: stream.
+		stream 
+			nextPutAll: ' - Message send: '; 
+			print: array second;
+			nextPutAll: ' - Missing Types: ';
+			nextPutAll: array third asCommaSeparated: [ :type | stream nextPutAll: type name ]]	! !
+
+!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 11:10:11'!
+messageSendsWithInvalidReceiverTypes
+	
+	^messageSendsWithInvalidReceiverTypes! !
+
+!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 3/14/2019 18:48:05'!
+messageSendsWithInvalidReceiverTypesAsLabels
+	
+	^messageSendsWithInvalidReceiverTypes collect: [ :array | self messageSendWithInvalidReceiverTypesLabelFor: array ].
+		! !
+
+!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'initialization' stamp: 'HAW 3/14/2019 11:09:13'!
+initializeWith: aMessageSendsWithInvalidReceiverTypes 
+	
+	messageSendsWithInvalidReceiverTypes := aMessageSendsWithInvalidReceiverTypes ! !
+
+!CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'exceptionDescription' stamp: 'HAW 3/14/2019 18:30:24'!
+messageText
+
+	^'There are receiver types of message sends not included in implementor types'
+	"^String streamContents: [ :stream |
+		stream nextPutAll: 'There are receiver types of message sends not included in implementor types'; newLine.
+		messageSendsWithInvalidReceiverTypes 
+			do: [ :array |
+				array first printClassAndSelectorOn: stream.
+				stream 
+					nextPutAll: ' - Message send: '; 
+					print: array second;
+					nextPutAll: ' - Types: ';
+					nextPutAll: array third asCommaSeparated: [ :type | stream nextPutAll: type name ];
+					newLine]
+			separatedBy: [ stream newLine ]] 
+		" ! !
+
+!CanNotChangeSelectorWithNotIncludedTypes class methodsFor: 'signaling' stamp: 'HAW 3/14/2019 11:08:34'!
+signalWith: messageSendsWithInvalidReceiverTypes 
+	
+	(self with: messageSendsWithInvalidReceiverTypes) signal! !
+
+!CanNotChangeSelectorWithNotIncludedTypes class methodsFor: 'instance creation' stamp: 'HAW 3/14/2019 11:08:56'!
+with: messageSendsWithInvalidReceiverTypes
+ 
+	^self new initializeWith: messageSendsWithInvalidReceiverTypes! !
 
 !TypeCheckingResultWindow methodsFor: 'menu building' stamp: 'HAW 7/18/2019 00:41:43'!
 messageListMenu
@@ -12820,517 +12819,6 @@ createMethodReturnTypeInfoOf: aMethod
 	^super createMethodReturnTypeInfoOf: aMethod 
 ! !
 
-!Collection methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 11:47:11'!
-inject: aCollector addingAll: aBlock
-	
-	self do: [ :anObject | aCollector addAll: (aBlock value: anObject) ].
-	
-	^aCollector ! !
-
-!Collection methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 18:17:55'!
-reject: aRejectBlock thenCollect: aCollectBlock
-
-	^(self reject: aRejectBlock) collect: aCollectBlock ! !
-
-!ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:43:24'!
-createMethodReturnRawTypesOf: aCompiledMethod
-
-	aCompiledMethod selector == #size ifTrue: [ ^nil ].
-	
-	^super createMethodReturnRawTypesOf: aCompiledMethod ! !
-
-!ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 3/12/2019 21:22:09'!
-createMethodReturnTypeInfoOf: aCompiledMethod
-
-	aCompiledMethod selector == #size ifTrue: [ ^ ReturnTypeInfo of: aCompiledMethod are: `{ Integer }`].
-	
-	^super createMethodReturnTypeInfoOf: aCompiledMethod ! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:25:39'!
-addType: aType ifFull: aFullBlock
-
-	self withIndexDo: [ :typeAtIndex :rawTypesIndex |
-		typeAtIndex = aType ifTrue: [ ^self ].
-		typeAtIndex ifNil: [ ^self at: rawTypesIndex put: aType ]].
-	
-	^aFullBlock value.! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:35:11'!
-annotateTypeOf: aValue at: anIndex
-
-	| rawTypes |
-	
-	rawTypes := self at: anIndex ifAbsent: [^self].
-	rawTypes addType: aValue class ifFull: []! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:56:09'!
-doesStoreTypes
-
-	^true! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:53:52'!
-includesNil
-	
-	^ self includes: UndefinedObject ! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:55:21'!
-isMegamorphic
-	
-	^self last notNil 
-		! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:33:30'!
-isTypesEmpty
-	
-	^self isEmpty or: [self first isNil ]! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:34:30'!
-removeAllTypes
-	
-	self atAllPut: nil! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:36:29'!
-removeType: aType ifAbsent: anAbsentBlock
-
-	| typeIndex |
-	
-	typeIndex := self indexOf: aType ifAbsent: [ ^anAbsentBlock value ].
-	
-	self replaceFrom: typeIndex to: self size - 1 with: self startingAt: typeIndex + 1.
-	self at: self size put: nil! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:50:57'!
-types
-	
-	| firstEmptyIndex |
-	
-	firstEmptyIndex := self indexOf: nil ifAbsent: [^ self copy ].
-	firstEmptyIndex = 1 ifTrue: [ ^#() ].
-	
-	^self copyFrom: 1 to: firstEmptyIndex-1 	! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:51:36'!
-typesSize
-	
-	| firstIndexOfNil |
-	
-	firstIndexOfNil := self indexOf: nil ifAbsent: [ ^self size ].
-	
-	^firstIndexOfNil - 1! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:05:08'!
-actualSendersOf: aCompiledMethod 
-	
-	^self actualSendersOf: aCompiledMethod using: self methodNode
-	! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:04:42'!
-actualSendersOf: aCompiledMethod using: aCompiledMethodMethodNode
-	
-	| sendersCollector |
-	
-	sendersCollector := ActualMessageSendsCollector in: self of: aCompiledMethod.
-	aCompiledMethodMethodNode accept: sendersCollector.
-	
-	^sendersCollector ! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:10:48'!
-allRawTypesUnload: aClassToUnload 
-	
-	self withPropertiesDo: [ :properties | properties allRawTypesUnload: aClassToUnload ]
-	! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:22'!
-annotateRemoteTemporaryTypeOf: aValue at: anIndex 
-
-	"See keepTemporaryTypeInfoAt:of: - Hernan"
-
-	self 
-		withPropertiesDo: [ :properties | properties annotateRemoteTemporaryTypeOf: aValue at: anIndex ]
-		ifSelector: [ :selector | ]! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:30:52'!
-annotateReturnTypeOf: aValue
-
-	"See keepTemporaryTypeInfoAt:of: - Hernan"
-
-	self 
-		withPropertiesDo: [ :properties | properties annotateReturnTypeOf: aValue ]
-		ifSelector: [ :selector | ]! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:45'!
-annotateTemporaryTypeOf: aValue at: aTemporaryIndex 
-
-	"Used on code simulation. 
-	It bypasses MethodVariables and MethodVariableTypes for performance reason.
-	If the method is not keeping type info or the index is invalid or the types array is full, it does nothing
-	because we do not want to get error while debugging - Hernan"
-	
-	self 
-		withPropertiesDo: [ :properties | properties annotateTemporaryTypeOf: aValue at: aTemporaryIndex ]
-		ifSelector: [ :selector | ]
-		! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:32:23'!
-caretAutoCompleterDocumentation
-
-	^ Text string: String newLineString, '^ ' attributes: (SHTextStylerST80 attributesFor: #return)! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 11:29:11'!
-compiledMethod
-
-	"To be polimorphic with MethodReference - Hernan"
-	^self! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 19:42:14'!
-copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
-
-	| properties |
-	
-	self selector = aMethodForSameSelectorAndClass selector ifFalse: [ self error: 'Should not copy type information from a method with different selector' ].
-	self methodClass name = aMethodForSameSelectorAndClass methodClass name ifFalse: [  self error: 'Should not copy type information of a method from different class' ].
-	
-	properties := self properties.
-	"I have to set it because #properties creates a new AdditionaMethodState but does not set it - Hernan"
-	self penultimateLiteral: properties.
-	aMethodForSameSelectorAndClass 
-		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
-		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:21:27'!
-doesOnlySurelySend: aCompiledMethod 
-	
-	| actualMessageSendsCollector |
-	
-	actualMessageSendsCollector := self actualSendersOf: aCompiledMethod.
-	
-	^actualMessageSendsCollector hasOnlySureMessageSends! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:25:51'!
-initializeTypeInformation
-	
-	self initializeTypeInformationUsing: self methodNode! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:25:37'!
-initializeTypeInformationUsing: aMethodNode
-	
-	| properties |
-	
-	properties := self properties.
-	"I have to set it because #properties creates a new AdditionaMethodState but does not set it - Hernan"
-	self penultimateLiteral: properties.
-	properties initializeTypeInformationUsing: aMethodNode ! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 18:31:17'!
-isAnnotatingTypes
-	
-	^self withPropertiesDo: [ :properties | true ] ifSelector: [ :selector | false ] ! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/9/2019 19:11:12'!
-isPrimitive
-	
-	^ self primitive ~= 0! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 21:35:23'!
-isQuickReturnSelf
-	
-	^self primitive = 256! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/20/2019 15:57:40'!
-isReturnSpecialFalse
-	
-	^self primitive = 258! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 10:50:08'!
-isReturnSpecialTrue
-	
-	^self primitive = 257! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:34:33'!
-liveTypingAutoCompleterDocumentation
-	
-	| parametersTypeInfo |
- 
-	parametersTypeInfo := self methodVariablesTypes. 
-
-	^ self 
-		autoCompleterDocumentationAppendingToParameter: [ :aParameterName | 
-			self parameterTypeAutoCompleterDocumentationOf: aParameterName using: parametersTypeInfo ]
-		toReturn: [
-			self caretAutoCompleterDocumentation append: self returnTypeAutoCompleterDocumentation ].
-! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/20/2018 18:36:01'!
-methodVariablesTypes
-
-	^self methodClass methodVariablesTypesOf: self! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:34:00'!
-parameterTypeAutoCompleterDocumentationOf: aParameterName using: parametersTypeInfo
-
-	^ Text 
-		string: (parametersTypeInfo printReducedTypesOf: aParameterName ifAbsent: [ '<?>' ]) 
-		attributes: (SHTextStylerST80 attributesFor: #tempVar)! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/23/2018 14:43:21'!
-printTypeInfoOn: aStream
-
-	| variablesTypes beforeVariablesTypesPosition |
-	
-	variablesTypes := self methodVariablesTypes.
-	beforeVariablesTypesPosition := aStream position.
-	
-	variablesTypes printVariablesTypesOn: aStream.
-	beforeVariablesTypesPosition = aStream position 
-		ifTrue: [ variablesTypes printTypesInfoHeaderOn: aStream ]
-		ifFalse: [ aStream position: aStream position - 1].
-	
-	self returnTypeInfo printOn: aStream.
-	aStream newLine.
-	variablesTypes printTypesInfoFooterOn: aStream! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:57:21'!
-returnRawTypes
-	
-	^self typeAnnotationsHolder returnRawTypes
-	! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:34:47'!
-returnTypeAutoCompleterDocumentation
-
-	^ Text 
-		string: self returnTypeInfo printReducedTypes 
-		attributes: (SHTextStylerST80 attributesFor: #tempVar)
-! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/18/2019 18:59:19'!
-returnTypeInfo
-
-	^ self methodClass createMethodReturnTypeInfoOf: self ! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 01:26:02'!
-returnTypes
-	
-	^self returnTypeInfo types! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/4/2019 09:29:06'!
-sureMessageSendsRangesOf: aSentSelector whenSendTo: aReceiverTypes
-
-	| methodNode collector implementor ranges |
-	
-	methodNode := self methodNode.
-	ranges := Set new.
-		
-	aReceiverTypes do: [ :aReceiverType |
-		implementor := aReceiverType lookupSelector: aSentSelector.
-		implementor ifNotNil: [ 
-			collector := ActualMessageSendsCollector in: self of: implementor.
-			methodNode accept: collector. 
-			collector sureMessageSends do: [ :aMessageSend | ranges add: (
-				methodNode rangeForNode: aMessageSend ifAbsent: [self error: 'Should not happen'])]]].
-	
-	^ranges ! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/27/2019 11:03:42'!
-typeAnnotationsHolder
-	
-	^self 
-		withPropertiesDo: [ :properties | properties ] 
-		ifSelector: [ :aSelector | MethodNotAnnotatingTypes signalFor: self ].
-
-! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/18/2019 17:44:11'!
-typeCheck
-	
-	^(MethodTypeChecker for: self) value! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 12/6/2018 18:08:13'!
-typeInfoOfVariableNamed: aVarName 
-
-	^self methodVariablesTypes typeInfoOf: aVarName! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 12/6/2018 18:08:31'!
-typeInfoOfVariableNamed: aVarName ifAbsent: aBlock
-
-	^self methodVariablesTypes typeInfoOf: aVarName ifAbsent: aBlock! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 00:08:07'!
-typesOfInstanceVariableNamed: anInstVarName
-
-	^self methodClass typesOfInstanceVariableNamed: anInstVarName ! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/24/2018 20:12:03'!
-typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
-
-	^self methodClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 00:26:27'!
-typesOfVariableNamed: aVarName
-
-	^self methodVariablesTypes typesOf: aVarName! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/23/2018 16:03:59'!
-typesOfVariableNamed: aVarName ifAbsent: aBlock
-
-	^self methodVariablesTypes typesOf: aVarName ifAbsent: aBlock! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:18:17'!
-variablesRawTypes
-	
-	^self typeAnnotationsHolder variablesRawTypes! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 12:54:21'!
-actualImplementorsOf: aSelector in: aClass 
-	
-	| highestImplementorClass implementors |
-	
-	implementors := OrderedCollection new.
-	highestImplementorClass := aClass 
-		highestClassImplementing: aSelector 
-		ifNone: [ 
-			implementors add: (NotImplementedMethod class: aClass selector: aSelector).
-			aClass ].
-	
-	^ highestImplementorClass withAllSubclassesImplementing: aSelector addTo: implementors.
-	! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 09:39:05'!
-allActualImplementorsOf: aSelector forAll: types
-
-	^(AllActualImplementors of: aSelector forAll: types) value! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 09:56:28'!
-allActualLocalImplementorsOf: sentSelector forAll: types
-
-	^(AllActualLocalImplementors of: sentSelector forAll: types) value
-				
-				
-! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 3/18/2019 13:28:14'!
-allActualSendersOn: aSentCompiledMethod 
-	
-	| allSenders sureSenders possibleSenders actualMessageSendersCollector |
-	
-	allSenders := self allCallsOn: aSentCompiledMethod selector.
-	
-	sureSenders := OrderedCollection new.
-	possibleSenders := OrderedCollection new.
-	
-	allSenders do: [ :aSender | 
-		actualMessageSendersCollector := aSender actualSendersOf: aSentCompiledMethod.
-		actualMessageSendersCollector hasSureMessageSends ifTrue: [ sureSenders add: aSender ].
-		actualMessageSendersCollector hasPossibleMessageSends ifTrue: [ 
-			possibleSenders add: (PossibleSender in: aSender withPossibleMessageSends: actualMessageSendersCollector possibleMessageSends) ]].
-		
-	^Array with: sureSenders with: possibleSenders ! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 3/27/2019 14:57:55'!
-allActualSendersOn: sentSelector forAll: types whenSomeAreNotImplemented: someNotImplementedBlock whenNoImplementors: noImplementorsBlock
-	
-	| collector |
-	
-	collector := MultiImplementorsActualMessageSendsCollector 
-		on: sentSelector 
-		forAll: types
-		whenSomeAreNotImplemented: someNotImplementedBlock 
-		whenNoImplementors: noImplementorsBlock.
-		
-	collector value.
-	
-	^collector 
-	! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 10:31:43'!
-browseActualImplementorsFinder: anActualImplementorsFinder
-
-	| label |
-	
-	label := anActualImplementorsFinder finderTypeString, ' Implementors of ' , anActualImplementorsFinder selector, ' in ', anActualImplementorsFinder types asCommaStringAnd.
-	
-	(anActualImplementorsFinder implementorsIsEmpty or: [ anActualImplementorsFinder notImplementedIsEmpty ]) 
-		ifTrue: [ 
-			self 
-				browseMessageList: anActualImplementorsFinder implementorsSorted
-				name: label ]
-		ifFalse: [
-			MethodSetWindow 
-				openMessageList: anActualImplementorsFinder implementorsSorted, anActualImplementorsFinder notImplementedSorted
-				label: '[', anActualImplementorsFinder implementorsSize printString, '/', anActualImplementorsFinder totalSize printString, '] ', label
-				types: anActualImplementorsFinder types 
-				selector: nil ]
-
-! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 2/19/2019 14:04:31'!
-browseAllActualImplementorsOf: aSelector for: aClass
-
-	self browseAllActualImplementorsOf: aSelector forAll: (Array with: aClass)
-! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 10:03:24'!
-browseAllActualImplementorsOf: aSelector forAll: types
-
-	| allActualImplementors |
-	
-	allActualImplementors := self allActualImplementorsOf: aSelector forAll: types.
-	self browseActualImplementorsFinder: allActualImplementors ! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 10:04:17'!
-browseAllActualLocalImplementorsOf: sentSelector forAll: types
-
-	| allActualLocalImplementors |
-	
-	allActualLocalImplementors := self allActualLocalImplementorsOf: sentSelector forAll: types.
-	self browseActualImplementorsFinder: allActualLocalImplementors ! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 17:22:17'!
-browseAllActualSendersOn: aSentCompiledMethod 
-	
-	self browseAllActualSendersOn: aSentCompiledMethod selector forAll: { aSentCompiledMethod methodClass }.
-
-! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/16/2024 12:51:47'!
-browseAllActualSendersOn: aSentSelector forAll: aReceiverTypes  
-	"
-	Smalltalk browseAllActualSendersOn: #digitLength forAll: (Array with: LargePositiveInteger with: SmallInteger)
-	"
-	
-	| collector title |
-	
-	collector := self 
-		allActualSendersOn: aSentSelector 
-		forAll: aReceiverTypes
-		whenSomeAreNotImplemented: [ :notImplemented | 
-			(self confirm: aSentSelector, ' is not implemented in: ', notImplemented asCommaStringAnd, '. Continue?') ifFalse: [ ^self ]] 
-		whenNoImplementors: [  ^self inform: 'There are no implementors of ', aSentSelector , ' to look actual senders of' ].
-		
-	collector messageListSize = 0 ifTrue: [
-		^ PopUpMenu inform: ('There are no actual senders of ', aSentSelector, ' implemented at\', aReceiverTypes asCommaStringAnd) withNewLines ].
-
-	title := String streamContents: [ :aStream |
-		collector messageListSize > 1 ifTrue: [ 
-			aStream 
-				nextPut: $[;
-				print: collector messageListSize;
-				nextPutAll: '] ' ].
-		aStream nextPutAll: 'Actual Senders of '.
-		collector allImplementorsTitleOn: aStream ].
-
-	MethodSetWindow 
-		openMessageList: collector messageList 
-		label: title 
-		types: aReceiverTypes
-		selector: aSentSelector ! !
-
-!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 2/19/2019 14:03:55'!
-browseAllActualmplementorsOf: aMethod
-
-	self browseAllActualImplementorsOf: aMethod selector for: aMethod methodClass
-! !
-
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 11/27/2018 05:56:18'!
 identifierPrintString
 	
@@ -13915,6 +13403,212 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	^variableNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons  
 ! !
 
+!Workspace methodsFor: '*LiveTyping' stamp: 'HAW 10/28/2018 21:24:07'!
+selectedClassOrMetaClass
+	
+	^UndefinedObject ! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:51'!
+browseActualSendersOf: aCompiledMethod 
+	
+	Smalltalk browseAllActualSendersOn: aCompiledMethod ! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:29'!
+confirmActualRemovalOf: aCompiledMethod 
+	
+	^ (self hasNoActualSendersOrIsItself: aCompiledMethod)
+		ifTrue: [self confirmRemovalWhenNoSenders ]
+		ifFalse: [self confirmRemovalWhenHasSenders ].
+! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:12'!
+confirmRemovalWhenHasSenders
+
+	| menu |
+	
+	menu := PopUpMenu 
+		labels: 'Remove it
+Remove, then browse senders
+Don''t remove, but show me those senders
+Forget it -- do nothing -- sorry I asked'
+		icons: #(acceptIcon acceptIcon cancelIcon cancelIcon).
+			
+	^menu startUpWithCaption: 'This message has real or posible sender(s)' ! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:32:29'!
+confirmRemovalWhenNoSenders
+	
+	^ (self confirm: 'This message has no actual senders. Remove it anyway?') ifTrue: [1] ifFalse: [0]! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:32:07'!
+hasNoActualSendersOrIsItself: aCompiledMethod 
+	
+	| realSendersCount allSenders posibleSenders realSenders |
+
+	allSenders := Smalltalk allActualSendersOn: aCompiledMethod.
+	realSenders := allSenders first.
+	posibleSenders := allSenders second.
+	realSendersCount := realSenders size.
+
+	^posibleSenders isEmpty 
+		and: [ realSendersCount = 0 
+			or: [ realSendersCount = 1 
+				and: [(realSenders first actualClass == aCompiledMethod methodClass and: [realSenders first methodSymbol == aCompiledMethod selector])]]]
+! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:29:56'!
+removeMessageCheckingActualSenders
+	
+	| confirmation |
+
+	self currentCompiledMethod ifNotNil: [ :aCompiledMethod |
+		confirmation := self confirmActualRemovalOf: aCompiledMethod.
+
+		(confirmation = 1 or: [ confirmation = 2 ]) ifTrue: [self removeMethod: aCompiledMethod ].
+		(confirmation = 2 or: [ confirmation = 3 ]) ifTrue: [self browseActualSendersOf: aCompiledMethod ]].
+
+	! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:42:40'!
+removeMethod: aMethod
+
+	self subclassResponsibility ! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:47:52'!
+resetMethodTypes
+	
+	self currentCompiledMethod initializeTypeInformation.
+	! !
+
+!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:47:46'!
+typeCheckMethod
+		
+	| typeChecker |
+		
+	typeChecker := self currentCompiledMethod typeCheck.
+	typeChecker showResultsWith:  typeChecker method classAndSelector 
+	! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:47'!
+computeMessageEntriesIn: anAutocompleter ofBlockArgNamed: aName  
+
+	"This will change when type info for block arguments will be supported - Hernan"
+
+	"| typeInfo |
+	
+	typeInfo := currentCompiledMethod ifNotNil: [ currentCompiledMethod typeInfoOfVariableNamed: aName ifAbsent: [ nil ]].
+		
+	anAutocompleter computeMessageEntriesForTypeInfo: typeInfo."
+	
+	anAutocompleter computeMessageEntriesForTypeInfoOrNil: nil ! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:48'!
+computeMessageEntriesIn: anAutocompleter ofBlockTempVarNamed: aName  
+
+	"This will change when type info for block arguments will be supported - Hernan"
+
+	"| typeInfo |
+	
+	typeInfo := currentCompiledMethod ifNotNil: [ currentCompiledMethod typeInfoOfVariableNamed: aName ifAbsent: [ nil ]].
+		
+	anAutocompleter computeMessageEntriesForTypeInfo: typeInfo."
+	
+	anAutocompleter computeMessageEntriesForTypeInfoOrNil: nil ! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:48'!
+computeMessageEntriesIn: anAutocompleter ofInstVarNamed: aName  
+
+	| typeInfo |
+	
+	typeInfo := self selectedClassOrMetaClass 
+		ifNotNil: [ :selected |  selected typeInfoOfInstanceVariableNamed: aName ifAbsent: [ nil ] ].
+		
+	anAutocompleter computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:47'!
+computeMessageEntriesIn: anAutocompleter ofTempVarNamed: aName  
+
+	| typeInfo |
+	
+	typeInfo := currentCompiledMethod ifNotNil: [ currentCompiledMethod typeInfoOfVariableNamed: aName ifAbsent: [ nil ]].
+		
+	anAutocompleter computeMessageEntriesForTypeInfoOrNil: typeInfo .
+	
+! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:42:30'!
+removeMethod: aCompiledMethod 
+
+	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
+	self
+		messageListIndex: 0;
+		changed: #messageList;
+		setClassOrganizer.
+	! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/13/2022 16:18:05'!
+resetCategoryTypes
+	
+	| initializeWithInstances classes increment progressBar |
+	
+	selectedSystemCategory ifNotNil: [ 
+		initializeWithInstances := self confirm: 'Do you want to initialize instance variables types with current instances?'.
+		classes := systemOrganizer allClassesAt: selectedSystemCategory.
+		classes size = 0 ifTrue: [ ^self ].
+		progressBar := ProgressMorph label: 'Reseting types' subLabel: ''.
+		progressBar openInWorld.
+		increment := 1/classes size.
+		[ classes do: [ :aClass | 
+			progressBar subLabel: aClass name.
+			initializeWithInstances 
+				ifTrue: [ aClass initializeTypeInformationWithAllInstances ]
+				ifFalse: [ aClass initializeTypeInformation ].
+			progressBar incrDone: increment ].
+		progressBar dismissMorph] fork ]
+		! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:52:24'!
+resetClassType
+	
+	| initializeWithInstances |
+	
+	self selectedClass ifNotNil: [ :aSelectedClass |
+		initializeWithInstances := self confirm: 'Do you want to initialize instance variables types with current instances?'.
+		initializeWithInstances 
+			ifTrue: [ aSelectedClass initializeTypeInformationWithAllInstances ]
+			ifFalse: [ aSelectedClass initializeTypeInformation ] ]! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/13/2022 16:20:46'!
+typeCheckCategory
+
+	| typeChecker |
+	
+	selectedSystemCategory ifNotNil: [ 
+		typeChecker := ManyMethodsTypeChecker forAllClasses: (systemOrganizer allClassesAt: selectedSystemCategory).
+		typeChecker value.
+		typeChecker showResultsWith: selectedSystemCategory name ]
+	
+	! !
+
+!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:51:08'!
+typeCheckClass
+	
+	| typeChecker |
+	
+	typeChecker := self selectedClass ifNotNil: [ :aSelectedClass | 
+		typeChecker := aSelectedClass typeCheck.
+		typeChecker showResultsWith: aSelectedClass name ]
+	
+	! !
+
+!MethodSet methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:43:38'!
+removeMethod: aCompiledMethod 
+
+	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
+	self deleteFromMessageList: self selection.
+	self reformulateList.
+! !
+
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 10/4/2018 21:07:29'!
 indexOfInstanceVariable: anInstVarName ifAbsent: aBlock
 
@@ -14424,6 +14118,517 @@ createSuperclassTypeInfo
 		in: self 
 		are: `{Class. Metaclass. }`! !
 
+!Collection methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 11:47:11'!
+inject: aCollector addingAll: aBlock
+	
+	self do: [ :anObject | aCollector addAll: (aBlock value: anObject) ].
+	
+	^aCollector ! !
+
+!Collection methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 18:17:55'!
+reject: aRejectBlock thenCollect: aCollectBlock
+
+	^(self reject: aRejectBlock) collect: aCollectBlock ! !
+
+!ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:43:24'!
+createMethodReturnRawTypesOf: aCompiledMethod
+
+	aCompiledMethod selector == #size ifTrue: [ ^nil ].
+	
+	^super createMethodReturnRawTypesOf: aCompiledMethod ! !
+
+!ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 3/12/2019 21:22:09'!
+createMethodReturnTypeInfoOf: aCompiledMethod
+
+	aCompiledMethod selector == #size ifTrue: [ ^ ReturnTypeInfo of: aCompiledMethod are: `{ Integer }`].
+	
+	^super createMethodReturnTypeInfoOf: aCompiledMethod ! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:25:39'!
+addType: aType ifFull: aFullBlock
+
+	self withIndexDo: [ :typeAtIndex :rawTypesIndex |
+		typeAtIndex = aType ifTrue: [ ^self ].
+		typeAtIndex ifNil: [ ^self at: rawTypesIndex put: aType ]].
+	
+	^aFullBlock value.! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:35:11'!
+annotateTypeOf: aValue at: anIndex
+
+	| rawTypes |
+	
+	rawTypes := self at: anIndex ifAbsent: [^self].
+	rawTypes addType: aValue class ifFull: []! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:56:09'!
+doesStoreTypes
+
+	^true! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:53:52'!
+includesNil
+	
+	^ self includes: UndefinedObject ! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:55:21'!
+isMegamorphic
+	
+	^self last notNil 
+		! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:33:30'!
+isTypesEmpty
+	
+	^self isEmpty or: [self first isNil ]! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:34:30'!
+removeAllTypes
+	
+	self atAllPut: nil! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:36:29'!
+removeType: aType ifAbsent: anAbsentBlock
+
+	| typeIndex |
+	
+	typeIndex := self indexOf: aType ifAbsent: [ ^anAbsentBlock value ].
+	
+	self replaceFrom: typeIndex to: self size - 1 with: self startingAt: typeIndex + 1.
+	self at: self size put: nil! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:50:57'!
+types
+	
+	| firstEmptyIndex |
+	
+	firstEmptyIndex := self indexOf: nil ifAbsent: [^ self copy ].
+	firstEmptyIndex = 1 ifTrue: [ ^#() ].
+	
+	^self copyFrom: 1 to: firstEmptyIndex-1 	! !
+
+!Array methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 17:51:36'!
+typesSize
+	
+	| firstIndexOfNil |
+	
+	firstIndexOfNil := self indexOf: nil ifAbsent: [ ^self size ].
+	
+	^firstIndexOfNil - 1! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:05:08'!
+actualSendersOf: aCompiledMethod 
+	
+	^self actualSendersOf: aCompiledMethod using: self methodNode
+	! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 23:04:42'!
+actualSendersOf: aCompiledMethod using: aCompiledMethodMethodNode
+	
+	| sendersCollector |
+	
+	sendersCollector := ActualMessageSendsCollector in: self of: aCompiledMethod.
+	aCompiledMethodMethodNode accept: sendersCollector.
+	
+	^sendersCollector ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/22/2019 23:10:48'!
+allRawTypesUnload: aClassToUnload 
+	
+	self withPropertiesDo: [ :properties | properties allRawTypesUnload: aClassToUnload ]
+	! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:22'!
+annotateRemoteTemporaryTypeOf: aValue at: anIndex 
+
+	"See keepTemporaryTypeInfoAt:of: - Hernan"
+
+	self 
+		withPropertiesDo: [ :properties | properties annotateRemoteTemporaryTypeOf: aValue at: anIndex ]
+		ifSelector: [ :selector | ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:30:52'!
+annotateReturnTypeOf: aValue
+
+	"See keepTemporaryTypeInfoAt:of: - Hernan"
+
+	self 
+		withPropertiesDo: [ :properties | properties annotateReturnTypeOf: aValue ]
+		ifSelector: [ :selector | ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:45'!
+annotateTemporaryTypeOf: aValue at: aTemporaryIndex 
+
+	"Used on code simulation. 
+	It bypasses MethodVariables and MethodVariableTypes for performance reason.
+	If the method is not keeping type info or the index is invalid or the types array is full, it does nothing
+	because we do not want to get error while debugging - Hernan"
+	
+	self 
+		withPropertiesDo: [ :properties | properties annotateTemporaryTypeOf: aValue at: aTemporaryIndex ]
+		ifSelector: [ :selector | ]
+		! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:32:23'!
+caretAutoCompleterDocumentation
+
+	^ Text string: String newLineString, '^ ' attributes: (SHTextStylerST80 attributesFor: #return)! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/18/2019 11:29:11'!
+compiledMethod
+
+	"To be polimorphic with MethodReference - Hernan"
+	^self! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 19:42:14'!
+copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
+
+	| properties |
+	
+	self selector = aMethodForSameSelectorAndClass selector ifFalse: [ self error: 'Should not copy type information from a method with different selector' ].
+	self methodClass name = aMethodForSameSelectorAndClass methodClass name ifFalse: [  self error: 'Should not copy type information of a method from different class' ].
+	
+	properties := self properties.
+	"I have to set it because #properties creates a new AdditionaMethodState but does not set it - Hernan"
+	self penultimateLiteral: properties.
+	aMethodForSameSelectorAndClass 
+		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
+		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/14/2019 14:21:27'!
+doesOnlySurelySend: aCompiledMethod 
+	
+	| actualMessageSendsCollector |
+	
+	actualMessageSendsCollector := self actualSendersOf: aCompiledMethod.
+	
+	^actualMessageSendsCollector hasOnlySureMessageSends! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:25:51'!
+initializeTypeInformation
+	
+	self initializeTypeInformationUsing: self methodNode! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 15:25:37'!
+initializeTypeInformationUsing: aMethodNode
+	
+	| properties |
+	
+	properties := self properties.
+	"I have to set it because #properties creates a new AdditionaMethodState but does not set it - Hernan"
+	self penultimateLiteral: properties.
+	properties initializeTypeInformationUsing: aMethodNode ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/17/2019 18:31:17'!
+isAnnotatingTypes
+	
+	^self withPropertiesDo: [ :properties | true ] ifSelector: [ :selector | false ] ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/9/2019 19:11:12'!
+isPrimitive
+	
+	^ self primitive ~= 0! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/29/2018 21:35:23'!
+isQuickReturnSelf
+	
+	^self primitive = 256! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/20/2019 15:57:40'!
+isReturnSpecialFalse
+	
+	^self primitive = 258! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/3/2019 10:50:08'!
+isReturnSpecialTrue
+	
+	^self primitive = 257! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:34:33'!
+liveTypingAutoCompleterDocumentation
+	
+	| parametersTypeInfo |
+ 
+	parametersTypeInfo := self methodVariablesTypes. 
+
+	^ self 
+		autoCompleterDocumentationAppendingToParameter: [ :aParameterName | 
+			self parameterTypeAutoCompleterDocumentationOf: aParameterName using: parametersTypeInfo ]
+		toReturn: [
+			self caretAutoCompleterDocumentation append: self returnTypeAutoCompleterDocumentation ].
+! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/20/2018 18:36:01'!
+methodVariablesTypes
+
+	^self methodClass methodVariablesTypesOf: self! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:34:00'!
+parameterTypeAutoCompleterDocumentationOf: aParameterName using: parametersTypeInfo
+
+	^ Text 
+		string: (parametersTypeInfo printReducedTypesOf: aParameterName ifAbsent: [ '<?>' ]) 
+		attributes: (SHTextStylerST80 attributesFor: #tempVar)! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/23/2018 14:43:21'!
+printTypeInfoOn: aStream
+
+	| variablesTypes beforeVariablesTypesPosition |
+	
+	variablesTypes := self methodVariablesTypes.
+	beforeVariablesTypesPosition := aStream position.
+	
+	variablesTypes printVariablesTypesOn: aStream.
+	beforeVariablesTypesPosition = aStream position 
+		ifTrue: [ variablesTypes printTypesInfoHeaderOn: aStream ]
+		ifFalse: [ aStream position: aStream position - 1].
+	
+	self returnTypeInfo printOn: aStream.
+	aStream newLine.
+	variablesTypes printTypesInfoFooterOn: aStream! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:57:21'!
+returnRawTypes
+	
+	^self typeAnnotationsHolder returnRawTypes
+	! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 2/8/2019 18:34:47'!
+returnTypeAutoCompleterDocumentation
+
+	^ Text 
+		string: self returnTypeInfo printReducedTypes 
+		attributes: (SHTextStylerST80 attributesFor: #tempVar)
+! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 1/18/2019 18:59:19'!
+returnTypeInfo
+
+	^ self methodClass createMethodReturnTypeInfoOf: self ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 01:26:02'!
+returnTypes
+	
+	^self returnTypeInfo types! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/4/2019 09:29:06'!
+sureMessageSendsRangesOf: aSentSelector whenSendTo: aReceiverTypes
+
+	| methodNode collector implementor ranges |
+	
+	methodNode := self methodNode.
+	ranges := Set new.
+		
+	aReceiverTypes do: [ :aReceiverType |
+		implementor := aReceiverType lookupSelector: aSentSelector.
+		implementor ifNotNil: [ 
+			collector := ActualMessageSendsCollector in: self of: implementor.
+			methodNode accept: collector. 
+			collector sureMessageSends do: [ :aMessageSend | ranges add: (
+				methodNode rangeForNode: aMessageSend ifAbsent: [self error: 'Should not happen'])]]].
+	
+	^ranges ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/27/2019 11:03:42'!
+typeAnnotationsHolder
+	
+	^self 
+		withPropertiesDo: [ :properties | properties ] 
+		ifSelector: [ :aSelector | MethodNotAnnotatingTypes signalFor: self ].
+
+! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 7/18/2019 17:44:11'!
+typeCheck
+	
+	^(MethodTypeChecker for: self) value! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 12/6/2018 18:08:13'!
+typeInfoOfVariableNamed: aVarName 
+
+	^self methodVariablesTypes typeInfoOf: aVarName! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 12/6/2018 18:08:31'!
+typeInfoOfVariableNamed: aVarName ifAbsent: aBlock
+
+	^self methodVariablesTypes typeInfoOf: aVarName ifAbsent: aBlock! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 00:08:07'!
+typesOfInstanceVariableNamed: anInstVarName
+
+	^self methodClass typesOfInstanceVariableNamed: anInstVarName ! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/24/2018 20:12:03'!
+typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
+
+	^self methodClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/21/2018 00:26:27'!
+typesOfVariableNamed: aVarName
+
+	^self methodVariablesTypes typesOf: aVarName! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 10/23/2018 16:03:59'!
+typesOfVariableNamed: aVarName ifAbsent: aBlock
+
+	^self methodVariablesTypes typesOf: aVarName ifAbsent: aBlock! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 20:18:17'!
+variablesRawTypes
+	
+	^self typeAnnotationsHolder variablesRawTypes! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 8/21/2019 12:54:21'!
+actualImplementorsOf: aSelector in: aClass 
+	
+	| highestImplementorClass implementors |
+	
+	implementors := OrderedCollection new.
+	highestImplementorClass := aClass 
+		highestClassImplementing: aSelector 
+		ifNone: [ 
+			implementors add: (NotImplementedMethod class: aClass selector: aSelector).
+			aClass ].
+	
+	^ highestImplementorClass withAllSubclassesImplementing: aSelector addTo: implementors.
+	! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 09:39:05'!
+allActualImplementorsOf: aSelector forAll: types
+
+	^(AllActualImplementors of: aSelector forAll: types) value! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 09:56:28'!
+allActualLocalImplementorsOf: sentSelector forAll: types
+
+	^(AllActualLocalImplementors of: sentSelector forAll: types) value
+				
+				
+! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 3/18/2019 13:28:14'!
+allActualSendersOn: aSentCompiledMethod 
+	
+	| allSenders sureSenders possibleSenders actualMessageSendersCollector |
+	
+	allSenders := self allCallsOn: aSentCompiledMethod selector.
+	
+	sureSenders := OrderedCollection new.
+	possibleSenders := OrderedCollection new.
+	
+	allSenders do: [ :aSender | 
+		actualMessageSendersCollector := aSender actualSendersOf: aSentCompiledMethod.
+		actualMessageSendersCollector hasSureMessageSends ifTrue: [ sureSenders add: aSender ].
+		actualMessageSendersCollector hasPossibleMessageSends ifTrue: [ 
+			possibleSenders add: (PossibleSender in: aSender withPossibleMessageSends: actualMessageSendersCollector possibleMessageSends) ]].
+		
+	^Array with: sureSenders with: possibleSenders ! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 3/27/2019 14:57:55'!
+allActualSendersOn: sentSelector forAll: types whenSomeAreNotImplemented: someNotImplementedBlock whenNoImplementors: noImplementorsBlock
+	
+	| collector |
+	
+	collector := MultiImplementorsActualMessageSendsCollector 
+		on: sentSelector 
+		forAll: types
+		whenSomeAreNotImplemented: someNotImplementedBlock 
+		whenNoImplementors: noImplementorsBlock.
+		
+	collector value.
+	
+	^collector 
+	! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 10:31:43'!
+browseActualImplementorsFinder: anActualImplementorsFinder
+
+	| label |
+	
+	label := anActualImplementorsFinder finderTypeString, ' Implementors of ' , anActualImplementorsFinder selector, ' in ', anActualImplementorsFinder types asCommaStringAnd.
+	
+	(anActualImplementorsFinder implementorsIsEmpty or: [ anActualImplementorsFinder notImplementedIsEmpty ]) 
+		ifTrue: [ 
+			self 
+				browseMessageList: anActualImplementorsFinder implementorsSorted
+				name: label ]
+		ifFalse: [
+			MethodSetWindow 
+				openMessageList: anActualImplementorsFinder implementorsSorted, anActualImplementorsFinder notImplementedSorted
+				label: '[', anActualImplementorsFinder implementorsSize printString, '/', anActualImplementorsFinder totalSize printString, '] ', label
+				types: anActualImplementorsFinder types 
+				selector: nil ]
+
+! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 2/19/2019 14:04:31'!
+browseAllActualImplementorsOf: aSelector for: aClass
+
+	self browseAllActualImplementorsOf: aSelector forAll: (Array with: aClass)
+! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 10:03:24'!
+browseAllActualImplementorsOf: aSelector forAll: types
+
+	| allActualImplementors |
+	
+	allActualImplementors := self allActualImplementorsOf: aSelector forAll: types.
+	self browseActualImplementorsFinder: allActualImplementors ! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/4/2019 10:04:17'!
+browseAllActualLocalImplementorsOf: sentSelector forAll: types
+
+	| allActualLocalImplementors |
+	
+	allActualLocalImplementors := self allActualLocalImplementorsOf: sentSelector forAll: types.
+	self browseActualImplementorsFinder: allActualLocalImplementors ! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 3/28/2019 17:22:17'!
+browseAllActualSendersOn: aSentCompiledMethod 
+	
+	self browseAllActualSendersOn: aSentCompiledMethod selector forAll: { aSentCompiledMethod methodClass }.
+
+! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/16/2024 12:51:47'!
+browseAllActualSendersOn: aSentSelector forAll: aReceiverTypes  
+	"
+	Smalltalk browseAllActualSendersOn: #digitLength forAll: (Array with: LargePositiveInteger with: SmallInteger)
+	"
+	
+	| collector title |
+	
+	collector := self 
+		allActualSendersOn: aSentSelector 
+		forAll: aReceiverTypes
+		whenSomeAreNotImplemented: [ :notImplemented | 
+			(self confirm: aSentSelector, ' is not implemented in: ', notImplemented asCommaStringAnd, '. Continue?') ifFalse: [ ^self ]] 
+		whenNoImplementors: [  ^self inform: 'There are no implementors of ', aSentSelector , ' to look actual senders of' ].
+		
+	collector messageListSize = 0 ifTrue: [
+		^ PopUpMenu inform: ('There are no actual senders of ', aSentSelector, ' implemented at\', aReceiverTypes asCommaStringAnd) withNewLines ].
+
+	title := String streamContents: [ :aStream |
+		collector messageListSize > 1 ifTrue: [ 
+			aStream 
+				nextPut: $[;
+				print: collector messageListSize;
+				nextPutAll: '] ' ].
+		aStream nextPutAll: 'Actual Senders of '.
+		collector allImplementorsTitleOn: aStream ].
+
+	MethodSetWindow 
+		openMessageList: collector messageList 
+		label: title 
+		types: aReceiverTypes
+		selector: aSentSelector ! !
+
+!SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 2/19/2019 14:03:55'!
+browseAllActualmplementorsOf: aMethod
+
+	self browseAllActualImplementorsOf: aMethod selector for: aMethod methodClass
+! !
+
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 2/27/2019 19:31:04'!
 add: variableRawTypes to: anArrayOfRawTypes mapping: variableName to: variableTypeIndex in: variableNameToIndex
 	
@@ -14758,212 +14963,6 @@ storeIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex
 	
 	self object: (self at: tempVectorIndex + 1) basicAt: index put: value.
 	method annotateRemoteTemporaryTypeOf: value at: index ! !
-
-!Workspace methodsFor: '*LiveTyping' stamp: 'HAW 10/28/2018 21:24:07'!
-selectedClassOrMetaClass
-	
-	^UndefinedObject ! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:51'!
-browseActualSendersOf: aCompiledMethod 
-	
-	Smalltalk browseAllActualSendersOn: aCompiledMethod ! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:29'!
-confirmActualRemovalOf: aCompiledMethod 
-	
-	^ (self hasNoActualSendersOrIsItself: aCompiledMethod)
-		ifTrue: [self confirmRemovalWhenNoSenders ]
-		ifFalse: [self confirmRemovalWhenHasSenders ].
-! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:33:12'!
-confirmRemovalWhenHasSenders
-
-	| menu |
-	
-	menu := PopUpMenu 
-		labels: 'Remove it
-Remove, then browse senders
-Don''t remove, but show me those senders
-Forget it -- do nothing -- sorry I asked'
-		icons: #(acceptIcon acceptIcon cancelIcon cancelIcon).
-			
-	^menu startUpWithCaption: 'This message has real or posible sender(s)' ! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:32:29'!
-confirmRemovalWhenNoSenders
-	
-	^ (self confirm: 'This message has no actual senders. Remove it anyway?') ifTrue: [1] ifFalse: [0]! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:32:07'!
-hasNoActualSendersOrIsItself: aCompiledMethod 
-	
-	| realSendersCount allSenders posibleSenders realSenders |
-
-	allSenders := Smalltalk allActualSendersOn: aCompiledMethod.
-	realSenders := allSenders first.
-	posibleSenders := allSenders second.
-	realSendersCount := realSenders size.
-
-	^posibleSenders isEmpty 
-		and: [ realSendersCount = 0 
-			or: [ realSendersCount = 1 
-				and: [(realSenders first actualClass == aCompiledMethod methodClass and: [realSenders first methodSymbol == aCompiledMethod selector])]]]
-! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:29:56'!
-removeMessageCheckingActualSenders
-	
-	| confirmation |
-
-	self currentCompiledMethod ifNotNil: [ :aCompiledMethod |
-		confirmation := self confirmActualRemovalOf: aCompiledMethod.
-
-		(confirmation = 1 or: [ confirmation = 2 ]) ifTrue: [self removeMethod: aCompiledMethod ].
-		(confirmation = 2 or: [ confirmation = 3 ]) ifTrue: [self browseActualSendersOf: aCompiledMethod ]].
-
-	! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:42:40'!
-removeMethod: aMethod
-
-	self subclassResponsibility ! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:47:52'!
-resetMethodTypes
-	
-	self currentCompiledMethod initializeTypeInformation.
-	! !
-
-!CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:47:46'!
-typeCheckMethod
-		
-	| typeChecker |
-		
-	typeChecker := self currentCompiledMethod typeCheck.
-	typeChecker showResultsWith:  typeChecker method classAndSelector 
-	! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:47'!
-computeMessageEntriesIn: anAutocompleter ofBlockArgNamed: aName  
-
-	"This will change when type info for block arguments will be supported - Hernan"
-
-	"| typeInfo |
-	
-	typeInfo := currentCompiledMethod ifNotNil: [ currentCompiledMethod typeInfoOfVariableNamed: aName ifAbsent: [ nil ]].
-		
-	anAutocompleter computeMessageEntriesForTypeInfo: typeInfo."
-	
-	anAutocompleter computeMessageEntriesForTypeInfoOrNil: nil ! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:48'!
-computeMessageEntriesIn: anAutocompleter ofBlockTempVarNamed: aName  
-
-	"This will change when type info for block arguments will be supported - Hernan"
-
-	"| typeInfo |
-	
-	typeInfo := currentCompiledMethod ifNotNil: [ currentCompiledMethod typeInfoOfVariableNamed: aName ifAbsent: [ nil ]].
-		
-	anAutocompleter computeMessageEntriesForTypeInfo: typeInfo."
-	
-	anAutocompleter computeMessageEntriesForTypeInfoOrNil: nil ! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:48'!
-computeMessageEntriesIn: anAutocompleter ofInstVarNamed: aName  
-
-	| typeInfo |
-	
-	typeInfo := self selectedClassOrMetaClass 
-		ifNotNil: [ :selected |  selected typeInfoOfInstanceVariableNamed: aName ifAbsent: [ nil ] ].
-		
-	anAutocompleter computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 12/4/2019 15:59:47'!
-computeMessageEntriesIn: anAutocompleter ofTempVarNamed: aName  
-
-	| typeInfo |
-	
-	typeInfo := currentCompiledMethod ifNotNil: [ currentCompiledMethod typeInfoOfVariableNamed: aName ifAbsent: [ nil ]].
-		
-	anAutocompleter computeMessageEntriesForTypeInfoOrNil: typeInfo .
-	
-! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:42:30'!
-removeMethod: aCompiledMethod 
-
-	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
-	self
-		messageListIndex: 0;
-		changed: #messageList;
-		setClassOrganizer.
-	! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/13/2022 16:18:05'!
-resetCategoryTypes
-	
-	| initializeWithInstances classes increment progressBar |
-	
-	selectedSystemCategory ifNotNil: [ 
-		initializeWithInstances := self confirm: 'Do you want to initialize instance variables types with current instances?'.
-		classes := systemOrganizer allClassesAt: selectedSystemCategory.
-		classes size = 0 ifTrue: [ ^self ].
-		progressBar := ProgressMorph label: 'Reseting types' subLabel: ''.
-		progressBar openInWorld.
-		increment := 1/classes size.
-		[ classes do: [ :aClass | 
-			progressBar subLabel: aClass name.
-			initializeWithInstances 
-				ifTrue: [ aClass initializeTypeInformationWithAllInstances ]
-				ifFalse: [ aClass initializeTypeInformation ].
-			progressBar incrDone: increment ].
-		progressBar dismissMorph] fork ]
-		! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:52:24'!
-resetClassType
-	
-	| initializeWithInstances |
-	
-	self selectedClass ifNotNil: [ :aSelectedClass |
-		initializeWithInstances := self confirm: 'Do you want to initialize instance variables types with current instances?'.
-		initializeWithInstances 
-			ifTrue: [ aSelectedClass initializeTypeInformationWithAllInstances ]
-			ifFalse: [ aSelectedClass initializeTypeInformation ] ]! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/13/2022 16:20:46'!
-typeCheckCategory
-
-	| typeChecker |
-	
-	selectedSystemCategory ifNotNil: [ 
-		typeChecker := ManyMethodsTypeChecker forAllClasses: (systemOrganizer allClassesAt: selectedSystemCategory).
-		typeChecker value.
-		typeChecker showResultsWith: selectedSystemCategory name ]
-	
-	! !
-
-!Browser methodsFor: '*LiveTyping' stamp: 'HAW 8/10/2019 18:51:08'!
-typeCheckClass
-	
-	| typeChecker |
-	
-	typeChecker := self selectedClass ifNotNil: [ :aSelectedClass | 
-		typeChecker := aSelectedClass typeCheck.
-		typeChecker showResultsWith: aSelectedClass name ]
-	
-	! !
-
-!MethodSet methodsFor: '*LiveTyping' stamp: 'HAW 11/2/2024 19:43:38'!
-removeMethod: aCompiledMethod 
-
-	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
-	self deleteFromMessageList: self selection.
-	self reformulateList.
-! !
 
 !Boolean class methodsFor: '*LiveTyping' stamp: 'HAW 3/6/2019 18:32:15'!
 createMethodReturnRawTypesOf: aMethod
