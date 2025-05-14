@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7146] on 12 May 2025 at 2:52:51 pm'!
-'Description disableLiveTyping implementation'!
-!provides: 'LiveTyping' 1 133!
+'From Cuis7.3 [latest update: #7146] on 14 May 2025 at 11:58:38 am'!
+'Description fix sent unimplemented messages'!
+!provides: 'LiveTyping' 1 134!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -7996,11 +7996,6 @@ on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'FB 11/24/2021 20:09:04'!
-isActualScopeChoice
-	"TODO: Duplicated code"
-	^scopeChoice isNil or: [ scopeChoice >= 6 ]! !
-
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'FB 11/24/2021 20:09:34'!
 refactoringClass
 	
@@ -8008,85 +8003,14 @@ refactoringClass
 		ifTrue: [ InlineMethodWithActualScope ]
 		ifFalse: [ super refactoringClass ]! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'FB 11/24/2021 20:31:01'!
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 5/14/2025 11:53:03'!
 valueHandlingRefactoringExceptions: aBlock
 	"TODO: change?"
 	
-	^super valueHandlingRefactoringExceptions: [ aBlock 
-		on: CanNotChangeSelectorWithNotIncludedTypes
-		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
-
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 20:41:43'!
-actualImplementorsAndMessageSends 
-
-	"TODO: duplicated code"
-
-	self refactoringRequestedFromUsage
-		ifTrue: [ self actualImplementorsAndMessageSendsWhenOnMessageSend ]
-		ifFalse: [ self actualImplementorsAndMessageSendsWhenNotOnMessageSend ]
-! !
-
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 20:42:07'!
-actualImplementorsAndMessageSendsWhenNotOnMessageSend 
-	"TODO: duplicated code"
-	self refactoringClass 
-		addActualImplementorsOf: selectorToInline 
-		in: selectedClass 
-		to: self implementorsOrDiscardCollection 
-		andActualMessageSendsTo: self messageSendsOrDiscardCollection
-		inSystem: Smalltalk ! !
-
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/31/2022 23:15:17'!
-actualImplementorsAndMessageSendsWhenOnMessageSend
-
-	"TODO: duplicated code"
-
-	| incompleteTypeInfo receiverTypes |
-	
-	incompleteTypeInfo := Set new.
-	receiverTypes := triggeringMessageSend messageNode receiverOrCascadeReceiver 
-		typesIn: selectedClass>> triggeringMessageSend methodSymbol addingIncompleteTypeInfoTo: incompleteTypeInfo.
-	
-	receiverTypes isEmpty ifTrue: [ self canNotRefactorWithoutTypeInfo ].
-	incompleteTypeInfo notEmpty ifTrue: [ self canNotRefactorWithIncompleteTypeInfo ].
-	
-	self refactoringClass 
-		addActualImplementorsOf: selectorToInline
-		forTypes: receiverTypes 
-		to: self implementorsOrDiscardCollection 
-		andActualMessageSendsTo: self messageSendsOrDiscardCollection
-		inSystem: Smalltalk ! !
-
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/25/2021 00:34:50'!
-actualScopeOptionLabels
-	"TODO: Duplicated code"
-	^{ 'Actual/Possible Scope'. 'Actual Scope' } ! !
-
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 20:41:29'!
-calculateImplementorsAndMessageSends
-
-	"TODO: duplicated code"
-
-	self isActualScopeChoice 
-		ifTrue: [ self actualImplementorsAndMessageSends ]
-		ifFalse: [ super calculateImplementorsAndMessageSends ]! !
-
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 00:21:34'!
-canNotRefactorWithIncompleteTypeInfo
-	"TODO: duplicated code"
-	self 
-		inform: 'Can not apply the refactoring because there are errors getting receiver types';
-		endRequest 
-! !
-
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/24/2021 00:21:13'!
-canNotRefactorWithoutTypeInfo
-	"TODO: duplicated code"
-	self 
-		inform: 'Can not apply the refactoring because there is no receiver type information';
-		endRequest 
-
-! !
+	^super valueHandlingRefactoringExceptions: [ 
+		aBlock 
+			on: CanNotChangeSelectorWithNotIncludedTypes
+			do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/19/2022 19:45:55'!
 createAndApplyRefactoring
@@ -8094,25 +8018,25 @@ createAndApplyRefactoring
 	self filterSenders.
 	super createAndApplyRefactoring.! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/20/2022 19:07:50'!
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 5/14/2025 11:55:16'!
 filterSenders
 	
 	"Removes possible senders if user selected Actual scope"
 	
-	self isActualAndPossibleScope ifFalse: [
+	self isActualAndPossibleScopeChoice ifFalse: [
 		messageSends := messageSends select: [:aMessageNodeReference | aMessageNodeReference isPossibleMessageSend not]
 	].
 	! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 3/19/2022 19:53:02'!
-isActualAndPossibleScope
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 5/14/2025 11:55:16'!
+isActualAndPossibleScopeChoice
 	
 	^scopeChoice = 6
 	! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 11/27/2021 17:22:43'!
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 5/14/2025 11:50:23'!
 scopeOptionLabels
-	"TODO: Duplicated code"
+
 	^super scopeOptionLabels, self actualScopeOptionLabels.! !
 
 !InlineMethodWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'FB 3/13/2022 17:48:46'!
@@ -15440,6 +15364,30 @@ signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceive
 	CanNotChangeSelectorWithNotIncludedTypes signalWith: messageSendsWithInvalidReceiverTypes
 		! !
 
+!ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 5/14/2025 11:51:04'!
+actualScopeOptionLabels
+
+	^{ 'Actual/Possible Scope'. 'Actual Scope' } ! !
+
+!ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 5/14/2025 11:53:24'!
+canNotRefactorWithIncompleteTypeInfo
+	
+	self 
+		inform: 'Can not apply the refactoring because there are errors getting receiver types';
+		endRequest ! !
+
+!ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 5/14/2025 11:53:46'!
+canNotRefactorWithoutTypeInfo
+	
+	self 
+		inform: 'Can not apply the refactoring because there is no receiver type information';
+		endRequest ! !
+
+!ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 5/14/2025 11:52:23'!
+isActualScopeChoice
+	
+	^scopeChoice isNil or: [ scopeChoice >= 6 ]! !
+
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:37:12'!
 actualImplementorsAndSenders 
 
@@ -15477,25 +15425,6 @@ actualImplementorsAndSendersWhenOnMessageSend
 		andActualSendersTo: senders 
 		inSystem: Smalltalk ! !
 
-!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/28/2019 09:21:48'!
-actualScopeOptionLabels
-
-	^{ 'Actual/Possible Scope'. 'Actual Scope' } ! !
-
-!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 20:42:14'!
-canNotRefactorWithIncompleteTypeInfo
-	
-	self 
-		inform: 'Can not apply the refactoring because there are errors getting receiver types';
-		endRequest ! !
-
-!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/19/2019 06:29:14'!
-canNotRefactorWithoutTypeInfo
-	
-	self 
-		inform: 'Can not apply the refactoring because there is no receiver type information';
-		endRequest ! !
-
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 12/31/2019 14:42:40'!
 filterSenders
 	
@@ -15524,11 +15453,6 @@ handleCanNotChangeSelectorWithNotIncludedTypes: anError
 		
 	self endRequest 
 ! !
-
-!ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 22:14:46'!
-isActualScopeChoice
-	
-	^scopeChoice isNil or: [ scopeChoice >= 6 ]! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 8/17/2019 22:15:20'!
 isOnMessageSend
