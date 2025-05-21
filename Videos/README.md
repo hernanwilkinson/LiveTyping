@@ -7,3 +7,4 @@
 - California Smalltakers 2021 presentation: https://www.youtube.com/watch?v=4fS7Bu_O-Sk
 - UK Smalltalk User Group: https://www.youtube.com/watch?v=t8xf5YReV50
 - Refactorings using LiveTyping: https://www.youtube.com/watch?v=aF93NKwiwAk
+- Smalltalks 2023: https://www.youtube.com/watch?v=DbYCVY1eLpA&list=PLCGAAdUizzH19WfDNkQzeoULkIpjhDZoq&index=2
