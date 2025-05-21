@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3826] on 16 July 2019 at 2:28:39 pm'!
+'From Cuis7.3 [latest update: #7185] on 21 May 2025 at 12:55:44 pm'!
 'Description '!
-!provides: 'ReaderImage' 1 0!
+!provides: 'ReaderImage' 1 1!
 SystemOrganization addCategory: #ReaderImage!
 
 
@@ -15,13 +15,6 @@ StdioListener class
 	instanceVariableNames: ''!
 
 
-!StdioListener class methodsFor: 'as yet unclassified' stamp: 'HAW 10/3/2018 19:50:26'!
-startUp: resuming
-	"
-	Smalltalk addToStartUpList: self
-	"
-	resuming ifTrue: [ self run ]! !
-
 !StdioListener methodsFor: 'initialize-release' stamp: 'HAW 10/3/2018 19:42:31'!
 initialize
 	quitOnEof := true.
@@ -35,7 +28,7 @@ logError: errMsg inContext: aContext to: aStream
 	aContext errorReportOn: aStream.
 	aStream cr! !
 
-!StdioListener methodsFor: 'run loop' stamp: 'HAW 7/16/2019 14:28:16'!
+!StdioListener methodsFor: 'run loop' stamp: 'NMS 5/21/2025 12:38:35'!
 run
 	[stdin atEnd] whileFalse:
 		[| nextChunk |
@@ -49,7 +42,7 @@ run
 			do: [:ex| self logError: ex description inContext: ex signalerContext to: stderr]].
 	quitOnEof ifTrue:
 		[SourceFiles at: 2 put: nil.
-		 Smalltalk snapshot: true andQuit: true]! !
+		 Smalltalk saveAndQuit]! !
 
 !StdioListener methodsFor: 'accessing' stamp: 'eem 5/14/2009 17:36'!
 quitOnEof
@@ -63,6 +56,13 @@ quitOnEof: aBoolean
 run
 
 	[StdioListener new run] forkAt: Processor activePriority + 1.! !
+
+!StdioListener class methodsFor: 'as yet unclassified' stamp: 'HAW 10/3/2018 19:50:26'!
+startUp: resuming
+	"
+	Smalltalk addToStartUpList: self
+	"
+	resuming ifTrue: [ self run ]! !
 
 !StdIOReadStream methodsFor: '*ReaderImage' stamp: 'HAW 7/16/2019 14:23:40'!
 nextChunkNoTag
