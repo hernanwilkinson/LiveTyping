@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7249] on 28 May 2025 at 1:04:02 pm'!
-'Description update to cuis 7249'!
-!provides: 'LiveTyping' 1 136!
+'From Cuis7.5 [latest update: #7428] on 28 August 2025 at 2:00:47 pm'!
+'Description update to cuis 7451'!
+!provides: 'LiveTyping' 1 137!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2550,13 +2550,13 @@ systemCatListMenuSpecSend
 
 	^ MessageSend receiver: self selector: #systemCatListMenuSpec! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2025 12:55:23'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 12:31:15'!
 addAndClassifySelectorOriginalSourceCode
 
-	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category methodTimeStamp: aTimeStampString notifying: requestor
-	| priorMethodOrNil priorProtocolOrNil |
+	^'addAndClassifySelector: selector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString notifying: requestor
+	| priorMethodOrNil priorCategoryOrNil |
 	priorMethodOrNil := self compiledMethodAt: selector ifAbsent: nil.
-	priorProtocolOrNil := self whichCategoryIncludesSelector: selector.
+	priorCategoryOrNil := self whichCategoryIncludesSelector: selector.
 	self addSelectorSilently: selector withMethod: compiledMethod.
 	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
 	priorMethodOrNil
@@ -2575,12 +2575,12 @@ addAndClassifySelectorOriginalSourceCode
 				selector: selector 
 				inClass: self 
 				requestor: requestor.
-			category = priorProtocolOrNil ifFalse: [
+			category = priorCategoryOrNil ifFalse: [
 				SystemChangeNotifier uniqueInstance
 					selectorRecategorized: selector
-					from: priorProtocolOrNil
+					from: priorCategoryOrNil
 					to: category
-					inClass: self ]]'! !
+					inClass: self ]].'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 11/28/2018 14:00:01'!
 addAndClassifySelectorSourceCode
@@ -2618,22 +2618,18 @@ addAndClassifySelectorSourceCode
 					to: category
 					inClass: self ]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2025 12:25:44'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 12:22:53'!
 addAndClassifySelectorStep1SourceCode
 
-	^'addAndClassifySelector: nodeOrSelector withMethod: compiledMethod inProtocol: category methodTimeStamp: aTimeStampString notifying: requestor
-	| priorMethodOrNil priorProtocolOrNil selector |
-
-	selector := nodeOrSelector isSymbol ifTrue: [nodeOrSelector ] ifFalse: [ nodeOrSelector selector ].
+	^'addAndClassifySelector: selector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString notifying: requestor
+	| priorMethodOrNil priorCategoryOrNil |
 	priorMethodOrNil := self compiledMethodAt: selector ifAbsent: nil.
-	priorProtocolOrNil := self whichCategoryIncludesSelector: selector.
+	priorCategoryOrNil := self whichCategoryIncludesSelector: selector.
 	self addSelectorSilently: selector withMethod: compiledMethod.
-	compiledMethod initializeTypeInformation.
-
 	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
 	priorMethodOrNil
 		ifNil: [
-			SystemChangeNotifier uniqueInstance
+			SystemChangeNotifier uniqueInstance 
 				methodAdded: compiledMethod
 				selector: selector
 				inProtocol: category
@@ -2641,28 +2637,28 @@ addAndClassifySelectorStep1SourceCode
 				methodTimeStamp: aTimeStampString
 				requestor: requestor ]
 		ifNotNil: [
-			SystemChangeNotifier uniqueInstance
-				methodChangedFrom: priorMethodOrNil
-				to: compiledMethod
-				selector: selector
-				inClass: self
+			SystemChangeNotifier uniqueInstance 
+				methodChangedFrom: priorMethodOrNil 
+				to: compiledMethod 
+				selector: selector 
+				inClass: self 
 				requestor: requestor.
-			category = priorProtocolOrNil ifFalse: [
+			category = priorCategoryOrNil ifFalse: [
 				SystemChangeNotifier uniqueInstance
 					selectorRecategorized: selector
-					from: priorProtocolOrNil
+					from: priorCategoryOrNil
 					to: category
-					inClass: self ]]'! !
+					inClass: self ]].'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2025 12:28:01'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 12:27:16'!
 addAndClassifySelectorStep2SourceCode
 
-	^'addAndClassifySelector: node withMethod: compiledMethod inProtocol: category methodTimeStamp: aTimeStampString notifying: requestor
-	| priorMethodOrNil priorProtocolOrNil selector |
+	^'addAndClassifySelector: node withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString notifying: requestor
+	| priorMethodOrNil priorCategoryOrNil selector |
 
 	selector := node selector.
 	priorMethodOrNil := self compiledMethodAt: selector ifAbsent: nil.
-	priorProtocolOrNil := self whichCategoryIncludesSelector: selector.
+	priorCategoryOrNil := self whichCategoryIncludesSelector: selector.
 	self addSelectorSilently: selector withMethod: compiledMethod.
 
 	"I pass the methodNode becuase the compiledMethod needs the temps mapping to initialize its var raw types.
@@ -2686,12 +2682,12 @@ addAndClassifySelectorStep2SourceCode
 	      selector: selector
 	      inClass: self
 	      requestor: requestor.
-	    category = priorProtocolOrNil ifFalse: [
+	    category = priorCategoryOrNil ifFalse: [
 	      SystemChangeNotifier uniqueInstance
 	        selectorRecategorized: selector
-	        from: priorProtocolOrNil
+	        from: priorCategoryOrNil
 	        to: category
-	        inClass: self ]]'! !
+	        inClass: self ]].'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2025 13:03:01'!
 blockReturnTopOriginalSourceCode
@@ -2713,59 +2709,71 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2025 12:56:50'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 13:49:07'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
-	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
+	^'compile: code classified: category withStamp: changeStamp libraryName: aStringOrNil notifying: requestor logSource: logSource
 	
-	| methodAndNode selector isExistingMethod updatedCode |	
+	| methodAndNode selector newMethod isExistingMethod updatedCode libName |
 	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector := methodAndNode selector.
+	newMethod := methodAndNode method.
+	libName := aStringOrNil.
 	isExistingMethod := self includesSelector: selector.
 	isExistingMethod
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
-				ifFalse: [self error: ''Method modification not allowed'']]
+				ifFalse: [self error: ''Method modification not allowed''].
+			"If libraryName is provided, it takes precedence. If not, assume it doesn''t change."
+			libName isNil ifTrue: [ libName := (self compiledMethodAt: selector) propertyValueAt: #libraryName ]]
 		ifFalse: [
 			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method addition not allowed'']].
+	libName ifNotNil: [ newMethod propertyValueAt: #libraryName put: libName ].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
 		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
-			inCategory: category withStamp: changeStamp notifying: requestor.
+			inCategory: category withStamp: changeStamp libraryName: libName
+			notifying: requestor.
 	].
-	self addAndClassifySelector: selector withMethod: methodAndNode 
-		method inProtocol: category methodTimeStamp: changeStamp notifying: requestor.
-	^ methodAndNode selector'! !
+	self addAndClassifySelector: selector withMethod: newMethod
+		inCategory: category methodTimeStamp: changeStamp notifying: requestor.
+	^ selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2025 12:32:26'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 13:51:16'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
-	^'compile: code classified: category withStamp: changeStamp notifying: requestor logSource: logSource
-
-	| methodAndNode selector isExistingMethod updatedCode |
-	methodAndNode := self basicCompile: code notifying: requestor
+	^'compile: code classified: category withStamp: changeStamp libraryName: aStringOrNil notifying: requestor logSource: logSource
+	
+	| methodAndNode selector newMethod isExistingMethod updatedCode libName |
+	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector := methodAndNode selector.
+	newMethod := methodAndNode method.
+	libName := aStringOrNil.
 	isExistingMethod := self includesSelector: selector.
 	isExistingMethod
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
-				ifFalse: [self error: ''Method modification not allowed'']]
+				ifFalse: [self error: ''Method modification not allowed''].
+			"If libraryName is provided, it takes precedence. If not, assume it doesn''t change."
+			libName isNil ifTrue: [ libName := (self compiledMethodAt: selector) propertyValueAt: #libraryName ]]
 		ifFalse: [
 			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method addition not allowed'']].
+	libName ifNotNil: [ newMethod propertyValueAt: #libraryName put: libName ].
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
 		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
-		self logMethodSource: updatedCode forMethodWithNode: methodAndNode
-			inCategory: category withStamp: changeStamp notifying: requestor.
+		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
+			inCategory: category withStamp: changeStamp libraryName: libName
+			notifying: requestor.
 	].
-	self addAndClassifySelector: methodAndNode node withMethod: methodAndNode
-		method inProtocol: category methodTimeStamp: changeStamp notifying: requestor.
-	^ methodAndNode selector'! !
+	self addAndClassifySelector: methodAndNode node withMethod: newMethod
+		inCategory: category methodTimeStamp: changeStamp notifying: requestor.
+	^ selector'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 2/22/2019 22:12:10'!
 doneCompilingOriginalSourceCode
