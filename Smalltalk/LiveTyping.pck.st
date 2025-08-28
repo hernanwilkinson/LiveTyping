@@ -1,6 +1,6 @@
-'From Cuis7.5 [latest update: #7428] on 28 August 2025 at 2:00:47 pm'!
-'Description update to cuis 7451'!
-!provides: 'LiveTyping' 1 137!
+'From Cuis7.5 [latest update: #7452] on 28 August 2025 at 3:42:50 pm'!
+'Description update to cuis 7452'!
+!provides: 'LiveTyping' 1 140!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2406,11 +2406,10 @@ registerRefactoringAppliers
 		registerExtractAsParameterApplier: ExtractAsParameterApplierWithActualScopeApplier
 		! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 2/28/2019 22:12:26'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 8/28/2025 15:42:33'!
 initialize
 
-	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].
-	! !
+	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 5/28/2025 12:13:09'!
 initializeLiveTyping
@@ -2618,14 +2617,18 @@ addAndClassifySelectorSourceCode
 					to: category
 					inClass: self ]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 12:22:53'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 15:24:46'!
 addAndClassifySelectorStep1SourceCode
 
-	^'addAndClassifySelector: selector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString notifying: requestor
-	| priorMethodOrNil priorCategoryOrNil |
+	^'addAndClassifySelector: nodeOrSelector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString notifying: requestor
+	| priorMethodOrNil priorCategoryOrNil selector |
+
+	selector := nodeOrSelector isSymbol ifTrue: [nodeOrSelector ] ifFalse: [ nodeOrSelector selector ].
 	priorMethodOrNil := self compiledMethodAt: selector ifAbsent: nil.
 	priorCategoryOrNil := self whichCategoryIncludesSelector: selector.
 	self addSelectorSilently: selector withMethod: compiledMethod.
+	compiledMethod initializeTypeInformation.
+	
 	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
 	priorMethodOrNil
 		ifNil: [
@@ -2826,13 +2829,13 @@ mouseMoveLocalPositionSourceCode
 	(owner is: #ScrollPane) ifTrue: [
 		owner scrollSelectionIntoView ].'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 1/18/2024 12:55:17'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 15:36:29'!
 recompileFromOriginalSourceCode
 
 	^'recompile: selector from: oldClass
 	"Compile the method associated with selector in the receiver''s method dictionary."
 	"ar 7/10/1999: Use oldClass compiledMethodAt: not self compiledMethodAt:"
-	| method trailer methodNode |
+	| method trailer methodNode compiled |
 	method := oldClass compiledMethodAt: selector.
 	trailer := method trailer.
 	methodNode := self compilerClass new
@@ -2841,28 +2844,36 @@ recompileFromOriginalSourceCode
 				notifying: nil
 				ifFail: [^ self].   "Assume OK after proceed from SyntaxError"
 	selector == methodNode selector ifFalse: [self error: ''selector changed!!''].
-	self addSelectorSilently: selector withMethod: (methodNode generate: trailer).
-'
-! !
+	compiled := methodNode generate: trailer.
+	(method propertyValueAt: #libraryName) ifNotNil: [ :libName |
+		compiled propertyValueAt: #libraryName put: libName ].
+	self addSelectorSilently: selector withMethod: compiled.
+'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/6/2019 19:47:30'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 8/28/2025 15:35:36'!
 recompileFromSourceCode
 
 	^'recompile: selector from: oldClass
 	"Compile the method associated with selector in the receiver''s method dictionary."
 	"ar 7/10/1999: Use oldClass compiledMethodAt: not self compiledMethodAt:"
-	| method trailer methodNode newMethod |
-	method _ oldClass compiledMethodAt: selector.
-	trailer _ method trailer.
-	methodNode _ self compilerClass new
+	| method trailer methodNode compiled |
+	method := oldClass compiledMethodAt: selector.
+	trailer := method trailer.
+	methodNode := self compilerClass new
 				compile: (oldClass sourceCodeAt: selector)
 				in: self
 				notifying: nil
 				ifFail: [^ self].   "Assume OK after proceed from SyntaxError"
 	selector == methodNode selector ifFalse: [self error: ''selector changed!!''].
-	newMethod _ methodNode generate: trailer.
-	self addSelectorSilently: selector withMethod: newMethod.
-	newMethod copyTypeInformationFrom: method using: methodNode'! !
+	compiled := methodNode generate: trailer.
+	(method propertyValueAt: #libraryName) ifNotNil: [ :libName |
+		compiled propertyValueAt: #libraryName put: libName ].
+	self addSelectorSilently: selector withMethod: compiled.
+	compiled copyTypeInformationFrom: method using: methodNode
+'
+	
+	
+! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 5/28/2025 12:58:57'!
 setSenderReceiverMethodArgumentsOriginalSourceCode
