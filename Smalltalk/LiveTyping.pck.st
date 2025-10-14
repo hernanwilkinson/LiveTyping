@@ -1,6 +1,6 @@
-'From Cuis7.5 [latest update: #7594] on 20 September 2025 at 6:48:59 pm'!
-'Description Removes addtional dot'!
-!provides: 'LiveTyping' 1 141!
+'From Cuis7.5 [latest update: #7652] on 14 October 2025 at 9:54:33 am'!
+'Description Handles method documentations without type info'!
+!provides: 'LiveTyping' 1 142!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -6961,10 +6961,15 @@ indexOfNoRightParenthesis
 	^currentIndex
 			! !
 
-!LiveTypingSmalltalkCompleter methodsFor: 'selector documentation' stamp: 'HAW 2/8/2019 18:13:33'!
+!LiveTypingSmalltalkCompleter methodsFor: 'selector documentation' stamp: 'HAW 10/14/2025 09:53:20'!
 documentationOf: aMethod
 
-	^aMethod liveTypingAutoCompleterDocumentation! !
+	^aMethod isAnnotatingTypes
+		ifTrue: [ aMethod liveTypingAutoCompleterDocumentation ]
+		ifFalse: [ | documentation | 
+			documentation := aMethod dynamicTypingAutoCompleterDocumentation.
+			documentation := documentation, (Text string: String newLineString, '<No type info>' attributes: {TextColor red}).
+			documentation ]! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'jmv 4/26/2021 19:35:38'!
 tryToRecoverFromSyntaxError: aSyntaxErrorNotification withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
