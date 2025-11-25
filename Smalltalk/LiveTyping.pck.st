@@ -1,6 +1,6 @@
-'From Cuis7.5 [latest update: #7652] on 14 October 2025 at 9:54:33 am'!
-'Description Handles method documentations without type info'!
-!provides: 'LiveTyping' 1 142!
+'From Cuis7.5 [latest update: #7710] on 25 November 2025 at 7:22:52 pm'!
+'Description Uptodate with 7710'!
+!provides: 'LiveTyping' 1 143!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2396,12 +2396,12 @@ noReturnTypesDescriptionOf: aMethodReference
 
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 3/20/2025 18:56:45'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'Install-LiveTyping 11/25/2025 19:19:02'!
 checkRedefinedMethodsDidNotChange
 
 	self
 		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 3/29/2017 12:48';
-		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 1/18/2024 17:52:20' ;
+		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 11/4/2025 23:06:39' ;
 		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 7/16/2019 23:24:39'!
@@ -14683,27 +14683,28 @@ popIntoTemporaryVariable: offset
 	method annotateTemporaryTypeOf: value at: index
 	! !
 
-!MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 1/20/2024 12:22:32'!
+!MethodContext methodsFor: '*LiveTyping' stamp: 'Install-LiveTyping 11/25/2025 19:18:33'!
 return: value from: aSender
 	"For simulation.  Roll back self to aSender and return value from it.  Execute any unwind blocks on the way.  ASSUMES aSender is a sender of self"
 
 	| newTop |
 
 	newTop := aSender sender.
-	(aSender isDead or: [newTop isNil or: [newTop isDead]]) ifTrue: [
-		"I do not have to keep the type because it does not return - Hernan"
-		^ self pc: nil; send: #cannotReturn: to: self with: {value} super: false].
-	newTop := aSender sender.
-	(self findNextUnwindContextUpTo: newTop) ifNotNil: [
+	(aSender isDead or: [newTop isNil or: [newTop isDead]]) ifTrue:
+		["I do not have to keep the type because it does not return - Hernan"
+		^self pc: nil; send: #cannotReturn: to: self with: {value}].
+	(self findNextUnwindContextUpTo: newTop) ifNotNil: 
+		[:unwindProtectCtxt|
 		"If #aboutToReturn:through: fails, I do not keep the type - Hernan"
-		newTop := self send: #aboutToReturn:through: to: self with: {value. nil} super: false.
+		newTop := self send: #aboutToReturn:through: to: self with: {value. unwindProtectCtxt}.
 		method annotateReturnTypeOf: value.
-		^ newTop ].
+		^ newTop].
+	
 	self releaseTo: newTop.
-
 	method annotateReturnTypeOf: value.
-
-	^newTop push: value
+	newTop ifNotNil: [newTop push: value].
+	
+	^newTop
 ! !
 
 !MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 7/16/2019 23:33:22'!
