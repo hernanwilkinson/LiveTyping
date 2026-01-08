@@ -1,6 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 8 January 2026 at 7:18:02 pm'!
+'From Cuis7.7 [latest update: #7791] on 8 January 2026 at 7:21:33 pm'!
 'Description update to work with version 7791'!
-!provides: 'LiveTyping' 1 145!
+!provides: 'LiveTyping' 1 146!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2396,7 +2396,7 @@ noReturnTypesDescriptionOf: aMethodReference
 
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: 'Install-LiveTyping 8/Jan/2026 19:01:24'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 8/Jan/2026 19:21:07'!
 checkRedefinedMethodsDidNotChange
 
 	self
