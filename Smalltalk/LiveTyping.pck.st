@@ -1,6 +1,6 @@
-'From Cuis7.5 [latest update: #7771] on 18 December 2025 at 4:34:19 pm'!
-'Description changes how to check method author and time stamp'!
-!provides: 'LiveTyping' 1 144!
+'From Cuis7.7 [latest update: #7791] on 8 January 2026 at 7:18:02 pm'!
+'Description update to work with version 7791'!
+!provides: 'LiveTyping' 1 145!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2396,13 +2396,13 @@ noReturnTypesDescriptionOf: aMethodReference
 
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: 'Install-LiveTyping 25/Nov/2025 19:19:02'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'Install-LiveTyping 8/Jan/2026 19:01:24'!
 checkRedefinedMethodsDidNotChange
 
 	self
-		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 3/29/2017 12:48';
-		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 11/4/2025 23:06:39' ;
-		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is: 'eem 5/12/2009 13:05'! !
+		checkTimeStampOf: ContextPart>>#popIntoTemporaryVariable: is: 'eem 29/Mar/2017 12:48:00';
+		checkTimeStampOf: ContextPart>>#return:from: is: 'jar 4/Nov/2025 23:06:39';
+		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is:  'eem 12/May/2009 13:05:00'! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 18/Dec/2025 16:33:05'!
 checkTimeStampOf: aMethod is: expectedTimeStamp
