@@ -2905,7 +2905,7 @@ mouseMoveLocalPositionSourceCode
 
 	self shouldShowBalloonHelp ifTrue: [
 		aMouseMoveEvent hand
-			removePendingBalloonFor: self;
+			removePendingBalloon;
 			triggerBalloonFor: self after: self balloonHelpDelayTime ].
 
 	aMouseMoveEvent mouseButton1Pressed ifFalse: [
