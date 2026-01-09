@@ -1,6 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 9 January 2026 at 4:37:03 pm'!
-'Description fix ballon help + use v3 bytecode + remove code to remove mk categories'!
-!provides: 'LiveTyping' 1 147!
+'From Cuis7.7 [latest update: #7791] on 9 January 2026 at 6:21:23 pm'!
+'Description Changes to ExtractAsParameter applier for LT'!
+!provides: 'LiveTyping' 1 148!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -741,6 +741,16 @@ MethodReference subclass: #PossibleSender
 PossibleSender class
 	instanceVariableNames: ''!
 
+!classDefinition: #ChangeKeywordsSelectorOrderWithActualScope category: #'LiveTyping-Refactoring'!
+ChangeKeywordsSelectorOrder subclass: #ChangeKeywordsSelectorOrderWithActualScope
+	instanceVariableNames: 'shouldChangePossibleMessageSends'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'ChangeKeywordsSelectorOrderWithActualScope class' category: #'LiveTyping-Refactoring'!
+ChangeKeywordsSelectorOrderWithActualScope class
+	instanceVariableNames: ''!
+
 !classDefinition: #RenameSelectorWithActualScope category: #'LiveTyping-Refactoring'!
 RenameSelector subclass: #RenameSelectorWithActualScope
 	instanceVariableNames: 'shouldChangePossibleMessageSends'
@@ -801,14 +811,24 @@ AddParameterApplier subclass: #AddParameterWithActualScopeApplier
 AddParameterWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #ExtractAsParameterApplierWithActualScopeApplier category: #'LiveTyping-Refactoring'!
-AddParameterWithActualScopeApplier subclass: #ExtractAsParameterApplierWithActualScopeApplier
-	instanceVariableNames: 'interval intervals'
+!classDefinition: #ExtractAsParameterWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+ExtractAsParameterApplier subclass: #ExtractAsParameterWithActualScopeApplier
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'ExtractAsParameterApplierWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
-ExtractAsParameterApplierWithActualScopeApplier class
+!classDefinition: 'ExtractAsParameterWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+ExtractAsParameterWithActualScopeApplier class
+	instanceVariableNames: ''!
+
+!classDefinition: #ChangeKeywordsSelectorOrderWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+ChangeKeywordsSelectorOrderApplier subclass: #ChangeKeywordsSelectorOrderWithActualScopeApplier
+	instanceVariableNames: 'messageNode selectedSelector'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'ChangeKeywordsSelectorOrderWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+ChangeKeywordsSelectorOrderWithActualScopeApplier class
 	instanceVariableNames: ''!
 
 !classDefinition: #RenameSelectorWithActualScopeApplier category: #'LiveTyping-Refactoring'!
@@ -2478,14 +2498,14 @@ modifyClassDescriptionShape
 		on: Error do: [ :anError | anError return: nil ]
 ! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 3/Nov/2021 18:32:20'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 9/Jan/2026 18:09:49'!
 registerRefactoringAppliers
 
 	RefactoringApplier
 		registerRenameSelectorApplier: RenameSelectorWithActualScopeApplier;
 		registerAddParameterApplier: AddParameterWithActualScopeApplier;
 		registerRemoveParameterApplier: RemoveParameterWithActualScopeApplier;
-		registerExtractAsParameterApplier: ExtractAsParameterApplierWithActualScopeApplier
+		registerExtractAsParameterApplier: ExtractAsParameterWithActualScopeApplier
 		! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 28/Aug/2025 15:42:33'!
@@ -7268,6 +7288,57 @@ possibleSenderStringVersionHeader
 
 	^'Possible'! !
 
+!ChangeKeywordsSelectorOrderWithActualScope methodsFor: 'initialization' stamp: 'JEC 16/Nov/2025 10:18:53'!
+initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
+
+	shouldChangePossibleMessageSends := aShouldRenamePossibleMessageSends ! !
+
+!ChangeKeywordsSelectorOrderWithActualScope methodsFor: 'rename senders - private' stamp: 'JEC 16/Nov/2025 10:18:35'!
+messageSendSelectorKeywordPositionsIn: aMethodNode
+
+	^aMethodNode
+		actualMessageSendsSelectorPositionsOfAll: implementors
+		ifAbsent: [ #() ]
+		withPossibleMessageSends: shouldChangePossibleMessageSends.! !
+
+!ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation' stamp: 'JEC 16/Nov/2025 10:19:49'!
+from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders withPossibleMessageSends: shouldRenamePossibleMessageSends
+
+	self assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors.
+
+	^(super from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders)
+		initilaizeWithPossibleMessageSends: shouldRenamePossibleMessageSends! !
+
+!ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025 10:20:06'!
+from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders
+
+	self shouldNotImplement ! !
+
+!ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025 10:20:11'!
+from: anOldSelector to: aNewSelector in: aClassToRefactor
+
+	self shouldNotImplement ! !
+
+!ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025 10:20:17'!
+from: anOldSelector to: aNewSelector inCategoriesAndHierarchyOf: aClass organizedBy: anOrganization
+
+	self shouldNotImplement ! !
+
+!ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025 10:20:23'!
+from: anOldSelector to: aNewSelector inCategoryOf: aClass organizedBy: anOrganization
+
+	self shouldNotImplement ! !
+
+!ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025 10:20:29'!
+from: anOldSelector to: aNewSelector inHierarchyOf: aClass
+
+	self shouldNotImplement ! !
+
+!ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025 10:20:35'!
+from: anOldSelector to: aNewSelector inSystem: aSystem
+
+	self shouldNotImplement ! !
+
 !RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 1/Jan/2020 19:57:00'!
 messageSendSelectorKeywordPositionsIn: aMethodNode
 
@@ -7710,19 +7781,19 @@ on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 3/Nov/2021 18:53:18'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 3/Nov/2021 18:53:18'!
 initializeInterval: anInterval
 
 	interval := anInterval.
 
 	self initializeIntervals.! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 3/Nov/2021 18:53:53'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 3/Nov/2021 18:53:53'!
 initializeIntervals
 
 	intervals := self refactoringClass intervalsForEquivalentExpressionIn: selectedClass >> oldSelector at: interval.! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 19:28:40'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 19:28:40'!
 createRefactoringForKeywordSelector
 
 	^self refactoringClass
@@ -7734,7 +7805,7 @@ createRefactoringForKeywordSelector
 		implementors: implementors
 		senders: senders ! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 19:30:02'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 19:30:02'!
 createRefactoringForUnarySelector
 
 	^self refactoringClass
@@ -7744,7 +7815,7 @@ createRefactoringForUnarySelector
 		implementors: implementors
 		senders: senders ! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 18:58:49'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 18:58:49'!
 createRefactoringWithActualScopeForKeywordSelector
 
 	^self refactoringClass
@@ -7757,7 +7828,7 @@ createRefactoringWithActualScopeForKeywordSelector
 		senders: senders
 		withPossibleMessageSends: self isWithPossibleMessageSends ! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 18:56:41'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 18:56:41'!
 createRefactoringWithActualScopeForUnarySelector
 
 	^self refactoringClass
@@ -7769,17 +7840,17 @@ createRefactoringWithActualScopeForUnarySelector
 		withPossibleMessageSends: self isWithPossibleMessageSends
 		! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 18:57:38'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021 18:57:38'!
 refactoringClass
 
 	^self isActualScopeChoice
 		ifTrue: [ ExtractAsParameterWithActualScope ]
 		ifFalse: [ ExtractAsParameter ]! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021 19:04:26'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021 19:04:26'!
 askNewParameterValue! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021 19:34:01'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021 19:34:01'!
 askToReplaceAll
 
 	"This is repeated with ExtractAsParameter. A better way to solve this should be look for - Hernan"
@@ -7793,19 +7864,99 @@ askToReplaceAll
 
 	extractAll ifFalse: [ intervals := { interval } ].! !
 
-!ExtractAsParameterApplierWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021 19:21:23'!
+!ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021 19:21:23'!
 requestRefactoringParameters
 
 	intervals size > 1 ifTrue: [ self askToReplaceAll ].
 
 	super requestRefactoringParameters.! !
 
-!ExtractAsParameterApplierWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 3/Nov/2021 18:44:43'!
+!ExtractAsParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 3/Nov/2021 18:44:43'!
 from: anInterval on: aModel for: anOldSelector in: aClassToRefactor
 
 	ExtractAsParameterWithActualScope assertCanExtractedFromAll: { anInterval } for: aClassToRefactor >> anOldSelector.
 
 	^(self on: aModel for: anOldSelector in: aClassToRefactor) initializeInterval: anInterval ! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'initialization' stamp: 'JEC 16/Nov/2025 10:21:58'!
+createSenders
+
+	^OrderedCollection new.
+! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'initialization' stamp: 'JEC 16/Nov/2025 10:22:05'!
+initializeOf: aMessageNode at: aSelectedSelector
+
+	messageNode := aMessageNode.
+	selectedSelector := aSelectedSelector.
+! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025 10:22:20'!
+convertSendersToCompiledMethods
+
+	self filterSenders ! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025 10:22:24'!
+createRefactoring
+
+	^ self isActualScopeChoice
+		ifTrue: [ self createRefactoringWithActualScope ]
+		ifFalse: [ super createRefactoring ]! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025 10:22:29'!
+createRefactoringWithActualScope
+
+	^self refactoringClass
+		from: oldSelector
+		to: newSelector
+		implementors: implementors
+		senders: senders
+		withPossibleMessageSends: self isWithPossibleMessageSends ! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025 11:21:01'!
+refactoringClass
+
+	^self isActualScopeChoice
+		ifTrue: [ ChangeKeywordsSelectorOrderWithActualScope ]
+		ifFalse: [ super refactoringClass ]! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025 10:22:39'!
+valueHandlingRefactoringExceptions: aBlock
+
+	^super valueHandlingRefactoringExceptions: [ aBlock
+		on: CanNotChangeSelectorWithNotIncludedTypes
+		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025 10:22:56'!
+calculateImplementorsAndSenders
+
+	self isActualScopeChoice
+		ifTrue: [ self actualImplementorsAndSenders ]
+		ifFalse: [ super calculateImplementorsAndSenders ]! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025 10:23:00'!
+messageNode
+
+	^messageNode ! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025 10:23:04'!
+openChangeSelectorSendersStepWindow
+
+	self isActualScopeChoice
+		ifTrue: [ ChangeSelectorSendersStepWindow openForActualScopeFrom: self ]
+		ifFalse: [ super openChangeSelectorSendersStepWindow ]
+
+	! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025 10:23:09'!
+scopeOptionLabels
+
+	^super scopeOptionLabels, self actualScopeOptionLabels! !
+
+!ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025 10:23:14'!
+selectedSelector
+
+	^selectedSelector ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 5/Mar/2020 22:00:13'!
 convertSendersToCompiledMethods
