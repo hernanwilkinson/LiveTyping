@@ -1,6 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 8 January 2026 at 7:21:33 pm'!
-'Description update to work with version 7791'!
-!provides: 'LiveTyping' 1 146!
+'From Cuis7.7 [latest update: #7791] on 9 January 2026 at 4:37:03 pm'!
+'Description fix ballon help + use v3 bytecode + remove code to remove mk categories'!
+!provides: 'LiveTyping' 1 147!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -2422,7 +2422,7 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 
 	aClass compile: aNewSourceCode ! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 17/Jan/2025 13:51:39'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 9/Jan/2026 16:04:38'!
 compileAfterInstallMethods
 
 	"I do not use cascade message to be able to evaluate each collaboration separately for debugging pourposes - Hernan"
@@ -2449,10 +2449,6 @@ compileAfterInstallMethods
 		compile: self recompileFromSourceCode
 		in: Behavior
 		ifOriginalSourceCodeIs: self recompileFromOriginalSourceCode.
-	self
-		compile: self mouseMoveLocalPositionSourceCode
-		in: InnerTextMorph
-		ifOriginalSourceCodeIs: self mouseMoveLocalPositionOriginalSourceCode.
 	self
 		compile: self setSenderReceiverMethodArgumentsSourceCode
 		in: MethodContext
@@ -2497,7 +2493,7 @@ initialize
 
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 28/May/2025 12:13:09'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 9/Jan/2026 16:31:50'!
 initializeLiveTyping
 
 	"HERNAN!!!! Do not convert this to cascade message. It is like that to be able to
@@ -2508,7 +2504,11 @@ initializeLiveTyping
 	self compileAfterInstallMethods.
 	self initializeTypeInformation.
 	self registerRefactoringAppliers.
-	self initializeMenues ! !
+	self initializeMenues.
+	
+	"LiveTyping does not work well with sista bytecodes yet.
+	Remove this when supported - Hernan"
+	CompiledMethod useV3Bytecodes.! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 28/Apr/2025 21:17:35'!
 initializeMenues
@@ -2885,35 +2885,6 @@ doneCompilingSourceCode
 	self withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes ]'
 
 ! !
-
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/Nov/2021 20:13:15'!
-mouseMoveLocalPositionOriginalSourceCode
-
-	^'mouseMove: aMouseMoveEvent localPosition: localEventPosition
-
-	aMouseMoveEvent mouseButton1Pressed ifFalse: [
-		^ self enterClickableRegion: aMouseMoveEvent localPosition: localEventPosition ].
-	self handleInteraction: [
-		editor mouseMove: aMouseMoveEvent localPosition: localEventPosition].
-	(owner is: #ScrollPane) ifTrue: [
-		owner scrollSelectionIntoView ].'! !
-
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 3/Nov/2021 20:11:58'!
-mouseMoveLocalPositionSourceCode
-
-	^'mouseMove: aMouseMoveEvent localPosition: localEventPosition
-
-	self shouldShowBalloonHelp ifTrue: [
-		aMouseMoveEvent hand
-			removePendingBalloon;
-			triggerBalloonFor: self after: self balloonHelpDelayTime ].
-
-	aMouseMoveEvent mouseButton1Pressed ifFalse: [
-		^ self enterClickableRegion: aMouseMoveEvent localPosition: localEventPosition ].
-	self handleInteraction: [
-		editor mouseMove: aMouseMoveEvent localPosition: localEventPosition].
-	(owner is: #ScrollPane) ifTrue: [
-		owner scrollSelectionIntoView ].'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 28/Aug/2025 15:36:29'!
 recompileFromOriginalSourceCode
@@ -3546,7 +3517,7 @@ of: aSender for: aSentImplementors
 
 	^self new initializeOf: aSender for: aSentImplementors! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 8/Mar/2022 21:03:30'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 9/Jan/2026 15:51:47'!
 print: originalTypes on: aStream upTo: aNumberOfTypes
 
 	| types canBeNil |
@@ -3580,9 +3551,7 @@ print: originalTypes on: aStream upTo: aNumberOfTypes
 					canBeNil ifTrue: [ aStream nextPutAll: ' | can be nil !!' ]]].
 
 	aStream
-		nextPut: $>;
-		newLine "The newLine is necessary for the ballonhelp not to be wrapped... puag!!!! - Hernan"
-
+		nextPut: $>
 	! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 20/Sep/2025 18:08:08'!
@@ -15077,16 +15046,18 @@ openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 
 ! !
 
-!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 28/Nov/2021 17:38:42'!
-showBalloon: msgString hand: aHand
+!InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 9/Jan/2026 16:03:41'!
+balloonText
 
-	| localMousePosition mousePositionInText ballonTypeInfo |
-
-	localMousePosition := self internalizeFromWorld: aHand location translation.
-	mousePositionInText := self positionInTextOf: localMousePosition.
-	ballonTypeInfo := editor balloonTypeInfoAt: mousePositionInText.
-
-	^super showBalloon: ballonTypeInfo hand: aHand
+	^self activeHand 
+		ifNil: [ 'Cannot show the types because the active hand is nil' asText ]
+		ifNotNil: [ :activeHand | | localMousePosition mousePositionInText ballonTypeInfo |
+		
+			localMousePosition := self internalizeFromWorld: activeHand location translation.
+			mousePositionInText := self positionInTextOf: localMousePosition.
+			ballonTypeInfo := editor balloonTypeInfoAt: mousePositionInText.
+			
+			ballonTypeInfo ]
 ! !
 
 !InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 11/Jul/2022 20:04:11'!
@@ -15155,7 +15126,7 @@ balloonTypeInfoAt: mousePositionInText
 		ifTrue: [ self balloonTypeInfoOfInstanceVariableAt: mousePositionInText ]
 		ifFalse: [ self balloonTypeInfoInMethodAt: mousePositionInText ]! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 11/Jul/2019 17:20:47'!
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 9/Jan/2026 16:02:44'!
 balloonTypeInfoInMethodAt: mousePositionInText
 
 	^self
@@ -15166,8 +15137,8 @@ balloonTypeInfoInMethodAt: mousePositionInText
 				ifAbsent: [
 					mousePositionInText <= methodNode selectorLastPosition
 						ifTrue: [ self balloonTypeInfoOf: methodNode in: methodNode definedAt: class ]
-						ifFalse: [ '' ]]]
-		ifErrorsParsing: [ :anError | '' ]
+						ifFalse: [ 'Put the mouse over a code element to see its type' ]]]
+		ifErrorsParsing: [ :anError | 'Cannot show types becuase it cannot parse the code' ]
 
 
 ! !
@@ -15183,13 +15154,16 @@ balloonTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
 		do: [ :anError | 'Could not get type because: ', anError messageText ]
 ! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 27/Nov/2023 11:48:57'!
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 9/Jan/2026 15:54:51'!
 balloonTypeInfoOfInstanceVariableAt: mousePositionInText
 
-	| instVarName typeInfo |
+	| instVarName typeInfo selectedClass |
 
 	instVarName := (self wordAt: mousePositionInText) asString.
-	typeInfo := self codeProvider selectedClass typeInfoOfInstanceVariableNamed: instVarName ifAbsent: [^''].
+	selectedClass := self codeProvider selectedClass.
+	typeInfo := selectedClass 
+		typeInfoOfInstanceVariableNamed: instVarName 
+		ifAbsent: [^instVarName, ' not found in ', selectedClass name ].
 
 	^typeInfo printTypesUpTo: 5! !
 
