@@ -1,6 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 9 January 2026 at 6:21:23 pm'!
-'Description Changes to ExtractAsParameter applier for LT'!
-!provides: 'LiveTyping' 1 148!
+'From Cuis7.7 [latest update: #7797] on 26 June 2026 at 9:59:03 am'!
+'Description Support for reorder keyword refactoring for LiveTyping'!
+!provides: 'LiveTyping' 1 149!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -739,6 +739,16 @@ MethodReference subclass: #PossibleSender
 	category: 'LiveTyping'!
 !classDefinition: 'PossibleSender class' category: #LiveTyping!
 PossibleSender class
+	instanceVariableNames: ''!
+
+!classDefinition: #PossibleMessageNodeReference category: #'LiveTyping-Refactoring'!
+MessageNodeReference subclass: #PossibleMessageNodeReference
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'PossibleMessageNodeReference class' category: #'LiveTyping-Refactoring'!
+PossibleMessageNodeReference class
 	instanceVariableNames: ''!
 
 !classDefinition: #ChangeKeywordsSelectorOrderWithActualScope category: #'LiveTyping-Refactoring'!
@@ -2498,15 +2508,15 @@ modifyClassDescriptionShape
 		on: Error do: [ :anError | anError return: nil ]
 ! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 9/Jan/2026 18:09:49'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'JEC 16/Nov/2025 10:59:19'!
 registerRefactoringAppliers
 
 	RefactoringApplier
 		registerRenameSelectorApplier: RenameSelectorWithActualScopeApplier;
 		registerAddParameterApplier: AddParameterWithActualScopeApplier;
 		registerRemoveParameterApplier: RemoveParameterWithActualScopeApplier;
-		registerExtractAsParameterApplier: ExtractAsParameterWithActualScopeApplier
-		! !
+		registerExtractAsParameterApplier: ExtractAsParameterWithActualScopeApplier;
+		registerChangeKeywordsSelectorOrderApplier: ChangeKeywordsSelectorOrderWithActualScopeApplier ! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 28/Aug/2025 15:42:33'!
 initialize
@@ -3537,7 +3547,7 @@ of: aSender for: aSentImplementors
 
 	^self new initializeOf: aSender for: aSentImplementors! !
 
-!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 9/Jan/2026 15:51:47'!
+!VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 12/Jan/2026 17:25:36'!
 print: originalTypes on: aStream upTo: aNumberOfTypes
 
 	| types canBeNil |
@@ -3570,8 +3580,10 @@ print: originalTypes on: aStream upTo: aNumberOfTypes
 					self printAll: types on: aStream.
 					canBeNil ifTrue: [ aStream nextPutAll: ' | can be nil !!' ]]].
 
+	"The newLine is to avoid word wrapping, puaj!! - Hernan"
 	aStream
-		nextPut: $>
+		nextPut: $>;
+		newLine
 	! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 20/Sep/2025 18:08:08'!
@@ -7287,6 +7299,29 @@ in: aSender withPossibleMessageSends: aPossibleMessageSends
 possibleSenderStringVersionHeader
 
 	^'Possible'! !
+
+!PossibleMessageNodeReference methodsFor: 'initialization' stamp: 'FB 19/Mar/2022 19:23:16'!
+messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange
+
+	super messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange.
+	self prefixStringVersionWith: self class possibleMessageSendStringVersionHeader.! !
+
+!PossibleMessageNodeReference methodsFor: 'testing' stamp: 'FB 19/Mar/2022 19:13:17'!
+isPossibleMessageSend
+
+	^true! !
+
+!PossibleMessageNodeReference class methodsFor: 'printing' stamp: 'FB 19/Mar/2022 19:10:06'!
+possibleMessageSendStringVersionHeader
+
+	"TODO: duplicated code from PossibleSender"
+
+	^'Possible'! !
+
+!PossibleMessageNodeReference class methodsFor: 'instance creation' stamp: 'FB 19/Mar/2022 19:15:35'!
+messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange
+
+	^self new messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange.! !
 
 !ChangeKeywordsSelectorOrderWithActualScope methodsFor: 'initialization' stamp: 'JEC 16/Nov/2025 10:18:53'!
 initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
@@ -15454,6 +15489,22 @@ typeCheck
 typeInfoOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^aBlock value! !
+
+!MessageNodeReference methodsFor: '*LiveTyping-Refactoring' stamp: 'HAW 11/Jun/2022 19:24:06'!
+asPossibleMessageNodeReference
+
+	^PossibleMessageNodeReference
+		messageNode: messageNode
+		selector: selector
+		class: classReference
+		completeSourceRange: completeSourceRange.! !
+
+!MessageNodeReference methodsFor: '*LiveTyping-Refactoring' stamp: 'FB 19/Mar/2022 19:13:52'!
+isPossibleMessageSend
+
+	"Implements polymorphism with PossbileMessageNodeReference"
+
+	^false! !
 
 !ChangeSelector class methodsFor: '*LiveTyping' stamp: 'HAW 30/Dec/2019 17:50:57'!
 addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: aSystem
