@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8029] on 26 June 2026 at 12:41:30 pm'!
-'Description Support for Cuis 7.9-8029'!
-!provides: 'LiveTyping' 1 150!
+'From Cuis7.9 [latest update: #8098] on 29 July 2026 at 4:09:59 pm'!
+'Description Support for Cuis 7.9-8098'!
+!provides: 'LiveTyping' 1 151!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 SystemOrganization addCategory: #LiveTyping!
@@ -14751,19 +14751,6 @@ returnRawTypes
 returnRawTypesUnload: aClassToUnload
 
 	ReturnTypeInfo unload: aClassToUnload from: returnRawTypes ! !
-
-!AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 20/Oct/2018, 9:42:17 pm (UTC)'!
-setMethod: aMethod
-
-	| propertyOrPragma "<Association|Pragma>" |
-
-	method := aMethod.
-	1 to: self basicSize do:
-		[ :i |
-		(propertyOrPragma := self basicAt: i) isVariableBinding ifFalse:
-			[propertyOrPragma setMethod: aMethod]].
-
-! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Feb/2019, 8:04:00 pm (UTC)'!
 sizeOf: anArrayOfRawTypesOrNil
