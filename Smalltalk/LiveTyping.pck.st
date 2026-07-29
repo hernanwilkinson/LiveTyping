@@ -1,8 +1,9 @@
-'From Cuis7.9 [latest update: #8098] on 29 July 2026 at 4:09:59 pm'!
-'Description Support for Cuis 7.9-8098'!
-!provides: 'LiveTyping' 1 151!
+'From Cuis7.9 [latest update: #8111] on 29 July 2026 at 7:24:08 pm'!
+'Description use of StreamExtentions'!
+!provides: 'LiveTyping' 1 152!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
+!requires: 'StreamExtentionsTests' 1 0 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
 SystemOrganization addCategory: #'LiveTyping-Refactoring'!
@@ -1345,14 +1346,14 @@ allImplementorsTitleOn: aStream
 		allInvalidImplementorsTitleOn: aStream from: sentImplementorsByIsValid.
 		! !
 
-!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 2/Jan/2020, 7:45:44 pm (UTC)'!
+!MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 29/Jul/2026, 10:16:37 pm (UTC)'!
 allInvalidImplementorsTitleOn: aStream from: sentImplementorsByIsValid
 
 	sentImplementorsByIsValid
 		at: false
 		ifPresent: [ :notImplemented |
 			aStream
-				nextPutAll: ' and' when: (sentImplementorsByIsValid includesKey: true);
+				nextPutAll: ' and' if: (sentImplementorsByIsValid includesKey: true);
 				nextPutAll: ' not implemented in ';
 				nextPutAll: notImplemented asCommaSeparated: [ :aNotImplementor |
 					aStream print: aNotImplementor methodClass ]]
