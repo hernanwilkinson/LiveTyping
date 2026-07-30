@@ -3,7 +3,7 @@
 !provides: 'LiveTyping' 1 152!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
-!requires: 'StreamExtentionsTests' 1 0 nil!
+!requires: 'StreamExtensionsTests' 1 0 nil!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
 SystemOrganization addCategory: #'LiveTyping-Refactoring'!
