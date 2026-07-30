@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8111] on 29 July 2026 at 7:24:08 pm'!
-'Description use of StreamExtentions'!
-!provides: 'LiveTyping' 1 152!
+'From Cuis7.9 [latest update: #8113] on 30 July 2026 at 7:44:02 pm'!
+'Description Use of Systa bytecodes'!
+!provides: 'LiveTyping' 1 153!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2524,7 +2524,7 @@ initialize
 
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 26/Jun/2026, 3:41:01 pm (UTC)'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 30/Jul/2026, 10:43:21 pm (UTC)'!
 initializeLiveTyping
 
 	"HERNAN!!!! Do not convert this to cascade message. It is like that to be able to
@@ -2535,11 +2535,7 @@ initializeLiveTyping
 	self compileAfterInstallMethods.
 	self initializeTypeInformation.
 	self registerRefactoringAppliers.
-	self initializeMenues.
-	
-	"LiveTyping does not work well with sista bytecodes yet.
-	Remove this when supported - Hernan"
-	CompiledMethod useV3Bytecodes.! !
+	self initializeMenues.! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 29/Apr/2025, 12:17:35 am (UTC)'!
 initializeMenues
