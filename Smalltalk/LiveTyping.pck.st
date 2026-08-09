@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8113] on 30 July 2026 at 7:44:02 pm'!
-'Description Use of Systa bytecodes'!
-!provides: 'LiveTyping' 1 153!
+'From Cuis7.9 [latest update: #8134] on 9 August 2026 at 7:44:30 pm'!
+'Description Update to Cuils 8134 - Go back to V3 bytecodes'!
+!provides: 'LiveTyping' 1 154!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2524,7 +2524,8 @@ initialize
 
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 30/Jul/2026, 10:43:21 pm (UTC)'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 9/Aug/2026, 10:43:51 pm (UTC)'!
+!methodProperties: {}!
 initializeLiveTyping
 
 	"HERNAN!!!! Do not convert this to cascade message. It is like that to be able to
@@ -2535,7 +2536,9 @@ initializeLiveTyping
 	self compileAfterInstallMethods.
 	self initializeTypeInformation.
 	self registerRefactoringAppliers.
-	self initializeMenues.! !
+	self initializeMenues.
+	
+	CompiledMethod useV3Bytecodes ! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 29/Apr/2025, 12:17:35 am (UTC)'!
 initializeMenues
@@ -2820,67 +2823,79 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 26/Jun/2026, 3:28:27 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 9/Aug/2026, 10:42:42 pm (UTC)'!
+!methodProperties: {}!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
-	^'compile: code classified: category withStamp: changeStamp libraryName: aStringOrNil notifying: requestor logSource: logSource
+	^'compile: code classified: category withStamp: changeStamp methodProperties: aCollectionOrNil notifying: requestor logSource: logSource
 	
-	| methodAndNode selector newMethod isExistingMethod updatedCode libName |
+	| methodAndNode selector newMethod isExistingMethod updatedCode |
 	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector := methodAndNode selector.
 	newMethod := methodAndNode method.
-	libName := aStringOrNil.
 	isExistingMethod := self includesSelector: selector.
 	isExistingMethod
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
-				ifFalse: [self error: ''Method modification not allowed''].
-			"If libraryName is provided, it takes precedence. If not, assume it doesn''t change."
-			libName isNil ifTrue: [ libName := (self compiledMethodAt: selector) propertyValueAt: #libraryName ]]
+				ifFalse: [self error: ''Method modification not allowed'']]
 		ifFalse: [
 			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method addition not allowed'']].
-	libName ifNotNil: [ newMethod propertyValueAt: #libraryName put: libName ].
+
+	"Any Pragmas were just added when compiling code. Add method properties now."
+	aCollectionOrNil
+		ifNotNil: [ aCollectionOrNil do: [ :assoc | newMethod addPragmaOrProperty: assoc]]
+		ifNil: [
+			"If method properties are not provided, then keep those of the existing method, if any."
+			isExistingMethod ifTrue: [
+				(self compiledMethodAt: selector) withPropertiesDo: [ :additionalMethodState |
+					additionalMethodState propertiesDo: [ :assoc | newMethod addPragmaOrProperty: assoc ]] ifSelector: [ :s | ]]].
+
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
 		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
-			inCategory: category withStamp: changeStamp libraryName: libName
-			notifying: requestor.
+			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
 	self addAndClassifySelector: selector withMethod: newMethod
 		inCategory: category methodTimeStamp: changeStamp.
 	^ selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 28/Aug/2025, 4:51:16 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 9/Aug/2026, 10:42:11 pm (UTC)'!
+!methodProperties: {}!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
-	^'compile: code classified: category withStamp: changeStamp libraryName: aStringOrNil notifying: requestor logSource: logSource
+	^'compile: code classified: category withStamp: changeStamp methodProperties: aCollectionOrNil notifying: requestor logSource: logSource
 	
-	| methodAndNode selector newMethod isExistingMethod updatedCode libName |
+	| methodAndNode selector newMethod isExistingMethod updatedCode |
 	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector := methodAndNode selector.
 	newMethod := methodAndNode method.
-	libName := aStringOrNil.
 	isExistingMethod := self includesSelector: selector.
 	isExistingMethod
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
-				ifFalse: [self error: ''Method modification not allowed''].
-			"If libraryName is provided, it takes precedence. If not, assume it doesn''t change."
-			libName isNil ifTrue: [ libName := (self compiledMethodAt: selector) propertyValueAt: #libraryName ]]
+				ifFalse: [self error: ''Method modification not allowed'']]
 		ifFalse: [
 			(self theNonMetaClass isOkToAddMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method addition not allowed'']].
-	libName ifNotNil: [ newMethod propertyValueAt: #libraryName put: libName ].
+
+	"Any Pragmas were just added when compiling code. Add method properties now."
+	aCollectionOrNil
+		ifNotNil: [ aCollectionOrNil do: [ :assoc | newMethod addPragmaOrProperty: assoc]]
+		ifNil: [
+			"If method properties are not provided, then keep those of the existing method, if any."
+			isExistingMethod ifTrue: [
+				(self compiledMethodAt: selector) withPropertiesDo: [ :additionalMethodState |
+					additionalMethodState propertiesDo: [ :assoc | newMethod addPragmaOrProperty: assoc ]] ifSelector: [ :s | ]]].
+
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
 		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
-			inCategory: category withStamp: changeStamp libraryName: libName
-			notifying: requestor.
+			inCategory: category withStamp: changeStamp notifying: requestor.
 	].
 	self addAndClassifySelector: methodAndNode node withMethod: newMethod
 		inCategory: category methodTimeStamp: changeStamp.
