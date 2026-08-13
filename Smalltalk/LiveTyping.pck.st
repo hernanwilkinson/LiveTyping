@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8134] on 9 August 2026 at 7:44:30 pm'!
-'Description Update to Cuils 8134 - Go back to V3 bytecodes'!
-!provides: 'LiveTyping' 1 154!
+'From Cuis7.9 [latest update: #8137] on 13 August 2026 at 11:15:38 am'!
+'Description Update to Cuils 8137'!
+!provides: 'LiveTyping' 1 155!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2525,7 +2525,6 @@ initialize
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 9/Aug/2026, 10:43:51 pm (UTC)'!
-!methodProperties: {}!
 initializeLiveTyping
 
 	"HERNAN!!!! Do not convert this to cascade message. It is like that to be able to
@@ -2823,7 +2822,7 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 9/Aug/2026, 10:42:42 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 13/Aug/2026, 2:14:28 pm (UTC)'!
 !methodProperties: {}!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
@@ -2856,13 +2855,13 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
 		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
-			inCategory: category withStamp: changeStamp notifying: requestor.
+			inCategory: category withStamp: changeStamp.
 	].
 	self addAndClassifySelector: selector withMethod: newMethod
 		inCategory: category methodTimeStamp: changeStamp.
 	^ selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 9/Aug/2026, 10:42:11 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 13/Aug/2026, 2:14:39 pm (UTC)'!
 !methodProperties: {}!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
@@ -2895,7 +2894,7 @@ compileClassifiedWithStampNotifyingLogSourceSourceCode
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
 		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
 		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
-			inCategory: category withStamp: changeStamp notifying: requestor.
+			inCategory: category withStamp: changeStamp.
 	].
 	self addAndClassifySelector: methodAndNode node withMethod: newMethod
 		inCategory: category methodTimeStamp: changeStamp.
