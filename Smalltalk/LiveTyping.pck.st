@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8134] on 27 August 2026 at 6:52:07 pm'!
-'Description Ask a class whether it has subclasses instead of reimplementing it'!
-!provides: 'LiveTyping' 1 158!
+'From Cuis7.9 [latest update: #8134] on 27 August 2026 at 6:59:01 pm'!
+'Description Remove what is left of isSubclassesEmpty'!
+!provides: 'LiveTyping' 1 159!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14879,12 +14879,6 @@ initializeMethodsTypeInformation
 
 	self methodsDo: [ :aCompiledMethod | aCompiledMethod initializeTypeInformation ]! !
 
-!Behavior methodsFor: '*LiveTyping' stamp: 'HAW 17/Oct/2018, 11:30:33 pm (UTC)'!
-!methodProperties: {}!
-isSubclassesEmpty
-
-	self subclassResponsibility ! !
-
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 20/Oct/2018, 9:36:25 pm (UTC)'!
 !methodProperties: {}!
 methodVariablesTypesOf: aMethod
@@ -15437,13 +15431,6 @@ createSuperclassTypeInfo
 		are: `{Class. UndefinedObject }`
 
 	! !
-
-!Metaclass methodsFor: '*LiveTyping' stamp: 'HAW 17/Oct/2018, 11:31:37 pm (UTC)'!
-!methodProperties: {}!
-isSubclassesEmpty
-
-	self subclassesDo: [ :aSubclass | ^false ].
-	^true ! !
 
 !Metaclass class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:32:09 pm (UTC)'!
 !methodProperties: {}!
