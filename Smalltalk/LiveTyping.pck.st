@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8134] on 27 August 2026 at 1:55:55 pm'!
-'Description Change superclass to DynamicallyCodeCreatingTest '!
-!provides: 'LiveTyping' 1 156!
+'From Cuis7.9 [latest update: #8134] on 27 August 2026 at 6:52:07 pm'!
+'Description Ask a class whether it has subclasses instead of reimplementing it'!
+!provides: 'LiveTyping' 1 158!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -4365,7 +4365,7 @@ maxRawTypesSize
 
 	^(class withAllSubclasses collect: [ :aSubclass | aSubclass instanceVariableRawTypesSizeFor: variableName ]) max! !
 
-!HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 20/Oct/2018, 8:13:03 pm (UTC)'!
+!HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 27/Aug/2026, 8:46:42 pm (UTC)'!
 !methodProperties: {}!
 types
 
@@ -4373,9 +4373,10 @@ types
 
 	thisClassTypes := super types.
 
-	^ class isSubclassesEmpty
-		ifTrue: [ thisClassTypes ]
-		ifFalse: [ self allSubclassesTypesPlus: thisClassTypes ]! !
+	^ class hasSubclasses 
+		ifTrue: [ self allSubclassesTypesPlus: thisClassTypes ]
+		ifFalse: [ thisClassTypes ]
+		! !
 
 !HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 20/Oct/2018, 7:12:18 pm (UTC)'!
 !methodProperties: {}!
@@ -6722,7 +6723,6 @@ messageSendAsConditionOfIfTrueWithCascadeSend
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 19/Jul/2019, 8:44:19 pm (UTC)'!
-!methodProperties: {}!
 methodNotAnnotatingTypes
 
 	'something' size! !
@@ -15413,12 +15413,6 @@ typesOfMethodVariableNamed: aVarName at: aSelector
 
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) types
 	! !
-
-!Class methodsFor: '*LiveTyping' stamp: 'HAW 17/Oct/2018, 11:29:49 pm (UTC)'!
-!methodProperties: {}!
-isSubclassesEmpty
-
-	^subclasses isNil ! !
 
 !Class methodsFor: '*LiveTyping' stamp: 'HAW 23/Feb/2019, 1:58:55 am (UTC)'!
 !methodProperties: {}!
