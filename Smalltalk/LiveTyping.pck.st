@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8137] on 13 August 2026 at 11:15:38 am'!
-'Description Update to Cuils 8137'!
-!provides: 'LiveTyping' 1 155!
+'From Cuis7.9 [latest update: #8134] on 27 August 2026 at 1:55:55 pm'!
+'Description Change superclass to DynamicallyCodeCreatingTest '!
+!provides: 'LiveTyping' 1 156!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -872,16 +872,6 @@ InlineMethodApplier subclass: #InlineMethodWithActualScopeApplier
 InlineMethodWithActualScopeApplier class
 	instanceVariableNames: ''!
 
-!classDefinition: #LiveTypingSmalltalkCompleterTest category: #'LiveTyping-Tests'!
-SmalltalkCompleterTest subclass: #LiveTypingSmalltalkCompleterTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Tests'!
-!classDefinition: 'LiveTypingSmalltalkCompleterTest class' category: #'LiveTyping-Tests'!
-LiveTypingSmalltalkCompleterTest class
-	instanceVariableNames: ''!
-
 !classDefinition: #AddParameterWithActualScopeTest category: #'LiveTyping-Tests'!
 RefactoringTest subclass: #AddParameterWithActualScopeTest
 	instanceVariableNames: ''
@@ -912,8 +902,18 @@ RefactoringTest subclass: #RenameSelectorWithActualScopeTest
 RenameSelectorWithActualScopeTest class
 	instanceVariableNames: ''!
 
+!classDefinition: #LiveTypingSmalltalkCompleterTest category: #'LiveTyping-Tests'!
+SmalltalkCompleterTest subclass: #LiveTypingSmalltalkCompleterTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'LiveTypingSmalltalkCompleterTest class' category: #'LiveTyping-Tests'!
+LiveTypingSmalltalkCompleterTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests'!
-DynamicallyCodeCreationTest subclass: #InstanceVariableTypeInfoTest
+DynamicallyCodeCreatingTest subclass: #InstanceVariableTypeInfoTest
 	instanceVariableNames: 'iv1'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -923,7 +923,7 @@ InstanceVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #MethodVariableTypeInfoTest category: #'LiveTyping-Tests'!
-DynamicallyCodeCreationTest subclass: #MethodVariableTypeInfoTest
+DynamicallyCodeCreatingTest subclass: #MethodVariableTypeInfoTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -933,7 +933,7 @@ MethodVariableTypeInfoTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #ReturnTypeInfoTest category: #'LiveTyping-Tests'!
-DynamicallyCodeCreationTest subclass: #ReturnTypeInfoTest
+DynamicallyCodeCreatingTest subclass: #ReturnTypeInfoTest
 	instanceVariableNames: 'iv1 iv2'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -1077,16 +1077,19 @@ MethodTypeCheckerTest class
 Morphic view for MessageSet models. See category 'GUI building'.!
 
 !ActualMessageSendsCollector methodsFor: 'accessing' stamp: 'HAW 14/Mar/2019, 12:54:19 pm (UTC)'!
+!methodProperties: {}!
 possibleMessageSends
 
 	^possibleMessageSends ! !
 
 !ActualMessageSendsCollector methodsFor: 'accessing' stamp: 'HAW 14/Mar/2019, 12:51:51 pm (UTC)'!
+!methodProperties: {}!
 sureMessageSends
 
 	^sureMessageSends! !
 
 !ActualMessageSendsCollector methodsFor: 'visiting' stamp: 'HAW 14/Mar/2019, 7:41:47 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNode: aMessageNode
 
 	(aMessageNode selector isNamed: sentSelector) ifTrue: [ self analizeMessageSend: aMessageNode ].
@@ -1095,6 +1098,7 @@ visitMessageNode: aMessageNode
 	! !
 
 !ActualMessageSendsCollector methodsFor: 'visiting' stamp: 'HAW 10/Aug/2019, 4:11:51 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNodeInCascade: aMessageNode
 
 	(aMessageNode selector isNamed: sentSelector) ifTrue: [ self analizeMessageSend: aMessageNode ].
@@ -1103,6 +1107,7 @@ visitMessageNodeInCascade: aMessageNode
 	! !
 
 !ActualMessageSendsCollector methodsFor: 'initialization' stamp: 'HAW 14/Mar/2019, 7:34:13 pm (UTC)'!
+!methodProperties: {}!
 initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod
 
 	toAnalize := toAnalizeCompiledMethod.
@@ -1116,21 +1121,25 @@ initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod
 	possibleMessageSends := OrderedCollection new.! !
 
 !ActualMessageSendsCollector methodsFor: 'testing' stamp: 'HAW 14/Mar/2019, 12:53:23 pm (UTC)'!
+!methodProperties: {}!
 hasOnlySureMessageSends
 
 	^sureMessageSends notEmpty and: [ possibleMessageSends isEmpty ]! !
 
 !ActualMessageSendsCollector methodsFor: 'testing' stamp: 'HAW 14/Mar/2019, 12:55:02 pm (UTC)'!
+!methodProperties: {}!
 hasPossibleMessageSends
 
 	^ possibleMessageSends notEmpty! !
 
 !ActualMessageSendsCollector methodsFor: 'testing' stamp: 'HAW 14/Mar/2019, 12:53:02 pm (UTC)'!
+!methodProperties: {}!
 hasSureMessageSends
 
 	^sureMessageSends notEmpty! !
 
 !ActualMessageSendsCollector methodsFor: 'collecting' stamp: 'HAW 22/Jun/2020, 10:42:22 pm (UTC)'!
+!methodProperties: {}!
 analizeMessageSend: aMessageNode
 
 	 | receiverTypes incompleteTypeInfoReasons |
@@ -1150,18 +1159,21 @@ analizeMessageSend: aMessageNode
 			incompleteTypeInfoReasons notEmpty ifTrue: [ possibleMessageSends add: aMessageNode->incompleteTypeInfoReasons ]]! !
 
 !ActualMessageSendsCollector methodsFor: 'collecting' stamp: 'HAW 14/Mar/2019, 7:39:09 pm (UTC)'!
+!methodProperties: {}!
 isSureMessageSendFor: receiverTypes
 
 	^receiverTypes anySatisfy: [ :aReceiverType |
 		(aReceiverType includesBehavior: sentMethodClass) or: [ isToAnalizeInSuperclass and: [ aReceiverType = toAnalizeMethodClass ]]]! !
 
 !ActualMessageSendsCollector class methodsFor: 'instance creation' stamp: 'HAW 21/Oct/2018, 3:00:50 am (UTC)'!
+!methodProperties: {}!
 in: toAnalizeCompiledMethod of: aSentCompiledMethod
 
 	^self new initializeIn: toAnalizeCompiledMethod of: aSentCompiledMethod
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 2/Jan/2020, 7:39:50 pm (UTC)'!
+!methodProperties: {}!
 addCompleteSureSendersToMessageList
 
 	completeSureSenders ifNotEmpty: [
@@ -1174,6 +1186,7 @@ addCompleteSureSendersToMessageList
 	! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 2/Jan/2020, 7:27:57 pm (UTC)'!
+!methodProperties: {}!
 addPartialSureSendersToMessageList
 
 	(partialSureSenders keys asSortedCollection: [ :left :right | left size > right size ]) do: [ :implementors |
@@ -1184,6 +1197,7 @@ addPartialSureSendersToMessageList
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 11:09:28 pm (UTC)'!
+!methodProperties: {}!
 addPossibleSendersToMessageList
 
 	possibleSenders notEmpty ifTrue: [
@@ -1195,11 +1209,13 @@ addPossibleSendersToMessageList
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 10:03:30 pm (UTC)'!
+!methodProperties: {}!
 addToCompleteSureSenders: aSenderInfo
 
 	completeSureSenders add: aSenderInfo sender ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 10:05:22 pm (UTC)'!
+!methodProperties: {}!
 addToPartialSureSenders: aSenderInfo
 
 	| sureSendersOfPartialImplementors |
@@ -1208,6 +1224,7 @@ addToPartialSureSenders: aSenderInfo
 	sureSendersOfPartialImplementors add: aSenderInfo sender ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 2/Jan/2020, 7:27:42 pm (UTC)'!
+!methodProperties: {}!
 addToPossibleSenders: aSenderInfo
 
 	| possibleSender |
@@ -1220,6 +1237,7 @@ addToPossibleSenders: aSenderInfo
 		possibleSender addPossibleMessageSends: aPossibleMessageSend ]! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 18/Mar/2019, 4:34:27 pm (UTC)'!
+!methodProperties: {}!
 calculatePossibleSendersOf: aSentImplementor from: aPossibleSenders
 
 	| senderInfo |
@@ -1229,6 +1247,7 @@ calculatePossibleSendersOf: aSentImplementor from: aPossibleSenders
 		senderInfo addPossibleSender: aPossibleSender of: aSentImplementor ]! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 9:51:51 pm (UTC)'!
+!methodProperties: {}!
 calculateSendersInfo
 
 	sendersInfo := Dictionary new.
@@ -1237,6 +1256,7 @@ calculateSendersInfo
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 9:56:14 pm (UTC)'!
+!methodProperties: {}!
 calculateSendersInfoOf: aSentImplementor
 
 	| actualSenders |
@@ -1248,6 +1268,7 @@ calculateSendersInfoOf: aSentImplementor
 		calculatePossibleSendersOf: aSentImplementor from: actualSenders second.! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 10:00:02 pm (UTC)'!
+!methodProperties: {}!
 calculateSureSendersOf: aSentImplementor from: aSureSenders
 
 	| senderInfo |
@@ -1258,6 +1279,7 @@ calculateSureSendersOf: aSentImplementor from: aSureSenders
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 10:10:07 pm (UTC)'!
+!methodProperties: {}!
 createMessageList
 
 	messageList := OrderedCollection new.
@@ -1271,6 +1293,7 @@ createMessageList
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 10:06:40 pm (UTC)'!
+!methodProperties: {}!
 groupSenderByTypeFor: aSenderInfo
 
 	aSenderInfo hasCompleteSureSenders ifTrue: [ self addToCompleteSureSenders: aSenderInfo ].
@@ -1281,6 +1304,7 @@ groupSenderByTypeFor: aSenderInfo
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 10:00:56 pm (UTC)'!
+!methodProperties: {}!
 groupSendersByType
 
 	completeSureSenders := Set new.
@@ -1291,6 +1315,7 @@ groupSendersByType
 	! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 11:00:45 pm (UTC)'!
+!methodProperties: {}!
 methodReferenceForTitle: aTitle
 
 	^ (MethodReference class: Object selector: ('_', numberOfTitles printString) asSymbol)
@@ -1298,11 +1323,13 @@ methodReferenceForTitle: aTitle
 		yourself! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating - private' stamp: 'HAW 13/Mar/2019, 11:03:24 pm (UTC)'!
+!methodProperties: {}!
 methodReferenceTitleForImplementors: implementors
 
 	^self methodReferenceForTitle: (self titleForImplementors: implementors)! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'evaluating' stamp: 'HAW 13/Mar/2019, 10:11:32 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	self
@@ -1311,21 +1338,25 @@ value
 		createMessageList ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'initialization' stamp: 'HAW 13/Mar/2019, 10:39:17 pm (UTC)'!
+!methodProperties: {}!
 initializeFor: aSentImplementors
 
 	sentImplementors := aSentImplementors ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'message list' stamp: 'HAW 13/Mar/2019, 10:14:03 pm (UTC)'!
+!methodProperties: {}!
 messageList
 
 	^messageList! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'message list' stamp: 'HAW 13/Mar/2019, 10:14:23 pm (UTC)'!
+!methodProperties: {}!
 messageListSize
 
 	^messageList size - numberOfTitles ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 2/Jan/2020, 7:39:20 pm (UTC)'!
+!methodProperties: {}!
 allImplementorsTitle
 
 	^String streamContents: [ :aStream |
@@ -1334,6 +1365,7 @@ allImplementorsTitle
 		aStream nextPutAll: ' --'].! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 2/Jan/2020, 7:45:36 pm (UTC)'!
+!methodProperties: {}!
 allImplementorsTitleOn: aStream
 
 	| sentImplementorsByIsValid |
@@ -1347,6 +1379,7 @@ allImplementorsTitleOn: aStream
 		! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 29/Jul/2026, 10:16:37 pm (UTC)'!
+!methodProperties: {}!
 allInvalidImplementorsTitleOn: aStream from: sentImplementorsByIsValid
 
 	sentImplementorsByIsValid
@@ -1360,6 +1393,7 @@ allInvalidImplementorsTitleOn: aStream from: sentImplementorsByIsValid
 		ifAbsent: [].! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 2/Jan/2020, 7:45:07 pm (UTC)'!
+!methodProperties: {}!
 allValidImplementorsTitleOn: aStream from: sentImplementorsByIsValid
 
 	sentImplementorsByIsValid
@@ -1373,6 +1407,7 @@ allValidImplementorsTitleOn: aStream from: sentImplementorsByIsValid
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 13/Mar/2019, 10:16:10 pm (UTC)'!
+!methodProperties: {}!
 sentImplementorsAsString
 
 	| sentImplementorsClassNames |
@@ -1383,6 +1418,7 @@ sentImplementorsAsString
 ! !
 
 !MultiImplementorsActualMessageSendsCollector methodsFor: 'printing' stamp: 'HAW 2/Jan/2020, 7:34:49 pm (UTC)'!
+!methodProperties: {}!
 titleForImplementors: implementors
 
 	^String streamContents: [ :stream |
@@ -1392,11 +1428,13 @@ titleForImplementors: implementors
 			nextPutAll: ' --' ]! !
 
 !MultiImplementorsActualMessageSendsCollector class methodsFor: 'instance creation' stamp: 'HAW 13/Mar/2019, 10:40:28 pm (UTC)'!
+!methodProperties: {}!
 for: sentImplementors
 
 	^self new initializeFor: sentImplementors ! !
 
 !MultiImplementorsActualMessageSendsCollector class methodsFor: 'instance creation' stamp: 'HAW 2/Jan/2020, 5:57:21 pm (UTC)'!
+!methodProperties: {}!
 on: sentSelector forAll: types whenSomeAreNotImplemented: notImplementedBlock whenNoImplementors: noImplementorsBlock
 
 	| notImplemented sentImplementors |
@@ -1418,12 +1456,14 @@ on: sentSelector forAll: types whenSomeAreNotImplemented: notImplementedBlock wh
 	^self for: sentImplementors ! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'initialization' stamp: 'HAW 14/Mar/2019, 1:06:46 pm (UTC)'!
+!methodProperties: {}!
 initializeFrom: aCollectionOfSenders to: aCollectionOfImplementors
 
 	senders := aCollectionOfSenders.
 	implementors := aCollectionOfImplementors ! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'conforming definition' stamp: 'HAW 27/Mar/2019, 7:22:08 pm (UTC)'!
+!methodProperties: {}!
 add: aMessageNode toNotIncludedReceiverTypesIfCorrespond: receiverTypes
 
 	| notIncludedTypes |
@@ -1433,16 +1473,19 @@ add: aMessageNode toNotIncludedReceiverTypesIfCorrespond: receiverTypes
 ! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'conforming definition' stamp: 'HAW 27/Mar/2019, 7:18:10 pm (UTC)'!
+!methodProperties: {}!
 anyImplementorIsTypeOrSuperTypeOf: aReceiverType
 
 	^types anySatisfy: [ :anImplementorType | aReceiverType includesBehavior: anImplementorType ]! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'conforming definition' stamp: 'HAW 27/Mar/2019, 7:17:57 pm (UTC)'!
+!methodProperties: {}!
 isMessageSendToAnyImplementor: receiverTypes
 
 	^receiverTypes anySatisfy: [ :aReceiverType | self anyImplementorIsTypeOrSuperTypeOf: aReceiverType ]! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'conforming definition' stamp: 'HAW 27/Mar/2019, 7:22:28 pm (UTC)'!
+!methodProperties: {}!
 receiverTypesThatShouldRenameButAreNotIncludedInImplementorTypes: receiverTypes
 
 	^ receiverTypes select: [ :aReceiverType |
@@ -1450,6 +1493,7 @@ receiverTypesThatShouldRenameButAreNotIncludedInImplementorTypes: receiverTypes
 ! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'evaluation' stamp: 'HAW 27/Jul/2023, 6:25:24 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	notIncludedReceiverTypesInMessageSends := OrderedCollection new.
@@ -1466,6 +1510,7 @@ value
 	^notIncludedReceiverTypesInMessageSends! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'visiting' stamp: 'HAW 27/Mar/2019, 7:20:27 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNode: aMessageNode
 
 	| receiverTypes |
@@ -1477,16 +1522,19 @@ visitMessageNode: aMessageNode
 		(self isMessageSendToAnyImplementor: receiverTypes) ifTrue: [ self add: aMessageNode toNotIncludedReceiverTypesIfCorrespond: receiverTypes ]].! !
 
 !ReceiverTypesOfMessageSendsConform methodsFor: 'visiting' stamp: 'HAW 10/Aug/2019, 9:02:16 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNodeInCascade: aMessageNode
 
 	self visitMessageNode: aMessageNode ! !
 
 !ReceiverTypesOfMessageSendsConform class methodsFor: 'instance creation' stamp: 'HAW 14/Mar/2019, 1:06:10 pm (UTC)'!
+!methodProperties: {}!
 from: aCollectionOfSenders to: aCollectionOfImplementors
 
 	^self new initializeFrom: aCollectionOfSenders to: aCollectionOfImplementors! !
 
 !MethodTypeCheckerVisitor methodsFor: 'evaluating' stamp: 'HAW 21/Aug/2019, 9:29:22 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	self
@@ -1495,6 +1543,7 @@ value
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForClassEqualOrIdenticalTo: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1504,6 +1553,7 @@ builderForClassEqualOrIdenticalTo: aMessageNode
 		rejectingDuring: aMessageNode arguments second! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForClassNotEqualOrNotIdenticalTo: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1514,6 +1564,7 @@ builderForClassNotEqualOrNotIdenticalTo: aMessageNode
 		! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForEqualOrIdenticalToClass: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1523,6 +1574,7 @@ builderForEqualOrIdenticalToClass: aMessageNode
 		rejectingDuring: aMessageNode arguments second! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForEqualOrIdenticalToNil: aMessageNode
 
 	| receiver |
@@ -1538,6 +1590,7 @@ builderForEqualOrIdenticalToNil: aMessageNode
 		! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForIfNil: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1548,6 +1601,7 @@ builderForIfNil: aMessageNode
 	! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForIfNotNil: aMessageNode
 
 	| receiver |
@@ -1561,6 +1615,7 @@ builderForIfNotNil: aMessageNode
 		! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 23/Aug/2019, 6:20:31 pm (UTC)'!
+!methodProperties: {}!
 builderForIfWithMessageNodeAsCondition: aMessageNode
 
 	| condition |
@@ -1583,6 +1638,7 @@ builderForIfWithMessageNodeAsCondition: aMessageNode
 	^self newBuilderIfIsTypeCheck: condition in: aMessageNode ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:25:34 pm (UTC)'!
+!methodProperties: {}!
 builderForIsKindOf: aMessageNode
 
 	^IsKindOfTypeCastApplierBuilder
@@ -1592,6 +1648,7 @@ builderForIsKindOf: aMessageNode
 		rejectingDuring: aMessageNode arguments second! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForIsNilCheck: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1601,6 +1658,7 @@ builderForIsNilCheck: aMessageNode
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForNilEqualOrIdenticalTo: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1610,6 +1668,7 @@ builderForNilEqualOrIdenticalTo: aMessageNode
 		! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForNilNotEqualOrNotIdenticalTo: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1620,6 +1679,7 @@ builderForNilNotEqualOrNotIdenticalTo: aMessageNode
 		! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForNotEqualOrNotIdenticalToClass: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1629,6 +1689,7 @@ builderForNotEqualOrNotIdenticalToClass: aMessageNode
 		rejectingDuring: aMessageNode arguments first! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForNotEqualOrNotIdenticalToNil: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1638,6 +1699,7 @@ builderForNotEqualOrNotIdenticalToNil: aMessageNode
 		! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 21/Aug/2019, 5:24:57 pm (UTC)'!
+!methodProperties: {}!
 builderForNotNilCheck: aMessageNode
 
 	^EqualsTypeCastApplierBuilder
@@ -1647,6 +1709,7 @@ builderForNotNilCheck: aMessageNode
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 23/Aug/2019, 6:20:05 pm (UTC)'!
+!methodProperties: {}!
 newBuilderFor: aMessageNode
 
 	|  condition |
@@ -1665,6 +1728,7 @@ newBuilderFor: aMessageNode
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'casting applier builder' stamp: 'HAW 22/Aug/2019, 9:51:50 pm (UTC)'!
+!methodProperties: {}!
 newBuilderIfIsTypeCheck: condition in: aMessageNode
 
 	| incompleteTypeInfoReasons types implementors typesToCastTo typesToReject |
@@ -1692,6 +1756,7 @@ newBuilderIfIsTypeCheck: condition in: aMessageNode
 	! !
 
 !MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 20/Aug/2019, 1:48:33 am (UTC)'!
+!methodProperties: {}!
 initializeFor: aMethodReference collectingErrorsInto: aCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems
 
 	methodReference := aMethodReference.
@@ -1701,6 +1766,7 @@ initializeFor: aMethodReference collectingErrorsInto: aCollectionOfErrors warnin
 	! !
 
 !MethodTypeCheckerVisitor methodsFor: 'initialization' stamp: 'HAW 27/Jul/2023, 6:47:30 pm (UTC)'!
+!methodProperties: {}!
 prepareToValue
 
 	"I'm using methodNode instead of notOptimizedMethodNode because notOptimizeMethoNode was
@@ -1713,6 +1779,7 @@ prepareToValue
 	castingApplierBuilder := NoTypeCastApplierBuilder new.! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 21/Aug/2019, 3:38:13 pm (UTC)'!
+!methodProperties: {}!
 checkMessageSentIn: aMessageNode isImplementedInAll: receiverTypes
 
 	| implementorsFinder |
@@ -1725,6 +1792,7 @@ checkMessageSentIn: aMessageNode isImplementedInAll: receiverTypes
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 19/Aug/2019, 4:50:03 pm (UTC)'!
+!methodProperties: {}!
 typeCheck: aMessageNode
 
 	self
@@ -1733,6 +1801,7 @@ typeCheck: aMessageNode
 	! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 21/Aug/2019, 5:18:40 pm (UTC)'!
+!methodProperties: {}!
 visitArgumentsOf: aMessageNode
 
 	| currentCastingStrategyBuilder |
@@ -1747,6 +1816,7 @@ visitArgumentsOf: aMessageNode
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 21/Aug/2019, 5:18:40 pm (UTC)'!
+!methodProperties: {}!
 visitBlockNode: aBlockNode
 
 	blockCastingApplier := castingApplierBuilder for: aBlockNode previous: blockCastingApplier.
@@ -1756,6 +1826,7 @@ visitBlockNode: aBlockNode
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 19/Aug/2019, 4:50:03 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNode: aMessageNode
 
 	aMessageNode receiver accept: self.
@@ -1768,6 +1839,7 @@ visitMessageNode: aMessageNode
 ! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 19/Aug/2019, 4:50:03 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNodeInCascade: aMessageNode
 
 	aMessageNode selector accept: self.
@@ -1779,6 +1851,7 @@ visitMessageNodeInCascade: aMessageNode
 	! !
 
 !MethodTypeCheckerVisitor methodsFor: 'visiting' stamp: 'HAW 22/Aug/2019, 1:23:41 am (UTC)'!
+!methodProperties: {}!
 withReceiverTypesOf: aMessageNode do: aTypesBlock
 
 	| incompleteTypeInfoReasons receiverTypes |
@@ -1793,55 +1866,65 @@ withReceiverTypesOf: aMessageNode do: aTypesBlock
 		! !
 
 !MethodTypeCheckerVisitor methodsFor: 'problems' stamp: 'HAW 20/Aug/2019, 1:47:23 am (UTC)'!
+!methodProperties: {}!
 addProblem: anIncompleteTypeInfoWarning node: aMessageNode
 
 	problems add: (TypeCheckingProblem
 			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoWarning reasonDescription on: methodReference node: aMessageNode of: methodNode)! !
 
 !MethodTypeCheckerVisitor methodsFor: 'warnings' stamp: 'HAW 20/Aug/2019, 1:47:23 am (UTC)'!
+!methodProperties: {}!
 addWarning: anIncompleteTypeInfoError node: aMessageNode
 
 	warnings add: (TypeCheckingWarning
 			canNotDeduceReceiverTypeDueTo: anIncompleteTypeInfoError reasonDescription on: methodReference node: aMessageNode of: methodNode)! !
 
 !MethodTypeCheckerVisitor class methodsFor: 'instace creation' stamp: 'HAW 20/Aug/2019, 1:48:43 am (UTC)'!
+!methodProperties: {}!
 for: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems
 
 	^self new initializeFor: aMethodReference collectingErrorsInto: anCollectionOfErrors warningsInto: aCollectionOfWarnings andProblemsInto: aCollectionOfProblems
 	! !
 
 !MethodNotAnnotatingTypes methodsFor: 'private' stamp: 'HAW 27/Mar/2019, 1:51:58 pm (UTC)'!
+!methodProperties: {}!
 isResumable
 
 	^ true! !
 
 !MethodNotAnnotatingTypes methodsFor: 'initialization' stamp: 'HAW 27/Mar/2019, 1:55:53 pm (UTC)'!
+!methodProperties: {}!
 initializeFor: aMethod
 
 	method := aMethod! !
 
 !MethodNotAnnotatingTypes methodsFor: 'exceptionDescription' stamp: 'HAW 27/Mar/2019, 1:56:33 pm (UTC)'!
+!methodProperties: {}!
 messageText
 
 	messageText ifNil: [ messageText := method classAndSelector, ' is not anottating types' ].
 	^messageText! !
 
 !MethodNotAnnotatingTypes methodsFor: 'method' stamp: 'HAW 27/Mar/2019, 1:59:59 pm (UTC)'!
+!methodProperties: {}!
 method
 
 	^method! !
 
 !MethodNotAnnotatingTypes class methodsFor: 'signaling' stamp: 'HAW 27/Mar/2019, 1:55:36 pm (UTC)'!
+!methodProperties: {}!
 signalFor: aMethod
 
 	^(self for: aMethod) signal! !
 
 !MethodNotAnnotatingTypes class methodsFor: 'instance creation' stamp: 'HAW 27/Mar/2019, 1:55:18 pm (UTC)'!
+!methodProperties: {}!
 for: aMethod
 
 	^self new initializeFor: aMethod! !
 
 !CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 14/Mar/2019, 9:49:19 pm (UTC)'!
+!methodProperties: {}!
 messageSendWithInvalidReceiverTypesLabelFor: array
 
 	^String streamContents: [ :stream |
@@ -1853,22 +1936,26 @@ messageSendWithInvalidReceiverTypesLabelFor: array
 			nextPutAll: array third asCommaSeparated: [ :type | stream nextPutAll: type name ]]	! !
 
 !CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 14/Mar/2019, 2:10:11 pm (UTC)'!
+!methodProperties: {}!
 messageSendsWithInvalidReceiverTypes
 
 	^messageSendsWithInvalidReceiverTypes! !
 
 !CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'labels' stamp: 'HAW 14/Mar/2019, 9:48:05 pm (UTC)'!
+!methodProperties: {}!
 messageSendsWithInvalidReceiverTypesAsLabels
 
 	^messageSendsWithInvalidReceiverTypes collect: [ :array | self messageSendWithInvalidReceiverTypesLabelFor: array ].
 		! !
 
 !CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'initialization' stamp: 'HAW 14/Mar/2019, 2:09:13 pm (UTC)'!
+!methodProperties: {}!
 initializeWith: aMessageSendsWithInvalidReceiverTypes
 
 	messageSendsWithInvalidReceiverTypes := aMessageSendsWithInvalidReceiverTypes ! !
 
 !CanNotChangeSelectorWithNotIncludedTypes methodsFor: 'exceptionDescription' stamp: 'HAW 14/Mar/2019, 9:30:24 pm (UTC)'!
+!methodProperties: {}!
 messageText
 
 	^'There are receiver types of message sends not included in implementor types'
@@ -1887,16 +1974,19 @@ messageText
 		" ! !
 
 !CanNotChangeSelectorWithNotIncludedTypes class methodsFor: 'signaling' stamp: 'HAW 14/Mar/2019, 2:08:34 pm (UTC)'!
+!methodProperties: {}!
 signalWith: messageSendsWithInvalidReceiverTypes
 
 	(self with: messageSendsWithInvalidReceiverTypes) signal! !
 
 !CanNotChangeSelectorWithNotIncludedTypes class methodsFor: 'instance creation' stamp: 'HAW 14/Mar/2019, 2:08:56 pm (UTC)'!
+!methodProperties: {}!
 with: messageSendsWithInvalidReceiverTypes
 
 	^self new initializeWith: messageSendsWithInvalidReceiverTypes! !
 
 !ActualSendersMessageSet methodsFor: 'message sends ranges' stamp: 'HAW 30/Apr/2019, 9:07:03 pm (UTC)'!
+!methodProperties: {}!
 messageSendsRangesOf: aSelector
 
 	^ selectedMessage
@@ -1905,12 +1995,14 @@ messageSendsRangesOf: aSelector
 ! !
 
 !ActualSendersMessageSet methodsFor: 'initialization' stamp: 'HAW 30/Apr/2019, 9:10:18 pm (UTC)'!
+!methodProperties: {}!
 initializeTypes: aReceiverTypes
 
 	types := aReceiverTypes.
 ! !
 
 !ActualSendersMessageSet class methodsFor: 'instance creation' stamp: 'HAW 10/Aug/2019, 3:00:20 pm (UTC)'!
+!methodProperties: {}!
 messageList: messageList types: aReceiverTypes
 
 	| newInstance |
@@ -1919,6 +2011,7 @@ messageList: messageList types: aReceiverTypes
 	^newInstance initializeTypes: aReceiverTypes ! !
 
 !TypeCheckingResultSet methodsFor: 'list' stamp: 'HAW 9/Aug/2019, 1:36:26 pm (UTC)'!
+!methodProperties: {}!
 calculateList
 
 	messageList := methodTypeChecker errorsAndWarningsAsMethodReferencesWithProblems: showProblems.
@@ -1926,6 +2019,7 @@ calculateList
 	! !
 
 !TypeCheckingResultSet methodsFor: 'accessing' stamp: 'HAW 18/Jul/2019, 10:27:36 pm (UTC)'!
+!methodProperties: {}!
 contents: aString notifying: aRequestor
 
 	| result |
@@ -1938,6 +2032,7 @@ contents: aString notifying: aRequestor
 ! !
 
 !TypeCheckingResultSet methodsFor: 'source code ranges' stamp: 'HAW 18/Jul/2019, 3:13:44 am (UTC)'!
+!methodProperties: {}!
 messageSendsRangesOf: aSelector
 
 	^ selectedMessage
@@ -1946,6 +2041,7 @@ messageSendsRangesOf: aSelector
 ! !
 
 !TypeCheckingResultSet methodsFor: 'initialization' stamp: 'HAW 27/Apr/2023, 9:14:48 pm (UTC)'!
+!methodProperties: {}!
 initializeFor: aMethodTypeChecker showingProblems: showingProblems
 
 	methodTypeChecker := aMethodTypeChecker.
@@ -1956,83 +2052,99 @@ initializeFor: aMethodTypeChecker showingProblems: showingProblems
 	self autoHighlightString: methodTypeChecker methodSelector allOccurrences: false! !
 
 !TypeCheckingResultSet class methodsFor: 'instance creation' stamp: 'HAW 9/Aug/2019, 1:29:20 pm (UTC)'!
+!methodProperties: {}!
 for: aMethodTypeChecker showingProblems: showingProblems
 
 	^self new initializeFor: aMethodTypeChecker showingProblems: showingProblems
 ! !
 
 !ActualImplementorsFinder methodsFor: 'implementors' stamp: 'HAW 4/Apr/2019, 1:07:09 pm (UTC)'!
+!methodProperties: {}!
 implementorsIsEmpty
 
 	^implementors isEmpty ! !
 
 !ActualImplementorsFinder methodsFor: 'implementors' stamp: 'HAW 4/Apr/2019, 1:07:13 pm (UTC)'!
+!methodProperties: {}!
 implementorsSize
 
 	^implementors size! !
 
 !ActualImplementorsFinder methodsFor: 'implementors' stamp: 'HAW 4/Apr/2019, 1:07:18 pm (UTC)'!
+!methodProperties: {}!
 implementorsSorted
 
 	^implementors asArray sort! !
 
 !ActualImplementorsFinder methodsFor: 'implementors' stamp: 'HAW 4/Apr/2019, 1:07:41 pm (UTC)'!
+!methodProperties: {}!
 totalSize
 
 	^self implementorsSize + self notImplementedSize! !
 
 !ActualImplementorsFinder methodsFor: 'initialization' stamp: 'HAW 4/Apr/2019, 1:07:22 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aSelector forAll: aTypes
 
 	selector := aSelector.
 	types := aTypes! !
 
 !ActualImplementorsFinder methodsFor: 'not implemented' stamp: 'HAW 17/Jul/2019, 10:12:29 pm (UTC)'!
+!methodProperties: {}!
 notImplemented
 
 	^notImplemented! !
 
 !ActualImplementorsFinder methodsFor: 'not implemented' stamp: 'HAW 4/Apr/2019, 1:07:26 pm (UTC)'!
+!methodProperties: {}!
 notImplementedIsEmpty
 
 	^notImplemented isEmpty ! !
 
 !ActualImplementorsFinder methodsFor: 'not implemented' stamp: 'HAW 4/Apr/2019, 1:07:31 pm (UTC)'!
+!methodProperties: {}!
 notImplementedSize
 
 	^notImplemented size! !
 
 !ActualImplementorsFinder methodsFor: 'not implemented' stamp: 'HAW 4/Apr/2019, 1:07:36 pm (UTC)'!
+!methodProperties: {}!
 notImplementedSorted
 
 	^notImplemented sort ! !
 
 !ActualImplementorsFinder methodsFor: 'types' stamp: 'HAW 4/Apr/2019, 1:07:45 pm (UTC)'!
+!methodProperties: {}!
 types
 
 	^types! !
 
 !ActualImplementorsFinder methodsFor: 'selector' stamp: 'HAW 4/Apr/2019, 1:08:10 pm (UTC)'!
+!methodProperties: {}!
 selector
 
 	^selector ! !
 
 !ActualImplementorsFinder methodsFor: 'evaluating' stamp: 'HAW 4/Apr/2019, 1:09:39 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	self subclassResponsibility ! !
 
 !ActualImplementorsFinder methodsFor: 'printing' stamp: 'HAW 4/Apr/2019, 1:09:20 pm (UTC)'!
+!methodProperties: {}!
 finderTypeString
 
 	self subclassResponsibility ! !
 
 !ActualImplementorsFinder class methodsFor: 'instance creation' stamp: 'HAW 4/Apr/2019, 1:10:34 pm (UTC)'!
+!methodProperties: {}!
 of: aSelector forAll: aTypes
 
 	^self new initializeOf: aSelector forAll: aTypes! !
 
 !AllActualImplementors methodsFor: 'evaluating' stamp: 'HAW 4/Apr/2019, 12:48:15 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	| typeImplementors |
@@ -2048,11 +2160,13 @@ value
 	^self! !
 
 !AllActualImplementors methodsFor: 'printing' stamp: 'HAW 4/Apr/2019, 1:09:47 pm (UTC)'!
+!methodProperties: {}!
 finderTypeString
 
 	^'Actual'! !
 
 !AllActualLocalImplementors methodsFor: 'evaluating' stamp: 'HAW 4/Apr/2019, 12:59:40 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	notImplemented := OrderedCollection new.
@@ -2070,11 +2184,13 @@ value
 ! !
 
 !AllActualLocalImplementors methodsFor: 'printng' stamp: 'HAW 4/Apr/2019, 1:04:41 pm (UTC)'!
+!methodProperties: {}!
 finderTypeString
 
 	^'Actual Local'! !
 
 !BrowseActualSelectors methodsFor: 'initialization' stamp: 'HAW 30/Nov/2018, 9:18:53 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 
 	methodNode := aMethodNode.
@@ -2083,6 +2199,7 @@ initializeOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 	morph := aMorph ! !
 
 !BrowseActualSelectors methodsFor: 'browsing' stamp: 'HAW 4/Apr/2019, 11:02:59 am (UTC)'!
+!methodProperties: {}!
 browse
 
 	| methodSelector |
@@ -2103,6 +2220,7 @@ browse
 ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 16/Jul/2019, 8:44:07 pm (UTC)'!
+!methodProperties: {}!
 browseActualMessageNode: messageNode
 
 	sentSelector := messageNode selector key.
@@ -2117,6 +2235,7 @@ browseActualMessageNode: messageNode
 ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 21/Feb/2019, 2:36:28 am (UTC)'!
+!methodProperties: {}!
 browseActualWithNoTypeInfoSendTo: receiver
 
 	(self confirm: 'There is no type info for ', receiver nodeTypeAndIdentifierPrintString, '
@@ -2125,6 +2244,7 @@ Do you want to see all ', self browseActualLabel, '?') ifTrue: [ self browseAll 
 ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 21/Feb/2019, 2:35:48 am (UTC)'!
+!methodProperties: {}!
 browseActualWithTypeInfo
 
 	incompleteTypeInfoReasons isEmpty
@@ -2134,6 +2254,7 @@ browseActualWithTypeInfo
 ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 21/Feb/2019, 2:37:03 am (UTC)'!
+!methodProperties: {}!
 browseActualWithTypeInfoAndIncompleteTypeInfo
 
 	| menu labels icons selectionIndex |
@@ -2153,6 +2274,7 @@ browseActualWithTypeInfoAndIncompleteTypeInfo
 ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 21/Feb/2019, 2:35:48 am (UTC)'!
+!methodProperties: {}!
 browseActualWithTypeInfoNoMatterIncompleteTypeInfo
 
 	| receiverTypeInfo |
@@ -2165,108 +2287,129 @@ browseActualWithTypeInfoNoMatterIncompleteTypeInfo
 ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 30/Nov/2018, 9:28:10 pm (UTC)'!
+!methodProperties: {}!
 browseAll
 
 	self subclassResponsibility ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 30/Nov/2018, 9:31:39 pm (UTC)'!
+!methodProperties: {}!
 browseForAllTypes
 
 	self subclassResponsibility ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 3/Dec/2018, 5:51:58 pm (UTC)'!
+!methodProperties: {}!
 browseForCommonSupertype: aCommonSupertype
 
 	self subclassResponsibility ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-private' stamp: 'HAW 30/Nov/2018, 9:22:11 pm (UTC)'!
+!methodProperties: {}!
 browseWhenAtMethodSelector
 
 	self subclassResponsibility ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 21/Feb/2019, 2:36:28 am (UTC)'!
+!methodProperties: {}!
 browseActualLabel
 
 	self subclassResponsibility ! !
 
 !BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 19/Dec/2018, 8:51:35 pm (UTC)'!
+!methodProperties: {}!
 incompleteTypeInfoQuestionTitle
 
 	^'Incomplete type info. What do you want to do?'! !
 
 !BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 21/Feb/2019, 2:36:28 am (UTC)'!
+!methodProperties: {}!
 seeAllLabel
 
 	^'See all ', self browseActualLabel! !
 
 !BrowseActualSelectors methodsFor: 'browsing-labels-private' stamp: 'HAW 21/Feb/2019, 2:37:03 am (UTC)'!
+!methodProperties: {}!
 showBrowseActualAnywayLabel
 
 	self subclassResponsibility ! !
 
 !BrowseActualSelectors class methodsFor: 'instance creation' stamp: 'HAW 30/Nov/2018, 9:41:34 pm (UTC)'!
+!methodProperties: {}!
 browseOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 
 	^(self of: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph) browse! !
 
 !BrowseActualSelectors class methodsFor: 'instance creation' stamp: 'HAW 30/Nov/2018, 9:18:18 pm (UTC)'!
+!methodProperties: {}!
 of: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 
 	^self new initializeOf: aMethodNode definedIn: aClass withCursorAt: aPosition in: aMorph
 ! !
 
 !BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 30/Nov/2018, 9:36:09 pm (UTC)'!
+!methodProperties: {}!
 browseAll
 
 	Smalltalk browseAllImplementorsOf: sentSelector 	! !
 
 !BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 19/Feb/2019, 5:04:31 pm (UTC)'!
+!methodProperties: {}!
 browseForAllTypes
 
 	Smalltalk browseAllActualImplementorsOf: sentSelector forAll: types ! !
 
 !BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 19/Feb/2019, 5:03:55 pm (UTC)'!
+!methodProperties: {}!
 browseForCommonSupertype: aCommonSupertype
 
 	Smalltalk browseAllActualImplementorsOf: sentSelector for: aCommonSupertype ! !
 
 !BrowseActualImplementors methodsFor: 'browsing-private' stamp: 'HAW 19/Feb/2019, 5:03:35 pm (UTC)'!
+!methodProperties: {}!
 browseWhenAtMethodSelector
 
 	Smalltalk browseAllActualmplementorsOf: methodToLookUp ! !
 
 !BrowseActualImplementors methodsFor: 'browsing-labels-private' stamp: 'HAW 21/Feb/2019, 2:36:27 am (UTC)'!
+!methodProperties: {}!
 browseActualLabel
 
 	^'implementors'! !
 
 !BrowseActualImplementors methodsFor: 'browsing-labels-private' stamp: 'HAW 21/Feb/2019, 2:37:03 am (UTC)'!
+!methodProperties: {}!
 showBrowseActualAnywayLabel
 
 	^'Show actual implementors anyway' ! !
 
 !BrowseActualLocalImplementors methodsFor: 'browsing-private' stamp: 'HAW 4/Apr/2019, 12:32:57 pm (UTC)'!
+!methodProperties: {}!
 browseForAllTypes
 
 	Smalltalk browseAllActualLocalImplementorsOf: sentSelector forAll: types
 ! !
 
 !BrowseActualLocalImplementors methodsFor: 'browsing-private' stamp: 'HAW 2/Apr/2019, 1:14:32 pm (UTC)'!
+!methodProperties: {}!
 browseForCommonSupertype: aCommonSupertype
 
 	self browseForAllTypes ! !
 
 !BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 1/Dec/2018, 1:56:12 pm (UTC)'!
+!methodProperties: {}!
 browseAll
 
 	Smalltalk browseAllCallsOn: sentSelector ! !
 
 !BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 19/Feb/2019, 5:03:11 pm (UTC)'!
+!methodProperties: {}!
 browseForAllTypes
 
 	 Smalltalk browseAllActualSendersOn: sentSelector forAll: types ! !
 
 !BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 19/Feb/2019, 3:21:28 pm (UTC)'!
+!methodProperties: {}!
 browseForCommonSupertype: aCommonSupertype
 
 	| implementor |
@@ -2278,36 +2421,43 @@ browseForCommonSupertype: aCommonSupertype
 ! !
 
 !BrowseActualSenders methodsFor: 'browsing-private' stamp: 'HAW 19/Feb/2019, 3:21:28 pm (UTC)'!
+!methodProperties: {}!
 browseWhenAtMethodSelector
 
 	Smalltalk browseAllActualSendersOn: methodToLookUp ! !
 
 !BrowseActualSenders methodsFor: 'browsing-labels-private' stamp: 'HAW 21/Feb/2019, 2:36:28 am (UTC)'!
+!methodProperties: {}!
 browseActualLabel
 
 	^'senders'! !
 
 !BrowseActualSenders methodsFor: 'browsing-labels-private' stamp: 'HAW 21/Feb/2019, 2:37:03 am (UTC)'!
+!methodProperties: {}!
 showBrowseActualAnywayLabel
 
 	^'Show actual senders anyway' ! !
 
 !DynamicType methodsFor: 'name' stamp: 'HAW 19/Feb/2019, 9:01:03 pm (UTC)'!
+!methodProperties: {}!
 typeName
 
 	self subclassResponsibility ! !
 
 !DynamicType methodsFor: 'type convertion' stamp: 'HAW 16/Jan/2019, 3:26:07 am (UTC)'!
+!methodProperties: {}!
 asTypeFor: aReceiverType
 
 	self subclassResponsibility ! !
 
 !DynamicType methodsFor: 'printing' stamp: 'HAW 19/Feb/2019, 9:03:09 pm (UTC)'!
+!methodProperties: {}!
 printOn: aStream
 
 	aStream nextPutAll: self typeName ! !
 
 !DynamicType methodsFor: 'to do' stamp: 'HAW 16/Jan/2019, 3:38:10 am (UTC)'!
+!methodProperties: {}!
 TO_DO
 
 "
@@ -2317,6 +2467,7 @@ Should I call it MetaReturnType?
 "! !
 
 !ClassType methodsFor: 'type convertion' stamp: 'HAW 28/Jun/2020, 8:27:55 pm (UTC)'!
+!methodProperties: {}!
 asTypeFor: aReceiverType
 
 	^((`Set with: Behavior with: ClassDescription with: Class with: Metaclass`) includes: aReceiverType)
@@ -2325,11 +2476,13 @@ asTypeFor: aReceiverType
 	! !
 
 !ClassType methodsFor: 'name' stamp: 'HAW 19/Feb/2019, 9:01:23 pm (UTC)'!
+!methodProperties: {}!
 typeName
 
 	^'class'! !
 
 !InstanceType methodsFor: 'type convertion' stamp: 'HAW 12/Aug/2019, 6:13:17 pm (UTC)'!
+!methodProperties: {}!
 asTypeFor: aReceiverType
 
 	^aReceiverType isMeta
@@ -2342,92 +2495,110 @@ asTypeFor: aReceiverType
 			! !
 
 !InstanceType methodsFor: 'name' stamp: 'HAW 19/Feb/2019, 9:01:48 pm (UTC)'!
+!methodProperties: {}!
 typeName
 
 	^'instance'! !
 
 !InstanceType class methodsFor: 'error description' stamp: 'HAW 12/Aug/2019, 6:03:16 pm (UTC)'!
+!methodProperties: {}!
 onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription
 
 	^'Only behaviors can be converted by instance type'! !
 
 !SelfType methodsFor: 'type convertion' stamp: 'HAW 16/Jan/2019, 1:56:59 am (UTC)'!
+!methodProperties: {}!
 asTypeFor: aReceiverType
 
 	^aReceiverType ! !
 
 !SelfType methodsFor: 'name' stamp: 'HAW 19/Feb/2019, 9:02:15 pm (UTC)'!
+!methodProperties: {}!
 typeName
 
 	^'self'! !
 
 !IncompleteTypeInfo methodsFor: 'initialization' stamp: 'HAW 3/Dec/2018, 2:53:42 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aMethodReference describedAs: aReasonDescription
 
 	methodReference := aMethodReference.
 	reasonDescription := aReasonDescription ! !
 
 !IncompleteTypeInfo methodsFor: 'accessing' stamp: 'HAW 1/Dec/2018, 11:10:43 pm (UTC)'!
+!methodProperties: {}!
 methodReference
 
 	^methodReference! !
 
 !IncompleteTypeInfo methodsFor: 'accessing' stamp: 'HAW 3/Dec/2018, 2:54:34 pm (UTC)'!
+!methodProperties: {}!
 reasonDescription
 
 	^reasonDescription ! !
 
 !IncompleteTypeInfo methodsFor: 'browsing' stamp: 'HAW 1/Dec/2018, 11:14:05 pm (UTC)'!
+!methodProperties: {}!
 browse
 
 	BrowserWindow fullOnClass: methodReference actualClass selector: methodReference methodSymbol ! !
 
 !IncompleteTypeInfo methodsFor: 'comparing' stamp: 'HAW 3/Dec/2018, 2:54:13 pm (UTC)'!
+!methodProperties: {}!
 = anObject
 
 	^ self class = anObject class and: [ reasonDescription = anObject reasonDescription]! !
 
 !IncompleteTypeInfo methodsFor: 'comparing' stamp: 'HAW 3/Dec/2018, 2:54:19 pm (UTC)'!
+!methodProperties: {}!
 hash
 
 	^reasonDescription hash! !
 
 !IncompleteTypeInfo class methodsFor: 'instance creation' stamp: 'HAW 3/Dec/2018, 2:53:20 pm (UTC)'!
+!methodProperties: {}!
 of: aMethodReference describedAs: aReasonDescription
 
 	^self new initializeOf: aMethodReference describedAs: aReasonDescription! !
 
 !IncompleteTypeInfoError methodsFor: 'as yet unclassified' stamp: 'HAW 9/Aug/2019, 11:59:12 am (UTC)'!
+!methodProperties: {}!
 addTo: aMethodTypeCheckerVisitor node: aMessageNode
 
 	aMethodTypeCheckerVisitor addWarning: self node: aMessageNode ! !
 
 !IncompleteTypeInfoError class methodsFor: 'instance creation' stamp: 'HAW 9/Aug/2019, 11:40:21 am (UTC)'!
+!methodProperties: {}!
 dueToMissingImplementationOf: aMethodReference
 
 	^self of: aMethodReference describedAs: (self missingImplementationDescriptionOf: aMethodReference)! !
 
 !IncompleteTypeInfoError class methodsFor: 'error descriptions' stamp: 'HAW 9/Aug/2019, 12:25:56 pm (UTC)'!
+!methodProperties: {}!
 missingImplementationDescriptionOf: aMethodReference
 
 	^'#', aMethodReference selector, ' not implemented in ', aMethodReference actualClass name! !
 
 !IncompleteTypeInfoWarning methodsFor: 'as yet unclassified' stamp: 'HAW 9/Aug/2019, 12:00:36 pm (UTC)'!
+!methodProperties: {}!
 addTo: aMethodTypeCheckerVisitor node: aMessageNode
 
 	aMethodTypeCheckerVisitor addProblem: self node: aMessageNode ! !
 
 !IncompleteTypeInfoWarning class methodsFor: 'instance creation' stamp: 'HAW 9/Aug/2019, 11:40:32 am (UTC)'!
+!methodProperties: {}!
 dueToNoReturnTypeOf: aMethodReference
 
 	^self of: aMethodReference describedAs: (self noReturnTypesDescriptionOf: aMethodReference)! !
 
 !IncompleteTypeInfoWarning class methodsFor: 'error descriptions' stamp: 'HAW 9/Aug/2019, 11:42:16 am (UTC)'!
+!methodProperties: {}!
 noReturnTypesDescriptionOf: aMethodReference
 
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 8/Jan/2026, 10:21:07 pm (UTC)'!
+!methodProperties: {}!
 checkRedefinedMethodsDidNotChange
 
 	self
@@ -2436,11 +2607,13 @@ checkRedefinedMethodsDidNotChange
 		checkTimeStampOf: ContextPart>>#storeIntoRemoteTemp:inVectorAt: is:  'eem 12/May/2009 13:05:00'! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 18/Dec/2025, 7:33:05 pm (UTC)'!
+!methodProperties: {}!
 checkTimeStampOf: aMethod is: expectedTimeStamp
 
 	aMethod authorAndStampAsSaved = expectedTimeStamp ifFalse: [ self error: aMethod classAndSelector, ' has changed' ].! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 21/Feb/2019, 2:07:37 am (UTC)'!
+!methodProperties: {}!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 
 	| newSourceCodeMethodNode originalSourceMethodNode |
@@ -2454,6 +2627,7 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	aClass compile: aNewSourceCode ! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 9/Jan/2026, 7:04:38 pm (UTC)'!
+!methodProperties: {}!
 compileAfterInstallMethods
 
 	"I do not use cascade message to be able to evaluate each collaboration separately for debugging pourposes - Hernan"
@@ -2491,17 +2665,20 @@ compileAfterInstallMethods
 ! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 28/Nov/2018, 4:24:26 pm (UTC)'!
+!methodProperties: {}!
 defineInstVarNamed: anInstVarName in: aClass
 
 	(aClass definesInstanceVariableNamed: anInstVarName ) ifFalse: [ aClass addInstVarName: anInstVarName ]! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 28/Feb/2019, 9:51:53 pm (UTC)'!
+!methodProperties: {}!
 modifyAdditionalMethodStateShape
 
 	#('variablesRawTypes' 'returnRawTypes' 'remoteVectorRawTypes' 'variableNameToTypeIndex' 'variableNameToRemoteVectorTypeIndex')
 		do: [ :aVariableName | self defineInstVarNamed: aVariableName  in: AdditionalMethodState ]! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 27/Jan/2022, 6:59:41 pm (UTC)'!
+!methodProperties: {}!
 modifyClassDescriptionShape
 
 	[[ SystemChangeNotifier uniqueInstance doSilently: [ self defineInstVarNamed: 'instanceVariablesRawTypes' in: ClassDescription ]]
@@ -2510,6 +2687,7 @@ modifyClassDescriptionShape
 ! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'JEC 16/Nov/2025, 1:59:19 pm (UTC)'!
+!methodProperties: {}!
 registerRefactoringAppliers
 
 	RefactoringApplier
@@ -2520,11 +2698,13 @@ registerRefactoringAppliers
 		registerChangeKeywordsSelectorOrderApplier: ChangeKeywordsSelectorOrderWithActualScopeApplier ! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 28/Aug/2025, 6:42:33 pm (UTC)'!
+!methodProperties: {}!
 initialize
 
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 9/Aug/2026, 10:43:51 pm (UTC)'!
+!methodProperties: {}!
 initializeLiveTyping
 
 	"HERNAN!!!! Do not convert this to cascade message. It is like that to be able to
@@ -2540,6 +2720,7 @@ initializeLiveTyping
 	CompiledMethod useV3Bytecodes ! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 29/Apr/2025, 12:17:35 am (UTC)'!
+!methodProperties: {}!
 initializeMenues
 
 	BrowserWindow registerAll: self browserWindowMenuSpecs.
@@ -2548,12 +2729,14 @@ initializeMenues
 	! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 29/Apr/2025, 12:24:04 am (UTC)'!
+!methodProperties: {}!
 unload
 
 	"Old method should be restored - Hernan"
 	self unloadMenues! !
 
 !LiveTyping class methodsFor: 'initialization' stamp: 'HAW 29/Apr/2025, 12:24:14 am (UTC)'!
+!methodProperties: {}!
 unloadMenues
 
 	BrowserWindow unregisterAll: self browserWindowMenuSpecs.
@@ -2562,6 +2745,7 @@ unloadMenues
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 19/Aug/2022, 9:24:20 pm (UTC)'!
+!methodProperties: {}!
 aMenuLabel
 
 	"I had to call it aMenuLabel and not just menuLabel because it has to be loaded before classListMenuOptions for
@@ -2569,6 +2753,7 @@ aMenuLabel
 	^'LiveTyping'! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 29/Apr/2025, 12:21:45 am (UTC)'!
+!methodProperties: {}!
 browserWindowMenuSpecs
 
 	^{ 	{ #systemCatListMenuSpec. self systemCatListMenuSpecSend }.
@@ -2579,6 +2764,7 @@ browserWindowMenuSpecs
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 31/Dec/2024, 9:26:39 pm (UTC)'!
+!methodProperties: {}!
 classListMenuSpec
 
 	^{
@@ -2589,11 +2775,13 @@ classListMenuSpec
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 29/Apr/2025, 12:20:02 am (UTC)'!
+!methodProperties: {}!
 classListMenuSpecSend
 
 	^ MessageSend receiver: self selector: #classListMenuSpec! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 29/Apr/2025, 12:19:38 am (UTC)'!
+!methodProperties: {}!
 debuggerWindowMenuSpecs
 
 	^{ { #SmalltalkEditor. self smalltalkEditorMenuSpecSend } }.
@@ -2602,6 +2790,7 @@ debuggerWindowMenuSpecs
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 31/Dec/2024, 9:27:38 pm (UTC)'!
+!methodProperties: {}!
 messageListMenuSpec
 
 	^{
@@ -2617,11 +2806,13 @@ messageListMenuSpec
 ! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 29/Apr/2025, 12:20:23 am (UTC)'!
+!methodProperties: {}!
 messageListMenuSpecSend
 
 	^ MessageSend receiver: self selector: #messageListMenuSpec! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 29/Apr/2025, 12:23:05 am (UTC)'!
+!methodProperties: {}!
 methodSetWindowMenuSpecs
 
 	^ { { #messageListMenuSpec. self messageListMenuSpecSend }.
@@ -2630,6 +2821,7 @@ methodSetWindowMenuSpecs
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 31/Dec/2024, 9:26:00 pm (UTC)'!
+!methodProperties: {}!
 smalltalkEditorMenuSpec
 
 	^{
@@ -2645,11 +2837,13 @@ smalltalkEditorMenuSpec
 ! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 29/Apr/2025, 12:19:31 am (UTC)'!
+!methodProperties: {}!
 smalltalkEditorMenuSpecSend
 
 	^ MessageSend receiver: self selector: #smalltalkEditorMenuSpec! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 30/Dec/2024, 10:31:06 pm (UTC)'!
+!methodProperties: {}!
 systemCatListMenuSpec
 
 	^{
@@ -2660,11 +2854,13 @@ systemCatListMenuSpec
 	! !
 
 !LiveTyping class methodsFor: 'menues' stamp: 'HAW 29/Apr/2025, 12:19:51 am (UTC)'!
+!methodProperties: {}!
 systemCatListMenuSpecSend
 
 	^ MessageSend receiver: self selector: #systemCatListMenuSpec! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 26/Jun/2026, 3:23:00 pm (UTC)'!
+!methodProperties: {}!
 addAndClassifySelectorOriginalSourceCode
 
 	^'addAndClassifySelector: selector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString
@@ -2695,6 +2891,7 @@ addAndClassifySelectorOriginalSourceCode
 					inClass: self ]].'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 28/Nov/2018, 5:00:01 pm (UTC)'!
+!methodProperties: {}!
 addAndClassifySelectorSourceCode
 
 	^'addAndClassifySelector: selector withMethod: compiledMethod inProtocol: category notifying: requestor
@@ -2731,6 +2928,7 @@ addAndClassifySelectorSourceCode
 					inClass: self ]]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 26/Jun/2026, 3:25:00 pm (UTC)'!
+!methodProperties: {}!
 addAndClassifySelectorStep1SourceCode
 
 	^'addAndClassifySelector: nodeOrSelector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString
@@ -2766,6 +2964,7 @@ addAndClassifySelectorStep1SourceCode
 					inClass: self ]].'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 26/Jun/2026, 3:39:02 pm (UTC)'!
+!methodProperties: {}!
 addAndClassifySelectorStep2SourceCode
 
 	^'addAndClassifySelector: node withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString
@@ -2803,6 +3002,7 @@ addAndClassifySelectorStep2SourceCode
 	        inClass: self ]].'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 28/May/2025, 4:03:01 pm (UTC)'!
+!methodProperties: {}!
 blockReturnTopOriginalSourceCode
 
 	^'blockReturnTop
@@ -2812,6 +3012,7 @@ blockReturnTopOriginalSourceCode
 	^self return: self pop from: self'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 17/Jul/2019, 2:14:48 am (UTC)'!
+!methodProperties: {}!
 blockReturnTopSourceCode
 
 	^'blockReturnTop
@@ -2901,6 +3102,7 @@ compileClassifiedWithStampNotifyingLogSourceSourceCode
 	^ selector'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Feb/2019, 1:12:10 am (UTC)'!
+!methodProperties: {}!
 doneCompilingOriginalSourceCode
 
 	^'doneCompiling
@@ -2911,6 +3113,7 @@ doneCompilingOriginalSourceCode
 ! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 7/Jan/2019, 2:14:56 pm (UTC)'!
+!methodProperties: {}!
 doneCompilingSourceCode
 
 	^'doneCompiling
@@ -2923,6 +3126,7 @@ doneCompilingSourceCode
 ! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 28/Aug/2025, 6:36:29 pm (UTC)'!
+!methodProperties: {}!
 recompileFromOriginalSourceCode
 
 	^'recompile: selector from: oldClass
@@ -2944,6 +3148,7 @@ recompileFromOriginalSourceCode
 '! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 28/Aug/2025, 6:35:36 pm (UTC)'!
+!methodProperties: {}!
 recompileFromSourceCode
 
 	^'recompile: selector from: oldClass
@@ -2969,6 +3174,7 @@ recompileFromSourceCode
 ! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 28/May/2025, 3:58:57 pm (UTC)'!
+!methodProperties: {}!
 setSenderReceiverMethodArgumentsOriginalSourceCode
 
 	^'setSender: s receiver: r method: m arguments: args 
@@ -2983,6 +3189,7 @@ setSenderReceiverMethodArgumentsOriginalSourceCode
 	1 to: args size do: [:i | self at: i put: (args at: i)]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 17/Jul/2019, 2:55:46 am (UTC)'!
+!methodProperties: {}!
 setSenderReceiverMethodArgumentsSourceCode
 
 	^'setSender: s receiver: r method: m arguments: args
@@ -3002,6 +3209,7 @@ setSenderReceiverMethodArgumentsSourceCode
 		parameterIndex := parameterIndex - 1. ]'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Feb/2019, 1:12:30 am (UTC)'!
+!methodProperties: {}!
 unloadOriginalSourceCode
 
 	^'unload
@@ -3010,6 +3218,7 @@ unloadOriginalSourceCode
 '! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Feb/2019, 1:22:31 am (UTC)'!
+!methodProperties: {}!
 unloadSourceCode
 
 	^'unload
@@ -3018,6 +3227,7 @@ unloadSourceCode
 	self unloadFromAllRawTypes'! !
 
 !LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 28/Jan/2022, 9:52:36 pm (UTC)'!
+!methodProperties: {}!
 addReturnTypes: types to: aSelector in: aClass
 
 	| methodReturnTypeInfo |
@@ -3027,17 +3237,20 @@ addReturnTypes: types to: aSelector in: aClass
 	types do: [ :type | methodReturnTypeInfo addType: type ifFull: [] ]! !
 
 !LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 1/May/2025, 10:41:46 pm (UTC)'!
+!methodProperties: {}!
 initializeGraphicsTypeInformation
 
 	self initializeTypeInformationOf: 'Graphics'! !
 
 !LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 1/May/2025, 10:50:33 pm (UTC)'!
+!methodProperties: {}!
 initializeMorphicTypeInformation
 
 	self initializeTypeInformationOf: 'Morphic'
 	! !
 
 !LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 24/Apr/2023, 1:24:59 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInformation
 
 	ProtoObject withAllSubclassesDo: [ :aClass |
@@ -3051,6 +3264,7 @@ initializeTypeInformation
 ! !
 
 !LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 1/May/2025, 10:42:23 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInformationOf: aCategory
 
 	(SystemOrganization allClassesAt: aCategory) do: [ :aClass |
@@ -3059,6 +3273,7 @@ initializeTypeInformationOf: aCategory
 ! !
 
 !LiveTyping class methodsFor: 'initialization-type information' stamp: 'HAW 28/Jan/2022, 9:42:56 pm (UTC)'!
+!methodProperties: {}!
 initializeWellKnownReturnTypes
 
 	Number allSubclassesDo: [ :aClass |
@@ -3071,6 +3286,7 @@ initializeWellKnownReturnTypes
 	! !
 
 !LiveTyping class methodsFor: 'initialization-browser' stamp: 'HAW 1/May/2025, 10:58:29 pm (UTC)'!
+!methodProperties: {}!
 initializeBrowserAnnotations
 
 	Preferences
@@ -3088,35 +3304,43 @@ initializeBrowserAnnotations
 ! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:52:52 pm (UTC)'!
+!methodProperties: {}!
 visitAssignmentNode: anAssignmentNode
 	! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:53:02 pm (UTC)'!
+!methodProperties: {}!
 visitBlockNode: aBlockNode
 
 		! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:53:22 pm (UTC)'!
+!methodProperties: {}!
 visitBraceNode: aBraceNode
 	! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:53:28 pm (UTC)'!
+!methodProperties: {}!
 visitCascadeNode: aCascadeNode
 	! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 9:05:29 pm (UTC)'!
+!methodProperties: {}!
 visitInstanceVariableNode: anInstanceVariableNode
 
 	typeInfo := method methodClass typeInfoOfInstanceVariableNamed: anInstanceVariableNode name ifAbsent: [ self resetTypeInfo ]
 	! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:45:58 pm (UTC)'!
+!methodProperties: {}!
 visitLiteralNode: aLiteralNode! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:45:58 pm (UTC)'!
+!methodProperties: {}!
 visitLiteralVariableNode: aLiteralVariableNode! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 8:47:55 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNode: aMessageNode
 
 	| implementors receiverTypes |
@@ -3128,11 +3352,13 @@ visitMessageNode: aMessageNode
 	implementors size = 1 ifTrue: [ typeInfo := implementors anyOne returnTypeInfo ]! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 8:49:43 pm (UTC)'!
+!methodProperties: {}!
 visitMessageNodeInCascade: aMessageNode
 
 	"does it with visitMessageNode - Hernan"! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 8:49:57 pm (UTC)'!
+!methodProperties: {}!
 visitMethodNode: aMethodNode
 
 	"Used when cursor is in method selector - Hernan"
@@ -3140,38 +3366,47 @@ visitMethodNode: aMethodNode
 	typeInfo := method returnTypeInfo ! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:45:58 pm (UTC)'!
+!methodProperties: {}!
 visitNewArrayNode: aNewArrayNode! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:45:58 pm (UTC)'!
+!methodProperties: {}!
 visitRemoteTempVectorNode: aRemoteTempVectorNode! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 8:51:02 pm (UTC)'!
+!methodProperties: {}!
 visitReturnNode: aReturnNode
 
 	typeInfo := method returnTypeInfo ! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:45:58 pm (UTC)'!
+!methodProperties: {}!
 visitSelectorNode: aSelectorNode! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 9:08:31 pm (UTC)'!
+!methodProperties: {}!
 visitTempVariableNode: aTempVariableNode
 
 	typeInfo := method typeInfoOfVariableNamed: aTempVariableNode name ifAbsent: [ self resetTypeInfo ]! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 3:45:58 pm (UTC)'!
+!methodProperties: {}!
 visitUndeclaredVariableNode: aVariableNode! !
 
 !ParseNodeTypeInfo methodsFor: 'visiting' stamp: 'HAW 6/Dec/2018, 9:14:29 pm (UTC)'!
+!methodProperties: {}!
 visitVariableNode: aVariableNode
 
 ! !
 
 !ParseNodeTypeInfo methodsFor: 'type info' stamp: 'HAW 6/Dec/2018, 9:05:52 pm (UTC)'!
+!methodProperties: {}!
 resetTypeInfo
 
 	typeInfo := nil! !
 
 !ParseNodeTypeInfo methodsFor: 'type info' stamp: 'HAW 6/Dec/2018, 9:16:42 pm (UTC)'!
+!methodProperties: {}!
 withTypeInfoDo: aBlock ifNone: aNoneBlock
 
 	self resetTypeInfo.
@@ -3182,18 +3417,21 @@ withTypeInfoDo: aBlock ifNone: aNoneBlock
 	! !
 
 !ParseNodeTypeInfo methodsFor: 'initialization' stamp: 'HAW 6/Dec/2018, 8:10:24 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aParseNode in: aCompiledMethod
 
 	parseNodeToAnalize := aParseNode.
 	method := aCompiledMethod ! !
 
 !ParseNodeTypeInfo class methodsFor: 'instance creation' stamp: 'HAW 6/Dec/2018, 8:09:42 pm (UTC)'!
+!methodProperties: {}!
 of: aParseNode in: aCompiledMethod
 
 	^self new initializeOf: aParseNode in: aCompiledMethod
 ! !
 
 !ParseNodeTypesDisplay methodsFor: 'initialization' stamp: 'HAW 4/Apr/2019, 11:02:59 am (UTC)'!
+!methodProperties: {}!
 initliazeOf: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 
 	parseNodeToAnalize := aParseNodeToAnalize.
@@ -3206,6 +3444,7 @@ initliazeOf: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 ! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing' stamp: 'HAW 6/Dec/2018, 4:01:32 pm (UTC)'!
+!methodProperties: {}!
 show
 
 	self
@@ -3214,6 +3453,7 @@ show
 		! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 1/Apr/2019, 6:24:32 pm (UTC)'!
+!methodProperties: {}!
 addCommonSupertypeLabel
 
 	typeInfo typesSize = 1
@@ -3237,6 +3477,7 @@ addCommonSupertypeLabel
 		! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 14/Dec/2018, 9:45:12 am (UTC)'!
+!methodProperties: {}!
 addCrudOptions
 
 	(ParseNodeTypeInfo of: parseNodeToAnalize in: methodToAnalyze)
@@ -3244,6 +3485,7 @@ addCrudOptions
 		ifNone: []! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 6/Dec/2018, 6:23:42 pm (UTC)'!
+!methodProperties: {}!
 addCrudOptionsFor: aTypeInfo
 
 	lines add: labels size.
@@ -3261,6 +3503,7 @@ addCrudOptionsFor: aTypeInfo
 	actions add: [ self removeAllTypesFrom: aTypeInfo ].! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 6/Dec/2018, 6:20:02 pm (UTC)'!
+!methodProperties: {}!
 addIncompleteTypesReasons
 
 	incompleteTypeInfoReasons notEmpty ifTrue: [
@@ -3274,6 +3517,7 @@ addIncompleteTypesReasons
 	! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 24/Dec/2019, 6:58:24 pm (UTC)'!
+!methodProperties: {}!
 addTypesLabels
 
  	| typeIcon canBeNil |
@@ -3296,6 +3540,7 @@ addTypesLabels
 ! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 16/Jan/2019, 11:01:02 pm (UTC)'!
+!methodProperties: {}!
 browseClassNamed: aName
 
 	(Smalltalk classNamed: aName)
@@ -3303,11 +3548,13 @@ browseClassNamed: aName
 		ifNotNil: [ :aClass | BrowserWindow fullOnClass: aClass selector: nil ]! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 3/Dec/2018, 3:13:22 pm (UTC)'!
+!methodProperties: {}!
 browseIncompleteTypeInfo
 
 	^(incompleteTypeInfoReasons at: selectedIndex - typesIndexLimit) browse ! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 6/Dec/2018, 6:21:34 pm (UTC)'!
+!methodProperties: {}!
 browseSelected
 
 	| action |
@@ -3316,6 +3563,7 @@ browseSelected
 	action value! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 3/Dec/2018, 3:11:46 pm (UTC)'!
+!methodProperties: {}!
 browseSelectedTypeOrCommonSelectors
 
 	| selected |
@@ -3326,6 +3574,7 @@ browseSelectedTypeOrCommonSelectors
 		ifFalse: [ self browseClassNamed: selected ]! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 1/Apr/2019, 6:06:12 pm (UTC)'!
+!methodProperties: {}!
 calculateLabelsAndLines
 
 	labels := OrderedCollection new.
@@ -3341,6 +3590,7 @@ calculateLabelsAndLines
 ! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 1/Dec/2018, 11:11:44 pm (UTC)'!
+!methodProperties: {}!
 calculateTypes
 
 	incompleteTypeInfoReasons := Set new.
@@ -3349,27 +3599,32 @@ calculateTypes
 	! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 30/Nov/2018, 3:11:12 pm (UTC)'!
+!methodProperties: {}!
 commonSelectorsOption
 
 	^'Common selectors previous to Object'! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 11/Jul/2019, 7:09:50 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInfo
 
 	typeInfo := VariableTypeInfo new initializeRawTypes: types asArray.
 ! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 3/Dec/2018, 3:12:17 pm (UTC)'!
+!methodProperties: {}!
 isIncompleteTypeInfoSelection
 
 	^selectedIndex between: typesIndexLimit + 1 and: labels size! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 3/Dec/2018, 3:10:59 pm (UTC)'!
+!methodProperties: {}!
 isTypeSelection
 
 	^selectedIndex between: 1 and: typesIndexLimit! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 19/Feb/2019, 5:04:31 pm (UTC)'!
+!methodProperties: {}!
 showCommonSelectors
 
 	 | commonSelectors menu selectedSelectorIndex |
@@ -3383,6 +3638,7 @@ showCommonSelectors
 	selectedSelectorIndex = 0 ifFalse: [ Smalltalk browseAllActualImplementorsOf: (commonSelectors at: selectedSelectorIndex) forAll: typeInfo types ]! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 14/Dec/2018, 9:36:08 am (UTC)'!
+!methodProperties: {}!
 showTypes
 
 	types isEmpty
@@ -3391,6 +3647,7 @@ showTypes
 	! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 19/Dec/2018, 9:30:25 pm (UTC)'!
+!methodProperties: {}!
 showTypesPopUp
 
 	| menu |
@@ -3400,6 +3657,7 @@ showTypesPopUp
 ! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 11/Jul/2019, 7:09:50 pm (UTC)'!
+!methodProperties: {}!
 showTypesWhenNotEmpty
 
 	self
@@ -3409,26 +3667,31 @@ showTypesWhenNotEmpty
 		browseSelected	! !
 
 !ParseNodeTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 6/Dec/2018, 6:38:34 pm (UTC)'!
+!methodProperties: {}!
 typeIcon
 
 	^Theme current editFindReplaceIcon! !
 
 !ParseNodeTypesDisplay methodsFor: 'accessing' stamp: 'HAW 6/Dec/2018, 6:23:24 pm (UTC)'!
+!methodProperties: {}!
 definingClass
 
 	^definingClass! !
 
 !ParseNodeTypesDisplay methodsFor: 'accessing' stamp: 'HAW 6/Dec/2018, 6:21:56 pm (UTC)'!
+!methodProperties: {}!
 parseNodeToAnalize
 
 	^parseNodeToAnalize! !
 
 !ParseNodeTypesDisplay methodsFor: 'accessing' stamp: 'HAW 11/Jul/2019, 7:11:25 pm (UTC)'!
+!methodProperties: {}!
 typeInfo
 
 	^typeInfo! !
 
 !ParseNodeTypesDisplay methodsFor: 'crud' stamp: 'HAW 23/Sep/2020, 9:54:37 pm (UTC)'!
+!methodProperties: {}!
 addTypeTo: aVariableTypeInfo
 
 	| className trimmedNamed |
@@ -3440,11 +3703,13 @@ addTypeTo: aVariableTypeInfo
 		aVariableTypeInfo addType: aType ifFull: [ self inform: 'There is no more space to add type' ]]! !
 
 !ParseNodeTypesDisplay methodsFor: 'crud' stamp: 'HAW 6/Dec/2018, 7:04:56 pm (UTC)'!
+!methodProperties: {}!
 removeAllTypesFrom: aVariableTypeInfo
 
 	aVariableTypeInfo removeAllTypes! !
 
 !ParseNodeTypesDisplay methodsFor: 'crud' stamp: 'HAW 6/Dec/2018, 6:43:28 pm (UTC)'!
+!methodProperties: {}!
 removeTypeFrom: aVariableTypeInfo
 
 	| typeNamesToRemove typeNamesToRemoveIcons selectedTypeToRemoveIndex typeNameToRemove options |
@@ -3459,12 +3724,14 @@ removeTypeFrom: aVariableTypeInfo
 	aVariableTypeInfo removeType: (Smalltalk classNamed: typeNameToRemove)! !
 
 !ParseNodeTypesDisplay class methodsFor: 'instance creation' stamp: 'HAW 30/Nov/2018, 2:19:56 pm (UTC)'!
+!methodProperties: {}!
 of: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 
 	^self new initliazeOf: aParseNodeToAnalize in: aMethodNodeOwner definedAt: aClass
 ! !
 
 !InstanceVariableTypesDisplay methodsFor: 'initialization' stamp: 'HAW 3/Apr/2019, 12:20:56 am (UTC)'!
+!methodProperties: {}!
 initializeTypeInfo: anInstanceVariableTypeInfo
 
 	instVarTypeInfo := anInstanceVariableTypeInfo.
@@ -3472,11 +3739,13 @@ initializeTypeInfo: anInstanceVariableTypeInfo
 	incompleteTypeInfoReasons := #()! !
 
 !InstanceVariableTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 3/Apr/2019, 12:28:58 am (UTC)'!
+!methodProperties: {}!
 addCrudOptions
 
 	self addCrudOptionsFor: instVarTypeInfo ! !
 
 !InstanceVariableTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 3/Jul/2019, 10:34:54 pm (UTC)'!
+!methodProperties: {}!
 showTypes
 
 	types isEmpty
@@ -3485,6 +3754,7 @@ showTypes
 ! !
 
 !InstanceVariableTypesDisplay methodsFor: 'showing - private' stamp: 'HAW 3/Apr/2019, 12:23:21 am (UTC)'!
+!methodProperties: {}!
 showTypesPopUp
 
 	| menu |
@@ -3493,11 +3763,13 @@ showTypesPopUp
 	selectedIndex := menu startUpWithCaption: 'Type info of inst var ', instVarTypeInfo variableName ! !
 
 !InstanceVariableTypesDisplay class methodsFor: 'instance creation' stamp: 'HAW 11/Jul/2019, 7:03:57 pm (UTC)'!
+!methodProperties: {}!
 typeInfo: anInstanceVariableTypeInfo
 
 	^self new initializeTypeInfo: anInstanceVariableTypeInfo! !
 
 !SenderInfo methodsFor: 'initialization' stamp: 'HAW 13/Mar/2019, 7:23:53 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aSender for: aSentImplementors
 
 	sender := aSender.
@@ -3507,36 +3779,43 @@ initializeOf: aSender for: aSentImplementors
 ! !
 
 !SenderInfo methodsFor: 'sender' stamp: 'HAW 13/Mar/2019, 6:54:53 pm (UTC)'!
+!methodProperties: {}!
 sender
 
 	^sender! !
 
 !SenderInfo methodsFor: 'possible senders' stamp: 'HAW 13/Mar/2019, 6:45:17 pm (UTC)'!
+!methodProperties: {}!
 addPossibleSender: aPossibleSender of: aSentImplementor
 
 	possibleSenders add: aPossibleSender ! !
 
 !SenderInfo methodsFor: 'possible senders' stamp: 'HAW 13/Mar/2019, 6:51:17 pm (UTC)'!
+!methodProperties: {}!
 hasPossibleSenders
 
 	^possibleSenders notEmpty ! !
 
 !SenderInfo methodsFor: 'possible senders' stamp: 'HAW 13/Mar/2019, 7:05:28 pm (UTC)'!
+!methodProperties: {}!
 withPossibleMessageSendsDo: aBlock
 
 	possibleSenders do: [ :aPossibleSender | aPossibleSender withPossibleMessageSendsDo: aBlock ]! !
 
 !SenderInfo methodsFor: 'sure senders' stamp: 'HAW 13/Mar/2019, 6:41:32 pm (UTC)'!
+!methodProperties: {}!
 addSureSenderOf: aSentImplementor
 
 	sureSenders add: aSentImplementor! !
 
 !SenderInfo methodsFor: 'sure senders' stamp: 'HAW 13/Mar/2019, 7:24:51 pm (UTC)'!
+!methodProperties: {}!
 hasCompleteSureSenders
 
 	^sureSenders size = sentImplementors size! !
 
 !SenderInfo methodsFor: 'sure senders' stamp: 'HAW 13/Mar/2019, 7:25:52 pm (UTC)'!
+!methodProperties: {}!
 hasPartialSureSenders
 
 	^sureSenders size between: 1 and: sentImplementors size - 1
@@ -3544,16 +3823,19 @@ hasPartialSureSenders
 	! !
 
 !SenderInfo methodsFor: 'sure senders' stamp: 'HAW 13/Mar/2019, 7:10:03 pm (UTC)'!
+!methodProperties: {}!
 sureSenders
 
 	^sureSenders! !
 
 !SenderInfo class methodsFor: 'instance creation' stamp: 'HAW 13/Mar/2019, 7:20:49 pm (UTC)'!
+!methodProperties: {}!
 of: aSender for: aSentImplementors
 
 	^self new initializeOf: aSender for: aSentImplementors! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 12/Jan/2026, 8:25:36 pm (UTC)'!
+!methodProperties: {}!
 print: originalTypes on: aStream upTo: aNumberOfTypes
 
 	| types canBeNil |
@@ -3593,6 +3875,7 @@ print: originalTypes on: aStream upTo: aNumberOfTypes
 	! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 20/Sep/2025, 9:08:08 pm (UTC)'!
+!methodProperties: {}!
 printAll: types on: aStream
 
 	types
@@ -3602,6 +3885,7 @@ printAll: types on: aStream
 ! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 7:08:24 pm (UTC)'!
+!methodProperties: {}!
 printOn: aStream
 
 	aStream
@@ -3612,11 +3896,13 @@ printOn: aStream
 	! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 20/Jan/2019, 11:06:40 pm (UTC)'!
+!methodProperties: {}!
 printReducedTypes
 
 	^String streamContents: [ :stream | self printReducedTypesOn: stream ]! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 19/Feb/2019, 8:53:31 pm (UTC)'!
+!methodProperties: {}!
 printReducedTypesOn: aStream
 
 	aStream nextPut: $<.
@@ -3638,11 +3924,13 @@ printReducedTypesOn: aStream
 ! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 19/Jan/2019, 10:35:54 am (UTC)'!
+!methodProperties: {}!
 printTypes
 
 	^String streamContents: [ :stream | self printTypesOn: stream ]! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 11/Jul/2019, 7:57:38 pm (UTC)'!
+!methodProperties: {}!
 printTypesOn: aStream
 
 	| types |
@@ -3653,22 +3941,26 @@ printTypesOn: aStream
 	! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 20/Aug/2019, 7:33:25 pm (UTC)'!
+!methodProperties: {}!
 printTypesOn: aStream upTo: aNumberOfTypes
 
 	self print: self types on: aStream upTo: aNumberOfTypes.
 	! !
 
 !VariableTypeInfo methodsFor: 'printing' stamp: 'HAW 11/Jul/2019, 7:42:32 pm (UTC)'!
+!methodProperties: {}!
 printTypesUpTo: aNumberOfTypes
 
 	^String streamContents: [ :stream | self printTypesOn: stream upTo: aNumberOfTypes]! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 6/Dec/2018, 8:55:32 pm (UTC)'!
+!methodProperties: {}!
 addType: aType
 
 	^self addType: aType ifFull: [ self signalRawTypesIsFull]! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:26:23 pm (UTC)'!
+!methodProperties: {}!
 addType: aType ifFull: aFullBlock
 
 	"If rawTypes is nil, it is assumed that type can not be added and therefore it is full - Hernan"
@@ -3677,67 +3969,80 @@ addType: aType ifFull: aFullBlock
 ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:34:13 pm (UTC)'!
+!methodProperties: {}!
 isTypesEmpty
 
 	^rawTypes isTypesEmpty! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:35:00 pm (UTC)'!
+!methodProperties: {}!
 removeAllTypes
 
 	rawTypes removeAllTypes ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 6/Dec/2018, 6:46:05 pm (UTC)'!
+!methodProperties: {}!
 removeType: aType
 
 	^self removeType: aType ifAbsent: [ self signalTypeNotFound]! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:37:00 pm (UTC)'!
+!methodProperties: {}!
 removeType: aType ifAbsent: anAbsentBlock
 
 	^rawTypes removeType: aType ifAbsent: anAbsentBlock
 ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:52:09 pm (UTC)'!
+!methodProperties: {}!
 types
 
 	^rawTypes types! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 6/Dec/2018, 8:22:29 pm (UTC)'!
+!methodProperties: {}!
 typesDo: aBlock
 
 	^self types do: aBlock ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 20/Jan/2019, 11:05:00 pm (UTC)'!
+!methodProperties: {}!
 typesDo: aBlock separatedBy: separatorBlock
 
 	^self types do: aBlock separatedBy: separatorBlock! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Oct/2018, 1:45:30 am (UTC)'!
+!methodProperties: {}!
 typesIncludes: aType
 
 	^self types includes: aType ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 30/Oct/2018, 12:58:58 am (UTC)'!
+!methodProperties: {}!
 typesIncludesAllOf: aTypesCollection
 
 	^self types includesAllOf: aTypesCollection ! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 19/Feb/2019, 8:57:40 pm (UTC)'!
+!methodProperties: {}!
 typesNames
 
 	^(self types collect: [ :aType | aType typeName ]) sorted! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:51:58 pm (UTC)'!
+!methodProperties: {}!
 typesSize
 
 	^rawTypes typesSize ! !
 
 !VariableTypeInfo methodsFor: 'common selectors' stamp: 'HAW 11/Oct/2018, 12:19:30 am (UTC)'!
+!methodProperties: {}!
 commonSelectors
 
 	^self commonSelectorsPreviousTo: nil! !
 
 !VariableTypeInfo methodsFor: 'common selectors' stamp: 'HAW 11/Oct/2018, 12:47:10 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsPreviousTo: aSuperclassToExclude
 
 	^self
@@ -3745,6 +4050,7 @@ commonSelectorsPreviousTo: aSuperclassToExclude
 		ifInvalidSupertype: [ :aStartingClass | self signal: aSuperclassToExclude isNotInSuperclassesOf:  aStartingClass ].! !
 
 !VariableTypeInfo methodsFor: 'common selectors' stamp: 'HAW 16/Oct/2018, 6:21:15 pm (UTC)'!
+!methodProperties: {}!
 commonSelectorsPreviousTo: aSuperclassToExclude ifInvalidSupertype: anInvalidBlock
 
 	| types initialType commonSelectors invalidSupertypeBlock |
@@ -3768,11 +4074,13 @@ commonSelectorsPreviousTo: aSuperclassToExclude ifInvalidSupertype: anInvalidBlo
 	^commonSelectors ! !
 
 !VariableTypeInfo methodsFor: 'common selectors' stamp: 'HAW 21/Oct/2018, 1:38:18 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsPreviousToObject
 
 	^ self commonSelectorsPreviousTo: Object ! !
 
 !VariableTypeInfo methodsFor: 'common selectors - private' stamp: 'HAW 11/Oct/2018, 12:51:09 am (UTC)'!
+!methodProperties: {}!
 intersect: previousCommonSelectors withSelectorsOf: aStartingType previousTo: aSupertypeToExclude ifInvalidSupertype: anInvalidBlock
 
 	|  commonSelectors |
@@ -3788,6 +4096,7 @@ intersect: previousCommonSelectors withSelectorsOf: aStartingType previousTo: aS
 	^commonSelectors ! !
 
 !VariableTypeInfo methodsFor: 'common selectors - private' stamp: 'HAW 15/Oct/2018, 8:31:38 pm (UTC)'!
+!methodProperties: {}!
 selectorsOf: aStartingType previousTo: aSupertypeToExclude ifInvalidSupertype: anInvalidBlock
 
 	| commonSelectors |
@@ -3803,6 +4112,7 @@ selectorsOf: aStartingType previousTo: aSupertypeToExclude ifInvalidSupertype: a
 	! !
 
 !VariableTypeInfo methodsFor: 'common selectors - private' stamp: 'HAW 11/Oct/2018, 12:51:53 am (UTC)'!
+!methodProperties: {}!
 withSelectorsOf: aStartingType previousTo: aSupertypeToExclude do: aBlock ifInvalidSuperclass: anInvalidBlock
 
 	| currentType |
@@ -3817,6 +4127,7 @@ withSelectorsOf: aStartingType previousTo: aSupertypeToExclude do: aBlock ifInva
 ! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 17/Oct/2018, 10:41:50 pm (UTC)'!
+!methodProperties: {}!
 addIfNoCommonSupertypeTo: allWithNoCommonSupertype
 
 	| commonSupertype |
@@ -3826,6 +4137,7 @@ addIfNoCommonSupertypeTo: allWithNoCommonSupertype
 	(commonSupertype = Object or: [ commonSupertype = ProtoObject ]) ifTrue: [  allWithNoCommonSupertype add: (self identifier->self types)]! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 16/Oct/2018, 6:18:22 pm (UTC)'!
+!methodProperties: {}!
 allSupertypesOf: types
 
 	^ types
@@ -3834,16 +4146,19 @@ allSupertypesOf: types
 ! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 10/Oct/2018, 10:07:30 am (UTC)'!
+!methodProperties: {}!
 commonSupertype
 
 	^self commonSupertypeIfNoTypes: [ ProtoObject ]! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 3/Dec/2018, 3:55:49 pm (UTC)'!
+!methodProperties: {}!
 commonSupertypeIfGeneric: genericBlock
 
 	^self withCommonSupertypeDo: [ :aCommonSupertype | aCommonSupertype ] ifGeneric: genericBlock! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 16/Oct/2018, 6:18:32 pm (UTC)'!
+!methodProperties: {}!
 commonSupertypeIfNoTypes: aBlock
 
 	| types commonSupertypes commonSupertype |
@@ -3860,11 +4175,13 @@ commonSupertypeIfNoTypes: aBlock
 	^commonSupertype ! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 19/Dec/2018, 9:03:49 pm (UTC)'!
+!methodProperties: {}!
 commonSupertypeOrCommonSelectorsPreviousToObjectIfGeneric
 
 	^self commonSupertypeIfGeneric: [ :genericSuperclass | self commonSelectorsPreviousToObject ]! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 3/Dec/2018, 3:54:22 pm (UTC)'!
+!methodProperties: {}!
 withCommonSupertypeDo: doBlock ifGeneric: ifGenericBlock
 
 	| commonSupertype block  |
@@ -3877,6 +4194,7 @@ withCommonSupertypeDo: doBlock ifGeneric: ifGenericBlock
 	^block value: commonSupertype ! !
 
 !VariableTypeInfo methodsFor: 'common supertype - private' stamp: 'HAW 15/Oct/2018, 8:37:34 pm (UTC)'!
+!methodProperties: {}!
 commonLowestTypeIn: commonSupertypes
 
 	| commonSupertype commonSupertypeSuperclassesSize |
@@ -3892,72 +4210,86 @@ commonLowestTypeIn: commonSupertypes
 	^ commonSupertype! !
 
 !VariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 10/Oct/2018, 12:48:09 pm (UTC)'!
+!methodProperties: {}!
 initializeRawTypes: aRawTypes
 
 	rawTypes := aRawTypes ! !
 
 !VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 16/Jul/2019, 8:56:22 pm (UTC)'!
+!methodProperties: {}!
 doesStoreTypes
 
 	^rawTypes doesStoreTypes ! !
 
 !VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 16/Jul/2019, 8:54:11 pm (UTC)'!
+!methodProperties: {}!
 includesNil
 
 	^ rawTypes includesNil ! !
 
 !VariableTypeInfo methodsFor: 'testing' stamp: 'HAW 16/Jul/2019, 8:55:39 pm (UTC)'!
+!methodProperties: {}!
 isMegamorphic
 
 	^rawTypes isMegamorphic ! !
 
 !VariableTypeInfo methodsFor: 'exceptions' stamp: 'HAW 10/Oct/2018, 11:40:52 pm (UTC)'!
+!methodProperties: {}!
 signal: aClass isNotInSuperclassesOf: anotherClass
 
 	self error: (self class errorDescriptionFor: aClass isNotInSuperclassesOf: anotherClass)! !
 
 !VariableTypeInfo methodsFor: 'exceptions' stamp: 'HAW 6/Dec/2018, 8:56:14 pm (UTC)'!
+!methodProperties: {}!
 signalRawTypesIsFull
 
 	self error: self class rawTypesIfFullErrorDescription! !
 
 !VariableTypeInfo methodsFor: 'exceptions' stamp: 'HAW 6/Dec/2018, 6:46:39 pm (UTC)'!
+!methodProperties: {}!
 signalTypeNotFound
 
 	self error: self class typeNotFoundErrorDescription! !
 
 !VariableTypeInfo methodsFor: 'identification' stamp: 'HAW 17/Oct/2018, 10:41:58 pm (UTC)'!
+!methodProperties: {}!
 identifier
 
 	self subclassResponsibility ! !
 
 !VariableTypeInfo methodsFor: 'identification' stamp: 'HAW 27/Oct/2019, 8:49:39 pm (UTC)'!
+!methodProperties: {}!
 variableName
 
 	^'unknow variable'! !
 
 !VariableTypeInfo methodsFor: 'megamorphic' stamp: 'HAW 17/Oct/2018, 10:52:50 pm (UTC)'!
+!methodProperties: {}!
 ifMegamorphicAddTo: allMegamorphicVariables
 
 	self isMegamorphic ifTrue: [ allMegamorphicVariables add: (self identifier -> self typesSize) ]
 ! !
 
 !VariableTypeInfo class methodsFor: 'error descriptions' stamp: 'HAW 10/Oct/2018, 11:37:07 pm (UTC)'!
+!methodProperties: {}!
 errorDescriptionFor: aClass isNotInSuperclassesOf: anotherClass
 
 	^aClass name, ' in not in the superclass chain of ', anotherClass name! !
 
 !VariableTypeInfo class methodsFor: 'error descriptions' stamp: 'HAW 6/Dec/2018, 8:56:43 pm (UTC)'!
+!methodProperties: {}!
 rawTypesIfFullErrorDescription
 
 	^'Can not add more types. Types collection is full'! !
 
 !VariableTypeInfo class methodsFor: 'error descriptions' stamp: 'HAW 6/Dec/2018, 6:47:32 pm (UTC)'!
+!methodProperties: {}!
 typeNotFoundErrorDescription
 
 	^'Type not found'! !
 
 !VariableTypeInfo class methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:44:28 pm (UTC)'!
+!methodProperties: {}!
 unload: aClassToUnload from: rawTypes
 
 	rawTypes
@@ -3966,16 +4298,19 @@ unload: aClassToUnload from: rawTypes
 		! !
 
 !InstanceVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 23/Oct/2018, 2:22:19 pm (UTC)'!
+!methodProperties: {}!
 identifier
 
 	^class->self variableName ! !
 
 !InstanceVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 19/Feb/2019, 2:54:01 pm (UTC)'!
+!methodProperties: {}!
 variableName
 
 	^variableName ! !
 
 !InstanceVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 19/Feb/2019, 2:54:01 pm (UTC)'!
+!methodProperties: {}!
 addTypeFrom: anInstance
 
 	| instVarType |
@@ -3984,6 +4319,7 @@ addTypeFrom: anInstance
 	self addType: instVarType ifFull: []! !
 
 !InstanceVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 19/Feb/2019, 2:54:01 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: anInstVarName in: aClass are: aRawTypes
 
 	variableName := anInstVarName.
@@ -3991,17 +4327,20 @@ initializeOf: anInstVarName in: aClass are: aRawTypes
 	self initializeRawTypes: aRawTypes ! !
 
 !InstanceVariableTypeInfo class methodsFor: 'as yet unclassified' stamp: 'HAW 20/Oct/2018, 7:36:20 pm (UTC)'!
+!methodProperties: {}!
 of: anInstVarName in: aClass are: rawTypes
 
 	^self new initializeOf: anInstVarName in: aClass are: rawTypes
 ! !
 
 !HierarchyInstanceVariableTypeInfo methodsFor: 'testing' stamp: 'HAW 17/Oct/2018, 11:39:45 pm (UTC)'!
+!methodProperties: {}!
 isMegamorphic
 
 	^ self types size >= self maxRawTypesSize! !
 
 !HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 19/Feb/2019, 2:54:01 pm (UTC)'!
+!methodProperties: {}!
 allSubclassesTypesPlus: thisClassTypes
 
 	| typesWithAllSubclasses |
@@ -4015,16 +4354,19 @@ allSubclassesTypesPlus: thisClassTypes
 	^typesWithAllSubclasses! !
 
 !HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 17/Oct/2018, 11:41:28 pm (UTC)'!
+!methodProperties: {}!
 isTypesEmpty
 
 	^self types isEmpty! !
 
 !HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 19/Feb/2019, 2:54:01 pm (UTC)'!
+!methodProperties: {}!
 maxRawTypesSize
 
 	^(class withAllSubclasses collect: [ :aSubclass | aSubclass instanceVariableRawTypesSizeFor: variableName ]) max! !
 
 !HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 20/Oct/2018, 8:13:03 pm (UTC)'!
+!methodProperties: {}!
 types
 
 	| thisClassTypes |
@@ -4036,21 +4378,25 @@ types
 		ifFalse: [ self allSubclassesTypesPlus: thisClassTypes ]! !
 
 !HierarchyInstanceVariableTypeInfo methodsFor: 'types' stamp: 'HAW 20/Oct/2018, 7:12:18 pm (UTC)'!
+!methodProperties: {}!
 typesSize
 
 	^self types size! !
 
 !MethodVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 23/Oct/2018, 2:22:07 pm (UTC)'!
+!methodProperties: {}!
 identifier
 
 	^method -> self variableName ! !
 
 !MethodVariableTypeInfo methodsFor: 'identification' stamp: 'HAW 19/Feb/2019, 2:53:46 pm (UTC)'!
+!methodProperties: {}!
 variableName
 
 	^variableName ! !
 
 !MethodVariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 28/Feb/2019, 7:44:30 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aVarName in: aCompiledMethod are: aRawTypes
 
 	variableName := aVarName.
@@ -4058,28 +4404,33 @@ initializeOf: aVarName in: aCompiledMethod are: aRawTypes
 	self initializeRawTypes: aRawTypes ! !
 
 !MethodVariableTypeInfo class methodsFor: 'instance creation' stamp: 'HAW 28/Feb/2019, 7:44:11 pm (UTC)'!
+!methodProperties: {}!
 of: aVarName in: aCompiledMethod are: rawTypes
 
 	^self new initializeOf: aVarName in: aCompiledMethod are: rawTypes
 ! !
 
 !ReturnTypeInfo methodsFor: 'identification' stamp: 'HAW 23/Oct/2018, 2:22:00 pm (UTC)'!
+!methodProperties: {}!
 identifier
 
 	^method -> self variableName ! !
 
 !ReturnTypeInfo methodsFor: 'identification' stamp: 'HAW 23/Oct/2018, 2:21:53 pm (UTC)'!
+!methodProperties: {}!
 variableName
 
 	^'^'! !
 
 !ReturnTypeInfo methodsFor: 'initialization' stamp: 'HAW 10/Oct/2018, 12:52:35 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aCompiledMethod are: aRawTypes
 
 	method := aCompiledMethod.
 	self initializeRawTypes: aRawTypes ! !
 
 !ReturnTypeInfo class methodsFor: 'statistics' stamp: 'HAW 27/Mar/2019, 2:31:27 pm (UTC)'!
+!methodProperties: {}!
 numberOfRawTypesForAll
 
 	"
@@ -4097,37 +4448,44 @@ numberOfRawTypesForAll
 	^numberOfTypes contents! !
 
 !ReturnTypeInfo class methodsFor: 'statistics' stamp: 'HAW 27/Mar/2019, 2:41:59 pm (UTC)'!
+!methodProperties: {}!
 percentangeOfUsedRawTypes
 
 	^VariablesTypes percentangeOfUsedRawTypesOf: self ! !
 
 !ReturnTypeInfo class methodsFor: 'instance creation' stamp: 'HAW 28/Nov/2018, 5:35:23 pm (UTC)'!
+!methodProperties: {}!
 of: aCompiledMethod
 
 	^self of: aCompiledMethod are: aCompiledMethod returnRawTypes! !
 
 !ReturnTypeInfo class methodsFor: 'instance creation' stamp: 'HAW 10/Oct/2018, 12:50:46 pm (UTC)'!
+!methodProperties: {}!
 of: aCompiledMethod are: aRawTypes
 
 	^self new initializeOf: aCompiledMethod are: aRawTypes ! !
 
 !VariablesTypes methodsFor: 'collect info' stamp: 'HAW 23/Oct/2018, 3:21:44 pm (UTC)'!
+!methodProperties: {}!
 addMegamorphicVariablesTo: allMegamorphicVariables
 
 	self typesInfoDo: [ :aVarTypeInfo | aVarTypeInfo ifMegamorphicAddTo: allMegamorphicVariables ]
 		! !
 
 !VariablesTypes methodsFor: 'collect info' stamp: 'HAW 23/Oct/2018, 3:21:50 pm (UTC)'!
+!methodProperties: {}!
 addTypesSizesTo: aBagCollector
 
 	self typesInfoDo: [ :aVarTypeInfo | aBagCollector add: aVarTypeInfo typesSize ]! !
 
 !VariablesTypes methodsFor: 'collect info' stamp: 'HAW 23/Oct/2018, 3:21:56 pm (UTC)'!
+!methodProperties: {}!
 addWithNoCommonSupertypeTo: allWithNoCommonSupertype
 
 	self typesInfoDo: [ :aVarTypeInfo | aVarTypeInfo addIfNoCommonSupertypeTo: allWithNoCommonSupertype ]! !
 
 !VariablesTypes methodsFor: 'printing' stamp: 'HAW 20/Jan/2019, 11:12:50 pm (UTC)'!
+!methodProperties: {}!
 printReducedTypesOf: aVarName ifAbsent: anAbsentBlock
 
 	| typeInfo |
@@ -4137,6 +4495,7 @@ printReducedTypesOf: aVarName ifAbsent: anAbsentBlock
 	^typeInfo printReducedTypes ! !
 
 !VariablesTypes methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 5:17:36 pm (UTC)'!
+!methodProperties: {}!
 printTypeInfo: typeInfo on: aStream
 
 	aStream
@@ -4144,23 +4503,27 @@ printTypeInfo: typeInfo on: aStream
 		newLine! !
 
 !VariablesTypes methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 5:18:04 pm (UTC)'!
+!methodProperties: {}!
 printTypesInfoFooterOn: aStream
 
 	aStream nextPut: $" ! !
 
 !VariablesTypes methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 6:28:33 pm (UTC)'!
+!methodProperties: {}!
 printTypesInfoHeaderOn: aStream
 
 	self class printTypesInfoHeaderOn: aStream
 	! !
 
 !VariablesTypes methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 5:17:21 pm (UTC)'!
+!methodProperties: {}!
 printTypesInfoOn: aStream
 
 	self typesInfoDo: [ :typeInfo | self printTypeInfo: typeInfo on: aStream ].
 	! !
 
 !VariablesTypes methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 5:17:56 pm (UTC)'!
+!methodProperties: {}!
 printVariablesTypesOn: aStream
 
 	self typesInfoNotEmpty ifTrue: [
@@ -4169,47 +4532,56 @@ printVariablesTypesOn: aStream
 		self printTypesInfoFooterOn: aStream ]! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 22/Feb/2019, 10:16:51 pm (UTC)'!
+!methodProperties: {}!
 localTypesInfoDo: aBlock
 
 	self subclassResponsibility ! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 20/Oct/2018, 11:10:39 pm (UTC)'!
+!methodProperties: {}!
 typeInfoOf: aVarName
 
 	^self typeInfoOf: aVarName ifAbsent: [ self error: 'Invalid variable name' ].
 	! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 16/Oct/2018, 1:57:59 am (UTC)'!
+!methodProperties: {}!
 typeInfoOf: aVarName ifAbsent: anAbsentBlock
 
 	self subclassResponsibility ! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 28/Feb/2019, 7:51:59 pm (UTC)'!
+!methodProperties: {}!
 typesInfoDo: aBlock
 
 	self subclassResponsibility ! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 23/Oct/2018, 3:34:19 pm (UTC)'!
+!methodProperties: {}!
 typesInfoIsEmpty
 
 	^self typesInfoSize = 0! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 23/Oct/2018, 3:34:00 pm (UTC)'!
+!methodProperties: {}!
 typesInfoNotEmpty
 
 	^self typesInfoIsEmpty not! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 28/Feb/2019, 7:52:56 pm (UTC)'!
+!methodProperties: {}!
 typesInfoSize
 
 	self subclassResponsibility ! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 21/Oct/2018, 3:26:50 am (UTC)'!
+!methodProperties: {}!
 typesOf: aVarName
 
 	^(self typeInfoOf: aVarName) types! !
 
 !VariablesTypes methodsFor: 'types' stamp: 'HAW 21/Oct/2018, 5:14:31 am (UTC)'!
+!methodProperties: {}!
 typesOf: aVarName ifAbsent: aBlock
 
 	| varTypeInfo |
@@ -4219,6 +4591,7 @@ typesOf: aVarName ifAbsent: aBlock
 	^varTypeInfo types! !
 
 !VariablesTypes methodsFor: 'common selectors' stamp: 'HAW 16/Oct/2018, 1:37:35 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOf: aVarName
 
 	"
@@ -4228,6 +4601,7 @@ commonSelectorsOf: aVarName
 	^ (self typeInfoOf: aVarName) commonSelectors ! !
 
 !VariablesTypes methodsFor: 'common selectors' stamp: 'HAW 16/Oct/2018, 1:37:35 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOf: aVarName previoustTo:  aSuperclass
 
 	"
@@ -4237,6 +4611,7 @@ commonSelectorsOf: aVarName previoustTo:  aSuperclass
 	^ (self typeInfoOf: aVarName) commonSelectorsPreviousTo: aSuperclass ! !
 
 !VariablesTypes methodsFor: 'common supertype' stamp: 'HAW 16/Oct/2018, 1:37:35 am (UTC)'!
+!methodProperties: {}!
 commonSupertypeOf: aVarName
 
 	"
@@ -4246,16 +4621,19 @@ commonSupertypeOf: aVarName
 	^ (self typeInfoOf: aVarName) commonSupertype ! !
 
 !VariablesTypes methodsFor: 'common supertype' stamp: 'HAW 16/Oct/2018, 1:37:35 am (UTC)'!
+!methodProperties: {}!
 commonSupertypeOf: aVarName ifNoTypes: aBlock
 
 	^ (self typeInfoOf: aVarName) commonSupertypeIfNoTypes: aBlock! !
 
 !VariablesTypes methodsFor: 'variable names' stamp: 'NPM 10/Oct/2018, 11:21:52 pm (UTC)'!
+!methodProperties: {}!
 variablesNames
 
 	self subclassResponsibility.! !
 
 !VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 20/Oct/2018, 8:34:10 pm (UTC)'!
+!methodProperties: {}!
 allMegamorphicVariables
 
 	"
@@ -4271,6 +4649,7 @@ allMegamorphicVariables
 	^allMegamorphicVariables ! !
 
 !VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 20/Oct/2018, 8:36:44 pm (UTC)'!
+!methodProperties: {}!
 allWithNoCommonSupertype
 
 	"
@@ -4288,6 +4667,7 @@ allWithNoCommonSupertype
 ! !
 
 !VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 9/Mar/2021, 9:06:38 pm (UTC)'!
+!methodProperties: {}!
 numberOfRawTypesForAll
 
 	"
@@ -4299,6 +4679,7 @@ numberOfRawTypesForAll
 	self subclassResponsibility ! !
 
 !VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 20/Oct/2018, 8:45:10 pm (UTC)'!
+!methodProperties: {}!
 numberOfTypesForAll
 
 	"
@@ -4314,6 +4695,7 @@ numberOfTypesForAll
 	^numberOfTypes contents! !
 
 !VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 27/Mar/2019, 2:42:17 pm (UTC)'!
+!methodProperties: {}!
 percentangeOfUsedRawTypes
 
 	"
@@ -4325,6 +4707,7 @@ percentangeOfUsedRawTypes
 	^self percentangeOfUsedRawTypesOf: self ! !
 
 !VariablesTypes class methodsFor: 'statistics' stamp: 'HAW 27/Mar/2019, 2:40:37 pm (UTC)'!
+!methodProperties: {}!
 percentangeOfUsedRawTypesOf: aVariableTypesClass
 
 	| usedSlots numberOfRawTypesForAll |
@@ -4336,11 +4719,13 @@ percentangeOfUsedRawTypesOf: aVariableTypesClass
 	^(usedSlots/(numberOfRawTypesForAll sum * ClassDescription defaultRawTypesSize)) asFloat.! !
 
 !VariablesTypes class methodsFor: 'types' stamp: 'HAW 23/Feb/2019, 2:04:39 am (UTC)'!
+!methodProperties: {}!
 unload: aClassToUnload from: aRawTypes
 
 	self subclassResponsibility ! !
 
 !VariablesTypes class methodsFor: 'types' stamp: 'HAW 23/Feb/2019, 2:04:39 am (UTC)'!
+!methodProperties: {}!
 unload: aClassToUnload fromAllRawTypesOf: aVariablesRawTypes
 
 	aVariablesRawTypes ifNotNil: [
@@ -4348,21 +4733,25 @@ unload: aClassToUnload fromAllRawTypesOf: aVariablesRawTypes
 	! !
 
 !VariablesTypes class methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 6:41:51 pm (UTC)'!
+!methodProperties: {}!
 printTypesInfoHeaderOn: aStream
 
 	self subclassResponsibility ! !
 
 !VariablesTypes class methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 6:29:39 pm (UTC)'!
+!methodProperties: {}!
 typesInfoHeader
 
 	^String streamContents: [ :stream | self printTypesInfoHeaderOn: stream ]! !
 
 !VariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 20/Oct/2018, 8:34:16 pm (UTC)'!
+!methodProperties: {}!
 of: aClass do: aBlock
 
 	self subclassResponsibility ! !
 
 !InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 9/Mar/2021, 7:40:49 pm (UTC)'!
+!methodProperties: {}!
 initializeEachInstanceVariableRawTypes
 
 	rawTypes ifNotNil: [
@@ -4370,6 +4759,7 @@ initializeEachInstanceVariableRawTypes
 			rawTypes at: instVarIndex put: (class createInstanceVariableRawTypesFor: instVarName) ]]! !
 
 !InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 16/Oct/2018, 9:43:18 am (UTC)'!
+!methodProperties: {}!
 initializeOf: aClass rawTypes: aRawTypes
 
 	class := aClass.
@@ -4377,6 +4767,7 @@ initializeOf: aClass rawTypes: aRawTypes
 	! !
 
 !InstanceVariablesTypes methodsFor: 'initialization' stamp: 'HAW 17/Jan/2019, 3:49:21 pm (UTC)'!
+!methodProperties: {}!
 storeAllInstancesCurrentTypes
 
 	| instVarTypes |
@@ -4388,17 +4779,20 @@ storeAllInstancesCurrentTypes
 	! !
 
 !InstanceVariablesTypes methodsFor: 'collect info' stamp: 'HAW 17/Jan/2019, 3:49:21 pm (UTC)'!
+!methodProperties: {}!
 addNumberOfRawTypesTo: aBagCollector
 
 	rawTypes ifNotNil: [ class allInstVarNames do: [ :anInstVarName | aBagCollector add: (self localTypeInfoOf: anInstVarName) typesSize ]]! !
 
 !InstanceVariablesTypes methodsFor: 'collect info' stamp: 'HAW 6/Nov/2018, 10:05:39 am (UTC)'!
+!methodProperties: {}!
 addTypeInformationOf: anInstance using: instVarTypes
 
 	instVarTypes do: [ :anInstVarTypeInfo | anInstVarTypeInfo addTypeFrom: anInstance ]
 	! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 17/Jan/2019, 3:50:20 pm (UTC)'!
+!methodProperties: {}!
 localTypeInfoOf: anInstVarName
 
 	| instVarRawTypes |
@@ -4408,11 +4802,13 @@ localTypeInfoOf: anInstVarName
 	^ class createLocalInstanceVariableTypeInfoOf: anInstVarName with: instVarRawTypes ! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 22/Feb/2019, 10:20:38 am (UTC)'!
+!methodProperties: {}!
 localTypesInfoDo: aBlock
 
 	self variablesNames do: [ :variableName | aBlock value: (self localTypeInfoOf: variableName) ]! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 20/Oct/2018, 7:39:45 pm (UTC)'!
+!methodProperties: {}!
 rawTypesOf: anInstVarName
 
 	| instVarIndex |
@@ -4425,6 +4821,7 @@ rawTypesOf: anInstVarName
 	! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 17/Jan/2019, 4:00:35 pm (UTC)'!
+!methodProperties: {}!
 typeInfoInHierarchyOf: anInstVarName
 
 	| instVarRawTypes |
@@ -4434,6 +4831,7 @@ typeInfoInHierarchyOf: anInstVarName
 	^ class createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: instVarRawTypes ! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 10/Aug/2019, 2:38:08 pm (UTC)'!
+!methodProperties: {}!
 typeInfoOf: anInstVarName ifAbsent: anAbsentBlock
 
 	(class definesInstanceVariableNamedInHierarchy: anInstVarName) ifFalse:[ ^anAbsentBlock value ].
@@ -4441,46 +4839,55 @@ typeInfoOf: anInstVarName ifAbsent: anAbsentBlock
 	^ self typeInfoInHierarchyOf: anInstVarName! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 28/Feb/2019, 7:51:49 pm (UTC)'!
+!methodProperties: {}!
 typesInfoDo: aBlock
 
 	self variablesNames do: [ :variableName | aBlock value: (self typeInfoOf: variableName) ]! !
 
 !InstanceVariablesTypes methodsFor: 'types' stamp: 'HAW 28/Feb/2019, 7:52:46 pm (UTC)'!
+!methodProperties: {}!
 typesInfoSize
 
 	^self variablesNames size! !
 
 !InstanceVariablesTypes methodsFor: 'variable names' stamp: 'HAW 20/Oct/2018, 8:00:06 pm (UTC)'!
+!methodProperties: {}!
 variablesNames
 
 	^class instVarNames ! !
 
 !InstanceVariablesTypes methodsFor: 'testing' stamp: 'HAW 20/Oct/2018, 11:36:57 pm (UTC)'!
+!methodProperties: {}!
 doesStoreTypes
 
 	^rawTypes notNil ! !
 
 !InstanceVariablesTypes methodsFor: 'megamorphic' stamp: 'HAW 16/Oct/2018, 1:37:35 am (UTC)'!
+!methodProperties: {}!
 megamorphicInstanceVariables
 
 	^ class allInstVarNames select: [ :anInstVarName | (self typeInfoOf: anInstVarName) isMegamorphic]! !
 
 !InstanceVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 16/Oct/2018, 4:03:43 am (UTC)'!
+!methodProperties: {}!
 of: aClass
 
 	^self of: aClass rawTypes: aClass instanceVariablesRawTypes! !
 
 !InstanceVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 5/Oct/2018, 12:09:31 am (UTC)'!
+!methodProperties: {}!
 of: aClass rawTypes: rawTypes
 
 	^self new initializeOf: aClass rawTypes: rawTypes! !
 
 !InstanceVariablesTypes class methodsFor: 'types' stamp: 'HAW 23/Feb/2019, 2:04:39 am (UTC)'!
+!methodProperties: {}!
 unload: aClassToUnload from: aRawTypes
 
 	InstanceVariableTypeInfo unload: aClassToUnload from: aRawTypes ! !
 
 !InstanceVariablesTypes class methodsFor: 'initialization' stamp: 'HAW 16/Oct/2018, 4:05:51 am (UTC)'!
+!methodProperties: {}!
 initializeForAllClasses
 
 	"
@@ -4490,6 +4897,7 @@ initializeForAllClasses
 	ProtoObject withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
 
 !InstanceVariablesTypes class methodsFor: 'initialization' stamp: 'HAW 16/Oct/2018, 4:06:09 am (UTC)'!
+!methodProperties: {}!
 initializeForAllClassesWithAllInstances
 
 	"
@@ -4499,11 +4907,13 @@ initializeForAllClassesWithAllInstances
 	ProtoObject withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypesWithAllInstances]! !
 
 !InstanceVariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 20/Oct/2018, 8:34:41 pm (UTC)'!
+!methodProperties: {}!
 of: aClass do: aBlock
 
 	aBlock value: aClass instanceVariablesTypes ! !
 
 !InstanceVariablesTypes class methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 6:41:25 pm (UTC)'!
+!methodProperties: {}!
 printTypesInfoHeaderOn: aStream
 
 	aStream
@@ -4513,6 +4923,7 @@ printTypesInfoHeaderOn: aStream
 		! !
 
 !InstanceVariablesTypes class methodsFor: 'statistics' stamp: 'HAW 20/Oct/2018, 8:48:53 pm (UTC)'!
+!methodProperties: {}!
 numberOfRawTypesForAll
 
 	"
@@ -4527,6 +4938,7 @@ numberOfRawTypesForAll
 	^numberOfTypes contents! !
 
 !MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 28/Feb/2019, 8:13:05 pm (UTC)'!
+!methodProperties: {}!
 typeInfoOf: aVarName ifAbsent: anAbsentBlock
 
 	| rawTypes |
@@ -4536,26 +4948,31 @@ typeInfoOf: aVarName ifAbsent: anAbsentBlock
 	^method methodClass createMethodVariableTypeInfoOf: aVarName in: method are: rawTypes ! !
 
 !MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 28/Feb/2019, 8:06:22 pm (UTC)'!
+!methodProperties: {}!
 typesInfoDo: aBlock
 
 	self variablesNamesDo: [ :aVarName | aBlock value: (self typeInfoOf: aVarName ifAbsent: [ self error: 'should not happen' ])]! !
 
 !MethodVariablesTypes methodsFor: 'types' stamp: 'HAW 28/Feb/2019, 8:13:05 pm (UTC)'!
+!methodProperties: {}!
 typesInfoSize
 
 	methodProperties numberOfVariables! !
 
 !MethodVariablesTypes methodsFor: 'variable names' stamp: 'HAW 28/Feb/2019, 8:13:05 pm (UTC)'!
+!methodProperties: {}!
 variablesNames
 
 	^methodProperties variablesNames! !
 
 !MethodVariablesTypes methodsFor: 'variable names' stamp: 'HAW 28/Feb/2019, 8:13:05 pm (UTC)'!
+!methodProperties: {}!
 variablesNamesDo: aBlock
 
 	^ methodProperties variablesNamesDo: aBlock! !
 
 !MethodVariablesTypes methodsFor: 'initialization' stamp: 'HAW 28/Feb/2019, 8:13:32 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aCompiledMethod with: aMethodProperties
 
 	method := aCompiledMethod.
@@ -4563,22 +4980,26 @@ initializeOf: aCompiledMethod with: aMethodProperties
 ! !
 
 !MethodVariablesTypes methodsFor: 'collect info' stamp: 'HAW 27/Mar/2019, 1:38:25 pm (UTC)'!
+!methodProperties: {}!
 addNumberOfRawTypesTo: aBagCollector
 
 	self typesInfoDo: [ :aTypeInfo |  aBagCollector add: aTypeInfo typesSize ]
 	! !
 
 !MethodVariablesTypes class methodsFor: 'instance creation' stamp: 'HAW 6/Mar/2019, 9:55:36 pm (UTC)'!
+!methodProperties: {}!
 of: aCompiledMethod
 
 	^self new initializeOf: aCompiledMethod with: aCompiledMethod typeAnnotationsHolder! !
 
 !MethodVariablesTypes class methodsFor: 'types' stamp: 'HAW 23/Feb/2019, 2:04:39 am (UTC)'!
+!methodProperties: {}!
 unload: aClassToUnload from: aRawTypes
 
 	MethodVariableTypeInfo unload: aClassToUnload from: aRawTypes ! !
 
 !MethodVariablesTypes class methodsFor: 'initialization' stamp: 'HAW 20/Oct/2018, 9:30:48 pm (UTC)'!
+!methodProperties: {}!
 initializeForAllClasses
 
 	"
@@ -4587,6 +5008,7 @@ initializeForAllClasses
 	ProtoObject withAllSubclassesDo: [ :aClass | aClass initializeMethodsTypeInformation ]! !
 
 !MethodVariablesTypes class methodsFor: 'enumeration' stamp: 'HAW 27/Aug/2019, 10:37:11 am (UTC)'!
+!methodProperties: {}!
 of: aClass do: aBlock
 
 	aClass methodsDo: [ :aCompiledMethod |
@@ -4595,6 +5017,7 @@ of: aClass do: aBlock
 			do: [ :error | ]]! !
 
 !MethodVariablesTypes class methodsFor: 'statistics' stamp: 'HAW 27/Mar/2019, 2:15:33 pm (UTC)'!
+!methodProperties: {}!
 numberOfRawTypesForAll
 
 	"
@@ -4612,6 +5035,7 @@ numberOfRawTypesForAll
 	^numberOfTypes contents! !
 
 !MethodVariablesTypes class methodsFor: 'printing' stamp: 'HAW 23/Oct/2018, 6:43:23 pm (UTC)'!
+!methodProperties: {}!
 printTypesInfoHeaderOn: aStream
 
 	aStream
@@ -4621,6 +5045,7 @@ printTypesInfoHeaderOn: aStream
 		! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 31/Dec/2018, 6:36:06 pm (UTC)'!
+!methodProperties: {}!
 inject: thisValue into: binaryBlock
 	"Accumulate a running value associated with evaluating the argument,
 	binaryBlock, with the current value of the argument, thisValue, and the
@@ -4634,6 +5059,7 @@ inject: thisValue into: binaryBlock
 	^nextValue! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 3/Jan/2019, 1:47:14 pm (UTC)'!
+!methodProperties: {}!
 m1
 
 	| t1 t2 |
@@ -4648,6 +5074,7 @@ m1
 	! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 2/Jan/2019, 12:51:14 pm (UTC)'!
+!methodProperties: {}!
 m1: p1
    | t1 |
 
@@ -4657,6 +5084,7 @@ m1: p1
    [ | t3 | t3 := 3.14 ] value. "<-- it will save Float in (method additionalState contextTypesAt: 3) at: 1"! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 31/Dec/2018, 2:16:44 pm (UTC)'!
+!methodProperties: {}!
 m1_read_temp
 
 	| t1 |
@@ -4667,6 +5095,7 @@ m1_read_temp
 	^t1! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 31/Dec/2018, 2:17:01 pm (UTC)'!
+!methodProperties: {}!
 m1_read_write_temp
 
 	| t1 |
@@ -4677,6 +5106,7 @@ m1_read_write_temp
 	^t1! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 27/Feb/2019, 5:14:41 pm (UTC)'!
+!methodProperties: {}!
 m1_temps_not_in_block_read_temp
 
 	| n1 n2 t1 |
@@ -4690,6 +5120,7 @@ m1_temps_not_in_block_read_temp
 	^t1! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 31/Dec/2018, 2:20:03 pm (UTC)'!
+!methodProperties: {}!
 m1_temps_not_in_block_read_write_temp
 
 	| n1 n2 t1 |
@@ -4703,6 +5134,7 @@ m1_temps_not_in_block_read_write_temp
 	^t1! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 31/Dec/2018, 2:17:32 pm (UTC)'!
+!methodProperties: {}!
 m1_write_temp_outside_block
 
 	| t1 |
@@ -4715,6 +5147,7 @@ m1_write_temp_outside_block
 	^t1! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 2/Jan/2019, 12:51:51 pm (UTC)'!
+!methodProperties: {}!
 m10
    | t1 |
 
@@ -4724,6 +5157,7 @@ m10
    [ | t3 | t3 := 3.14 ] value. "<-- it will save Float in (method additionalState contextTypesAt: 3) at: 1"! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 31/Dec/2018, 3:11:06 pm (UTC)'!
+!methodProperties: {}!
 m2
 
 	| t1 t2 |
@@ -4733,6 +5167,7 @@ m2
 ! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 31/Dec/2018, 2:22:05 pm (UTC)'!
+!methodProperties: {}!
 m2_block_with_arguments
 
 	"
@@ -4749,6 +5184,7 @@ m2_block_with_arguments
 	^t1! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 1/Jan/2019, 2:06:57 pm (UTC)'!
+!methodProperties: {}!
 m3
 "
 self new m3
@@ -4766,6 +5202,7 @@ self new m3
 ! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 27/Feb/2019, 5:19:08 pm (UTC)'!
+!methodProperties: {}!
 m4_many_temps_in_remote_vector
 
 	| t1 t2 t3 |
@@ -4778,6 +5215,7 @@ m4_many_temps_in_remote_vector
 	^t3! !
 
 !ClosureTypeExamples methodsFor: 'as yet unclassified' stamp: 'HAW 27/Feb/2019, 5:30:01 pm (UTC)'!
+!methodProperties: {}!
 m5_many_temps_in_remote_vector_with_block_params_and_temps
 
 	| t1 t2 t3 |
@@ -4798,6 +5236,7 @@ m5_many_temps_in_remote_vector_with_block_params_and_temps
 	^t3! !
 
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 1/Nov/2018, 3:24:48 pm (UTC)'!
+!methodProperties: {}!
 aconcaguaTime
 
 	"
@@ -4807,6 +5246,7 @@ aconcaguaTime
 	^ self timeToRunTestsOf: 'Aconcagua' ! !
 
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 23/Sep/2018, 12:53:02 am (UTC)'!
+!methodProperties: {}!
 chaltenTime
 
 	"
@@ -4816,6 +5256,7 @@ chaltenTime
 	^ self timeToRunTestsOf: 'Chalten'! !
 
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 1/Nov/2018, 3:35:04 pm (UTC)'!
+!methodProperties: {}!
 kernelTestsTime
 
 	"
@@ -4827,6 +5268,7 @@ kernelTestsTime
 	! !
 
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 1/Nov/2018, 3:36:38 pm (UTC)'!
+!methodProperties: {}!
 refactoringTime
 
 	"
@@ -4837,6 +5279,7 @@ refactoringTime
 	! !
 
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 1/Nov/2018, 3:26:02 pm (UTC)'!
+!methodProperties: {}!
 ticTacToeTime
 
 	"
@@ -4846,6 +5289,7 @@ ticTacToeTime
 	^ self timeToRunTestsOf: 'TicTacToe'! !
 
 !PerfomanceTest class methodsFor: 'as yet unclassified' stamp: 'HAW 23/Sep/2018, 12:51:11 am (UTC)'!
+!methodProperties: {}!
 timeToRunTestsOf: aCategoryBeginName
 
 	| suite testCases |
@@ -4857,50 +5301,61 @@ timeToRunTestsOf: aCategoryBeginName
 ! !
 
 !TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:52:25 pm (UTC)'!
+!methodProperties: {}!
 implementedOnAll: p1
 
 	self subclassResponsibility ! !
 
 !TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:51:50 pm (UTC)'!
+!methodProperties: {}!
 implementedOnRootAndSibling1: p1
 
 	^p1! !
 
 !TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:50:51 pm (UTC)'!
+!methodProperties: {}!
 implementedOnRootOnly: p1! !
 
 !TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 10/Aug/2019, 3:48:33 pm (UTC)'!
+!methodProperties: {}!
 implementedOnSibling1Only
 
 	self subclassResponsibility ! !
 
 !TypeInfoRootTestClass methodsFor: 'test data' stamp: 'HAW 16/Oct/2018, 2:17:17 am (UTC)'!
+!methodProperties: {}!
 ivroot: anObject
 
 	ivroot := anObject ! !
 
 !TypeInfoRootTestClass class methodsFor: 'raw types size' stamp: 'HAW 16/Oct/2018, 4:07:21 am (UTC)'!
+!methodProperties: {}!
 instanceVariableRawTypesSizeFor: anInstVarName
 
 	^ 2! !
 
 !TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:52:40 pm (UTC)'!
+!methodProperties: {}!
 implementedOnAll: p1
 
 	^1! !
 
 !TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:50:38 pm (UTC)'!
+!methodProperties: {}!
 implementedOnRootAndSibling1: p1! !
 
 !TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:51:11 pm (UTC)'!
+!methodProperties: {}!
 implementedOnSibling1AndSibling2: p1! !
 
 !TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 10/Aug/2019, 3:48:47 pm (UTC)'!
+!methodProperties: {}!
 implementedOnSibling1Only
 
 	^1! !
 
 !TypeInfoSibling1TestClass methodsFor: 'test data' stamp: 'HAW 2/Nov/2018, 11:31:27 am (UTC)'!
+!methodProperties: {}!
 ivsibling1: anObject
 	"
 	IVTISibling1 initializeInstanceVariablesRawTypes.
@@ -4909,24 +5364,29 @@ ivsibling1: anObject
 	ivsibling1 := anObject ! !
 
 !TypeInfoSibling1TestClass class methodsFor: 'raw types size' stamp: 'HAW 16/Oct/2018, 4:07:21 am (UTC)'!
+!methodProperties: {}!
 instanceVariableRawTypesSizeFor: anInstVarName
 
 	^ 3! !
 
 !TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:53:01 pm (UTC)'!
+!methodProperties: {}!
 implementedOnAll: p1
 
 	^1/2! !
 
 !TypeInfoSibling2TestClass methodsFor: 'test data' stamp: 'HAW 19/Feb/2019, 5:51:11 pm (UTC)'!
+!methodProperties: {}!
 implementedOnSibling1AndSibling2: p1! !
 
 !TypeInfoSibling2TestClass class methodsFor: 'raw types size' stamp: 'HAW 16/Oct/2018, 4:07:21 am (UTC)'!
+!methodProperties: {}!
 instanceVariableRawTypesSizeFor: anInstVarName
 
 	^ 3! !
 
 !TypeCast methodsFor: 'applying' stamp: 'HAW 20/Aug/2019, 10:47:03 pm (UTC)'!
+!methodProperties: {}!
 applyTo: aParseNode using: originalTypes
 
 	^(self isFor: aParseNode)
@@ -4934,16 +5394,19 @@ applyTo: aParseNode using: originalTypes
 		ifFalse: [ originalTypes ]! !
 
 !TypeCast methodsFor: 'testing' stamp: 'HAW 20/Aug/2019, 1:31:36 am (UTC)'!
+!methodProperties: {}!
 isFor: aParseNode
 
 	^objetToCast isSameAs: aParseNode! !
 
 !TypeCast methodsFor: 'casting' stamp: 'HAW 23/Aug/2019, 6:54:10 pm (UTC)'!
+!methodProperties: {}!
 cast: originalTypes
 
 	self subclassResponsibility! !
 
 !ManyTypesCast methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 11:30:54 pm (UTC)'!
+!methodProperties: {}!
 cast: originalTypes
 
 	| newTypes |
@@ -4953,27 +5416,32 @@ cast: originalTypes
 	^newTypes ! !
 
 !ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 20/Aug/2019, 11:37:49 pm (UTC)'!
+!methodProperties: {}!
 does: aType withoutRejectionsIncludesBehavior: aTypeToCastTo
 
 	^(aType includesBehavior: aTypeToCastTo) and: [ self is: aType notRejectedInSubclassesOf: aTypeToCastTo ]! !
 
 !ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 20/Aug/2019, 11:38:48 pm (UTC)'!
+!methodProperties: {}!
 is: aType notRejectedInSubclassesOf: aTypeToCastTo
 
 	^(self typeToRejectSubclassesOf: aTypeToCastTo) noneSatisfy: [ :aTypeToReject | aType includesBehavior: aTypeToReject ]! !
 
 !ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 20/Aug/2019, 11:35:01 pm (UTC)'!
+!methodProperties: {}!
 shouldKeep: aType
 
 	^typesToCastTo anySatisfy: [ :aTypeToCastTo | self does: aType withoutRejectionsIncludesBehavior: aTypeToCastTo ]
 	! !
 
 !ManyTypesCast methodsFor: 'casting - private' stamp: 'HAW 20/Aug/2019, 11:38:57 pm (UTC)'!
+!methodProperties: {}!
 typeToRejectSubclassesOf: aTypeToCastTo
 
 	^typesToReject select: [ :aTypeToReject | aTypeToReject inheritsFrom: aTypeToCastTo ]! !
 
 !ManyTypesCast methodsFor: 'initialization' stamp: 'HAW 20/Aug/2019, 7:58:29 pm (UTC)'!
+!methodProperties: {}!
 initializeTo: aTypesToCastTo rejecting: aTypesToReject of: anObjectToCast
 
 	typesToCastTo := aTypesToCastTo.
@@ -4981,62 +5449,74 @@ initializeTo: aTypesToCastTo rejecting: aTypesToReject of: anObjectToCast
 	objetToCast := anObjectToCast ! !
 
 !ManyTypesCast class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 7:57:59 pm (UTC)'!
+!methodProperties: {}!
 to: aTypesToCastTo rejecting: aTypesToReject of: anObjectToCast
 
 	^self new initializeTo: aTypesToCastTo rejecting: aTypesToReject of: anObjectToCast! !
 
 !OneTypeCast methodsFor: 'initialization' stamp: 'HAW 20/Aug/2019, 11:16:09 pm (UTC)'!
+!methodProperties: {}!
 initializeTo: aTypeToCastTo of: anObjectToCast
 
 	typeToCastTo := aTypeToCastTo.
 	objetToCast := anObjectToCast ! !
 
 !OneTypeCast class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 11:16:24 pm (UTC)'!
+!methodProperties: {}!
 to: aTypeToCastTo of: anObjectToCast
 
 	^self new initializeTo: aTypeToCastTo of: anObjectToCast! !
 
 !EqualTypeCast methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 1:34:47 am (UTC)'!
+!methodProperties: {}!
 cast: originalTypes
 
 	^ { typeToCastTo }! !
 
 !EqualTypeReject methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 11:28:00 pm (UTC)'!
+!methodProperties: {}!
 cast: originalTypes
 
 	^ originalTypes reject: [ :aType | aType = typeToCastTo ]! !
 
 !IsKindOfTypeCast methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 1:34:47 am (UTC)'!
+!methodProperties: {}!
 cast: originalTypes
 
 	^originalTypes select: [ :aType | aType includesBehavior: typeToCastTo ].! !
 
 !IsKindOfTypeReject methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 11:28:00 pm (UTC)'!
+!methodProperties: {}!
 cast: originalTypes
 
 	^originalTypes reject: [ :aType | aType includesBehavior: typeToCastTo ]! !
 
 !TypeCastApplier methodsFor: 'applying' stamp: 'HAW 21/Aug/2019, 12:06:44 am (UTC)'!
+!methodProperties: {}!
 applyTo: aParseNode with: originalTypes
 
 	self subclassResponsibility ! !
 
 !TypeCastApplier methodsFor: 'applying' stamp: 'HAW 20/Aug/2019, 1:55:22 am (UTC)'!
+!methodProperties: {}!
 typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock
 
 	self subclassResponsibility ! !
 
 !TypeCastApplier methodsFor: 'applying' stamp: 'HAW 20/Aug/2019, 1:55:34 am (UTC)'!
+!methodProperties: {}!
 typesIfRejecting: aParseNode using: originalTypes
 
 	self subclassResponsibility ! !
 
 !TypeCastApplier methodsFor: 'receiver types' stamp: 'HAW 21/Aug/2019, 5:36:33 pm (UTC)'!
+!methodProperties: {}!
 initialize
 
 	receiverTypes := IdentityDictionary new! !
 
 !TypeCastApplier methodsFor: 'receiver types' stamp: 'HAW 21/Aug/2019, 5:36:19 pm (UTC)'!
+!methodProperties: {}!
 receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^receiverTypes
@@ -5046,17 +5526,20 @@ receiverTypesFor: aMessageNode in: actualMethod addingIncompleteTypeInfoTo: inco
 ! !
 
 !EffectiveTypeCastApplier methodsFor: 'adding' stamp: 'HAW 21/Aug/2019, 9:29:31 pm (UTC)'!
+!methodProperties: {}!
 addTypeCasts: aCollectionOfRejections
 
 	rejections addAll: aCollectionOfRejections.
 	receiverTypes removeAll	! !
 
 !EffectiveTypeCastApplier methodsFor: 'applying' stamp: 'HAW 19/Aug/2019, 6:25:39 pm (UTC)'!
+!methodProperties: {}!
 applyTo: aParseNode with: originalTypes
 
 	^self typesIfCasting: aParseNode using: originalTypes ifNot: [ self typesIfRejecting: aParseNode using: originalTypes ]! !
 
 !EffectiveTypeCastApplier methodsFor: 'applying' stamp: 'HAW 20/Aug/2019, 1:34:55 am (UTC)'!
+!methodProperties: {}!
 typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock
 
 	^casts
@@ -5065,6 +5548,7 @@ typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock
 		ifNone: [ previous typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock ]! !
 
 !EffectiveTypeCastApplier methodsFor: 'applying' stamp: 'HAW 21/Aug/2019, 9:18:06 pm (UTC)'!
+!methodProperties: {}!
 typesIfRejecting: aParseNode using: originalTypes
 
 	| newTypes |
@@ -5076,6 +5560,7 @@ typesIfRejecting: aParseNode using: originalTypes
 	^previous typesIfRejecting: aParseNode using: newTypes! !
 
 !EffectiveTypeCastApplier methodsFor: 'initialization' stamp: 'HAW 21/Aug/2019, 9:18:06 pm (UTC)'!
+!methodProperties: {}!
 initializeCasts: aCollectionOfCasts rejections: aCollectionOfRejections previous: aPreviousCastingStrategy
 
 	casts := aCollectionOfCasts.
@@ -5084,17 +5569,20 @@ initializeCasts: aCollectionOfCasts rejections: aCollectionOfRejections previous
 	! !
 
 !EffectiveTypeCastApplier methodsFor: 'previous' stamp: 'HAW 19/Aug/2019, 6:03:58 pm (UTC)'!
+!methodProperties: {}!
 previous
 
 	^previous! !
 
 !EffectiveTypeCastApplier class methodsFor: 'instance creation' stamp: 'HAW 19/Aug/2019, 11:02:47 pm (UTC)'!
+!methodProperties: {}!
 casts: aCollectionOfCasts rejections: aCollectionOfRejections previous: aPreviousCastingStrategy
 
 	^self new initializeCasts: aCollectionOfCasts rejections: aCollectionOfRejections previous: aPreviousCastingStrategy
 ! !
 
 !EffectiveTypeCastApplier class methodsFor: 'instance creation' stamp: 'HAW 19/Aug/2019, 11:03:46 pm (UTC)'!
+!methodProperties: {}!
 previous: aPreviousCastingStrategy
 
 	^self
@@ -5103,56 +5591,67 @@ previous: aPreviousCastingStrategy
 		previous: aPreviousCastingStrategy ! !
 
 !NoTypeCastApplier methodsFor: 'applying' stamp: 'HAW 21/Aug/2019, 12:02:54 am (UTC)'!
+!methodProperties: {}!
 applyTo: aParseNode with: originalTypes
 
 	^originalTypes ! !
 
 !NoTypeCastApplier methodsFor: 'applying' stamp: 'HAW 19/Aug/2019, 6:27:52 pm (UTC)'!
+!methodProperties: {}!
 typesIfCasting: aParseNode using: originalTypes ifNot: aNotBlock
 
 	^aNotBlock value! !
 
 !NoTypeCastApplier methodsFor: 'applying' stamp: 'HAW 19/Aug/2019, 6:34:01 pm (UTC)'!
+!methodProperties: {}!
 typesIfRejecting: aParseNode using: originalTypes
 
 	^originalTypes ! !
 
 !TypeCastApplierBuilder methodsFor: 'type casts' stamp: 'HAW 20/Aug/2019, 10:55:33 pm (UTC)'!
+!methodProperties: {}!
 addAfterMessageTypeCastsTo: aCastingStrategy
 
 	self subclassResponsibility ! !
 
 !TypeCastApplierBuilder methodsFor: 'building' stamp: 'HAW 20/Aug/2019, 2:01:59 am (UTC)'!
+!methodProperties: {}!
 for: aBlockNode previous: aPreviousCastingStrategy
 
 	self subclassResponsibility ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 10:53:47 pm (UTC)'!
+!methodProperties: {}!
 buildTypeCast
 
 	self subclassResponsibility ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 10:53:42 pm (UTC)'!
+!methodProperties: {}!
 buildTypeReject
 
 	self subclassResponsibility ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'type casts' stamp: 'HAW 20/Aug/2019, 10:56:15 pm (UTC)'!
+!methodProperties: {}!
 addAfterMessageTypeCastsTo: aCastingStrategy
 
 	aCastingStrategy addTypeCasts: afterMessageTypeCasts ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:16:29 pm (UTC)'!
+!methodProperties: {}!
 buildCastApplierBefore: aPreviousCastingStrategy
 
 	 self subclassResponsibility ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:15:43 pm (UTC)'!
+!methodProperties: {}!
 buildRejectApplierBefore: aPreviousCastingStrategy
 
 	 self subclassResponsibility ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:17:23 pm (UTC)'!
+!methodProperties: {}!
 for: aBlockNode previous: aPreviousCastingApplier
 
 	aBlockNode = castingBlock ifTrue: [ ^self buildCastApplierBefore: aPreviousCastingApplier ].
@@ -5161,6 +5660,7 @@ for: aBlockNode previous: aPreviousCastingApplier
 	^EffectiveTypeCastApplier previous: aPreviousCastingApplier ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 22/Aug/2019, 12:36:56 am (UTC)'!
+!methodProperties: {}!
 addToAfterMessageTypeCasts: aTypeCastBlockBuilder ifReturns: anArgumentBlock
 
 	anArgumentBlock isBlockNode
@@ -5169,6 +5669,7 @@ addToAfterMessageTypeCasts: aTypeCastBlockBuilder ifReturns: anArgumentBlock
 ! !
 
 !EffectiveTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 22/Aug/2019, 12:35:15 am (UTC)'!
+!methodProperties: {}!
 initializeAfterMessageTypeCasts
 
 	afterMessageTypeCasts := OrderedCollection new.
@@ -5179,6 +5680,7 @@ initializeAfterMessageTypeCasts
 	! !
 
 !IsKindOfManyTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:17:40 pm (UTC)'!
+!methodProperties: {}!
 buildCastApplierBefore: aPreviousCastingApplier
 
 	^EffectiveTypeCastApplier
@@ -5187,6 +5689,7 @@ buildCastApplierBefore: aPreviousCastingApplier
 		previous: aPreviousCastingApplier! !
 
 !IsKindOfManyTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:17:45 pm (UTC)'!
+!methodProperties: {}!
 buildRejectApplierBefore: aPreviousCastingApplier
 
 	^EffectiveTypeCastApplier
@@ -5195,16 +5698,19 @@ buildRejectApplierBefore: aPreviousCastingApplier
 		previous: aPreviousCastingApplier! !
 
 !IsKindOfManyTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 10:58:08 pm (UTC)'!
+!methodProperties: {}!
 buildTypeCast
 
 	^ManyTypesCast to: typesToCastTo rejecting: typesToReject of: objectToCast! !
 
 !IsKindOfManyTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 11:23:11 pm (UTC)'!
+!methodProperties: {}!
 buildTypeReject
 
 	^ManyTypesCast to: typesToReject rejecting: typesToCastTo of: objectToCast! !
 
 !IsKindOfManyTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 20/Aug/2019, 11:05:59 pm (UTC)'!
+!methodProperties: {}!
 initializeTo: aTypesToCastTo rejecting: aTypesToRejet on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType
 
 	typesToCastTo := aTypesToCastTo.
@@ -5216,11 +5722,13 @@ initializeTo: aTypesToCastTo rejecting: aTypesToRejet on: anObjectToCast during:
 	! !
 
 !IsKindOfManyTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 7:42:48 pm (UTC)'!
+!methodProperties: {}!
 to: aTypesToCastTo rejecting: aTypesToRejet on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType
 
 	^self new initializeTo: aTypesToCastTo rejecting: aTypesToRejet on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType ! !
 
 !OneTypeCastApplierBuilder methodsFor: 'initialization' stamp: 'HAW 20/Aug/2019, 11:03:19 pm (UTC)'!
+!methodProperties: {}!
 initializeTo: aType on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType
 
 	castType := aType .
@@ -5231,32 +5739,38 @@ initializeTo: aType on: anObjectToCast during: aBlockToCastType rejectingDuring:
 ! !
 
 !OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 11:02:26 pm (UTC)'!
+!methodProperties: {}!
 to: aClass on: anObject during: aBlockToCastType
 
 	^self to: aClass on: anObject during: aBlockToCastType rejectingDuring: BlockNode empty
 	! !
 
 !OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 11:02:34 pm (UTC)'!
+!methodProperties: {}!
 to: aType on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType
 
 	^self new initializeTo: aType on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType ! !
 
 !OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 11:02:45 pm (UTC)'!
+!methodProperties: {}!
 toUndefinedObjectOn: anObjectToCast during: aBlockToCastType
 
 	^self to: UndefinedObject on: anObjectToCast during: aBlockToCastType rejectingDuring: BlockNode empty! !
 
 !OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 11:02:54 pm (UTC)'!
+!methodProperties: {}!
 toUndefinedObjectOn: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType
 
 	^self to: UndefinedObject on: anObjectToCast during: aBlockToCastType rejectingDuring: aBlockToRejectType ! !
 
 !OneTypeCastApplierBuilder class methodsFor: 'instance creation' stamp: 'HAW 20/Aug/2019, 11:03:03 pm (UTC)'!
+!methodProperties: {}!
 toUndefinedObjectOn: anObjectToCast rejectingDuring: aBlockToRejectType
 
 	^self to: UndefinedObject on: anObjectToCast during: BlockNode empty rejectingDuring: aBlockToRejectType ! !
 
 !EqualsTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:17:31 pm (UTC)'!
+!methodProperties: {}!
 buildCastApplierBefore: aPreviousCastingApplier
 
 	 ^EffectiveTypeCastApplier
@@ -5265,6 +5779,7 @@ buildCastApplierBefore: aPreviousCastingApplier
 		previous: aPreviousCastingApplier! !
 
 !EqualsTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:17:36 pm (UTC)'!
+!methodProperties: {}!
 buildRejectApplierBefore: aPreviousCastingApplier
 
 	 ^EffectiveTypeCastApplier
@@ -5273,16 +5788,19 @@ buildRejectApplierBefore: aPreviousCastingApplier
 		previous: aPreviousCastingApplier! !
 
 !EqualsTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 11:15:22 pm (UTC)'!
+!methodProperties: {}!
 buildTypeCast
 
 	^EqualTypeCast to: castType of: objectToCast! !
 
 !EqualsTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 11:26:45 pm (UTC)'!
+!methodProperties: {}!
 buildTypeReject
 
 	^EqualTypeReject to: castType of: objectToCast! !
 
 !IsKindOfTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:17:50 pm (UTC)'!
+!methodProperties: {}!
 buildCastApplierBefore: aPreviousCastingApplier
 
 	^EffectiveTypeCastApplier
@@ -5292,6 +5810,7 @@ buildCastApplierBefore: aPreviousCastingApplier
 	! !
 
 !IsKindOfTypeCastApplierBuilder methodsFor: 'building applier' stamp: 'HAW 21/Aug/2019, 5:17:54 pm (UTC)'!
+!methodProperties: {}!
 buildRejectApplierBefore: aPreviousCastingApplier
 
 	^EffectiveTypeCastApplier
@@ -5301,21 +5820,25 @@ buildRejectApplierBefore: aPreviousCastingApplier
 	! !
 
 !IsKindOfTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 10:49:30 pm (UTC)'!
+!methodProperties: {}!
 buildTypeCast
 
 	^IsKindOfTypeCast to: castType of: objectToCast! !
 
 !IsKindOfTypeCastApplierBuilder methodsFor: 'building cast' stamp: 'HAW 20/Aug/2019, 11:26:45 pm (UTC)'!
+!methodProperties: {}!
 buildTypeReject
 
 	^IsKindOfTypeReject to: castType of: objectToCast! !
 
 !NoTypeCastApplierBuilder methodsFor: 'type casts' stamp: 'HAW 20/Aug/2019, 10:55:33 pm (UTC)'!
+!methodProperties: {}!
 addAfterMessageTypeCastsTo: aCastingStrategy
 
 	! !
 
 !NoTypeCastApplierBuilder methodsFor: 'building' stamp: 'HAW 21/Aug/2019, 5:17:59 pm (UTC)'!
+!methodProperties: {}!
 for: aBlockNode previous: aPreviousCastingApplier
 
 	"I don't use NoCastingTypeApplier because rejects can be added to the strategy for example
@@ -5323,6 +5846,7 @@ for: aBlockNode previous: aPreviousCastingApplier
 	^EffectiveTypeCastApplier previous: aPreviousCastingApplier ! !
 
 !TypeChecker methodsFor: 'showing results' stamp: 'HAW 3/May/2020, 9:56:18 pm (UTC)'!
+!methodProperties: {}!
 showResultsWith: aLabelTrail
 
 	| showProblems |
@@ -5333,91 +5857,109 @@ showResultsWith: aLabelTrail
 	TypeCheckingResultWindow openFor: self labelTrail: aLabelTrail showingProblems: showProblems ! !
 
 !TypeChecker methodsFor: 'problems' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 problems
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'problems' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 problemsDetect: aCondition ifNone: noneBlock
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'problems' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 problemsSize
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'warnings' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 warnings
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'warnings' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 warningsDetect: aCondition ifNone: aNoneBlock
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'warnings' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 warningsIsEmpty
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'warnings' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 warningsSize
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'errors' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 errors
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'errors' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 errorsAndWarnings
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'errors' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 errorsDetect: aCondition ifNone: aNoneBlock
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'errors' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 errorsIsEmpty
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'errors' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 errorsSize
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'type checking' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 value
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'testing' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 hasErrors
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'testing' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 hasErrorsOrWarnings
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'testing' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 hasNoErrorsAndWarnings
 
 	self subclassResponsibility! !
 
 !TypeChecker methodsFor: 'testing' stamp: 'HAW 12/Aug/2019, 1:36:14 am (UTC)'!
+!methodProperties: {}!
 hasProblems
 
 	self subclassResponsibility! !
 
 !ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 12/Aug/2019, 2:12:52 am (UTC)'!
+!methodProperties: {}!
 errors
 
 	^typeCheckers
@@ -5427,6 +5969,7 @@ errors
 			errors ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 18/Jul/2019, 8:44:56 pm (UTC)'!
+!methodProperties: {}!
 errorsAndWarnings
 
 	| list |
@@ -5441,6 +5984,7 @@ errorsAndWarnings
 	^list! !
 
 !ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 12/Aug/2019, 1:51:06 am (UTC)'!
+!methodProperties: {}!
 errorsDetect: aCondition ifNone: noneBlock
 
 	| errors |
@@ -5452,16 +5996,19 @@ errorsDetect: aCondition ifNone: noneBlock
 	^noneBlock value! !
 
 !ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 18/Jul/2019, 9:17:35 pm (UTC)'!
+!methodProperties: {}!
 errorsIsEmpty
 
 	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker errorsIsEmpty ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'errors' stamp: 'HAW 18/Jul/2019, 4:14:24 pm (UTC)'!
+!methodProperties: {}!
 errorsSize
 
 	^typeCheckers sum: [ :typeChecker | typeChecker errorsSize ] ifEmpty: [ 0 ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'problems to list' stamp: 'HAW 9/Aug/2019, 1:43:58 pm (UTC)'!
+!methodProperties: {}!
 errorsAndWarningsAsMethodReferencesWithProblems: showProblems
 
 	| list |
@@ -5476,6 +6023,7 @@ errorsAndWarningsAsMethodReferencesWithProblems: showProblems
 	^list! !
 
 !ManyMethodsTypeChecker methodsFor: 'problems to list' stamp: 'HAW 19/Jul/2019, 6:53:10 pm (UTC)'!
+!methodProperties: {}!
 errorsAsMethodReferences
 
 	| list |
@@ -5490,36 +6038,43 @@ errorsAsMethodReferences
 	^list! !
 
 !ManyMethodsTypeChecker methodsFor: 'problems to list' stamp: 'HAW 18/Jul/2019, 9:40:33 pm (UTC)'!
+!methodProperties: {}!
 sortedTypeCheckers
 
 	^typeCheckers sorted: [ :leftTypeChecker :rightTypeChecker | leftTypeChecker method <= rightTypeChecker method ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 12/Aug/2019, 2:09:05 am (UTC)'!
+!methodProperties: {}!
 hasErrors
 
 	^typeCheckers anySatisfy: [ :aTypeChecker | aTypeChecker hasErrors ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 12/Aug/2019, 2:15:29 am (UTC)'!
+!methodProperties: {}!
 hasErrorsOrWarnings
 
 	^typeCheckers anySatisfy: [ :aTypeChecker | aTypeChecker hasErrorsOrWarnings ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 18/Jul/2019, 8:45:24 pm (UTC)'!
+!methodProperties: {}!
 hasNoErrorsAndWarnings
 
 	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker hasNoErrorsAndWarnings ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'testing' stamp: 'HAW 9/Aug/2019, 1:54:46 pm (UTC)'!
+!methodProperties: {}!
 hasProblems
 
 	^typeCheckers anySatisfy: [ :aTypeChecker | aTypeChecker hasProblems ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 8:10:31 pm (UTC)'!
+!methodProperties: {}!
 methodSelector
 
 	^typeCheckers anyOne methodSelector ! !
 
 !ManyMethodsTypeChecker methodsFor: 'problems' stamp: 'HAW 12/Aug/2019, 2:04:08 am (UTC)'!
+!methodProperties: {}!
 problems
 
 	^typeCheckers
@@ -5529,6 +6084,7 @@ problems
 			problems ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'problems' stamp: 'HAW 12/Aug/2019, 1:43:49 am (UTC)'!
+!methodProperties: {}!
 problemsDetect: aCondition ifNone: noneBlock
 
 	| problem |
@@ -5540,11 +6096,13 @@ problemsDetect: aCondition ifNone: noneBlock
 	^noneBlock value! !
 
 !ManyMethodsTypeChecker methodsFor: 'problems' stamp: 'HAW 9/Aug/2019, 12:32:40 pm (UTC)'!
+!methodProperties: {}!
 problemsSize
 
 	^typeCheckers sum: [ :aTypeChecker | aTypeChecker problemsSize ] ifEmpty: [ 0 ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'type checking' stamp: 'HAW 18/Jul/2019, 8:44:31 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	typeCheckers := methodsToCheck collect: [:aMethod | aMethod typeCheck ].
@@ -5552,6 +6110,7 @@ value
 	^self! !
 
 !ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 12/Aug/2019, 1:48:41 am (UTC)'!
+!methodProperties: {}!
 warnings
 
 	^typeCheckers
@@ -5561,6 +6120,7 @@ warnings
 			warnings ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 12/Aug/2019, 2:06:14 am (UTC)'!
+!methodProperties: {}!
 warningsDetect: aCondition ifNone: noneBlock
 
 	| warning |
@@ -5572,21 +6132,25 @@ warningsDetect: aCondition ifNone: noneBlock
 	^noneBlock value! !
 
 !ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 9/Aug/2019, 12:32:20 pm (UTC)'!
+!methodProperties: {}!
 warningsIsEmpty
 
 	^typeCheckers allSatisfy: [ :aTypeChecker | aTypeChecker warningsIsEmpty ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'warning' stamp: 'HAW 18/Jul/2019, 4:14:59 pm (UTC)'!
+!methodProperties: {}!
 warningsSize
 
 	^typeCheckers sum: [ :typeChecker | typeChecker warningsSize ] ifEmpty: [ 0 ]! !
 
 !ManyMethodsTypeChecker methodsFor: 'initialization' stamp: 'HAW 18/Jul/2019, 9:54:09 pm (UTC)'!
+!methodProperties: {}!
 initializeForAll: aMethodToCheck
 
 	methodsToCheck := aMethodToCheck collect: [ :aMethod | aMethod asMethodReference ]! !
 
 !ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 9/Aug/2019, 11:26:52 pm (UTC)'!
+!methodProperties: {}!
 addMethodsOf: aClass to: methods
 
 	methods
@@ -5594,11 +6158,13 @@ addMethodsOf: aClass to: methods
 		addAll: aClass theMetaClass methodDictionary values! !
 
 !ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 9:54:18 pm (UTC)'!
+!methodProperties: {}!
 forAll: aMethodToCheck
 
 	^self new initializeForAll: aMethodToCheck ! !
 
 !ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 9/Aug/2019, 11:25:32 pm (UTC)'!
+!methodProperties: {}!
 forAllClasses: classes
 
 	| methods |
@@ -5609,11 +6175,13 @@ forAllClasses: classes
 	^self forAll: methods! !
 
 !ManyMethodsTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 6:34:23 pm (UTC)'!
+!methodProperties: {}!
 forClass: aClass
 
 	^self forAll: aClass theNonMetaClass methodDictionary values, aClass theMetaClass methodDictionary values! !
 
 !MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 9/Aug/2019, 10:13:02 pm (UTC)'!
+!methodProperties: {}!
 typeCheck
 
 	method isPrimitive ifTrue: [ ^self ].
@@ -5622,83 +6190,99 @@ typeCheck
 	 	ifFalse: [ self typeCheckWhenNotAnnotatingTypes ]! !
 
 !MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 21/Aug/2019, 12:10:22 am (UTC)'!
+!methodProperties: {}!
 typeCheckWhenAnnotatingTypes
 
 	(MethodTypeCheckerVisitor for: method collectingErrorsInto: errors warningsInto: warnings andProblemsInto: problems) value
 	! !
 
 !MethodTypeChecker methodsFor: 'type cheking - value' stamp: 'HAW 9/Aug/2019, 10:13:02 pm (UTC)'!
+!methodProperties: {}!
 typeCheckWhenNotAnnotatingTypes
 
 	problems add: (MethodNotAnnotatingTypesProblem for: method)! !
 
 !MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 18/Jul/2019, 1:48:54 am (UTC)'!
+!methodProperties: {}!
 warnings
 
 	^warnings! !
 
 !MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 17/Jul/2019, 11:04:26 pm (UTC)'!
+!methodProperties: {}!
 warningsDetect: aCondition ifNone: aNoneBlock
 
 	^warnings detect: aCondition ifNone: aNoneBlock ! !
 
 !MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 17/Jul/2019, 10:47:39 pm (UTC)'!
+!methodProperties: {}!
 warningsIsEmpty
 
 	^warnings isEmpty ! !
 
 !MethodTypeChecker methodsFor: 'warning' stamp: 'HAW 17/Jul/2019, 10:58:00 pm (UTC)'!
+!methodProperties: {}!
 warningsSize
 
 	^warnings size! !
 
 !MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 17/Jul/2019, 10:49:20 pm (UTC)'!
+!methodProperties: {}!
 errors
 
 	^errors! !
 
 !MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 18/Jul/2019, 3:38:03 am (UTC)'!
+!methodProperties: {}!
 errorsAndWarnings
 
 	^errors, warnings
 	! !
 
 !MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 17/Jul/2019, 10:54:03 pm (UTC)'!
+!methodProperties: {}!
 errorsDetect: aCondition ifNone: aNoneBlock
 
 	^errors detect: aCondition ifNone: aNoneBlock ! !
 
 !MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 17/Jul/2019, 10:47:27 pm (UTC)'!
+!methodProperties: {}!
 errorsIsEmpty
 
 	^errors isEmpty ! !
 
 !MethodTypeChecker methodsFor: 'errors' stamp: 'HAW 17/Jul/2019, 10:49:14 pm (UTC)'!
+!methodProperties: {}!
 errorsSize
 
 	^errors size! !
 
 !MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 18/Jul/2019, 10:33:08 pm (UTC)'!
+!methodProperties: {}!
 hasErrors
 
 	^errors notEmpty! !
 
 !MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 18/Jul/2019, 9:47:22 pm (UTC)'!
+!methodProperties: {}!
 hasErrorsOrWarnings
 
 	^errors notEmpty or: [ warnings notEmpty ]! !
 
 !MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 18/Jul/2019, 1:43:58 am (UTC)'!
+!methodProperties: {}!
 hasNoErrorsAndWarnings
 
 	^errors isEmpty and: [ warnings isEmpty ]! !
 
 !MethodTypeChecker methodsFor: 'testing' stamp: 'HAW 9/Aug/2019, 1:54:57 pm (UTC)'!
+!methodProperties: {}!
 hasProblems
 
 	^problems notEmpty ! !
 
 !MethodTypeChecker methodsFor: 'initialization' stamp: 'HAW 9/Aug/2019, 5:44:48 pm (UTC)'!
+!methodProperties: {}!
 initializeErrorsWarningsAndProblems
 
 	errors := OrderedCollection new.
@@ -5706,51 +6290,61 @@ initializeErrorsWarningsAndProblems
 	problems := OrderedCollection new.! !
 
 !MethodTypeChecker methodsFor: 'initialization' stamp: 'HAW 18/Jul/2019, 8:35:06 pm (UTC)'!
+!methodProperties: {}!
 initializeFor: aMethod
 
 	method := aMethod asMethodReference ! !
 
 !MethodTypeChecker methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 1:49:59 am (UTC)'!
+!methodProperties: {}!
 classAndSelector
 
 	^method classAndSelector ! !
 
 !MethodTypeChecker methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 9:18:56 pm (UTC)'!
+!methodProperties: {}!
 method
 
 	^method! !
 
 !MethodTypeChecker methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 2:08:15 am (UTC)'!
+!methodProperties: {}!
 methodClass
 
 	^method methodClass ! !
 
 !MethodTypeChecker methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 8:05:08 pm (UTC)'!
+!methodProperties: {}!
 methodReference
 
 	^method asMethodReference ! !
 
 !MethodTypeChecker methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 2:09:29 am (UTC)'!
+!methodProperties: {}!
 methodSelector
 
 	^method selector ! !
 
 !MethodTypeChecker methodsFor: 'problems' stamp: 'HAW 9/Aug/2019, 12:33:33 pm (UTC)'!
+!methodProperties: {}!
 problems
 
 	^problems! !
 
 !MethodTypeChecker methodsFor: 'problems' stamp: 'HAW 9/Aug/2019, 12:19:11 pm (UTC)'!
+!methodProperties: {}!
 problemsDetect: aCondition ifNone: noneBlock
 
 	^problems detect: aCondition ifNone: noneBlock ! !
 
 !MethodTypeChecker methodsFor: 'problems' stamp: 'HAW 9/Aug/2019, 12:18:42 pm (UTC)'!
+!methodProperties: {}!
 problemsSize
 
 	^problems size! !
 
 !MethodTypeChecker methodsFor: 'type checking' stamp: 'HAW 9/Aug/2019, 10:08:42 pm (UTC)'!
+!methodProperties: {}!
 value
 
 	self
@@ -5760,6 +6354,7 @@ value
 	^self! !
 
 !MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 18/Jul/2019, 9:44:13 pm (UTC)'!
+!methodProperties: {}!
 addMethodReferencesOf: aTypeCheckingProblemCollection prefixing: aPrefix to: methodReferencesCollection
 
 	aTypeCheckingProblemCollection do: [ :aTypeCheckingProblem |
@@ -5768,11 +6363,13 @@ addMethodReferencesOf: aTypeCheckingProblemCollection prefixing: aPrefix to: met
 	^methodReferencesCollection ! !
 
 !MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 9/Aug/2019, 1:41:17 pm (UTC)'!
+!methodProperties: {}!
 errorsAndWarningsAsMethodReferencesWithProblems: showProblems
 
 	^self errorsAndWarningsAsMethodReferencesWithProblems: showProblems prefixing: ''! !
 
 !MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 12/Aug/2019, 1:09:11 am (UTC)'!
+!methodProperties: {}!
 errorsAndWarningsAsMethodReferencesWithProblems: showingProblems prefixing: aPrefix
 
 	| listToShow |
@@ -5784,52 +6381,62 @@ errorsAndWarningsAsMethodReferencesWithProblems: showingProblems prefixing: aPre
 	^listToShow! !
 
 !MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 18/Jul/2019, 10:28:34 pm (UTC)'!
+!methodProperties: {}!
 errorsAsMethodReferences
 
 	^self errorsAsMethodReferencesPrefixing: ''! !
 
 !MethodTypeChecker methodsFor: 'problems to list' stamp: 'HAW 18/Jul/2019, 10:28:59 pm (UTC)'!
+!methodProperties: {}!
 errorsAsMethodReferencesPrefixing: aPrefix
 
 	^self addMethodReferencesOf: errors prefixing: aPrefix to: OrderedCollection new! !
 
 !MethodTypeChecker class methodsFor: 'instance creation' stamp: 'HAW 17/Jul/2019, 10:42:35 pm (UTC)'!
+!methodProperties: {}!
 for: aMethod
 
 	^self new initializeFor: aMethod ! !
 
 !TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'method reference protocol' stamp: 'HAW 18/Jul/2019, 9:27:36 pm (UTC)'!
+!methodProperties: {}!
 actualClass
 
 	^typeCheckingProblem method actualClass! !
 
 !TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'method reference protocol' stamp: 'HAW 18/Jul/2019, 9:27:53 pm (UTC)'!
+!methodProperties: {}!
 methodSymbol
 
 	^typeCheckingProblem method methodSymbol ! !
 
 !TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'method reference protocol' stamp: 'HAW 18/Jul/2019, 9:30:18 pm (UTC)'!
+!methodProperties: {}!
 sourceCodeRange
 
 	^typeCheckingProblem sourceCodeRange ! !
 
 !TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'printing' stamp: 'HAW 18/Jul/2019, 9:30:58 pm (UTC)'!
+!methodProperties: {}!
 displayStringOrText
 
 	^prefix, typeCheckingProblem displayStringOrText! !
 
 !TypeCheckingProblemToMethodReferenceAdapter methodsFor: 'initialization' stamp: 'HAW 18/Jul/2019, 9:27:00 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aTypeCheckingProblem prefixing: aHeader
 
 	typeCheckingProblem := aTypeCheckingProblem.
 	prefix := aHeader ! !
 
 !TypeCheckingProblemToMethodReferenceAdapter class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 9:26:08 pm (UTC)'!
+!methodProperties: {}!
 of: aTypeCheckingProblem
 
 	^self of: aTypeCheckingProblem prefixing: ''! !
 
 !TypeCheckingProblemToMethodReferenceAdapter class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 9:26:37 pm (UTC)'!
+!methodProperties: {}!
 of: aTypeCheckingProblem prefixing: aHeader
 
 	^self new initializeOf: aTypeCheckingProblem prefixing: aHeader
@@ -5837,101 +6444,121 @@ of: aTypeCheckingProblem prefixing: aHeader
 ! !
 
 !TypeCheckingResult methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:21:16 pm (UTC)'!
+!methodProperties: {}!
 displayStringOrText
 
 	^ self problemTypeIdentifierString, ': ', self problemDescription! !
 
 !TypeCheckingResult methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:22:06 pm (UTC)'!
+!methodProperties: {}!
 problemDescription
 
 	self subclassResponsibility ! !
 
 !TypeCheckingResult methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:22:03 pm (UTC)'!
+!methodProperties: {}!
 problemTypeIdentifierString
 
 	self subclassResponsibility ! !
 
 !TypeCheckingResult methodsFor: 'method' stamp: 'HAW 12/Aug/2019, 2:22:06 am (UTC)'!
+!methodProperties: {}!
 method
 
 	self subclassResponsibility ! !
 
 !TypeCheckingResult methodsFor: 'method' stamp: 'HAW 12/Aug/2019, 2:22:50 am (UTC)'!
+!methodProperties: {}!
 sourceCodeRange
 
 	self subclassResponsibility ! !
 
 !MethodNotAnnotatingTypesProblem methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:22:17 pm (UTC)'!
+!methodProperties: {}!
 problemDescription
 
 	^ 'Method is not annotating types'! !
 
 !MethodNotAnnotatingTypesProblem methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:21:29 pm (UTC)'!
+!methodProperties: {}!
 problemTypeIdentifierString
 
 	^ 'Problem'! !
 
 !MethodNotAnnotatingTypesProblem methodsFor: 'initialization' stamp: 'HAW 18/Jul/2019, 8:51:03 pm (UTC)'!
+!methodProperties: {}!
 initializeFor: aMethod
 
 	method := aMethod! !
 
 !MethodNotAnnotatingTypesProblem methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 9:31:43 pm (UTC)'!
+!methodProperties: {}!
 method
 
 	^method! !
 
 !MethodNotAnnotatingTypesProblem methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 9:31:59 pm (UTC)'!
+!methodProperties: {}!
 sourceCodeRange
 
 	^#()! !
 
 !MethodNotAnnotatingTypesProblem class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 8:50:51 pm (UTC)'!
+!methodProperties: {}!
 for: aMethod
 
 	^self new initializeFor: aMethod! !
 
 !TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 17/Jul/2019, 10:15:25 pm (UTC)'!
+!methodProperties: {}!
 notImplemented
 
 	^notImplemented! !
 
 !TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 17/Jul/2019, 10:33:02 pm (UTC)'!
+!methodProperties: {}!
 notImplementedIncludesType: aType
 
 	^notImplemented anySatisfy: [ :aNotImplemented | aNotImplemented actualClass = aType ]! !
 
 !TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 17/Jul/2019, 10:32:31 pm (UTC)'!
+!methodProperties: {}!
 notImplementedSize
 
 	^notImplemented size! !
 
 !TypeCheckingError methodsFor: 'not implemented' stamp: 'HAW 17/Jul/2019, 10:34:41 pm (UTC)'!
+!methodProperties: {}!
 notImplementedTypes
 
 	^notImplemented collect: [:aNotImplemented | aNotImplemented actualClass ]! !
 
 !TypeCheckingError methodsFor: 'method' stamp: 'HAW 17/Jul/2019, 9:35:31 pm (UTC)'!
+!methodProperties: {}!
 method
 
 	^method! !
 
 !TypeCheckingError methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 3:13:20 am (UTC)'!
+!methodProperties: {}!
 sourceCodeRange
 
 	^Array with: (methodNode rangeForNode: messageNode ifAbsent: [^#()])! !
 
 !TypeCheckingError methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:22:30 pm (UTC)'!
+!methodProperties: {}!
 problemDescription
 
 	^ self selector identifierPrintString, ' not implemented in ', self notImplementedTypes asCommaStringAnd ! !
 
 !TypeCheckingError methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:21:37 pm (UTC)'!
+!methodProperties: {}!
 problemTypeIdentifierString
 
 	^ 'Error'! !
 
 !TypeCheckingError methodsFor: 'initialization' stamp: 'HAW 18/Jul/2019, 3:10:10 am (UTC)'!
+!methodProperties: {}!
 initializeOn: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
 
 	method := aCompiledMethod.
@@ -5940,16 +6567,19 @@ initializeOn: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented:
 	notImplemented := aNotImplemented ! !
 
 !TypeCheckingError methodsFor: 'receiver/selector' stamp: 'HAW 17/Jul/2019, 9:38:08 pm (UTC)'!
+!methodProperties: {}!
 receiver
 
 	^messageNode receiver ! !
 
 !TypeCheckingError methodsFor: 'receiver/selector' stamp: 'HAW 17/Jul/2019, 9:38:39 pm (UTC)'!
+!methodProperties: {}!
 selector
 
 	^messageNode selector! !
 
 !TypeCheckingError class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 3:09:54 am (UTC)'!
+!methodProperties: {}!
 on: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
 
 	^self new initializeOn: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImplemented
@@ -5957,36 +6587,43 @@ on: aCompiledMethod node: aMessageNode of: aMethodNode notImplemented: aNotImple
 ! !
 
 !TypeCheckingIssue methodsFor: 'receiver/selector' stamp: 'HAW 17/Jul/2019, 11:04:47 pm (UTC)'!
+!methodProperties: {}!
 receiver
 
 	^messageNode receiver ! !
 
 !TypeCheckingIssue methodsFor: 'receiver/selector' stamp: 'HAW 17/Jul/2019, 11:04:58 pm (UTC)'!
+!methodProperties: {}!
 selector
 
 	^messageNode selector ! !
 
 !TypeCheckingIssue methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 9:33:12 pm (UTC)'!
+!methodProperties: {}!
 method
 
 	^method! !
 
 !TypeCheckingIssue methodsFor: 'method' stamp: 'HAW 18/Jul/2019, 3:20:18 am (UTC)'!
+!methodProperties: {}!
 sourceCodeRange
 
 	^Array with: (methodNode rangeForNode: messageNode ifAbsent: [^#()])! !
 
 !TypeCheckingIssue methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:26:42 pm (UTC)'!
+!methodProperties: {}!
 problemDescription
 
 	^self reason! !
 
 !TypeCheckingIssue methodsFor: 'printing' stamp: 'HAW 17/Jul/2019, 11:13:22 pm (UTC)'!
+!methodProperties: {}!
 reason
 
 	^reason! !
 
 !TypeCheckingIssue methodsFor: 'initialization' stamp: 'HAW 18/Jul/2019, 3:19:57 am (UTC)'!
+!methodProperties: {}!
 initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
 
 	method := aMethod.
@@ -5995,26 +6632,31 @@ initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
 	reason := aReason ! !
 
 !TypeCheckingIssue class methodsFor: 'description' stamp: 'HAW 22/Aug/2019, 12:53:53 am (UTC)'!
+!methodProperties: {}!
 canNotDeduceReceiverTypeDueToDescription: aReason
 
 	^'Can not deduce receiver''s type because: ', aReason ! !
 
 !TypeCheckingIssue class methodsFor: 'description' stamp: 'HAW 17/Jul/2019, 11:13:15 pm (UTC)'!
+!methodProperties: {}!
 receiverHasNoTypesDescription
 
 	^'Receiver has no types'! !
 
 !TypeCheckingIssue class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 3:27:46 am (UTC)'!
+!methodProperties: {}!
 canNotDeduceReceiverTypeDueTo: aReason on: aCompiledMethod node: aMessageNode of: aMethodNode
 
 	^self on: aCompiledMethod node: aMessageNode of: aMethodNode reason: (self canNotDeduceReceiverTypeDueToDescription: aReason)! !
 
 !TypeCheckingIssue class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 3:18:56 am (UTC)'!
+!methodProperties: {}!
 forReceiverWithNoTypesOn: aMethod node: aMessageNode of: methodNode
 
 	^self on: aMethod node: aMessageNode of: methodNode reason: self receiverHasNoTypesDescription! !
 
 !TypeCheckingIssue class methodsFor: 'instance creation' stamp: 'HAW 18/Jul/2019, 3:19:45 am (UTC)'!
+!methodProperties: {}!
 on: aMethod node: aMessageNode of: aMethodNode reason: aReason
 
 	^self new initializeOn: aMethod node: aMessageNode of: aMethodNode reason: aReason
@@ -6022,16 +6664,19 @@ on: aMethod node: aMessageNode of: aMethodNode reason: aReason
 ! !
 
 !TypeCheckingProblem methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:21:45 pm (UTC)'!
+!methodProperties: {}!
 problemTypeIdentifierString
 
 	^ 'Problem'! !
 
 !TypeCheckingWarning methodsFor: 'printing' stamp: 'HAW 9/Aug/2019, 10:21:52 pm (UTC)'!
+!methodProperties: {}!
 problemTypeIdentifierString
 
 	^ 'Warning'! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 10/Aug/2019, 4:17:03 pm (UTC)'!
+!methodProperties: {}!
 cascadeMessageSend
 
 	self
@@ -6039,6 +6684,7 @@ cascadeMessageSend
 		printString! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 10/Aug/2019, 4:29:24 pm (UTC)'!
+!methodProperties: {}!
 cascadeMessageSendWithTypeCast
 
 	| temp1 |
@@ -6052,11 +6698,13 @@ cascadeMessageSendWithTypeCast
 	! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 18/Jul/2019, 6:21:38 pm (UTC)'!
+!methodProperties: {}!
 emptyMethod
 
 	! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 22/Aug/2019, 7:47:39 pm (UTC)'!
+!methodProperties: {}!
 ifTrueCascadeSend
 
 	^true
@@ -6065,6 +6713,7 @@ ifTrueCascadeSend
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 22/Aug/2019, 9:50:52 pm (UTC)'!
+!methodProperties: {}!
 messageSendAsConditionOfIfTrueWithCascadeSend
 
 	^true not
@@ -6073,16 +6722,19 @@ messageSendAsConditionOfIfTrueWithCascadeSend
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 19/Jul/2019, 8:44:19 pm (UTC)'!
+!methodProperties: {}!
 methodNotAnnotatingTypes
 
 	'something' size! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 18/Jul/2019, 6:21:38 pm (UTC)'!
+!methodProperties: {}!
 methodWithNoReturnTypes
 
 	self methodWithNoReturnTypes printString! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 18/Jul/2019, 6:21:38 pm (UTC)'!
+!methodProperties: {}!
 methodWithReceiverWithNoTypes
 
 	| temp1 |
@@ -6094,21 +6746,25 @@ methodWithReceiverWithNoTypes
 	! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 18/Jul/2019, 6:21:38 pm (UTC)'!
+!methodProperties: {}!
 methodWithoutTypeErrors
 
 	1 + 1! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 9/Aug/2019, 2:47:55 pm (UTC)'!
+!methodProperties: {}!
 returnParameter: anObject
 
 	^anObject ! !
 
 !TypeCheckerTestMethods methodsFor: 'other methods' stamp: 'HAW 21/Aug/2019, 10:17:41 pm (UTC)'!
+!methodProperties: {}!
 returnParameter2: anObject
 
 	^anObject ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 22/Aug/2019, 2:35:58 am (UTC)'!
+!methodProperties: {}!
 andWithoutMessageAsReceiver
 
 	| temp1 |
@@ -6118,6 +6774,7 @@ andWithoutMessageAsReceiver
 	^temp1 and: [ temp1 ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 30/Jul/2019, 5:37:10 pm (UTC)'!
+!methodProperties: {}!
 comparingForNilWithIfTrueIfFalse
 
 	| temp1 |
@@ -6127,6 +6784,7 @@ comparingForNilWithIfTrueIfFalse
 	temp1 == nil ifTrue: [] ifFalse: [ temp1 + 1] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 30/Jul/2019, 5:36:07 pm (UTC)'!
+!methodProperties: {}!
 comparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes
 
 	| temp1 |
@@ -6136,6 +6794,7 @@ comparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes
 	temp1 == nil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 30/Jul/2019, 5:54:13 pm (UTC)'!
+!methodProperties: {}!
 comparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
 
 	| temp1 |
@@ -6144,6 +6803,7 @@ comparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
 	temp1 == nil ifTrue: [ temp1 * 1 ] ifFalse: [ temp1 + 1] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:56:43 pm (UTC)'!
+!methodProperties: {}!
 equalsNilIfFalse
 
 	| temp1  |
@@ -6153,6 +6813,7 @@ equalsNilIfFalse
 	temp1 = nil ifFalse: [ temp1 + 1 ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:03:52 pm (UTC)'!
+!methodProperties: {}!
 equalsNilIfFalseIfTrue
 
 	| temp1  |
@@ -6162,6 +6823,7 @@ equalsNilIfFalseIfTrue
 	temp1 = nil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:53:15 pm (UTC)'!
+!methodProperties: {}!
 equalsNilIfTrue
 
 	| temp1  |
@@ -6171,6 +6833,7 @@ equalsNilIfTrue
 	temp1 = nil ifTrue: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:50:09 pm (UTC)'!
+!methodProperties: {}!
 equalsNilIfTrueIfFalse
 
 	| temp1  |
@@ -6180,6 +6843,7 @@ equalsNilIfTrueIfFalse
 	temp1 = nil ifTrue: [ temp1 subclasses ] ifFalse: [ temp1 + 1 ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:02:11 pm (UTC)'!
+!methodProperties: {}!
 identicalToNilIfFalse
 
 	| temp1  |
@@ -6189,6 +6853,7 @@ identicalToNilIfFalse
 	temp1 == nil ifFalse: [ temp1 + 1 ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:05:19 pm (UTC)'!
+!methodProperties: {}!
 identicalToNilIfFalseIfTrue
 
 	| temp1  |
@@ -6198,6 +6863,7 @@ identicalToNilIfFalseIfTrue
 	temp1 == nil ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:54:49 pm (UTC)'!
+!methodProperties: {}!
 identicalToNilIfTrue
 
 	| temp1  |
@@ -6207,6 +6873,7 @@ identicalToNilIfTrue
 	temp1 == nil ifTrue: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 30/Jul/2019, 6:49:21 pm (UTC)'!
+!methodProperties: {}!
 ifNilCheck
 
 	| temp1 |
@@ -6216,6 +6883,7 @@ ifNilCheck
 	temp1 ifNil: [ temp1 subclasses ].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:38:59 pm (UTC)'!
+!methodProperties: {}!
 ifNilIfNotNil
 
 	| temp1  |
@@ -6226,6 +6894,7 @@ ifNilIfNotNil
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 19/Aug/2019, 5:21:30 pm (UTC)'!
+!methodProperties: {}!
 ifNilWithReturn
 
 	| temp1 |
@@ -6237,6 +6906,7 @@ ifNilWithReturn
 	temp1 + 1! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 14/Aug/2019, 3:50:58 pm (UTC)'!
+!methodProperties: {}!
 ifNotNilCheck
 
 	| temp1 |
@@ -6247,6 +6917,7 @@ ifNotNilCheck
 	temp1 ifNotNil: [ temp1 +1 ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 20/Jul/2019, 10:10:08 pm (UTC)'!
+!methodProperties: {}!
 ifNotNilCheckAccesingOtherObject
 
 	| temp1 temp2 |
@@ -6256,11 +6927,13 @@ ifNotNilCheckAccesingOtherObject
 	temp1 ifNotNil: [ temp2 +1 ].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 9/Aug/2019, 2:54:40 pm (UTC)'!
+!methodProperties: {}!
 ifNotNilCheckWithArgument
 
 	nil ifNotNil: [ :one |  one + 2 ].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:48:44 pm (UTC)'!
+!methodProperties: {}!
 ifNotNilIfNil
 
 	| temp1  |
@@ -6270,12 +6943,14 @@ ifNotNilIfNil
 	temp1 ifNotNil: [ temp1 + 1 ] ifNil: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 9/Aug/2019, 2:47:55 pm (UTC)'!
+!methodProperties: {}!
 ifNotNilWithMessageSend
 
 	(self returnParameter: 1) ifNotNil: [ (self returnParameter: 1) + 1 ]
 	! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 9/Aug/2019, 6:40:12 pm (UTC)'!
+!methodProperties: {}!
 ifNotNilWithoutBlock
 
 	| temp1 |
@@ -6286,6 +6961,7 @@ ifNotNilWithoutBlock
 	temp1 ifNotNil: temp1 + 1! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 22/Aug/2019, 7:20:36 pm (UTC)'!
+!methodProperties: {}!
 ifNotNilifNotNil: value
 
 	"
@@ -6296,6 +6972,7 @@ ifNotNilifNotNil: value
 	value ifNotNil: [ :w | (w returnParameter2: 1) ifNotNil: [ :c | c + 1 ]] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:32:12 pm (UTC)'!
+!methodProperties: {}!
 isNilCondition
 
 	| temp1  |
@@ -6309,6 +6986,7 @@ isNilCondition
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 22/Aug/2019, 2:18:16 am (UTC)'!
+!methodProperties: {}!
 isNilOr
 
 	| temp1 |
@@ -6319,6 +6997,7 @@ isNilOr
 	^temp1 isNil or: [ temp1 odd ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:30:32 pm (UTC)'!
+!methodProperties: {}!
 nestedIfNilCheck
 
 	| temp1 temp2 |
@@ -6333,6 +7012,7 @@ nestedIfNilCheck
 			temp2 subclasses ]].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 6:35:01 pm (UTC)'!
+!methodProperties: {}!
 nestedIfNilCheckErrorsWhenOutsideOfRightIfNil
 
 	| temp1 temp2 |
@@ -6346,6 +7026,7 @@ nestedIfNilCheckErrorsWhenOutsideOfRightIfNil
 		temp2 subclasses ].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 30/Jul/2019, 6:19:13 pm (UTC)'!
+!methodProperties: {}!
 nestedIfNotNilCheck
 
 	| temp1 temp2 |
@@ -6360,6 +7041,7 @@ nestedIfNotNilCheck
 			temp2 + 1 ]].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 30/Jul/2019, 6:20:24 pm (UTC)'!
+!methodProperties: {}!
 nestedIfNotNilCheckErrorsWhenOutsideOfRightIfNotNil
 
 	| temp1 temp2 |
@@ -6373,6 +7055,7 @@ nestedIfNotNilCheckErrorsWhenOutsideOfRightIfNotNil
 		temp2 * 1 ].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 4/Aug/2019, 2:27:41 am (UTC)'!
+!methodProperties: {}!
 nestedRejects
 
 	| temp1  |
@@ -6384,6 +7067,7 @@ nestedRejects
 	temp1 ifNotNil: [ (temp1 isKindOf: SmallInteger) ifFalse: [ temp1 first ]].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:13:27 pm (UTC)'!
+!methodProperties: {}!
 nilEqualsToIfTrueIfFalseOrIfFalseIfTrue
 
 	| temp1  |
@@ -6394,6 +7078,7 @@ nilEqualsToIfTrueIfFalseOrIfFalseIfTrue
 	nil = temp1 ifFalse: [ temp1 + 1 ] ifTrue: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:13:59 pm (UTC)'!
+!methodProperties: {}!
 nilEqualsToIfTrueOrIfFalse
 
 	| temp1  |
@@ -6404,6 +7089,7 @@ nilEqualsToIfTrueOrIfFalse
 	nil = temp1 ifFalse: [ temp1 + 1 ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:17:42 pm (UTC)'!
+!methodProperties: {}!
 nilIdenticalTo
 
 	| temp1  |
@@ -6414,6 +7100,7 @@ nilIdenticalTo
 	nil == temp1 ifFalse: [ temp1 + 1 ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 21/Aug/2019, 2:13:05 am (UTC)'!
+!methodProperties: {}!
 nilNotEqualOrIdenticalIdenticalTo
 
 	| temp1  |
@@ -6424,6 +7111,7 @@ nilNotEqualOrIdenticalIdenticalTo
 	nil ~= temp1 ifTrue: [ temp1 + 1 ] ifFalse: [ temp1 subclasses ].! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:21:12 pm (UTC)'!
+!methodProperties: {}!
 notEqualToNil
 
 	| temp1  |
@@ -6436,6 +7124,7 @@ notEqualToNil
 	temp1 ~= nil ifFalse: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 7:28:15 pm (UTC)'!
+!methodProperties: {}!
 notIdenticalToNil
 
 	| temp1  |
@@ -6448,6 +7137,7 @@ notIdenticalToNil
 	temp1 ~~ nil ifFalse: [ temp1 subclasses ] ! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 9/Aug/2019, 10:41:53 pm (UTC)'!
+!methodProperties: {}!
 notNilAnd
 
 	| temp1 |
@@ -6458,6 +7148,7 @@ notNilAnd
 	^temp1 notNil and: [ temp1 odd ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 22/Aug/2019, 2:13:23 am (UTC)'!
+!methodProperties: {}!
 notNilAndIfTrue
 
 	| temp1 temp2 |
@@ -6470,6 +7161,7 @@ notNilAndIfTrue
 	^(temp1 notNil and: [ temp2 notNil ]) ifTrue: [ temp1 odd. temp2 odd ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 2/Aug/2019, 8:03:12 pm (UTC)'!
+!methodProperties: {}!
 notNilCondition
 
 	| temp1  |
@@ -6482,6 +7174,7 @@ notNilCondition
 	temp1 notNil ifFalse: [ temp1 subclasses ]! !
 
 !TypeCheckerTestMethods methodsFor: 'nil check' stamp: 'HAW 22/Aug/2019, 2:36:35 am (UTC)'!
+!methodProperties: {}!
 orWithoutMessageAsReceiver
 
 	| temp1 |
@@ -6491,11 +7184,13 @@ orWithoutMessageAsReceiver
 	^temp1 or: [ temp1 ]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 9/Aug/2019, 6:06:06 pm (UTC)'!
+!methodProperties: {}!
 castWithBlockInRejectBlock
 
 	nil ifNotNil: [ :temp1 | [ temp1 mod: 5 ] value ]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 5/Aug/2019, 8:29:32 pm (UTC)'!
+!methodProperties: {}!
 isKindOfKeepsSubtypes
 
 	| temp1  |
@@ -6507,6 +7202,7 @@ isKindOfKeepsSubtypes
 	(temp1 isKindOf: Collection) ifTrue: [ temp1 addLast:1 ].! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 22/Aug/2019, 1:54:20 am (UTC)'!
+!methodProperties: {}!
 orCheck
 
 	| temp1  |
@@ -6521,6 +7217,7 @@ orCheck
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 2/Aug/2019, 9:46:49 pm (UTC)'!
+!methodProperties: {}!
 typeCastToWithEqualOrIdenticalTo
 
 	| temp1  |
@@ -6540,6 +7237,7 @@ typeCastToWithEqualOrIdenticalTo
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 2/Aug/2019, 9:54:13 pm (UTC)'!
+!methodProperties: {}!
 typeCastToWithNotEqualOrNotIdenticalTo
 
 	| temp1  |
@@ -6559,6 +7257,7 @@ typeCastToWithNotEqualOrNotIdenticalTo
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 3/Aug/2019, 1:08:33 pm (UTC)'!
+!methodProperties: {}!
 typeCastUsingIsKindOf
 
 	| temp1  |
@@ -6574,6 +7273,7 @@ typeCastUsingIsKindOf
 	! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 2/Aug/2019, 9:45:30 pm (UTC)'!
+!methodProperties: {}!
 typeCastWithEqualOrIdenticalTo
 
 	| temp1  |
@@ -6593,6 +7293,7 @@ typeCastWithEqualOrIdenticalTo
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 2/Aug/2019, 9:44:52 pm (UTC)'!
+!methodProperties: {}!
 typeCastWithNotEqualOrNotIdenticalTo
 
 	| temp1  |
@@ -6612,6 +7313,7 @@ typeCastWithNotEqualOrNotIdenticalTo
 ! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 10:32:37 pm (UTC)'!
+!methodProperties: {}!
 typeCastWithReturnOnIfFalse
 
 	| temp1  |
@@ -6623,6 +7325,7 @@ typeCastWithReturnOnIfFalse
 	temp1 odd ! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 10:30:53 pm (UTC)'!
+!methodProperties: {}!
 typeCastWithReturnOnIfTrue
 
 	| temp1  |
@@ -6634,6 +7337,7 @@ typeCastWithReturnOnIfTrue
 	temp1 first ! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 3/Aug/2019, 1:27:16 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMessage
 
 	| temp1  |
@@ -6645,6 +7349,7 @@ typeCheckMessage
 	! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 3/Aug/2019, 6:50:18 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMessageNestedInsideIfNotNil
 
 	| temp1  |
@@ -6657,6 +7362,7 @@ typeCheckMessageNestedInsideIfNotNil
 	! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 9:36:11 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMessageWithFalse_True_False_InSubclasses
 
 	| temp1  |
@@ -6672,6 +7378,7 @@ typeCheckMessageWithFalse_True_False_InSubclasses
 			ifFalse: [ temp1 alpha ]]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 7:13:51 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMessageWithFalseInSubclass
 
 	| temp1  |
@@ -6682,6 +7389,7 @@ typeCheckMessageWithFalseInSubclass
 	temp1 isCollection ifTrue: [ temp1 add: 1 ] ifFalse: [ temp1 alpha ]! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 9:46:19 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMessageWithReturnOnIfFalse
 
 	| temp1  |
@@ -6693,6 +7401,7 @@ typeCheckMessageWithReturnOnIfFalse
 	temp1 odd! !
 
 !TypeCheckerTestMethods methodsFor: 'casting' stamp: 'HAW 20/Aug/2019, 9:45:01 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMessageWithReturnOnIfTrue
 
 	| temp1  |
@@ -6704,17 +7413,20 @@ typeCheckMessageWithReturnOnIfTrue
 	temp1 alpha! !
 
 !TypeCheckerTestMethods methodsFor: 'methods with errors' stamp: 'HAW 30/Jul/2019, 7:35:46 pm (UTC)'!
+!methodProperties: {}!
 methodWithManyTypeErrors
 
 	1 date.
 	'hello' factorial! !
 
 !TypeCheckerTestMethods methodsFor: 'methods with errors' stamp: 'HAW 18/Jul/2019, 6:21:38 pm (UTC)'!
+!methodProperties: {}!
 methodWithTypeError
 
 	1 date! !
 
 !TypeCheckerTestMethods methodsFor: 'methods with errors' stamp: 'HAW 18/Jul/2019, 6:21:38 pm (UTC)'!
+!methodProperties: {}!
 methodWithTypeErrorWithManyNotImplemented
 
 	| temp1 |
@@ -6724,16 +7436,19 @@ methodWithTypeErrorWithManyNotImplemented
 	false ifTrue: [ temp1 date ]! !
 
 !TypeCheckerTestMethods methodsFor: 'methods with warnings' stamp: 'HAW 18/Jul/2019, 6:21:38 pm (UTC)'!
+!methodProperties: {}!
 methodWithWarningForError
 
 	1 date first! !
 
 !TypeCheckerTestMethods class methodsFor: 'as yet unclassified' stamp: 'HAW 18/Jul/2019, 6:26:30 pm (UTC)'!
+!methodProperties: {}!
 classMethodWithTypeError
 
 	1 date! !
 
 !TypeCheckingResultWindow methodsFor: 'menu building' stamp: 'HAW 18/Jul/2019, 3:41:43 am (UTC)'!
+!methodProperties: {}!
 messageListMenu
 
 	| aMenu |
@@ -6753,6 +7468,7 @@ messageListMenu
 	^ aMenu! !
 
 !TypeCheckingResultWindow class methodsFor: 'instance creation' stamp: 'HAW 12/Aug/2019, 2:28:38 am (UTC)'!
+!methodProperties: {}!
 openFor: aTypeChecker labelTrail: aLabelTrail showingProblems: showingProblems
 
 	| window model |
@@ -6765,6 +7481,7 @@ openFor: aTypeChecker labelTrail: aLabelTrail showingProblems: showingProblems
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 3/May/2020, 10:30:12 pm (UTC)'!
+!methodProperties: {}!
 addCommonMessagesStartingWith: prefixedSelectors
 
 	| selectorsCollector |
@@ -6782,6 +7499,7 @@ addCommonMessagesStartingWith: prefixedSelectors
 	possibleInvalidSelectors := selectorsCollector possibleInvalidSelectors! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 3/May/2020, 10:30:12 pm (UTC)'!
+!methodProperties: {}!
 addCommonMessagesToEntries: prefixedSelectors
 
 	^ prefixedSelectors notEmpty ifTrue: [
@@ -6790,6 +7508,7 @@ addCommonMessagesToEntries: prefixedSelectors
 	 ]! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 7/Nov/2023, 1:53:53 pm (UTC)'!
+!methodProperties: {}!
 computeEntriesOfUnaryMessageReturnNamed: aSelector
 
 	| typeInfo |
@@ -6801,6 +7520,7 @@ computeEntriesOfUnaryMessageReturnNamed: aSelector
 	self computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 22/Feb/2019, 1:05:10 am (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesForCommonSupertype: commonSupertype of: aVariableTypeInfo
 
 	| selectorsCollector |
@@ -6819,6 +7539,7 @@ computeMessageEntriesForCommonSupertype: commonSupertype of: aVariableTypeInfo
 ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 3/May/2020, 4:33:45 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesForGenericSupertypeOf: aVariableTypeInfo
 
 	 | prefixedSelectors protoObjectReached |
@@ -6845,6 +7566,7 @@ computeMessageEntriesForGenericSupertypeOf: aVariableTypeInfo
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 4/Dec/2019, 6:58:34 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesForTypeInfo: aVariableTypeInfo
 
 	self isPreviousMessageSendBinary
@@ -6853,6 +7575,7 @@ computeMessageEntriesForTypeInfo: aVariableTypeInfo
 		! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 4/Dec/2019, 6:59:47 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesForTypeInfoOrNil: aVariableTypeInfoOrNil
 
 	aVariableTypeInfoOrNil
@@ -6861,6 +7584,7 @@ computeMessageEntriesForTypeInfoOrNil: aVariableTypeInfoOrNil
 	 ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 7/Nov/2023, 1:53:53 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesOfCascadeReceiver
 
 	 | positionBeforeSemiColon typeInfo |
@@ -6877,6 +7601,7 @@ computeMessageEntriesOfCascadeReceiver
 	self computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 7/Nov/2023, 1:50:41 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesOfEnclosedExpressionReturn
 
 	 | typeInfo |
@@ -6891,6 +7616,7 @@ computeMessageEntriesOfEnclosedExpressionReturn
 	self computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 4/Dec/2019, 6:51:22 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesWithBinaryMessageForCommonSupertype: commonSupertype of: aVariableTypeInfo
 
 	| selectorsCollector classes |
@@ -6911,6 +7637,7 @@ computeMessageEntriesWithBinaryMessageForCommonSupertype: commonSupertype of: aV
 ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 9/Mar/2021, 8:05:18 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesWithBinaryMessageForGenericSupertypeOf: aVariableTypeInfo
 
 	 | prefixedSelectors classes protoObjectReached selectorsCollector |
@@ -6948,6 +7675,7 @@ computeMessageEntriesWithBinaryMessageForGenericSupertypeOf: aVariableTypeInfo
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 4/Dec/2019, 6:57:22 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesWithoutBinaryMessageForTypeInfo: aVariableTypeInfo
 
 	aVariableTypeInfo
@@ -6957,6 +7685,7 @@ computeMessageEntriesWithoutBinaryMessageForTypeInfo: aVariableTypeInfo
 			self computeMessageEntriesForGenericSupertypeOf: aVariableTypeInfo ]! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries - private' stamp: 'HAW 4/May/2020, 7:12:33 pm (UTC)'!
+!methodProperties: {}!
 indexOfNoRightParenthesis
 
 	| currentIndex |
@@ -6969,6 +7698,7 @@ indexOfNoRightParenthesis
 			! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'selector documentation' stamp: 'HAW 14/Oct/2025, 12:53:20 pm (UTC)'!
+!methodProperties: {}!
 documentationOf: aMethod
 
 	^aMethod isAnnotatingTypes
@@ -6979,6 +7709,7 @@ documentationOf: aMethod
 			documentation ]! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'jmv 26/Apr/2021, 10:35:38 pm (UTC)'!
+!methodProperties: {}!
 tryToRecoverFromSyntaxError: aSyntaxErrorNotification withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
 
 	^ aSyntaxErrorNotification errorMessage = 'right parenthesis expected'
@@ -6987,12 +7718,14 @@ tryToRecoverFromSyntaxError: aSyntaxErrorNotification withMethodNodeOf: aSourceC
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'jmv 26/Apr/2021, 10:35:43 pm (UTC)'!
+!methodProperties: {}!
 tryToRecoverFromSyntaxErrorWithMethodNodeDo: doBlock ifError: anErrorBlock
 
 	^ self withMethodNodeOf: self allSource do: doBlock ifError: anErrorBlock
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 4/May/2020, 5:55:17 pm (UTC)'!
+!methodProperties: {}!
 withMethodNodeDo: doBlock ifError: anErrorBlock
 
 	^ self
@@ -7001,6 +7734,7 @@ withMethodNodeDo: doBlock ifError: anErrorBlock
 		handlingSyntaxErrorOrIfError: anErrorBlock! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 4/May/2020, 5:57:42 pm (UTC)'!
+!methodProperties: {}!
 withMethodNodeOf: aSourceCode do: doBlock handlingSyntaxErrorOrIfError: anErrorBlock
 
 	^self
@@ -7013,6 +7747,7 @@ withMethodNodeOf: aSourceCode do: doBlock handlingSyntaxErrorOrIfError: anErrorB
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'parse node manipulation' stamp: 'HAW 3/May/2020, 4:55:57 am (UTC)'!
+!methodProperties: {}!
 withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
 
 	^ [[ | methodNode noPattern |
@@ -7034,6 +7769,7 @@ withMethodNodeOf: aSourceCode do: doBlock ifError: anErrorBlock
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 4/May/2020, 7:26:54 pm (UTC)'!
+!methodProperties: {}!
 argumentOf: nodeToAnalyze ifPreviousIsBinaryMessageIn: methodNode
 
 	^(self isPreviousMessageSendBinary and: [ nodeToAnalyze isMessageNode and: [ nodeToAnalyze isInfix ]])
@@ -7044,6 +7780,7 @@ argumentOf: nodeToAnalyze ifPreviousIsBinaryMessageIn: methodNode
 ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 4/Apr/2019, 11:02:59 am (UTC)'!
+!methodProperties: {}!
 commonSupertypeOrSelectorsOf: aNodeUnderCursor in: aMethodNode
 
 	| methodToAnalyze types methodClass |
@@ -7058,6 +7795,7 @@ commonSupertypeOrSelectorsOf: aNodeUnderCursor in: aMethodNode
 ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 4/May/2020, 7:27:17 pm (UTC)'!
+!methodProperties: {}!
 handleArgumentOf: nodeToAnalyze whenPreviousIsBinaryMessage: methodNode
 
 	| argument |
@@ -7071,6 +7809,7 @@ handleArgumentOf: nodeToAnalyze whenPreviousIsBinaryMessage: methodNode
 	^argument! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 4/May/2020, 7:26:54 pm (UTC)'!
+!methodProperties: {}!
 returnTypeOfEnclosedExpresionIn: methodNode at: aPosition
 
 	^ methodNode
@@ -7082,6 +7821,7 @@ returnTypeOfEnclosedExpresionIn: methodNode at: aPosition
 		ifAbsent: [ nil ]! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 8/Feb/2019, 7:30:55 pm (UTC)'!
+!methodProperties: {}!
 returnTypeOfNodeUnderCursorIn: methodNode at: aPosition
 
 	^methodNode
@@ -7090,6 +7830,7 @@ returnTypeOfNodeUnderCursorIn: methodNode at: aPosition
 		ifAbsent: [ nil ]! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'return type' stamp: 'HAW 4/May/2020, 7:14:44 pm (UTC)'!
+!methodProperties: {}!
 typeOfCascadeReceiverIn: methodNode at: aPosition
 
 	^methodNode
@@ -7099,6 +7840,7 @@ typeOfCascadeReceiverIn: methodNode at: aPosition
 		! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries with binary as previos - private' stamp: 'HAW 28/Oct/2019, 3:37:34 am (UTC)'!
+!methodProperties: {}!
 addBinarySelectorsTo: selectorsCollector classes: classes for: typeInfo with: hierarchyRoot
 
 	| types prefixedSelectors classLimit |
@@ -7122,6 +7864,7 @@ addBinarySelectorsTo: selectorsCollector classes: classes for: typeInfo with: hi
 		addKeywordSelectorsOf: hierarchyRoot ! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries with binary as previos - private' stamp: 'HAW 4/Dec/2019, 6:49:36 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesWithBinaryMessageForClass: aClass
 
 	self
@@ -7130,6 +7873,7 @@ computeMessageEntriesWithBinaryMessageForClass: aClass
 		asRoot: Object! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries with binary as previos - private' stamp: 'HAW 2/May/2020, 8:10:20 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesWithBinaryMessageForClass: aClass
 	collectingWith: selectorsCollector
 	asRoot: hierarchyRoot
@@ -7150,6 +7894,7 @@ computeMessageEntriesWithBinaryMessageForClass: aClass
 	! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries with binary as previos - private' stamp: 'HAW 4/Dec/2019, 6:51:21 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesWithBinaryMessageForClasses: classes
 	collectingWith: selectorsCollector
 	asRoot: hierarchyRoot
@@ -7167,6 +7912,7 @@ computeMessageEntriesWithBinaryMessageForClasses: classes
 	possibleInvalidSelectors := selectorsCollector possibleInvalidSelectors.! !
 
 !LiveTypingSmalltalkCompleter methodsFor: 'message entries with binary as previos - private' stamp: 'HAW 4/Dec/2019, 6:57:07 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesWithBinaryMessageForTypeInfo: aVariableTypeInfo
 
 	aVariableTypeInfo
@@ -7180,95 +7926,113 @@ computeMessageEntriesWithBinaryMessageForTypeInfo: aVariableTypeInfo
 ! !
 
 !LiveTypingSmalltalkCompleter class methodsFor: 'testing' stamp: 'HAW 8/Feb/2019, 9:35:04 pm (UTC)'!
+!methodProperties: {}!
 isForCurrentTypeSystem
 
 	^ Smalltalk isLiveTypingInstalled ! !
 
 !NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 24/Oct/2018, 11:12:40 pm (UTC)'!
+!methodProperties: {}!
 returnTypes
 
 	^#()! !
 
 !NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 16/Jul/2019, 7:48:57 pm (UTC)'!
+!methodProperties: {}!
 typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^self actualClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
 
 !NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 24/Oct/2018, 11:09:43 pm (UTC)'!
+!methodProperties: {}!
 typesOfVariableNamed: aVarName ifAbsent: aBlockClosure
 
 	"I have not been compiled yet, so there is no info about parameters or temps - Hernan"
 	^aBlockClosure value! !
 
 !NotImplementedMethod methodsFor: 'setting' stamp: 'HAW 4/Apr/2019, 11:46:05 am (UTC)'!
+!methodProperties: {}!
 setStandardClass: aClass methodSymbol: aSelector
 
 	super setStandardClass: aClass methodSymbol: aSelector.
 	self prefixStringVersionWith: self class notImplementedStringVersionHeader ! !
 
 !NotImplementedMethod methodsFor: 'senders' stamp: 'HAW 4/Apr/2019, 11:09:37 am (UTC)'!
+!methodProperties: {}!
 actualSendersOf: aCompiledMethod
 
 	^#()! !
 
 !NotImplementedMethod methodsFor: 'auto complete' stamp: 'HAW 4/Apr/2019, 11:25:03 am (UTC)'!
+!methodProperties: {}!
 dynamicTypingAutoCompleterDocumentation
 
 	^'' asText! !
 
 !NotImplementedMethod methodsFor: 'auto complete' stamp: 'HAW 4/Apr/2019, 11:33:15 am (UTC)'!
+!methodProperties: {}!
 liveTypingAutoCompleterDocumentation
 
 	^'' asText! !
 
 !NotImplementedMethod methodsFor: 'testing' stamp: 'HAW 4/Apr/2019, 11:22:15 am (UTC)'!
+!methodProperties: {}!
 doesOnlySurelySend: aCompiledMethod
 
 	^false! !
 
 !NotImplementedMethod methodsFor: 'testing' stamp: 'HAW 2/Jan/2020, 10:11:54 am (UTC)'!
+!methodProperties: {}!
 hasVariableBindingTo: aClass
 
 	^false! !
 
 !NotImplementedMethod methodsFor: 'testing' stamp: 'HAW 24/Aug/2022, 9:55:27 pm (UTC)'!
+!methodProperties: {}!
 isTestMethod
 
 	^false! !
 
 !NotImplementedMethod methodsFor: 'testing' stamp: 'HAW 2/Jan/2020, 9:42:19 am (UTC)'!
+!methodProperties: {}!
 referencesParameterAt: parameterIndex
 
 	^false! !
 
 !NotImplementedMethod methodsFor: 'printing' stamp: 'HAW 2/Jan/2020, 6:12:09 pm (UTC)'!
+!methodProperties: {}!
 printClassAndSelectorOn: aStream
 
 	aStream nextPutAll: 'Not Implemented '.
 	super printClassAndSelectorOn: aStream ! !
 
 !NotImplementedMethod class methodsFor: 'string version' stamp: 'HAW 19/Aug/2021, 6:04:51 pm (UTC)'!
+!methodProperties: {}!
 notImplementedStringVersionHeader
 
 	^'Not implemented'! !
 
 !PossibleSender methodsFor: 'initialization' stamp: 'HAW 4/Apr/2019, 11:49:33 am (UTC)'!
+!methodProperties: {}!
 initializeWithPossibleMessageSends: aPossibleMessageSends
 
 	possibleMessageSends := Set newFrom: aPossibleMessageSends.
 	self prefixStringVersionWith: self class possibleSenderStringVersionHeader ! !
 
 !PossibleSender methodsFor: 'possible message sends' stamp: 'HAW 18/Mar/2019, 4:25:12 pm (UTC)'!
+!methodProperties: {}!
 addPossibleMessageSends: aPossibleMessageSend
 
 	possibleMessageSends add: aPossibleMessageSend ! !
 
 !PossibleSender methodsFor: 'possible message sends' stamp: 'HAW 13/Mar/2019, 7:06:34 pm (UTC)'!
+!methodProperties: {}!
 withPossibleMessageSendsDo: aBlock
 
 	possibleMessageSends do: aBlock! !
 
 !PossibleSender methodsFor: 'message sends ranges' stamp: 'HAW 27/Jul/2023, 7:47:35 pm (UTC)'!
+!methodProperties: {}!
 rangesOf: aSentSelector whenSendTo: aReceiverTypes
 
 	| compiledMethod possibleMessageSendsAsStrings ranges |
@@ -7289,11 +8053,13 @@ rangesOf: aSentSelector whenSendTo: aReceiverTypes
 	^ranges! !
 
 !PossibleSender methodsFor: 'testing' stamp: 'HAW 21/Aug/2019, 2:28:46 am (UTC)'!
+!methodProperties: {}!
 isPossibleSender
 
 	^true! !
 
 !PossibleSender class methodsFor: 'instance creation' stamp: 'HAW 10/Aug/2019, 3:01:24 pm (UTC)'!
+!methodProperties: {}!
 in: aSender withPossibleMessageSends: aPossibleMessageSends
 
 	| newInstance |
@@ -7302,22 +8068,26 @@ in: aSender withPossibleMessageSends: aPossibleMessageSends
 	^newInstance initializeWithPossibleMessageSends: aPossibleMessageSends ! !
 
 !PossibleSender class methodsFor: 'string version' stamp: 'HAW 19/Aug/2021, 6:04:21 pm (UTC)'!
+!methodProperties: {}!
 possibleSenderStringVersionHeader
 
 	^'Possible'! !
 
 !PossibleMessageNodeReference methodsFor: 'initialization' stamp: 'FB 19/Mar/2022, 10:23:16 pm (UTC)'!
+!methodProperties: {}!
 messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange
 
 	super messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange.
 	self prefixStringVersionWith: self class possibleMessageSendStringVersionHeader.! !
 
 !PossibleMessageNodeReference methodsFor: 'testing' stamp: 'FB 19/Mar/2022, 10:13:17 pm (UTC)'!
+!methodProperties: {}!
 isPossibleMessageSend
 
 	^true! !
 
 !PossibleMessageNodeReference class methodsFor: 'printing' stamp: 'FB 19/Mar/2022, 10:10:06 pm (UTC)'!
+!methodProperties: {}!
 possibleMessageSendStringVersionHeader
 
 	"TODO: duplicated code from PossibleSender"
@@ -7325,16 +8095,19 @@ possibleMessageSendStringVersionHeader
 	^'Possible'! !
 
 !PossibleMessageNodeReference class methodsFor: 'instance creation' stamp: 'FB 19/Mar/2022, 10:15:35 pm (UTC)'!
+!methodProperties: {}!
 messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange
 
 	^self new messageNode: aMessageNode selector: aSelector class: aClass completeSourceRange: aCompleteSourceRange.! !
 
 !ChangeKeywordsSelectorOrderWithActualScope methodsFor: 'initialization' stamp: 'JEC 16/Nov/2025, 1:18:53 pm (UTC)'!
+!methodProperties: {}!
 initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
 
 	shouldChangePossibleMessageSends := aShouldRenamePossibleMessageSends ! !
 
 !ChangeKeywordsSelectorOrderWithActualScope methodsFor: 'rename senders - private' stamp: 'JEC 16/Nov/2025, 1:18:35 pm (UTC)'!
+!methodProperties: {}!
 messageSendSelectorKeywordPositionsIn: aMethodNode
 
 	^aMethodNode
@@ -7343,6 +8116,7 @@ messageSendSelectorKeywordPositionsIn: aMethodNode
 		withPossibleMessageSends: shouldChangePossibleMessageSends.! !
 
 !ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation' stamp: 'JEC 16/Nov/2025, 1:19:49 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders withPossibleMessageSends: shouldRenamePossibleMessageSends
 
 	self assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors.
@@ -7351,36 +8125,43 @@ from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors sen
 		initilaizeWithPossibleMessageSends: shouldRenamePossibleMessageSends! !
 
 !ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025, 1:20:06 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders
 
 	self shouldNotImplement ! !
 
 !ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025, 1:20:11 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector in: aClassToRefactor
 
 	self shouldNotImplement ! !
 
 !ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025, 1:20:17 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inCategoriesAndHierarchyOf: aClass organizedBy: anOrganization
 
 	self shouldNotImplement ! !
 
 !ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025, 1:20:23 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inCategoryOf: aClass organizedBy: anOrganization
 
 	self shouldNotImplement ! !
 
 !ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025, 1:20:29 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inHierarchyOf: aClass
 
 	self shouldNotImplement ! !
 
 !ChangeKeywordsSelectorOrderWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'JEC 16/Nov/2025, 1:20:35 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inSystem: aSystem
 
 	self shouldNotImplement ! !
 
 !RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 1/Jan/2020, 10:57:00 pm (UTC)'!
+!methodProperties: {}!
 messageSendSelectorKeywordPositionsIn: aMethodNode
 
 	^aMethodNode
@@ -7391,11 +8172,13 @@ messageSendSelectorKeywordPositionsIn: aMethodNode
 ! !
 
 !RenameSelectorWithActualScope methodsFor: 'initialization' stamp: 'HAW 1/Jan/2020, 10:50:27 pm (UTC)'!
+!methodProperties: {}!
 initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
 
 	shouldChangePossibleMessageSends := aShouldRenamePossibleMessageSends ! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 14/Mar/2019, 4:45:50 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders withPossibleMessageSends: shouldRenamePossibleMessageSends
 
 	self assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors.
@@ -7404,53 +8187,63 @@ from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors sen
 		initilaizeWithPossibleMessageSends: shouldRenamePossibleMessageSends! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 3:01:15 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector implementors: aCollectionOfImplementors senders: aCollectionOfSenders
 
 	self shouldNotImplement ! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 3:01:34 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector in: aClassToRefactor
 
 	self shouldNotImplement ! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 3:01:51 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inCategoriesAndHierarchyOf: aClass organizedBy: anOrganization
 
 	self shouldNotImplement ! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 3:02:17 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inCategoryOf: aClass organizedBy: anOrganization
 
 	self shouldNotImplement ! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 3:02:39 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inHierarchyOf: aClass
 
 	self shouldNotImplement ! !
 
 !RenameSelectorWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 3:02:51 pm (UTC)'!
+!methodProperties: {}!
 from: anOldSelector to: aNewSelector inSystem: aSystem
 
 	self shouldNotImplement ! !
 
 !AddParameterWithActualScope methodsFor: 'initialization' stamp: 'HAW 17/Aug/2019, 6:29:04 pm (UTC)'!
+!methodProperties: {}!
 initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends
 
 	shouldChangePossibleMessageSends := aShouldChangePossibleMessageSends ! !
 
 !AddParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 17/Aug/2019, 6:57:54 pm (UTC)'!
+!methodProperties: {}!
 messageSendKeywordPositionsIn: aMethodNode
 
 	^aMethodNode actualMessageSendKeywordPositionsOfAll: implementors at: index ifAbsent: [ #()] withPossibleMessageSends: shouldChangePossibleMessageSends.
 	! !
 
 !AddParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 17/Aug/2019, 6:58:04 pm (UTC)'!
+!methodProperties: {}!
 messageSendLastPositionIn: aMethodNode
 
 	^aMethodNode actualMessageSendLastPositionsOfAll: implementors ifAbsent: [ #() ] withPossibleMessageSends: shouldChangePossibleMessageSends.
 			! !
 
 !AddParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 17/Aug/2019, 7:25:24 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	at: anIndex
 	initializedWith: aNewParameterValue
@@ -7472,6 +8265,7 @@ named: aNewParameter
 		senders: sendersCollection) initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends ! !
 
 !AddParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 17/Aug/2019, 6:32:06 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	initializedWith: aNewParameterValue
 	toUnarySelector: anOldSelector
@@ -7489,6 +8283,7 @@ named: aNewParameter
 		senders: sendersCollection) initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends ! !
 
 !AddParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 17/Aug/2019, 7:28:15 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	initializedWith: aNewParameterValue
 	using: aNewKeyword
@@ -7509,6 +8304,7 @@ named: aNewParameter
 ! !
 
 !AddParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 7:29:01 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	at: anIndex
 	initializedWith: aNewParameterValue
@@ -7520,6 +8316,7 @@ named: aNewParameter
 	self shouldNotImplement ! !
 
 !AddParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 7:29:30 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	initializedWith: aNewParameterValue
 	toUnarySelector: anOldSelector
@@ -7529,6 +8326,7 @@ named: aNewParameter
 	self shouldNotImplement ! !
 
 !AddParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 17/Aug/2019, 7:28:37 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	initializedWith: aNewParameterValue
 	using: aNewKeyword
@@ -7539,11 +8337,13 @@ named: aNewParameter
 	self shouldNotImplement ! !
 
 !RemoveParameterWithActualScope methodsFor: 'initialization' stamp: 'HAW 18/Aug/2019, 3:01:30 pm (UTC)'!
+!methodProperties: {}!
 initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends
 
 	shouldChangePossibleMessageSends := aShouldChangePossibleMessageSends ! !
 
 !RemoveParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 18/Aug/2019, 3:13:12 pm (UTC)'!
+!methodProperties: {}!
 keywordAndParameterPositionsIn: aMethodNode
 
 	^aMethodNode
@@ -7555,6 +8355,7 @@ keywordAndParameterPositionsIn: aMethodNode
 	! !
 
 !RemoveParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 2/Jan/2020, 3:11:32 am (UTC)'!
+!methodProperties: {}!
 atIndex: aParameterIndex named: aParameterToRemove from: oldSelector implementors: implementorsCollection senders: sendersCollection withPossibleMessageSends: aShouldChangePossibleMessageSends
 
 	self assertReceiverTypesOfAll: sendersCollection areIncludedInAllTypesOf: implementorsCollection.
@@ -7563,32 +8364,38 @@ atIndex: aParameterIndex named: aParameterToRemove from: oldSelector implementor
 		initilaizeWithPossibleMessageSends: aShouldChangePossibleMessageSends ! !
 
 !RemoveParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 2/Jan/2020, 3:14:47 am (UTC)'!
+!methodProperties: {}!
 atIndex: aParameterIndex named: aParameterToRemove from: oldSelector implementors: implementorsCollection senders: sendersCollection
 
 	self shouldNotImplement ! !
 
 !RemoveParameterWithActualScope class methodsFor: 'instance creation - invalidated' stamp: 'HAW 18/Aug/2019, 10:35:36 pm (UTC)'!
+!methodProperties: {}!
 named: aParameterToRemove from: aMethod implementors: implementorsCollection senders: sendersCollection
 
 	self shouldNotImplement ! !
 
 !ExtractAsParameterWithActualScope class methodsFor: 'implementors and senders' stamp: 'HAW 3/Nov/2021, 10:37:14 pm (UTC)'!
+!methodProperties: {}!
 addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: aSystem
 
 	^self addParameterClass addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: aSystem
 ! !
 
 !ExtractAsParameterWithActualScope class methodsFor: 'implementors and senders' stamp: 'HAW 3/Nov/2021, 10:20:14 pm (UTC)'!
+!methodProperties: {}!
 addActualImplementorsOf: anOldSelector in: aPotentialClassToRefactor to: implementors andActualSendersTo: senders inSystem: aSystem
 
 	^self addParameterClass addActualImplementorsOf: anOldSelector in: aPotentialClassToRefactor to: implementors andActualSendersTo: senders inSystem: aSystem ! !
 
 !ExtractAsParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 3/Nov/2021, 10:10:06 pm (UTC)'!
+!methodProperties: {}!
 addParameterClass
 
 	^ AddParameterWithActualScope ! !
 
 !ExtractAsParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 3/Nov/2021, 10:10:14 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	extractedFromAll: intervals
 	at: aSourceMethod
@@ -7612,6 +8419,7 @@ named: aNewParameter
 				withPossibleMessageSends: aShouldChangePossibleMessageSends ]! !
 
 !ExtractAsParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 3/Nov/2021, 10:10:25 pm (UTC)'!
+!methodProperties: {}!
 named: aNewParameter
 	extractedFromAll: intervals
 	at: aNewKeywordIndex
@@ -7641,6 +8449,7 @@ named: aNewParameter
 ! !
 
 !InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 23/Aug/2022, 9:19:05 pm (UTC)'!
+!methodProperties: {}!
 addActualImplementorsOf: aSelectorToInline forTypes: receiverTypes to: implementors
 	andActualMessageSendsTo: messageSends inSystem: aSystem
 
@@ -7678,6 +8487,7 @@ addActualImplementorsOf: aSelectorToInline forTypes: receiverTypes to: implement
 	! !
 
 !InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'FB 24/Nov/2021, 11:43:07 pm (UTC)'!
+!methodProperties: {}!
 addActualImplementorsOf: aSelectorToInline in: aPotentialClassToRefactor to: implementors
 	andActualMessageSendsTo: messageSends inSystem: aSystem
 
@@ -7689,6 +8499,7 @@ addActualImplementorsOf: aSelectorToInline in: aPotentialClassToRefactor to: imp
 		inSystem: aSystem ! !
 
 !InlineMethodWithActualScope class methodsFor: 'implementors and senders' stamp: 'HAW 27/Jul/2023, 7:47:26 pm (UTC)'!
+!methodProperties: {}!
 findReferencesToSelector: aSelectorToInline in: aMethodReference whenSentTo: receiverTypes
 
 	| methodNode |
@@ -7710,11 +8521,13 @@ findReferencesToSelector: aSelectorToInline in: aMethodReference whenSentTo: rec
 	! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 6/Mar/2020, 1:02:41 am (UTC)'!
+!methodProperties: {}!
 convertSendersToCompiledMethods
 
 	self filterSenders ! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 17/Aug/2019, 11:20:59 pm (UTC)'!
+!methodProperties: {}!
 createRefactoring
 
 	^ self isActualScopeChoice
@@ -7722,6 +8535,7 @@ createRefactoring
 		ifFalse: [ super createRefactoring ]! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 6/Mar/2020, 1:02:51 am (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScope
 
 	oldSelector isUnary ifTrue: [ ^self createRefactoringWithActualScopeForUnarySelector].
@@ -7731,6 +8545,7 @@ createRefactoringWithActualScope
 	! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 17/Aug/2019, 11:26:26 pm (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScopeForKeywordSelector
 
 	^self refactoringClass
@@ -7744,6 +8559,7 @@ createRefactoringWithActualScopeForKeywordSelector
 		withPossibleMessageSends: self isWithPossibleMessageSends ! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 17/Aug/2019, 11:25:51 pm (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScopeForUnarySelector
 
 	^self refactoringClass
@@ -7755,6 +8571,7 @@ createRefactoringWithActualScopeForUnarySelector
 		withPossibleMessageSends: self isWithPossibleMessageSends! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 17/Aug/2019, 11:24:15 pm (UTC)'!
+!methodProperties: {}!
 refactoringClass
 
 	^self isActualScopeChoice
@@ -7762,6 +8579,7 @@ refactoringClass
 		ifFalse: [ super refactoringClass ]! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 17/Aug/2019, 11:20:59 pm (UTC)'!
+!methodProperties: {}!
 valueHandlingRefactoringExceptions: aBlock
 
 	^super valueHandlingRefactoringExceptions: [ aBlock
@@ -7769,6 +8587,7 @@ valueHandlingRefactoringExceptions: aBlock
 		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 31/Dec/2019, 6:16:18 pm (UTC)'!
+!methodProperties: {}!
 calculateImplementorsAndSenders
 
 	self isActualScopeChoice
@@ -7776,11 +8595,13 @@ calculateImplementorsAndSenders
 		ifFalse: [ super calculateImplementorsAndSenders ]! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 11:39:46 pm (UTC)'!
+!methodProperties: {}!
 messageNode
 
 	^messageNode ! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 11:20:59 pm (UTC)'!
+!methodProperties: {}!
 openChangeSelectorSendersStepWindow
 
 	self isActualScopeChoice
@@ -7790,22 +8611,26 @@ openChangeSelectorSendersStepWindow
 	! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 11:45:55 pm (UTC)'!
+!methodProperties: {}!
 scopeOptionLabels
 
 	^super scopeOptionLabels, self actualScopeOptionLabels! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 11:39:54 pm (UTC)'!
+!methodProperties: {}!
 selectedSelector
 
 	^selectedSelector ! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 18/Aug/2019, 1:19:31 am (UTC)'!
+!methodProperties: {}!
 createSenders
 
 	^OrderedCollection new.
 ! !
 
 !AddParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 17/Aug/2019, 11:20:59 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aMessageNode at: aSelectedSelector
 
 	messageNode := aMessageNode.
@@ -7813,16 +8638,19 @@ initializeOf: aMessageNode at: aSelectedSelector
 ! !
 
 !AddParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 2/Jan/2020, 3:05:01 am (UTC)'!
+!methodProperties: {}!
 on: aMessageNode createAndValueHandlingExceptionsOn: aModel in: aSelectedClass at: aSelectedSelector
 
 	^self createAndValueHandlingExceptions: [ self on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector ]! !
 
 !AddParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 18/Aug/2019, 11:38:05 pm (UTC)'!
+!methodProperties: {}!
 on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 3/Nov/2021, 9:53:18 pm (UTC)'!
+!methodProperties: {}!
 initializeInterval: anInterval
 
 	interval := anInterval.
@@ -7830,11 +8658,13 @@ initializeInterval: anInterval
 	self initializeIntervals.! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 3/Nov/2021, 9:53:53 pm (UTC)'!
+!methodProperties: {}!
 initializeIntervals
 
 	intervals := self refactoringClass intervalsForEquivalentExpressionIn: selectedClass >> oldSelector at: interval.! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021, 10:28:40 pm (UTC)'!
+!methodProperties: {}!
 createRefactoringForKeywordSelector
 
 	^self refactoringClass
@@ -7847,6 +8677,7 @@ createRefactoringForKeywordSelector
 		senders: senders ! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021, 10:30:02 pm (UTC)'!
+!methodProperties: {}!
 createRefactoringForUnarySelector
 
 	^self refactoringClass
@@ -7857,6 +8688,7 @@ createRefactoringForUnarySelector
 		senders: senders ! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021, 9:58:49 pm (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScopeForKeywordSelector
 
 	^self refactoringClass
@@ -7870,6 +8702,7 @@ createRefactoringWithActualScopeForKeywordSelector
 		withPossibleMessageSends: self isWithPossibleMessageSends ! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021, 9:56:41 pm (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScopeForUnarySelector
 
 	^self refactoringClass
@@ -7882,6 +8715,7 @@ createRefactoringWithActualScopeForUnarySelector
 		! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 3/Nov/2021, 9:57:38 pm (UTC)'!
+!methodProperties: {}!
 refactoringClass
 
 	^self isActualScopeChoice
@@ -7889,9 +8723,11 @@ refactoringClass
 		ifFalse: [ ExtractAsParameter ]! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021, 10:04:26 pm (UTC)'!
+!methodProperties: {}!
 askNewParameterValue! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021, 10:34:01 pm (UTC)'!
+!methodProperties: {}!
 askToReplaceAll
 
 	"This is repeated with ExtractAsParameter. A better way to solve this should be look for - Hernan"
@@ -7906,6 +8742,7 @@ askToReplaceAll
 	extractAll ifFalse: [ intervals := { interval } ].! !
 
 !ExtractAsParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 3/Nov/2021, 10:21:23 pm (UTC)'!
+!methodProperties: {}!
 requestRefactoringParameters
 
 	intervals size > 1 ifTrue: [ self askToReplaceAll ].
@@ -7913,6 +8750,7 @@ requestRefactoringParameters
 	super requestRefactoringParameters.! !
 
 !ExtractAsParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 3/Nov/2021, 9:44:43 pm (UTC)'!
+!methodProperties: {}!
 from: anInterval on: aModel for: anOldSelector in: aClassToRefactor
 
 	ExtractAsParameterWithActualScope assertCanExtractedFromAll: { anInterval } for: aClassToRefactor >> anOldSelector.
@@ -7920,12 +8758,14 @@ from: anInterval on: aModel for: anOldSelector in: aClassToRefactor
 	^(self on: aModel for: anOldSelector in: aClassToRefactor) initializeInterval: anInterval ! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'initialization' stamp: 'JEC 16/Nov/2025, 1:21:58 pm (UTC)'!
+!methodProperties: {}!
 createSenders
 
 	^OrderedCollection new.
 ! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'initialization' stamp: 'JEC 16/Nov/2025, 1:22:05 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aMessageNode at: aSelectedSelector
 
 	messageNode := aMessageNode.
@@ -7933,11 +8773,13 @@ initializeOf: aMessageNode at: aSelectedSelector
 ! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025, 1:22:20 pm (UTC)'!
+!methodProperties: {}!
 convertSendersToCompiledMethods
 
 	self filterSenders ! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025, 1:22:24 pm (UTC)'!
+!methodProperties: {}!
 createRefactoring
 
 	^ self isActualScopeChoice
@@ -7945,6 +8787,7 @@ createRefactoring
 		ifFalse: [ super createRefactoring ]! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025, 1:22:29 pm (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScope
 
 	^self refactoringClass
@@ -7955,6 +8798,7 @@ createRefactoringWithActualScope
 		withPossibleMessageSends: self isWithPossibleMessageSends ! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025, 2:21:01 pm (UTC)'!
+!methodProperties: {}!
 refactoringClass
 
 	^self isActualScopeChoice
@@ -7962,6 +8806,7 @@ refactoringClass
 		ifFalse: [ super refactoringClass ]! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'JEC 16/Nov/2025, 1:22:39 pm (UTC)'!
+!methodProperties: {}!
 valueHandlingRefactoringExceptions: aBlock
 
 	^super valueHandlingRefactoringExceptions: [ aBlock
@@ -7969,6 +8814,7 @@ valueHandlingRefactoringExceptions: aBlock
 		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025, 1:22:56 pm (UTC)'!
+!methodProperties: {}!
 calculateImplementorsAndSenders
 
 	self isActualScopeChoice
@@ -7976,11 +8822,13 @@ calculateImplementorsAndSenders
 		ifFalse: [ super calculateImplementorsAndSenders ]! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025, 1:23:00 pm (UTC)'!
+!methodProperties: {}!
 messageNode
 
 	^messageNode ! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025, 1:23:04 pm (UTC)'!
+!methodProperties: {}!
 openChangeSelectorSendersStepWindow
 
 	self isActualScopeChoice
@@ -7990,21 +8838,25 @@ openChangeSelectorSendersStepWindow
 	! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025, 1:23:09 pm (UTC)'!
+!methodProperties: {}!
 scopeOptionLabels
 
 	^super scopeOptionLabels, self actualScopeOptionLabels! !
 
 !ChangeKeywordsSelectorOrderWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'JEC 16/Nov/2025, 1:23:14 pm (UTC)'!
+!methodProperties: {}!
 selectedSelector
 
 	^selectedSelector ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 6/Mar/2020, 1:00:13 am (UTC)'!
+!methodProperties: {}!
 convertSendersToCompiledMethods
 
 	self filterSenders ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 4/Apr/2019, 11:28:23 am (UTC)'!
+!methodProperties: {}!
 createRefactoring
 
 	^ self isActualScopeChoice
@@ -8012,6 +8864,7 @@ createRefactoring
 		ifFalse: [ super createRefactoring ]! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 6/Mar/2020, 1:00:46 am (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScope
 
 	^self refactoringClass
@@ -8022,6 +8875,7 @@ createRefactoringWithActualScope
 		withPossibleMessageSends: self isWithPossibleMessageSends ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 4/Apr/2019, 11:30:41 am (UTC)'!
+!methodProperties: {}!
 refactoringClass
 
 	^self isActualScopeChoice
@@ -8029,6 +8883,7 @@ refactoringClass
 		ifFalse: [ super refactoringClass ]! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 14/Mar/2019, 9:55:21 pm (UTC)'!
+!methodProperties: {}!
 valueHandlingRefactoringExceptions: aBlock
 
 	^super valueHandlingRefactoringExceptions: [ aBlock
@@ -8036,6 +8891,7 @@ valueHandlingRefactoringExceptions: aBlock
 		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 31/Dec/2019, 6:16:26 pm (UTC)'!
+!methodProperties: {}!
 calculateImplementorsAndSenders
 
 	self isActualScopeChoice
@@ -8043,11 +8899,13 @@ calculateImplementorsAndSenders
 		ifFalse: [ super calculateImplementorsAndSenders ]! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 11:40:27 pm (UTC)'!
+!methodProperties: {}!
 messageNode
 
 	^messageNode ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 2:16:30 pm (UTC)'!
+!methodProperties: {}!
 openChangeSelectorSendersStepWindow
 
 	self isActualScopeChoice
@@ -8057,22 +8915,26 @@ openChangeSelectorSendersStepWindow
 	! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 11:46:28 pm (UTC)'!
+!methodProperties: {}!
 scopeOptionLabels
 
 	^super scopeOptionLabels, self actualScopeOptionLabels! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 17/Aug/2019, 11:40:35 pm (UTC)'!
+!methodProperties: {}!
 selectedSelector
 
 	^selectedSelector ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 18/Aug/2019, 2:52:19 am (UTC)'!
+!methodProperties: {}!
 createSenders
 
 	^OrderedCollection new.
 ! !
 
 !RenameSelectorWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 15/Mar/2019, 7:27:27 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aMessageNode at: aSelectedSelector
 
 	messageNode := aMessageNode.
@@ -8080,21 +8942,25 @@ initializeOf: aMessageNode at: aSelectedSelector
 ! !
 
 !RenameSelectorWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 2/Jan/2020, 3:05:29 am (UTC)'!
+!methodProperties: {}!
 on: aMessageNode createAndValueHandlingExceptionsOn: aModel in: aSelectedClass at: aSelectedSelector
 
 	^self createAndValueHandlingExceptions: [ self on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector ]! !
 
 !RenameSelectorWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 18/Aug/2019, 11:37:55 pm (UTC)'!
+!methodProperties: {}!
 on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 6/Mar/2020, 1:04:07 am (UTC)'!
+!methodProperties: {}!
 convertSendersToCompiledMethods
 
 	self filterSenders ! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 createRefactoring
 
 	^ self isActualScopeChoice
@@ -8102,6 +8968,7 @@ createRefactoring
 		ifFalse: [ super createRefactoring ]! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 6/Mar/2020, 1:04:05 am (UTC)'!
+!methodProperties: {}!
 createRefactoringWithActualScope
 
 	^self refactoringClass
@@ -8113,6 +8980,7 @@ createRefactoringWithActualScope
 		withPossibleMessageSends: self isWithPossibleMessageSends.! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 18/Aug/2019, 10:41:32 pm (UTC)'!
+!methodProperties: {}!
 refactoringClass
 
 	^self isActualScopeChoice
@@ -8120,6 +8988,7 @@ refactoringClass
 		ifFalse: [ super refactoringClass ]! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 valueHandlingRefactoringExceptions: aBlock
 
 	^super valueHandlingRefactoringExceptions: [ aBlock
@@ -8127,6 +8996,7 @@ valueHandlingRefactoringExceptions: aBlock
 		do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 31/Dec/2019, 6:16:22 pm (UTC)'!
+!methodProperties: {}!
 calculateImplementorsAndSenders
 
 	self isActualScopeChoice
@@ -8134,11 +9004,13 @@ calculateImplementorsAndSenders
 		ifFalse: [ super calculateImplementorsAndSenders ]! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 messageNode
 
 	^messageNode ! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 openChangeSelectorSendersStepWindow
 
 	self isActualScopeChoice
@@ -8148,22 +9020,26 @@ openChangeSelectorSendersStepWindow
 	! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 scopeOptionLabels
 
 	^super scopeOptionLabels, self actualScopeOptionLabels! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 selectedSelector
 
 	^selectedSelector ! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 createSenders
 
 	^OrderedCollection new.
 ! !
 
 !RemoveParameterWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 18/Aug/2019, 10:39:24 pm (UTC)'!
+!methodProperties: {}!
 initializeOf: aMessageNode at: aSelectedSelector
 
 	messageNode := aMessageNode.
@@ -8171,16 +9047,19 @@ initializeOf: aMessageNode at: aSelectedSelector
 ! !
 
 !RemoveParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 2/Jan/2020, 3:05:18 am (UTC)'!
+!methodProperties: {}!
 on: aMessageNode createAndValueHandlingExceptionsOn: aModel in: aSelectedClass at: aSelectedSelector
 
 	^self createAndValueHandlingExceptions: [ self on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector ]! !
 
 !RemoveParameterWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'HAW 18/Aug/2019, 10:39:25 pm (UTC)'!
+!methodProperties: {}!
 on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'FB 24/Nov/2021, 11:09:34 pm (UTC)'!
+!methodProperties: {}!
 refactoringClass
 
 	^self isActualScopeChoice
@@ -8188,6 +9067,7 @@ refactoringClass
 		ifFalse: [ super refactoringClass ]! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 14/May/2025, 2:53:03 pm (UTC)'!
+!methodProperties: {}!
 valueHandlingRefactoringExceptions: aBlock
 	"TODO: change?"
 
@@ -8197,12 +9077,14 @@ valueHandlingRefactoringExceptions: aBlock
 			do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 19/Mar/2022, 10:45:55 pm (UTC)'!
+!methodProperties: {}!
 createAndApplyRefactoring
 
 	self filterSenders.
 	super createAndApplyRefactoring.! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 14/May/2025, 2:55:16 pm (UTC)'!
+!methodProperties: {}!
 filterSenders
 
 	"Removes possible senders if user selected Actual scope"
@@ -8213,493 +9095,27 @@ filterSenders
 	! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 14/May/2025, 2:55:16 pm (UTC)'!
+!methodProperties: {}!
 isActualAndPossibleScopeChoice
 
 	^scopeChoice = 6
 	! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 14/May/2025, 2:50:23 pm (UTC)'!
+!methodProperties: {}!
 scopeOptionLabels
 
 	^super scopeOptionLabels, self actualScopeOptionLabels.! !
 
 !InlineMethodWithActualScopeApplier class methodsFor: 'instance creation' stamp: 'FB 13/Mar/2022, 8:48:46 pm (UTC)'!
+!methodProperties: {}!
 initialize
 
 	RefactoringApplier
 		registerInlineMethodApplier: InlineMethodWithActualScopeApplier.! !
 
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:17:40 am (UTC)'!
-README
-
-	"The tests names in some cases only talk about the setup and not the assertion
-	because if not they would be to long to read and understand - Hernan"! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:39 am (UTC)'!
-test_Browser_ArrayWithArrayAndOtherObjects
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < {{1 yourself} value. 2} '
-		areUnaryAndBinarySelectorsOf: Array
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:21 am (UTC)'!
-test_Browser_BinaryAndArray
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself} '
-		areUnaryAndBinarySelectorsOf: Array
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:34 am (UTC)'!
-test_Browser_BinaryAndArrayOfArray
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < {{1 yourself}} '
-		areUnaryAndBinarySelectorsOf: Array
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:30 am (UTC)'!
-test_Browser_BinaryAndArrayWithManyElements
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself. 2} '
-		areUnaryAndBinarySelectorsOf: Array
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:25 am (UTC)'!
-test_Browser_BinaryAndBinaryInParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < (1^1) '
-		areUnaryAndBinarySelectorsOf: SmallInteger ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:20 am (UTC)'!
-test_Browser_BinaryAndBlock
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < [1 yourself] '
-		areUnaryAndBinarySelectorsOf: BlockClosure
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:15 am (UTC)'!
-test_Browser_BinaryAndBlockOfBlock
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < [[1 yourself]] '
-		areUnaryAndBinarySelectorsOf: BlockClosure
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:11 am (UTC)'!
-test_Browser_BinaryAndBlockOfEvaluatedBlock
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < [[1 yourself] value ] '
-		areUnaryAndBinarySelectorsOf: BlockClosure
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:07 am (UTC)'!
-test_Browser_BinaryAndExpresionInParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) '
-		areUnaryAndBinarySelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:01 am (UTC)'!
-test_Browser_BinaryAndLiteralArray
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < #(1) '
-		areUnaryAndBinarySelectorsOf: Array
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:56 am (UTC)'!
-test_Browser_BinaryAndMoreThanOneUnaryAfterExpresionInParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) yourself yourself '
-		areUnaryAndBinarySelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:52 am (UTC)'!
-test_Browser_BinaryAndOneUnaryAfterBlock
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < [1 yourself] yourself '
-		areUnaryAndBinarySelectorsOf: BlockClosure
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:47 am (UTC)'!
-test_Browser_BinaryAndOneUnaryAfterBrace
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself} yourself '
-		areUnaryAndBinarySelectorsOf: Array
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:42 am (UTC)'!
-test_Browser_BinaryAndOneUnaryAfterCharacter
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < $a yourself '
-		areUnaryAndBinarySelectorsOf: Character
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:37 am (UTC)'!
-test_Browser_BinaryAndOneUnaryAfterLiteralArray
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < #(1 2) yourself '
-		areUnaryAndBinarySelectorsOf: Array
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:33 am (UTC)'!
-test_Browser_BinaryAndOneUnaryAfterStringSymbol
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < #''a'' yourself '
-		areUnaryAndBinarySelectorsOf: Symbol
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:29 am (UTC)'!
-test_Browser_BinaryAndOneUnaryAfterSymbol
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < #xx yourself '
-		areUnaryAndBinarySelectorsOf: Symbol
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:29 am (UTC)'!
-test_Browser_BinaryAndUnaryInProtoObject
-
-	classToBrowse := ProtoObject.
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < self initialize '
-		areUnaryAndBinarySelectorsOf: ProtoObject.
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:23 am (UTC)'!
-test_Browser_BinaryAndUncompleteKeywordAfterParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) o'
-		areUnaryAndBinarySelectorsOf: SmallInteger
-		beginningWith: 'o'
-! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:18 am (UTC)'!
-test_Browser_BinaryAndUncompleteKeywordAfterUnary
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself o'
-		areUnaryAndBinarySelectorsOf: SmallInteger
-		beginningWith: 'o'
-! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:14 am (UTC)'!
-test_Browser_BinaryAndUncompleteMessageAfterUnary
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself an'
-		areUnaryAndBinarySelectorsOf: SmallInteger
-		beginningWith: 'an'
-! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:09 am (UTC)'!
-test_Browser_BinaryInParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 (1<1) '
-		areSelectorsOfAll: {True. False. }! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:04 am (UTC)'!
-test_Browser_BinaryWithMoreThanOneUnary
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself yourself '
-		areUnaryAndBinarySelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:03 am (UTC)'!
-test_Browser_BinaryWithOneUnary
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself '
-		areUnaryAndBinarySelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:59 am (UTC)'!
-test_Browser_ClosedAndUnclosedParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 ((1 yourself) '
-		areSelectorsOf: SmallInteger ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:53 am (UTC)'!
-test_Browser_ExpressionInManyParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 ((1 yourself)) '
-		areSelectorsOf: SmallInteger ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:47 am (UTC)'!
-test_Browser_ExpressionWithMoreThanOneParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < ((1 yourself)) '
-		areUnaryAndBinarySelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:39 am (UTC)'!
-test_Browser_LFBeforeParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 (1 yourself
-		 ) '
-		areSelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:33 am (UTC)'!
-test_Browser_SpaceBeforeParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 (1 yourself ) '
-		areSelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:28 am (UTC)'!
-test_Browser_UnaryAfterExpresionInParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) yourself '
-		areUnaryAndBinarySelectorsOf: SmallInteger
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:24 am (UTC)'!
-test_Browser_UnclosedArrayAfterClosedArray
-
-	self
-		assertEntriesWhenBrowsing: 'm1 {{1} '
-		areSelectorsOf: Array ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:14 am (UTC)'!
-test_Browser_UnclosedBlockAfterBlock
-
-	self
-		assertEntriesWhenBrowsing: 'm1 [[1] '
-		areSelectorsOf: BlockClosure ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:06 am (UTC)'!
-test_Browser_UnclosedDoubleParenthesis
-
-	self
-		assertEntriesWhenBrowsing: 'm1 ((1 yourself '
-		areSelectorsOf: SmallInteger ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:36 am (UTC)'!
-test_Browser_selfInProtoObject
-
-	classToBrowse := ProtoObject.
-	self
-		assertEntriesWhenBrowsing: 'm1 self initialize '
-		areSelectorsOf: ProtoObject .
-! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:01 am (UTC)'!
-test_Workspace_ExpresionInParenthesis
-
-	self
-		assertEntriesForWorkspaceWith: '(1) '
-		binding: 'x'
-		to: 1
-		areSelectorsOf: SmallInteger.! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:50 am (UTC)'!
-test_Workspace_MoreThanOneUnaryMessage
-
-	self
-		assertEntriesForWorkspaceWith: '1 yourself yourself '
-		binding: 'x'
-		to: 1
-		areSelectorsOf: SmallInteger.! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:43 am (UTC)'!
-test_Workspace_OnlyRightParenthesis
-
-	self
-		shouldnt: [
-			self
-				autocompleteEntriesForWorkspaceWith: ') '
-				binding: 'x'
-				to: 1 ]
-		raise: Error! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 3/May/2020, 12:08:05 am (UTC)'!
-test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrowsedClassDoesNotHaveASuperclass
-
-	self browseClass: ProtoObject.
-
-	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'm1 super '.
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < super '
-		areUnaryAndBinarySelectorsOf: nil.! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:42:33 am (UTC)'!
-test012_AutocompletesMessagesFor_InstanceVariables
-
-	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
-	super test012_AutocompletesMessagesFor_InstanceVariables! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 3/May/2020, 12:25:12 am (UTC)'!
-test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsOfInstVarTypes
-
-	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
-	instanceVariable1 := 1.
-
-	self
-		assertEntriesWhenBrowsing: 'm1 instanceVariable1 '
-		areSelectorsOf: SmallInteger.
-
-	self
-		assertEntriesWhenBrowsing: 'm1 1 < instanceVariable1 '
-		areUnaryAndBinarySelectorsOf: SmallInteger.
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 3/May/2020, 12:40:33 am (UTC)'!
-test014_AutocompletesMessagesFor_TemporaryVariables_WithSelectorsOfTempVarTypes
-
-	classToBrowse := self class.
-	self methodWithTempVar.
-	self
-		assertEntriesWhenBrowsingMethod: self class >> #methodWithTempVar
-		areSelectorsOf: SmallInteger.
-
-	self methodWithBinaryMessageSendAndTempVar.
-	self
-		assertEntriesWhenBrowsingMethod: self class >> #methodWithBinaryMessageSendAndTempVar
-		areUnaryAndBinarySelectorsOf: SmallInteger.
-
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:43:31 am (UTC)'!
-test023_AutocompletingMessagesFor_UnaryMessages
-
-	classToBrowse := self class.
-	self assertEntriesWhenBrowsing: 'm1 self class ' areSelectorsOf: self class class.
-	self assertEntriesWhenBrowsing: 'm1 1 < self class ' areUnaryAndBinarySelectorsOf: self class class.
-
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:44:50 am (UTC)'!
-test024_AutocompletingMessagesFor_RightParenthesis
-
-	self assertEntriesWhenBrowsing: 'm1 (1) ' areSelectorsOf: SmallInteger.
-	self assertEntriesWhenBrowsing: 'm1 1 + (1 ' areSelectorsOf: SmallInteger.
-
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:45:10 am (UTC)'!
-test026_AutocompletingMessagesFor_Cascade
-
-	classToBrowse := self class.
-	self
-		assertEntriesWhenBrowsing: 'm1 self class; '
-		areSelectorsOf: self class
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 2/May/2020, 11:19:07 pm (UTC)'!
-binaryMessageSendReturnTypes
-
-	^ Boolean withAllSubclasses! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 3/May/2020, 4:58:19 am (UTC)'!
-methodWithBinaryMessageSendAndTempVar
-	"space at the end is important - Hernan"
-	|a|
-	a := 1.
-	1 < a ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 3/May/2020, 4:58:25 am (UTC)'!
-methodWithTempVar
-	"space at the end is important - Hernan"
-	|a|
-	a := 1.
-	a ! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 3/May/2020, 12:10:54 am (UTC)'!
-assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: aClass
-
-	| classes |
-
-	classes := self binaryMessageSendReturnTypes.
-	aClass ifNotNil: [ classes add: aClass ].
-
-	self
-		assert: aCompleter
-		analizedSelectorsFrom: classes
-		canShowDocumentation: true
-		detectedPossibleInvalidSelector: #()
-		suggested: (self using: aCompleter addUnaryAndBinarySelectorsOf: aClass).
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 7/May/2020, 2:08:48 am (UTC)'!
-assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: class beginningWith: aPrefix
-
-	| suggested classes |
-
-	classes := self binaryMessageSendReturnTypes.
-	suggested := classes
-		inject: Set new
-		into: [ :suggestedCollector :aClass |
-			suggestedCollector
-				addAll: (aClass allSelectors select: [ :aSelector | aSelector isKeyword and: [ aSelector beginsWith: aPrefix ]]);
-				yourself ].
-
-	class ifNotNil: [
-		classes add: class.
-		suggested addAll:
-			(class allSelectors select: [ :aSelector | (aSelector isUnary or: [ aSelector isInfix ]) and: [ aSelector beginsWith: aPrefix ]])].
-
-	self
-		assert: aCompleter
-		analizedSelectorsFrom: classes
-		canShowDocumentation: true
-		detectedPossibleInvalidSelector: #()
-		suggested: suggested.! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 7/May/2020, 2:09:06 am (UTC)'!
-assertEntriesWhenBrowsing: sourceCode areUnaryAndBinarySelectorsOf: aClass beginningWith: aPrefix
-
-	self
-		assertEntriesOf: (self autocompleteEntriesBrowsing: sourceCode)
-		areUnaryAndBinarySelectorsOf: aClass
-		beginningWith: aPrefix
-
-	! !
-
-!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 3/May/2020, 12:00:51 am (UTC)'!
-using: aCompleter addUnaryAndBinarySelectorsOf: aClass
-
-	| entries classes |
-
-	entries := super using: aCompleter addUnaryAndBinarySelectorsOf: aClass.
-
-	classes := self binaryMessageSendReturnTypes.
-	classes add: Object; add: ProtoObject.
-
-	classes do: [ :aBooleanClass |
-		entries addAll: (aBooleanClass selectors select: [ :aSelector | aSelector isKeyword ]) ].
-
-	^entries
-		! !
-
-!LiveTypingSmalltalkCompleterTest class methodsFor: 'testing' stamp: 'HAW 2/May/2020, 8:04:06 pm (UTC)'!
-isAbstract
-
-	^false! !
-
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 6:45:17 pm (UTC)'!
+!methodProperties: {}!
 test01_01_DoesNotChangePossibleMessageSendWhenInstructedToDoSoWithKeywordMessages
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -8728,6 +9144,7 @@ test01_01_DoesNotChangePossibleMessageSendWhenInstructedToDoSoWithKeywordMessage
 	! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 6:28:35 pm (UTC)'!
+!methodProperties: {}!
 test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -8754,6 +9171,7 @@ test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
 	! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:26:59 pm (UTC)'!
+!methodProperties: {}!
 test02_01_CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsForKeywordMessage
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
@@ -8791,6 +9209,7 @@ test02_01_CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplemento
 	! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:24:04 pm (UTC)'!
+!methodProperties: {}!
 test02CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementors
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
@@ -8826,6 +9245,7 @@ test02CanNotAddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementors
 	! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:44:50 pm (UTC)'!
+!methodProperties: {}!
 test03AddParameterWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -8851,6 +9271,7 @@ test03AddParameterWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | x := ', self classOfOtherImplementorName, ' new. x m1: 1'.! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:46:11 pm (UTC)'!
+!methodProperties: {}!
 test04AddParameterWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
 
 	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
@@ -8880,6 +9301,7 @@ test04AddParameterWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
 		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1'.! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:47:31 pm (UTC)'!
+!methodProperties: {}!
 test05AddParameterInDifferentMessageSendsWithReceiverTypeIsIncludedInImplementorsType
 
 	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
@@ -8909,6 +9331,7 @@ test05AddParameterInDifferentMessageSendsWithReceiverTypeIsIncludedInImplementor
 		equals: senderToChange, ' | x y | x := self. y := ', self classOfOtherImplementorName, ' new. x m1: 1. y m1: 1'! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:48:39 pm (UTC)'!
+!methodProperties: {}!
 test06AddParameterInDifferentMessageSendsWithReceiverTypeEqualToImplementorsType
 
 	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
@@ -8938,6 +9361,7 @@ test06AddParameterInDifferentMessageSendsWithReceiverTypeEqualToImplementorsType
 		equals: senderToChange, ' | x y | x := y:= self. x := y := ', self classOfOtherImplementorName, ' new. x m1: 1. y m1: 1'.! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:49:48 pm (UTC)'!
+!methodProperties: {}!
 test07AddParameterToPossibleMessageSendIfInstructedToDoSo
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -8964,6 +9388,7 @@ test07AddParameterToPossibleMessageSendIfInstructedToDoSo
 	! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 7:50:59 pm (UTC)'!
+!methodProperties: {}!
 test08AddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelectorNotImplementedInTypeHierarchy
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
@@ -8996,6 +9421,7 @@ test08AddParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelec
 		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1: 1'.! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 18/Aug/2019, 10:30:39 pm (UTC)'!
+!methodProperties: {}!
 test09AddParameterOnlyToValidMessageSendWhenMoreSendsInSameMethod
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
@@ -9030,6 +9456,7 @@ test09AddParameterOnlyToValidMessageSendWhenMoreSendsInSameMethod
 		equals: senderToChange, ' self m1: 1. ', self classOfOtherImplementorName, ' new ', oldSelector .! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 18/Aug/2019, 2:53:08 pm (UTC)'!
+!methodProperties: {}!
 test10UsesTheModifiedSourceCodeWhenAddingParameterToMethodWithSureAndPossibleSenders
 
 	| classToRefactor oldSelector senderToChange rename |
@@ -9056,6 +9483,7 @@ test10UsesTheModifiedSourceCodeWhenAddingParameterToMethodWithSureAndPossibleSen
 		equals: senderToChange, ' |x| self m1: 1. x ', oldSelector.! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 17/Aug/2019, 11:18:58 pm (UTC)'!
+!methodProperties: {}!
 test11CanNotAddParameterWithReceiverTypeOfCascadeMessageSendNotIncludedInImplementors
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
@@ -9091,6 +9519,7 @@ test11CanNotAddParameterWithReceiverTypeOfCascadeMessageSendNotIncludedInImpleme
 	! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 28/Oct/2019, 4:06:06 am (UTC)'!
+!methodProperties: {}!
 test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 
 	| instanceCreationMethod |
@@ -9100,6 +9529,7 @@ test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
 
 !AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 18/Aug/2019, 10:37:41 pm (UTC)'!
+!methodProperties: {}!
 test13AddLastParameterCorrectly
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -9126,16 +9556,19 @@ test13AddLastParameterCorrectly
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m1: 1 m2: 2'.! !
 
 !AddParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 17/Aug/2019, 2:40:33 pm (UTC)'!
+!methodProperties: {}!
 classOfOtherImplementorName
 
 	^#ClassOfSender! !
 
 !AddParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 17/Aug/2019, 2:40:51 pm (UTC)'!
+!methodProperties: {}!
 classToRefactorName
 
 	^#ClassToAddParameter! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:33:01 am (UTC)'!
+!methodProperties: {}!
 test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -9162,6 +9595,7 @@ test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
 	! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:33:16 am (UTC)'!
+!methodProperties: {}!
 test02CanNotRemoveParameterWithReceiverTypeOfMessageSendNotIncludedInImplementors
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
@@ -9197,6 +9631,7 @@ test02CanNotRemoveParameterWithReceiverTypeOfMessageSendNotIncludedInImplementor
 	! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:33:29 am (UTC)'!
+!methodProperties: {}!
 test03RemovesParameterWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -9222,6 +9657,7 @@ test03RemovesParameterWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | x := ', self classOfOtherImplementorName, ' new. x m1'.! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:33:42 am (UTC)'!
+!methodProperties: {}!
 test04RemovesParameterWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
 
 	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
@@ -9251,6 +9687,7 @@ test04RemovesParameterWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
 		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1'.! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:33:55 am (UTC)'!
+!methodProperties: {}!
 test05RemovesParameterInDifferentMessageSendsWithReceiverTypeIsIncludedInImplementorsType
 
 	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
@@ -9280,6 +9717,7 @@ test05RemovesParameterInDifferentMessageSendsWithReceiverTypeIsIncludedInImpleme
 		equals: senderToChange, ' | x y | x := self. y := ', self classOfOtherImplementorName, ' new. x m1. y m1'! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:34:07 am (UTC)'!
+!methodProperties: {}!
 test06RemovesParameterInDifferentMessageSendsWithReceiverTypeEqualToImplementorsType
 
 	| classToRefactor oldSelector senderToChange refactor classOfOtherImplementor |
@@ -9309,6 +9747,7 @@ test06RemovesParameterInDifferentMessageSendsWithReceiverTypeEqualToImplementors
 		equals: senderToChange, ' | x y | x := y:= self. x := y := ', self classOfOtherImplementorName, ' new. x m1. y m1'.! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:34:19 am (UTC)'!
+!methodProperties: {}!
 test07RemovesParameterToPossibleMessageSendIfInstructedToDoSo
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -9335,6 +9774,7 @@ test07RemovesParameterToPossibleMessageSendIfInstructedToDoSo
 	! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:34:45 am (UTC)'!
+!methodProperties: {}!
 test08RemovesParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelectorNotImplementedInTypeHierarchy
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
@@ -9367,6 +9807,7 @@ test08RemovesParameterWithReceiverTypeOfMessageSendNotIncludedInImplementorsButS
 		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x m1'.! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:34:57 am (UTC)'!
+!methodProperties: {}!
 test09RemovesParameterOnlyToValidMessageSendWhenMoreSendsInSameMethod
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
@@ -9401,6 +9842,7 @@ test09RemovesParameterOnlyToValidMessageSendWhenMoreSendsInSameMethod
 		equals: senderToChange, ' self m1. ', self classOfOtherImplementorName, ' new m1: 1' .! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:35:11 am (UTC)'!
+!methodProperties: {}!
 test10UsesTheModifiedSourceCodeWhenRemovingParameterToMethodWithSureAndPossibleSenders
 
 	| classToRefactor oldSelector senderToChange rename |
@@ -9427,6 +9869,7 @@ test10UsesTheModifiedSourceCodeWhenRemovingParameterToMethodWithSureAndPossibleS
 		equals: senderToChange, ' |x| self m1. x m1: 1'.! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:35:30 am (UTC)'!
+!methodProperties: {}!
 test11CanNotRemoveParameterWithReceiverTypeOfCascadeMessageSendNotIncludedInImplementors
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor messageSendWithInvalidReceiverTypes |
@@ -9462,6 +9905,7 @@ test11CanNotRemoveParameterWithReceiverTypeOfCascadeMessageSendNotIncludedInImpl
 	! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 28/Oct/2019, 4:06:20 am (UTC)'!
+!methodProperties: {}!
 test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 
 	| instanceCreationMethod |
@@ -9471,6 +9915,7 @@ test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:35:59 am (UTC)'!
+!methodProperties: {}!
 test13RemovesOtherThanLastParameterCorrectly
 
 	| classToRefactor oldSelector senderToChange refactor |
@@ -9496,16 +9941,19 @@ test13RemovesOtherThanLastParameterCorrectly
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m2: 2'.! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 18/Aug/2019, 3:02:24 pm (UTC)'!
+!methodProperties: {}!
 classOfOtherImplementorName
 
 	^#ClassOfSender! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 18/Aug/2019, 3:02:41 pm (UTC)'!
+!methodProperties: {}!
 classToRefactorName
 
 	^#ClassToRemoveParameter! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 14/Mar/2019, 4:45:13 pm (UTC)'!
+!methodProperties: {}!
 test01DoesNotRenamesPossibleMessageSendWhenInstructedToDoSo
 
 	| classToRefactor oldSelector senderToChange newSelector refactor |
@@ -9532,6 +9980,7 @@ test01DoesNotRenamesPossibleMessageSendWhenInstructedToDoSo
 	! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 27/Mar/2019, 6:39:33 pm (UTC)'!
+!methodProperties: {}!
 test02CanNotRenameWithReceiverTypeOfMessageSendNotIncludedInImplementors
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor messageSendWithInvalidReceiverTypes |
@@ -9567,6 +10016,7 @@ test02CanNotRenameWithReceiverTypeOfMessageSendNotIncludedInImplementors
 	! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 14/Mar/2019, 4:56:43 pm (UTC)'!
+!methodProperties: {}!
 test03RenamesWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
 
 	| classToRefactor oldSelector senderToChange newSelector refactor |
@@ -9593,6 +10043,7 @@ test03RenamesWhenReceiverTypeOfMessageSendIsSubtypeOfImplementorsType
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' | x | x := ', self classOfOtherImplementorName, ' new. x ', newSelector.! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 27/Mar/2019, 6:39:25 pm (UTC)'!
+!methodProperties: {}!
 test04RenamesWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
 
 	| classToRefactor oldSelector senderToChange newSelector refactor classOfOtherImplementor |
@@ -9622,6 +10073,7 @@ test04RenamesWhenReceiverTypeOfMessageSendIsEqualToImplementorsTypes
 		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', newSelector .! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 27/Mar/2019, 6:39:20 pm (UTC)'!
+!methodProperties: {}!
 test05RenamesDifferentMessageSendsWithReceiverTypeIsIncludedInImplementorsType
 
 	| classToRefactor oldSelector senderToChange newSelector refactor classOfOtherImplementor |
@@ -9651,6 +10103,7 @@ test05RenamesDifferentMessageSendsWithReceiverTypeIsIncludedInImplementorsType
 		equals: senderToChange, ' | x y | x := self. y := ', self classOfOtherImplementorName, ' new. x ', newSelector, '. y ', newSelector.! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 27/Mar/2019, 6:39:14 pm (UTC)'!
+!methodProperties: {}!
 test06RenamesDifferentMessageSendsWithReceiverTypeEqualToImplementorsType
 
 	| classToRefactor oldSelector senderToChange newSelector refactor classOfOtherImplementor |
@@ -9680,6 +10133,7 @@ test06RenamesDifferentMessageSendsWithReceiverTypeEqualToImplementorsType
 		equals: senderToChange, ' | x y | x := y:= self. x := y := ', self classOfOtherImplementorName, ' new. x ', newSelector, '. y ', newSelector.! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 14/Mar/2019, 4:55:08 pm (UTC)'!
+!methodProperties: {}!
 test07RenamePossibleMessageSendIfInstructedToDoSo
 
 	| classToRefactor oldSelector senderToChange newSelector refactor |
@@ -9706,6 +10160,7 @@ test07RenamePossibleMessageSendIfInstructedToDoSo
 	! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 27/Mar/2019, 6:38:16 pm (UTC)'!
+!methodProperties: {}!
 test08RenamesWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelectorNotImplementedInTypeHierarchy
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
@@ -9737,6 +10192,7 @@ test08RenamesWithReceiverTypeOfMessageSendNotIncludedInImplementorsButSelectorNo
 		equals: senderToChange, ' | x | x := self. x := ', self classOfOtherImplementorName, ' new. x ', newSelector.! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 18/Aug/2019, 10:29:55 pm (UTC)'!
+!methodProperties: {}!
 test09RenamesOnlyValidMessageSendWhenMoreSendsInSameMethod
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor rename |
@@ -9770,6 +10226,7 @@ test09RenamesOnlyValidMessageSendWhenMoreSendsInSameMethod
 		equals: senderToChange, ' self ', newSelector, '. ', self classOfOtherImplementorName, ' new ', oldSelector.! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 18/Aug/2019, 2:50:06 pm (UTC)'!
+!methodProperties: {}!
 test10UsesTheModifiedSourceCodeWhenRenamingAMethodWithSureAndPossibleSenders
 
 	| classToRefactor oldSelector senderToChange newSelector rename |
@@ -9796,6 +10253,7 @@ test10UsesTheModifiedSourceCodeWhenRenamingAMethodWithSureAndPossibleSenders
 		equals: senderToChange, ' |x| self ', newSelector, '. x ', oldSelector.! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 10/Aug/2019, 9:03:33 pm (UTC)'!
+!methodProperties: {}!
 test11CanNotRenameWithReceiverTypeOfCascadeMessageSendNotIncludedInImplementors
 
 	| classToRefactor oldSelector senderToChange newSelector classOfOtherImplementor messageSendWithInvalidReceiverTypes |
@@ -9831,6 +10289,7 @@ test11CanNotRenameWithReceiverTypeOfCascadeMessageSendNotIncludedInImplementors
 	! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 28/Oct/2019, 4:06:37 am (UTC)'!
+!methodProperties: {}!
 test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 
 	| instanceCreationMethod |
@@ -9840,16 +10299,542 @@ test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 14/Mar/2019, 12:40:22 pm (UTC)'!
+!methodProperties: {}!
 classOfOtherImplementorName
 
 	^#ClassOfSender! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 14/Mar/2019, 12:23:03 pm (UTC)'!
+!methodProperties: {}!
 classToRefactorName
 
 	^#ClassToRenameSelector! !
 
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:17:40 am (UTC)'!
+!methodProperties: {}!
+README
+
+	"The tests names in some cases only talk about the setup and not the assertion
+	because if not they would be to long to read and understand - Hernan"! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:39 am (UTC)'!
+!methodProperties: {}!
+test_Browser_ArrayWithArrayAndOtherObjects
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {{1 yourself} value. 2} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:21 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:34 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndArrayOfArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {{1 yourself}} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:30 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndArrayWithManyElements
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself. 2} '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:25 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndBinaryInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1^1) '
+		areUnaryAndBinarySelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:20 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [1 yourself] '
+		areUnaryAndBinarySelectorsOf: BlockClosure
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:15 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndBlockOfBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [[1 yourself]] '
+		areUnaryAndBinarySelectorsOf: BlockClosure
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:11 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndBlockOfEvaluatedBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [[1 yourself] value ] '
+		areUnaryAndBinarySelectorsOf: BlockClosure
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:07 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndExpresionInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:41:01 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndLiteralArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #(1) '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:56 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndMoreThanOneUnaryAfterExpresionInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) yourself yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:52 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndOneUnaryAfterBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < [1 yourself] yourself '
+		areUnaryAndBinarySelectorsOf: BlockClosure
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:47 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndOneUnaryAfterBrace
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < {1 yourself} yourself '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:42 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndOneUnaryAfterCharacter
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < $a yourself '
+		areUnaryAndBinarySelectorsOf: Character
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:37 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndOneUnaryAfterLiteralArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #(1 2) yourself '
+		areUnaryAndBinarySelectorsOf: Array
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:33 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndOneUnaryAfterStringSymbol
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #''a'' yourself '
+		areUnaryAndBinarySelectorsOf: Symbol
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:29 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndOneUnaryAfterSymbol
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < #xx yourself '
+		areUnaryAndBinarySelectorsOf: Symbol
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:29 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndUnaryInProtoObject
+
+	classToBrowse := ProtoObject.
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < self initialize '
+		areUnaryAndBinarySelectorsOf: ProtoObject.
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:23 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndUncompleteKeywordAfterParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) o'
+		areUnaryAndBinarySelectorsOf: SmallInteger
+		beginningWith: 'o'
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:18 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndUncompleteKeywordAfterUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself o'
+		areUnaryAndBinarySelectorsOf: SmallInteger
+		beginningWith: 'o'
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:14 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryAndUncompleteMessageAfterUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself an'
+		areUnaryAndBinarySelectorsOf: SmallInteger
+		beginningWith: 'an'
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:09 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 (1<1) '
+		areSelectorsOfAll: {True. False. }! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:40:04 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryWithMoreThanOneUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:03 am (UTC)'!
+!methodProperties: {}!
+test_Browser_BinaryWithOneUnary
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < 1 yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:59 am (UTC)'!
+!methodProperties: {}!
+test_Browser_ClosedAndUnclosedParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 ((1 yourself) '
+		areSelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:53 am (UTC)'!
+!methodProperties: {}!
+test_Browser_ExpressionInManyParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 ((1 yourself)) '
+		areSelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:47 am (UTC)'!
+!methodProperties: {}!
+test_Browser_ExpressionWithMoreThanOneParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < ((1 yourself)) '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:39 am (UTC)'!
+!methodProperties: {}!
+test_Browser_LFBeforeParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 (1 yourself
+		 ) '
+		areSelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:33 am (UTC)'!
+!methodProperties: {}!
+test_Browser_SpaceBeforeParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 (1 yourself ) '
+		areSelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:28 am (UTC)'!
+!methodProperties: {}!
+test_Browser_UnaryAfterExpresionInParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < (1 yourself) yourself '
+		areUnaryAndBinarySelectorsOf: SmallInteger
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:24 am (UTC)'!
+!methodProperties: {}!
+test_Browser_UnclosedArrayAfterClosedArray
+
+	self
+		assertEntriesWhenBrowsing: 'm1 {{1} '
+		areSelectorsOf: Array ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:14 am (UTC)'!
+!methodProperties: {}!
+test_Browser_UnclosedBlockAfterBlock
+
+	self
+		assertEntriesWhenBrowsing: 'm1 [[1] '
+		areSelectorsOf: BlockClosure ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:06 am (UTC)'!
+!methodProperties: {}!
+test_Browser_UnclosedDoubleParenthesis
+
+	self
+		assertEntriesWhenBrowsing: 'm1 ((1 yourself '
+		areSelectorsOf: SmallInteger ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:36 am (UTC)'!
+!methodProperties: {}!
+test_Browser_selfInProtoObject
+
+	classToBrowse := ProtoObject.
+	self
+		assertEntriesWhenBrowsing: 'm1 self initialize '
+		areSelectorsOf: ProtoObject .
+! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:39:01 am (UTC)'!
+!methodProperties: {}!
+test_Workspace_ExpresionInParenthesis
+
+	self
+		assertEntriesForWorkspaceWith: '(1) '
+		binding: 'x'
+		to: 1
+		areSelectorsOf: SmallInteger.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:50 am (UTC)'!
+!methodProperties: {}!
+test_Workspace_MoreThanOneUnaryMessage
+
+	self
+		assertEntriesForWorkspaceWith: '1 yourself yourself '
+		binding: 'x'
+		to: 1
+		areSelectorsOf: SmallInteger.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:38:43 am (UTC)'!
+!methodProperties: {}!
+test_Workspace_OnlyRightParenthesis
+
+	self
+		shouldnt: [
+			self
+				autocompleteEntriesForWorkspaceWith: ') '
+				binding: 'x'
+				to: 1 ]
+		raise: Error! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 3/May/2020, 12:08:05 am (UTC)'!
+!methodProperties: {}!
+test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrowsedClassDoesNotHaveASuperclass
+
+	self browseClass: ProtoObject.
+
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'm1 super '.
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < super '
+		areUnaryAndBinarySelectorsOf: nil.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:42:33 am (UTC)'!
+!methodProperties: {}!
+test012_AutocompletesMessagesFor_InstanceVariables
+
+	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
+	super test012_AutocompletesMessagesFor_InstanceVariables! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 3/May/2020, 12:25:12 am (UTC)'!
+!methodProperties: {}!
+test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsOfInstVarTypes
+
+	(self class typeInfoOfInstanceVariableNamed: 'instanceVariable1') removeAllTypes.
+	instanceVariable1 := 1.
+
+	self
+		assertEntriesWhenBrowsing: 'm1 instanceVariable1 '
+		areSelectorsOf: SmallInteger.
+
+	self
+		assertEntriesWhenBrowsing: 'm1 1 < instanceVariable1 '
+		areUnaryAndBinarySelectorsOf: SmallInteger.
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 3/May/2020, 12:40:33 am (UTC)'!
+!methodProperties: {}!
+test014_AutocompletesMessagesFor_TemporaryVariables_WithSelectorsOfTempVarTypes
+
+	classToBrowse := self class.
+	self methodWithTempVar.
+	self
+		assertEntriesWhenBrowsingMethod: self class >> #methodWithTempVar
+		areSelectorsOf: SmallInteger.
+
+	self methodWithBinaryMessageSendAndTempVar.
+	self
+		assertEntriesWhenBrowsingMethod: self class >> #methodWithBinaryMessageSendAndTempVar
+		areUnaryAndBinarySelectorsOf: SmallInteger.
+
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:43:31 am (UTC)'!
+!methodProperties: {}!
+test023_AutocompletingMessagesFor_UnaryMessages
+
+	classToBrowse := self class.
+	self assertEntriesWhenBrowsing: 'm1 self class ' areSelectorsOf: self class class.
+	self assertEntriesWhenBrowsing: 'm1 1 < self class ' areUnaryAndBinarySelectorsOf: self class class.
+
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:44:50 am (UTC)'!
+!methodProperties: {}!
+test024_AutocompletingMessagesFor_RightParenthesis
+
+	self assertEntriesWhenBrowsing: 'm1 (1) ' areSelectorsOf: SmallInteger.
+	self assertEntriesWhenBrowsing: 'm1 1 + (1 ' areSelectorsOf: SmallInteger.
+
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'HAW 7/May/2020, 2:45:10 am (UTC)'!
+!methodProperties: {}!
+test026_AutocompletingMessagesFor_Cascade
+
+	classToBrowse := self class.
+	self
+		assertEntriesWhenBrowsing: 'm1 self class; '
+		areSelectorsOf: self class
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 2/May/2020, 11:19:07 pm (UTC)'!
+!methodProperties: {}!
+binaryMessageSendReturnTypes
+
+	^ Boolean withAllSubclasses! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 3/May/2020, 4:58:19 am (UTC)'!
+!methodProperties: {}!
+methodWithBinaryMessageSendAndTempVar
+	"space at the end is important - Hernan"
+	|a|
+	a := 1.
+	1 < a ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'HAW 3/May/2020, 4:58:25 am (UTC)'!
+!methodProperties: {}!
+methodWithTempVar
+	"space at the end is important - Hernan"
+	|a|
+	a := 1.
+	a ! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 3/May/2020, 12:10:54 am (UTC)'!
+!methodProperties: {}!
+assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: aClass
+
+	| classes |
+
+	classes := self binaryMessageSendReturnTypes.
+	aClass ifNotNil: [ classes add: aClass ].
+
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: classes
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: #()
+		suggested: (self using: aCompleter addUnaryAndBinarySelectorsOf: aClass).
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 7/May/2020, 2:08:48 am (UTC)'!
+!methodProperties: {}!
+assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: class beginningWith: aPrefix
+
+	| suggested classes |
+
+	classes := self binaryMessageSendReturnTypes.
+	suggested := classes
+		inject: Set new
+		into: [ :suggestedCollector :aClass |
+			suggestedCollector
+				addAll: (aClass allSelectors select: [ :aSelector | aSelector isKeyword and: [ aSelector beginsWith: aPrefix ]]);
+				yourself ].
+
+	class ifNotNil: [
+		classes add: class.
+		suggested addAll:
+			(class allSelectors select: [ :aSelector | (aSelector isUnary or: [ aSelector isInfix ]) and: [ aSelector beginsWith: aPrefix ]])].
+
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: classes
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: #()
+		suggested: suggested.! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 7/May/2020, 2:09:06 am (UTC)'!
+!methodProperties: {}!
+assertEntriesWhenBrowsing: sourceCode areUnaryAndBinarySelectorsOf: aClass beginningWith: aPrefix
+
+	self
+		assertEntriesOf: (self autocompleteEntriesBrowsing: sourceCode)
+		areUnaryAndBinarySelectorsOf: aClass
+		beginningWith: aPrefix
+
+	! !
+
+!LiveTypingSmalltalkCompleterTest methodsFor: 'assertions' stamp: 'HAW 3/May/2020, 12:00:51 am (UTC)'!
+!methodProperties: {}!
+using: aCompleter addUnaryAndBinarySelectorsOf: aClass
+
+	| entries classes |
+
+	entries := super using: aCompleter addUnaryAndBinarySelectorsOf: aClass.
+
+	classes := self binaryMessageSendReturnTypes.
+	classes add: Object; add: ProtoObject.
+
+	classes do: [ :aBooleanClass |
+		entries addAll: (aBooleanClass selectors select: [ :aSelector | aSelector isKeyword ]) ].
+
+	^entries
+		! !
+
+!LiveTypingSmalltalkCompleterTest class methodsFor: 'testing' stamp: 'HAW 2/May/2020, 8:04:06 pm (UTC)'!
+!methodProperties: {}!
+isAbstract
+
+	^false! !
+
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:27:10 pm (UTC)'!
+!methodProperties: {}!
 assertTypesAreCollectedCorrectlyFor: anInstVarTypeInfoCreator
 
 	| root sibling1 sibling2 ivrootTypeInfo |
@@ -9872,6 +10857,7 @@ assertTypesAreCollectedCorrectlyFor: anInstVarTypeInfoCreator
 	self assert: (ivrootTypeInfo typesIncludes: 1.0 class)! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:32:03 pm (UTC)'!
+!methodProperties: {}!
 test01TypeCollectionOfInstanceVariableDefinedInLeafClassDoesNotTraverseHierarchy
 
 	| sibling1 ivsibling1TypeInfo |
@@ -9886,6 +10872,7 @@ test01TypeCollectionOfInstanceVariableDefinedInLeafClassDoesNotTraverseHierarchy
 	self assert: (ivsibling1TypeInfo typesIncludes: 1 class)! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/Aug/2019, 2:53:23 pm (UTC)'!
+!methodProperties: {}!
 test02TypeCollectionIncludesSubclasses
 
 	| root sibling1 sibling2 ivrootTypeInfo |
@@ -9908,6 +10895,7 @@ test02TypeCollectionIncludesSubclasses
 	self assert: (ivrootTypeInfo typesIncludes: 1.0 class)	! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/Aug/2019, 2:54:36 pm (UTC)'!
+!methodProperties: {}!
 test03TypeCollectionDoesNotIncludeSuperclassesAndSiblings
 
 	| root sibling1 sibling2 ivrootTypeInfo |
@@ -9929,6 +10917,7 @@ test03TypeCollectionDoesNotIncludeSuperclassesAndSiblings
 ! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:34:47 pm (UTC)'!
+!methodProperties: {}!
 test05TypeCollectionIncludesAllSubclasses
 
 	| root sibling1 sibling2 ivrootInRootTypeInfo |
@@ -9953,6 +10942,7 @@ test05TypeCollectionIncludesAllSubclasses
 	self assert: (ivrootInRootTypeInfo typesIncludes: 1.0 class)! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:41:56 pm (UTC)'!
+!methodProperties: {}!
 test06IsNotMegamorphicIfTypesSizeIsLessToTheMaxOfWithAllSubclassesRawTypesSize
 
 	| root ivrootInRootTypeInfo |
@@ -9968,6 +10958,7 @@ test06IsNotMegamorphicIfTypesSizeIsLessToTheMaxOfWithAllSubclassesRawTypesSize
 	self deny: ivrootInRootTypeInfo isMegamorphic ! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:42:16 pm (UTC)'!
+!methodProperties: {}!
 test07IsMegamorphicIfTypesSizeIsEqualToTheMaxOfWithAllSubclassesRawTypesSize
 
 	| sibling1 ivrootInRootTypeInfo |
@@ -9984,6 +10975,7 @@ test07IsMegamorphicIfTypesSizeIsEqualToTheMaxOfWithAllSubclassesRawTypesSize
 	self assert: ivrootInRootTypeInfo isMegamorphic.! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:49:21 pm (UTC)'!
+!methodProperties: {}!
 test08IsNotMegamorphicIfDoesNotFillRawTypesForLocalTypeInfo
 
 	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
@@ -10003,6 +10995,7 @@ test08IsNotMegamorphicIfDoesNotFillRawTypesForLocalTypeInfo
 	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:53:03 pm (UTC)'!
+!methodProperties: {}!
 test09IsMegamorphicIfFillsRawTypesOfDefiningClassForLocalTypeInfo
 
 	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
@@ -10023,6 +11016,7 @@ test09IsMegamorphicIfFillsRawTypesOfDefiningClassForLocalTypeInfo
 	self deny: ivrootInSibling1TypeInfo isMegamorphic.! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:53:31 pm (UTC)'!
+!methodProperties: {}!
 test10IsMegamorphicIfFillsRawTypesOfNotDefiningClassForLocalTypeInfo
 
 	| root sibling1 ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
@@ -10043,6 +11037,7 @@ test10IsMegamorphicIfFillsRawTypesOfNotDefiningClassForLocalTypeInfo
 	self assert: ivrootInSibling1TypeInfo isMegamorphic.! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/Aug/2019, 2:56:34 pm (UTC)'!
+!methodProperties: {}!
 test11IsTypesEmptyOfNonLocalTypeInfoTakesCareOfHierarchy
 
 	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
@@ -10059,6 +11054,7 @@ test11IsTypesEmptyOfNonLocalTypeInfoTakesCareOfHierarchy
 	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:57:28 pm (UTC)'!
+!methodProperties: {}!
 test12IsTypesEmptyForLocalTypeInfoOnlyCheckOnLocalRawTypes
 
 	| root ivrootInRootTypeInfo ivrootInSibling1TypeInfo |
@@ -10075,6 +11071,7 @@ test12IsTypesEmptyForLocalTypeInfoOnlyCheckOnLocalRawTypes
 	self assert: ivrootInSibling1TypeInfo isTypesEmpty.! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Apr/2025, 11:34:21 pm (UTC)'!
+!methodProperties: {}!
 test13RemovingAClassRemovesItAndItsClassFromInstanceVariableRawTypes
 
 	| classToRemove typeInfo |
@@ -10095,6 +11092,7 @@ test13RemovingAClassRemovesItAndItsClassFromInstanceVariableRawTypes
 	self assert: typeInfo isTypesEmpty ! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 11:29:11 pm (UTC)'!
+!methodProperties: {}!
 test14InstVarAtPutKeepTypeInfo
 
 	| types |
@@ -10108,11 +11106,13 @@ test14InstVarAtPutKeepTypeInfo
 	self assert: (types includes: SmallInteger)! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 27/Nov/2018, 6:04:54 pm (UTC)'!
+!methodProperties: {}!
 initializeHierarchyForTestingInstanceVariablesTypes
 
 	TypeInfoRootTestClass withAllSubclassesDo: [ :aClass | aClass initializeInstanceVariablesRawTypes]! !
 
 !MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Apr/2025, 11:36:21 pm (UTC)'!
+!methodProperties: {}!
 assertTypeIsRemovedFor: aVariableName
 
 	| classToRemove typeInfo methodUnderTest |
@@ -10134,11 +11134,13 @@ assertTypeIsRemovedFor: aVariableName
 	self assert: typeInfo isTypesEmpty ! !
 
 !MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 9:21:54 pm (UTC)'!
+!methodProperties: {}!
 test01RemovingAClassRemovesItFromMethodVariableRawTypesForParameter
 
 	self assertTypeIsRemovedFor: 'p1'! !
 
 !MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Apr/2025, 11:37:45 pm (UTC)'!
+!methodProperties: {}!
 test02RemovingAClassRemovesItsClassFromMethodVariableRawTypesForParameter
 
 	| classToRemove typeInfo |
@@ -10156,16 +11158,19 @@ test02RemovingAClassRemovesItsClassFromMethodVariableRawTypesForParameter
 	self assert: typeInfo isTypesEmpty ! !
 
 !MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 9:23:53 pm (UTC)'!
+!methodProperties: {}!
 test03RemovingAClassRemovesItFromMethodVariablesRawTypes
 
 	self assertTypeIsRemovedFor: 'tempNotInRemoteVector'! !
 
 !MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 9:24:09 pm (UTC)'!
+!methodProperties: {}!
 test04RemovingAClassRemovesItFromMethodVariableRemoteVectorRawTypes
 
 	self assertTypeIsRemovedFor: 'tempInRemoteVector'! !
 
 !MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 28/Feb/2019, 9:23:21 pm (UTC)'!
+!methodProperties: {}!
 methodWithParameterOfClassToRemove: p1
 
 	| tempNotInRemoteVector tempInRemoteVector |
@@ -10176,6 +11181,7 @@ methodWithParameterOfClassToRemove: p1
 	^10! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:48:50 pm (UTC)'!
+!methodProperties: {}!
 test01QuickReturnSelfMethodsReturnSelfTypeAsReturnType
 
 	| method returnTypes |
@@ -10188,48 +11194,56 @@ test01QuickReturnSelfMethodsReturnSelfTypeAsReturnType
 ! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 12:39:17 am (UTC)'!
+!methodProperties: {}!
 test02QuickReturnTrueMethodsReturnTrueReturnType
 
 	self assertReturnTypeOf: #quickReturnTrue is: true class.
 	! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 12:40:42 am (UTC)'!
+!methodProperties: {}!
 test03QuickReturnFalseMethodsReturnFalseAsReturnType
 
 	self assertReturnTypeOf: #quickReturnFalse is: false class.
 	! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 12:42:36 am (UTC)'!
+!methodProperties: {}!
 test04QuickReturnNilMethodsReturnUndefinedObjectAsReturnType
 
 	self assertReturnTypeOf: #quickReturnNil is: nil class.
 	! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 12:44:02 am (UTC)'!
+!methodProperties: {}!
 test05QuickReturnMinusOneMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnMinusOne is: -1 class.
 	! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 12:45:51 am (UTC)'!
+!methodProperties: {}!
 test06QuickReturnZeroMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnZero is: 0 class.
 	! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 12:45:38 am (UTC)'!
+!methodProperties: {}!
 test07QuickReturnOneMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnOne is: 1 class.
 	! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 12:51:55 am (UTC)'!
+!methodProperties: {}!
 test08QuickReturnTwoMethodsReturnSmallIntegerAsReturnType
 
 	self assertReturnTypeOf: #quickReturnTwo is: 2 class.
 	! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 1:00:09 am (UTC)'!
+!methodProperties: {}!
 test09QuickReturnOfFirstInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
 
 	self class initializeInstanceVariablesRawTypes.
@@ -10239,6 +11253,7 @@ test09QuickReturnOfFirstInstanceVariableMethodsReturnInstanceVariableTypesAsRetu
 	self assertReturnTypeOf: #quickReturnFirstInstanceVariable are: (Array with: 'hello' class with: 1 class)! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 30/Oct/2018, 1:13:24 am (UTC)'!
+!methodProperties: {}!
 test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsReturnType
 
 	self class initializeInstanceVariablesRawTypes.
@@ -10248,6 +11263,7 @@ test10QuickReturnOfSecondInstanceVariableMethodsReturnInstanceVariableTypesAsRet
 	self assertReturnTypeOf: #quickReturnSecondInstanceVariable are: (Array with: 1.0 class with: 1 class)! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 18/Jan/2019, 1:10:49 pm (UTC)'!
+!methodProperties: {}!
 test11classMethodReturnsClassTypeAsReturnType
 
 	| method returnTypes |
@@ -10260,6 +11276,7 @@ test11classMethodReturnsClassTypeAsReturnType
 ! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 18/Jan/2019, 1:12:19 pm (UTC)'!
+!methodProperties: {}!
 test12newMethodReturnsInstanceTypeAsReturnType
 
 	| method returnTypes |
@@ -10271,6 +11288,7 @@ test12newMethodReturnsInstanceTypeAsReturnType
 	self assert: returnTypes anyOne class equals: InstanceType ! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 18/Jan/2019, 1:10:32 pm (UTC)'!
+!methodProperties: {}!
 test13yourselfMethodReturnsSelfTypeAsReturnType
 
 	| method returnTypes |
@@ -10282,6 +11300,7 @@ test13yourselfMethodReturnsSelfTypeAsReturnType
 	self assert: returnTypes anyOne class equals: SelfType ! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Apr/2025, 11:37:09 pm (UTC)'!
+!methodProperties: {}!
 test14RemovingAClassRemovesItAndItsClassFromMethodReturnType
 
 	| classToRemove typeInfo methodUnderTest |
@@ -10304,6 +11323,7 @@ test14RemovingAClassRemovesItAndItsClassFromMethodReturnType
 	self assert: typeInfo isTypesEmpty ! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/Aug/2019, 3:45:14 pm (UTC)'!
+!methodProperties: {}!
 test15ReturnTypesOfAbstractMethodsIncludesSubclassesImplementationsTypes
 
 	| returnTypes |
@@ -10317,6 +11337,7 @@ test15ReturnTypesOfAbstractMethodsIncludesSubclassesImplementationsTypes
 		self assert: (returnTypes includesAllOf: (aSubclass returnTypesAt: #implementedOnAll:)) ].! !
 
 !ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 10/Aug/2019, 3:50:08 pm (UTC)'!
+!methodProperties: {}!
 test16ReturnTypesOfAbstractMethodWorksWhenNotImplementedInAllSubclasses
 
 	| returnTypes |
@@ -10327,6 +11348,7 @@ test16ReturnTypesOfAbstractMethodWorksWhenNotImplementedInAllSubclasses
 	self assert: (returnTypes includesAllOf: (TypeInfoSibling1TestClass returnTypesAt: #implementedOnSibling1Only)) ! !
 
 !ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 17/Jan/2019, 2:46:48 pm (UTC)'!
+!methodProperties: {}!
 assertReturnTypeOf: aSelector are: types
 
 	| method methodReturnTypeInfo |
@@ -10338,66 +11360,79 @@ assertReturnTypeOf: aSelector are: types
 	self assert: (methodReturnTypeInfo typesIncludesAllOf: types)! !
 
 !ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 30/Oct/2018, 12:58:16 am (UTC)'!
+!methodProperties: {}!
 assertReturnTypeOf: aSelector is: aType
 
 	self assertReturnTypeOf: aSelector are: (Array with: aType)! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 23/Feb/2019, 12:57:58 am (UTC)'!
+!methodProperties: {}!
 methodReturningInstanceOfClassToRemove: aClassToRemoveInstance
 
 	^aClassToRemoveInstance! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:40:21 am (UTC)'!
+!methodProperties: {}!
 quickReturnFalse
 
 	^false! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:51:45 am (UTC)'!
+!methodProperties: {}!
 quickReturnFirstInstanceVariable
 
 	^iv1! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:43:30 am (UTC)'!
+!methodProperties: {}!
 quickReturnMinusOne
 
 	^-1! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:42:16 am (UTC)'!
+!methodProperties: {}!
 quickReturnNil
 
 	^nil! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:44:40 am (UTC)'!
+!methodProperties: {}!
 quickReturnOne
 
 	^1! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 1:12:20 am (UTC)'!
+!methodProperties: {}!
 quickReturnSecondInstanceVariable
 
 	^iv2! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:24:29 am (UTC)'!
+!methodProperties: {}!
 quickReturnSelf
 
 	^self! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:36:02 am (UTC)'!
+!methodProperties: {}!
 quickReturnTrue
 
 	^true! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:50:11 am (UTC)'!
+!methodProperties: {}!
 quickReturnTwo
 
 	^2! !
 
 !ReturnTypeInfoTest methodsFor: 'test data' stamp: 'HAW 30/Oct/2018, 12:49:22 am (UTC)'!
+!methodProperties: {}!
 quickReturnZero
 
 	^0! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 19/Feb/2019, 5:50:51 pm (UTC)'!
+!methodProperties: {}!
 test01WhenIsImplementedOnlyInRootReturnsThatImplementorOnly
 
 	| implementors  |
@@ -10408,6 +11443,7 @@ test01WhenIsImplementedOnlyInRootReturnsThatImplementorOnly
 	self assert: (implementors includes: (MethodReference method: TypeInfoRootTestClass >> #implementedOnRootOnly:))! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 19/Feb/2019, 5:50:51 pm (UTC)'!
+!methodProperties: {}!
 test02ReturnsImplementorsOfSuperclasses
 
 	| implementors  |
@@ -10418,6 +11454,7 @@ test02ReturnsImplementorsOfSuperclasses
 	self assert: (implementors includes: (MethodReference method: TypeInfoRootTestClass >> #implementedOnRootOnly:))! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 21/Aug/2019, 3:59:08 pm (UTC)'!
+!methodProperties: {}!
 test03IfNotImplementedInRootOrSuperclassesDoesNotIncludeSubclassesImplementations
 
 	| implementors  |
@@ -10430,6 +11467,7 @@ test03IfNotImplementedInRootOrSuperclassesDoesNotIncludeSubclassesImplementation
 ! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 19/Feb/2019, 5:50:38 pm (UTC)'!
+!methodProperties: {}!
 test04IncludesSubclassesImplementations
 
 	| implementors  |
@@ -10441,6 +11479,7 @@ test04IncludesSubclassesImplementations
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling1TestClass selector: #implementedOnRootAndSibling1:)).! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 21/Aug/2019, 4:00:53 pm (UTC)'!
+!methodProperties: {}!
 test05DoesNotIncludeImplementorsOfSubclassesNotDefinedInSuperclass
 
 	| implementors  |
@@ -10453,6 +11492,7 @@ test05DoesNotIncludeImplementorsOfSubclassesNotDefinedInSuperclass
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling2TestClass selector: #implementedOnSibling1AndSibling2:))! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 19/Feb/2019, 5:51:11 pm (UTC)'!
+!methodProperties: {}!
 test06DoesNotIncludeImplementorsOfSiblingsWhenNotDefinedInSuperclass
 
 	| implementors  |
@@ -10463,6 +11503,7 @@ test06DoesNotIncludeImplementorsOfSiblingsWhenNotDefinedInSuperclass
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling1TestClass selector: #implementedOnSibling1AndSibling2:))! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 19/Feb/2019, 5:50:16 pm (UTC)'!
+!methodProperties: {}!
 test07ReturnsAllSubclassesImplementorsOfTheHighestImplementorClass
 
 	| implementors  |
@@ -10475,16 +11516,19 @@ test07ReturnsAllSubclassesImplementorsOfTheHighestImplementorClass
 	self assert: (implementors includes: (MethodReference class: TypeInfoSibling2TestClass selector: #implementedOnAll:))! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 12:23:04 pm (UTC)'!
+!methodProperties: {}!
 test08highestClassImplementingSelectorReturnsHighgestClass
 
 	self assert: (OrderedCollection highestClassImplementing: #at:put: ifNone: [ self fail ]) equals: Object! !
 
 !ActualImplementorsTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 12:23:59 pm (UTC)'!
+!methodProperties: {}!
 test09WhenNoHighestClassImplementingSelectorIfNoneBlockIsEvaluated
 
 	self assert: (OrderedCollection highestClassImplementing: #none ifNone: [ true ])! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 1:46:27 pm (UTC)'!
+!methodProperties: {}!
 test01SurelyRecognizeTypeSenderWhenSentToInstanceVariable
 
 	v1 := self.
@@ -10494,6 +11538,7 @@ test01SurelyRecognizeTypeSenderWhenSentToInstanceVariable
 	self assert: (self class>>thisContext selector doesOnlySurelySend: self class>>#m1)! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 1:48:27 pm (UTC)'!
+!methodProperties: {}!
 test02SurelyRecognizeTypeSenderWhenSentToTemporaryVariable
 
 	| t1 |
@@ -10505,6 +11550,7 @@ test02SurelyRecognizeTypeSenderWhenSentToTemporaryVariable
 	self assert: (self class>>thisContext selector doesOnlySurelySend: self class>>#m1)! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 1:49:30 pm (UTC)'!
+!methodProperties: {}!
 test03SurelyRecognizeTypeSenderInACollaboration
 
 	1 + 2.
@@ -10512,6 +11558,7 @@ test03SurelyRecognizeTypeSenderInACollaboration
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class>>#+))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 1:58:59 pm (UTC)'!
+!methodProperties: {}!
 test04RecognizeTypeSendersToInstancesOfSubClasses
 
 	1 factorial.
@@ -10519,6 +11566,7 @@ test04RecognizeTypeSendersToInstancesOfSubClasses
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #factorial))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:14:06 pm (UTC)'!
+!methodProperties: {}!
 test05RecognizeTypeSendersToLiteralTrue
 
 	true & true.
@@ -10526,6 +11574,7 @@ test05RecognizeTypeSendersToLiteralTrue
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (true class lookupSelector: #&))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 1:59:37 pm (UTC)'!
+!methodProperties: {}!
 test06RecognizeTypeSendersToLiteralFalse
 
 	false & true.
@@ -10533,6 +11582,7 @@ test06RecognizeTypeSendersToLiteralFalse
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (false class lookupSelector: #&))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:14:36 pm (UTC)'!
+!methodProperties: {}!
 test07RecognizeTypeSendersToThisContext
 
 	thisContext selector.
@@ -10540,6 +11590,7 @@ test07RecognizeTypeSendersToThisContext
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (thisContext class lookupSelector: #selector))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:14:58 pm (UTC)'!
+!methodProperties: {}!
 test08RecognizeTypeSendersToSelf
 
 	self m1.
@@ -10547,6 +11598,7 @@ test08RecognizeTypeSendersToSelf
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #m1))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 21/Oct/2018, 4:16:33 am (UTC)'!
+!methodProperties: {}!
 test09_01
 
 	"
@@ -10558,6 +11610,7 @@ test09_01
 	when receiver is super?"! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:15:17 pm (UTC)'!
+!methodProperties: {}!
 test09RecognizeTypeSendersToSuper
 
 	super selector.
@@ -10565,6 +11618,7 @@ test09RecognizeTypeSendersToSuper
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #selector))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:17:13 pm (UTC)'!
+!methodProperties: {}!
 test10RecognizeTypeSendersToSelfOfMessageImplementedInSuperclass
 
 	self selector.
@@ -10572,6 +11626,7 @@ test10RecognizeTypeSendersToSelfOfMessageImplementedInSuperclass
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class lookupSelector: #selector))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:18:17 pm (UTC)'!
+!methodProperties: {}!
 test11RecognizeTypeSendersToReturnsOfMessageSend
 
 	self m1 + 2.
@@ -10579,6 +11634,7 @@ test11RecognizeTypeSendersToReturnsOfMessageSend
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #+))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:20:33 pm (UTC)'!
+!methodProperties: {}!
 test12RecognizeTypeSendersOfChainedMessageSends
 
 	self m2 m1 + 2.
@@ -10586,6 +11642,7 @@ test12RecognizeTypeSendersOfChainedMessageSends
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #+))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:21:33 pm (UTC)'!
+!methodProperties: {}!
 test13RecognizeTypeSendersToReturnOfMessageSendNoMatterThePrecedence
 
 	"
@@ -10597,6 +11654,7 @@ test13RecognizeTypeSendersToReturnOfMessageSendNoMatterThePrecedence
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (1 class lookupSelector: #+))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 19/Feb/2019, 3:07:31 pm (UTC)'!
+!methodProperties: {}!
 test14RecognizeTypeSendersToClasses
 
 	ActualSendersTest m1.
@@ -10604,6 +11662,7 @@ test14RecognizeTypeSendersToClasses
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class class lookupSelector: #m1))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 19/Feb/2019, 3:07:31 pm (UTC)'!
+!methodProperties: {}!
 test15RecognizeTypeSendersToVariablesReferencingClasses
 
 	| t1 |
@@ -10614,6 +11673,7 @@ test15RecognizeTypeSendersToVariablesReferencingClasses
 	self assert: (self class>>thisContext selector doesOnlySurelySend: (self class class lookupSelector: #m1))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 30/Jan/2024, 7:51:11 pm (UTC)'!
+!methodProperties: {}!
 test16RecognizeTypeSendersToAnyLiteral
 
 	"
@@ -10624,6 +11684,7 @@ test16RecognizeTypeSendersToAnyLiteral
 	self assert: (self class>>thisContext selector doesOnlySurelySend: ($a class lookupSelector: #asString))! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 14/Mar/2019, 12:55:02 pm (UTC)'!
+!methodProperties: {}!
 test17CanRecognizePossibleTypeSenders
 
 	| t1 sendersCollector sureSender possibleSender |
@@ -10656,6 +11717,7 @@ test17CanRecognizePossibleTypeSenders
 	! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:27:34 pm (UTC)'!
+!methodProperties: {}!
 test18RecognizeTypeSendersWhenReturnTypeIsSelfType
 
 	1 yourself + 2.
@@ -10664,6 +11726,7 @@ test18RecognizeTypeSendersWhenReturnTypeIsSelfType
 ! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 2:29:11 pm (UTC)'!
+!methodProperties: {}!
 test19RecognizeTypeSendersWhenReturnTypeIsClassType
 
 	self class m1.
@@ -10673,12 +11736,14 @@ test19RecognizeTypeSendersWhenReturnTypeIsClassType
 ! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 14/Mar/2019, 7:44:25 pm (UTC)'!
+!methodProperties: {}!
 test20SurelySendWhenReceiverTypeIsSuperclassOfImplementorType
 
 	self assert: (self class superclass>>#runCase doesOnlySurelySend: self class>>#setUp).
 	! !
 
 !ActualSendersTest methodsFor: 'tests' stamp: 'HAW 10/Aug/2019, 4:08:14 pm (UTC)'!
+!methodProperties: {}!
 test21ActualSendersWorksWithCascadeMessageSends
 
 	self
@@ -10714,6 +11779,7 @@ test22ActualSendersDoesNotHangWhenReceiverIsTempVarInMethodWithoutTypes
 	! !
 
 !ActualSendersTest methodsFor: 'test data' stamp: 'HAW 21/Oct/2018, 4:32:19 am (UTC)'!
+!methodProperties: {}!
 m1
 
 	"
@@ -10725,6 +11791,7 @@ m1
 	^1+2! !
 
 !ActualSendersTest methodsFor: 'test data' stamp: 'HAW 17/Jan/2019, 2:19:41 pm (UTC)'!
+!methodProperties: {}!
 m2
 
 	"
@@ -10739,6 +11806,7 @@ m2
 	^self! !
 
 !ActualSendersTest methodsFor: 'test data' stamp: 'HAW 21/Oct/2018, 4:35:56 am (UTC)'!
+!methodProperties: {}!
 m3: anObject
 
 	"
@@ -10750,16 +11818,19 @@ m3: anObject
 	^anObject + 2! !
 
 !ActualSendersTest methodsFor: 'test data' stamp: 'HAW 14/Mar/2019, 7:19:27 pm (UTC)'!
+!methodProperties: {}!
 setUp
 
 	"Do not remove. It is used in test20.... - Hernan"! !
 
 !ActualSendersTest class methodsFor: 'test data' stamp: 'HAW 21/Oct/2018, 1:40:36 pm (UTC)'!
+!methodProperties: {}!
 m1
 
 	^1+1! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 27/Feb/2019, 9:02:46 pm (UTC)'!
+!methodProperties: {}!
 test01topBlockTempsMapReturnsTheTempsMapOfTheMethod
 
 	| thisMethodNode topContextTempsMap topContextTempsMapKey |
@@ -10772,6 +11843,7 @@ test01topBlockTempsMapReturnsTheTempsMapOfTheMethod
 	self assert: topContextTempsMap equals: (thisMethodNode blockExtentsToTempsMap at: topContextTempsMapKey)! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:42:21 pm (UTC)'!
+!methodProperties: {}!
 test02MethodWithNoParametersNoTemporariesAreInitializedCorrectly
 
 	| methodUnderTest methodState |
@@ -10789,6 +11861,7 @@ test02MethodWithNoParametersNoTemporariesAreInitializedCorrectly
 	! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:47:16 pm (UTC)'!
+!methodProperties: {}!
 test03MethodWithOnlyOneArgumentAreInitializedCorrectly
 
 	| methodUnderTest |
@@ -10799,6 +11872,7 @@ test03MethodWithOnlyOneArgumentAreInitializedCorrectly
 	self assertRawTypesOf: 'arg1' in: methodUnderTest includesOnly: 1 class.! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:44:58 pm (UTC)'!
+!methodProperties: {}!
 test04rawTypesOfInvalidVariableNameEvaluatesIfAbsentBlock
 
 	| methodUnderTest |
@@ -10809,6 +11883,7 @@ test04rawTypesOfInvalidVariableNameEvaluatesIfAbsentBlock
 	self assert: (methodUnderTest properties rawTypesOf: 'x' ifAbsent: [ nil ]) isNil! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:47:41 pm (UTC)'!
+!methodProperties: {}!
 test05MethodWithOnlyOneTempTwoArgumentsAreInitializedCorrectly
 
 	| methodUnderTest |
@@ -10823,6 +11898,7 @@ test05MethodWithOnlyOneTempTwoArgumentsAreInitializedCorrectly
 	! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:46:36 pm (UTC)'!
+!methodProperties: {}!
 test06MethodWithRemoveVectorVariablesAreInitializedCorrectly
 
 	| methodUnderTest tempInRemoteVectorName tempNotInRemoveVectorName |
@@ -10839,6 +11915,7 @@ test06MethodWithRemoveVectorVariablesAreInitializedCorrectly
 	self assert: methodUnderTest properties variablesRawTypes size equals: 1.	! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:48:25 pm (UTC)'!
+!methodProperties: {}!
 test07RemoteVectorRawTypesIsNilWhenMethodHasNoVariableInRemoteVector
 
 	| methodUnderTest |
@@ -10849,6 +11926,7 @@ test07RemoteVectorRawTypesIsNilWhenMethodHasNoVariableInRemoteVector
 	self assert: methodUnderTest properties variableNameToRemoteVectorTypeIndex isNil.! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:48:49 pm (UTC)'!
+!methodProperties: {}!
 test08VariableRawTypesIsNilWhenMethodHasNoVariableButHasInRemoteVector
 
 	| methodUnderTest |
@@ -10859,6 +11937,7 @@ test08VariableRawTypesIsNilWhenMethodHasNoVariableButHasInRemoteVector
 	self assert: methodUnderTest properties variableNameToTypeIndex isNil.! !
 
 !AdditionalMethodStateTest methodsFor: 'tests' stamp: 'HAW 28/Feb/2019, 8:49:27 pm (UTC)'!
+!methodProperties: {}!
 test09CanGetRawTypesWhenMethodHasNoVariableButHasInRemoteVector
 
 	| methodUnderTest |
@@ -10868,6 +11947,7 @@ test09CanGetRawTypesWhenMethodHasNoVariableButHasInRemoteVector
 	self assert: (methodUnderTest properties rawTypesOf: 't1' ifAbsent: [ nil ]) notNil! !
 
 !AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 28/Feb/2019, 8:42:05 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInfoFor: aSelector
 
 	| methodUnderTest |
@@ -10878,12 +11958,15 @@ initializeTypeInfoFor: aSelector
 	^methodUnderTest! !
 
 !AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 28/Feb/2019, 8:16:11 pm (UTC)'!
+!methodProperties: {}!
 m01_no_arguments_no_temporaries! !
 
 !AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 27/Feb/2019, 9:26:31 pm (UTC)'!
+!methodProperties: {}!
 m02_one_argument: arg1! !
 
 !AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 27/Feb/2019, 9:50:09 pm (UTC)'!
+!methodProperties: {}!
 m03_one_temp_two_arguments: arg1 arg2: arg2
 
 	| t1 |
@@ -10893,6 +11976,7 @@ m03_one_temp_two_arguments: arg1 arg2: arg2
 	^t1! !
 
 !AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 28/Feb/2019, 7:26:38 pm (UTC)'!
+!methodProperties: {}!
 m04_two_temps_one_temp_in_remote_vector
 
 	| t1 t2 |
@@ -10903,6 +11987,7 @@ m04_two_temps_one_temp_in_remote_vector
 	^t2! !
 
 !AdditionalMethodStateTest methodsFor: 'test data' stamp: 'HAW 28/Feb/2019, 8:27:28 pm (UTC)'!
+!methodProperties: {}!
 m05_only_temp_in_remote_vector
 
 	| t1 |
@@ -10912,6 +11997,7 @@ m05_only_temp_in_remote_vector
 	^t1! !
 
 !AdditionalMethodStateTest methodsFor: 'assertions' stamp: 'HAW 28/Feb/2019, 8:46:52 pm (UTC)'!
+!methodProperties: {}!
 assertRawTypesOf: aVariableName in: method includesOnly: aType
 
 	| types |
@@ -10923,6 +12009,7 @@ assertRawTypesOf: aVariableName in: method includesOnly: aType
 ! !
 
 !AdditionalMethodStateTest class methodsFor: 'as yet unclassified' stamp: 'HAW 28/Feb/2019, 8:27:35 pm (UTC)'!
+!methodProperties: {}!
 acreateMethodVariableRawTypesFor: variableName in: method
 
 	(variableName = 'arg1' and: [ method selector = #m02_one_argument: ]) ifTrue: [ ^{ Integer } ].
@@ -10933,6 +12020,7 @@ acreateMethodVariableRawTypesFor: variableName in: method
 	! !
 
 !ClosureVariablesTest methodsFor: 'as yet unclassified' stamp: 'HAW 2/Jan/2019, 8:58:04 pm (UTC)'!
+!methodProperties: {}!
 methodWithoutClosure: p1
 
 	| t1 t2 |
@@ -10943,6 +12031,7 @@ methodWithoutClosure: p1
 	^t2! !
 
 !ClosureVariablesTest methodsFor: 'as yet unclassified' stamp: 'HAW 2/Jan/2019, 9:00:09 pm (UTC)'!
+!methodProperties: {}!
 testOneArrayForTypesIsCreatedWhenAMethodHasNoClosures
 
 	| method |
@@ -10950,21 +12039,25 @@ testOneArrayForTypesIsCreatedWhenAMethodHasNoClosures
 	method initializeTypeInformation! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 4:10:40 pm (UTC)'!
+!methodProperties: {}!
 test01TypeConvertionForAClassReturnsSameClass
 
 	self assert: (Object asTypeFor: Array) equals: Object! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 4:11:14 pm (UTC)'!
+!methodProperties: {}!
 test02TypeConvertionForSelfTypeReturnsReceiversType
 
 	self assert: (SelfType new asTypeFor: Array) equals: Array! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 4:11:52 pm (UTC)'!
+!methodProperties: {}!
 test03TypeConvertionForClassTypeReturnsReceiversTypeClass
 
 	self assert: (ClassType new asTypeFor: Array) equals: Array class! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 18/Jan/2019, 1:23:19 pm (UTC)'!
+!methodProperties: {}!
 test04ClassMessageSendChainsClassType
 
 	|  method types |
@@ -10981,11 +12074,13 @@ test04ClassMessageSendChainsClassType
 	! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 18/Jan/2019, 1:08:27 pm (UTC)'!
+!methodProperties: {}!
 test05TypeConvertionForInstanceTypeReturnsMetaclassSoleInstance
 
 	self assert: (InstanceType new asTypeFor: Array class) equals: Array ! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 18/Jan/2019, 1:23:35 pm (UTC)'!
+!methodProperties: {}!
 test06newTypeIsMetaclassSoleInstance
 
 	| method types |
@@ -11002,6 +12097,7 @@ test06newTypeIsMetaclassSoleInstance
 ! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 6:13:44 pm (UTC)'!
+!methodProperties: {}!
 test07InstanceTypeReturnsClassWhenIsKindOfOfBehaviorButNotMeta
 
 	self assert: (InstanceType new asTypeFor: Behavior) equals: Behavior.
@@ -11011,6 +12107,7 @@ test07InstanceTypeReturnsClassWhenIsKindOfOfBehaviorButNotMeta
 ! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 6:02:49 pm (UTC)'!
+!methodProperties: {}!
 test08InstanceTypeErrorsWhenUsedWithNoBehavior
 
 	self
@@ -11019,6 +12116,7 @@ test08InstanceTypeErrorsWhenUsedWithNoBehavior
 		withMessageText: InstanceType onlyBehaviorsCanBeConvertedToInstanceTypeErrorDescription! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 28/Jun/2020, 9:17:15 pm (UTC)'!
+!methodProperties: {}!
 test09ClassTypeForMetamodelIsMetaclass
 
 	self assert: Metaclass equals: (ClassType new asTypeFor: Behavior ).
@@ -11028,16 +12126,19 @@ test09ClassTypeForMetamodelIsMetaclass
 	! !
 
 !DynamicTypesTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 6:36:25 pm (UTC)'!
+!methodProperties: {}!
 twoClassMessageSend
 
 	^self class class! !
 
 !DynamicTypesTest methodsFor: 'test data' stamp: 'HAW 18/Jan/2019, 1:19:57 pm (UTC)'!
+!methodProperties: {}!
 createNewInstance
 
 	^self class new! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 3/Apr/2024, 6:42:13 pm (UTC)'!
+!methodProperties: {}!
 test01InstanceVariablesTypesIsInitializedWithAnArrayOfClassInstSize
 
 	self class initializeInstanceVariablesRawTypes.
@@ -11054,6 +12155,7 @@ test01InstanceVariablesTypesIsInitializedWithAnArrayOfClassInstSize
 	! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 4:06:09 am (UTC)'!
+!methodProperties: {}!
 test02InitializeInstanceVariablesTypesWithAllInstancesStoreCurrentClassInstancesTypes
 
 	| testSelectorTypes |
@@ -11066,6 +12168,7 @@ test02InitializeInstanceVariablesTypesWithAllInstancesStoreCurrentClassInstances
 	self assert: (testSelectorTypes typesIncludes: Symbol)! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 4:05:51 am (UTC)'!
+!methodProperties: {}!
 test03TypesOfDifferentInstVarsAreStoredCorrectly
 
 	| instVar1Types instVar2Types |
@@ -11085,6 +12188,7 @@ test03TypesOfDifferentInstVarsAreStoredCorrectly
 	! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 4:05:51 am (UTC)'!
+!methodProperties: {}!
 test04MoreThanOneTypeAreStoredCorrectlyInDifferentInstVars
 
 	| instVar1Types instVar2Types |
@@ -11108,6 +12212,7 @@ test04MoreThanOneTypeAreStoredCorrectlyInDifferentInstVars
 	! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 4:05:51 am (UTC)'!
+!methodProperties: {}!
 test05TypesAreStoredUpToInstVarTypesSize
 
 	| instVar3Types |
@@ -11125,6 +12230,7 @@ test05TypesAreStoredUpToInstVarTypesSize
 		! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 4:05:51 am (UTC)'!
+!methodProperties: {}!
 test06NoTypesAreStoredWhenInstVarTypesIsNil
 
 	| instVar4Types |
@@ -11141,6 +12247,7 @@ test06NoTypesAreStoredWhenInstVarTypesIsNil
 		! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 4:05:51 am (UTC)'!
+!methodProperties: {}!
 test07CommonSupertypeOfReturnsSupertypeOfStoredTypes
 
 	| commonSupertype |
@@ -11154,6 +12261,7 @@ test07CommonSupertypeOfReturnsSupertypeOfStoredTypes
 	self assert: commonSupertype equals: Number! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 4:05:51 am (UTC)'!
+!methodProperties: {}!
 test08CommonSupertypeIfNoTypesEvaluatesAlternativeBlockWhenNoTypeHasBeenStore
 
 	| commonSupertype |
@@ -11164,12 +12272,14 @@ test08CommonSupertypeIfNoTypesEvaluatesAlternativeBlockWhenNoTypeHasBeenStore
 	self assert: commonSupertype equals: Array! !
 
 !InstanceVariablesTypesTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 2:01:03 am (UTC)'!
+!methodProperties: {}!
 test09EvaluatesIfAbsentBlockWhenAskTypeInfoForNonExistingInstVar
 
 	self class instanceVariablesTypes typeInfoOf: 'xyz' ifAbsent: [ ^self ].
 	self fail! !
 
 !InstanceVariablesTypesTest class methodsFor: 'as yet unclassified' stamp: 'HAW 3/Apr/2024, 6:38:01 pm (UTC)'!
+!methodProperties: {}!
 instanceVariableRawTypesSizeFor: anInstVarName
 
 	anInstVarName = 'instVar3' ifTrue: [ ^ 1 ].
@@ -11178,6 +12288,7 @@ instanceVariableRawTypesSizeFor: anInstVarName
 	^super instanceVariableRawTypesSizeFor: anInstVarName! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
+!methodProperties: {}!
 test01KeepTypesOfLocalTemporariesI
 
 	| method types |
@@ -11193,6 +12304,7 @@ test01KeepTypesOfLocalTemporariesI
 	self assert: (types includes: String).! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:53 pm (UTC)'!
+!methodProperties: {}!
 test02KeepTypesOfRemoteTemporaries
 
 	| method types |
@@ -11213,6 +12325,7 @@ test02KeepTypesOfRemoteTemporaries
 	self assert: (types includes: SmallInteger).! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 10:01:34 pm (UTC)'!
+!methodProperties: {}!
 test03KeepTypesOfParameters
 
 	| method types result |
@@ -11240,6 +12353,7 @@ test03KeepTypesOfParameters
 	self assert: (types includes: Fraction).! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 10:30:50 pm (UTC)'!
+!methodProperties: {}!
 test04KeepReturnTopTypes
 
 	| method types result |
@@ -11259,6 +12373,7 @@ test04KeepReturnTopTypes
 	! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 10:32:52 pm (UTC)'!
+!methodProperties: {}!
 test05KeepReturnConstantTypes
 
 	| method types result |
@@ -11278,6 +12393,7 @@ test05KeepReturnConstantTypes
 ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 10:34:03 pm (UTC)'!
+!methodProperties: {}!
 test06KeepReturnReceiverTypes
 
 	| method types result |
@@ -11297,6 +12413,7 @@ test06KeepReturnReceiverTypes
 	! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 10:38:34 pm (UTC)'!
+!methodProperties: {}!
 test07KeepReturnFromClosureTypes
 
 	| method types result |
@@ -11316,6 +12433,7 @@ test07KeepReturnFromClosureTypes
 	! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 10:59:09 pm (UTC)'!
+!methodProperties: {}!
 test08KeepReturnTypeWhenUnwind
 
 	| method types result |
@@ -11335,6 +12453,7 @@ test08KeepReturnTypeWhenUnwind
 ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 11:24:33 pm (UTC)'!
+!methodProperties: {}!
 test09BlockReturnDoesNotAffectMethodReturn
 
 	| method types result |
@@ -11354,6 +12473,7 @@ test09BlockReturnDoesNotAffectMethodReturn
 ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 17/Jul/2019, 1:23:56 am (UTC)'!
+!methodProperties: {}!
 test10KeepTypesOfParametersWhenSendingValueWithArguments
 
 	| method types result |
@@ -11381,6 +12501,7 @@ test10KeepTypesOfParametersWhenSendingValueWithArguments
 	self assert: (types includes: Fraction).! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 17/Jul/2019, 1:52:26 am (UTC)'!
+!methodProperties: {}!
 test11BlockWithParametersDoNotAffectMethodParameters
 
 	| method types |
@@ -11398,6 +12519,7 @@ test11BlockWithParametersDoNotAffectMethodParameters
 ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 9:42:00 pm (UTC)'!
+!methodProperties: {}!
 assignmentToLocalTemporary
 
 	| temporary |
@@ -11407,6 +12529,7 @@ assignmentToLocalTemporary
 	^temporary ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 9:40:46 pm (UTC)'!
+!methodProperties: {}!
 assignmentToRemoteTemporary
 
 	| localTemp remoteTemp |
@@ -11418,6 +12541,7 @@ assignmentToRemoteTemporary
 	^remoteTemp ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 11:24:45 pm (UTC)'!
+!methodProperties: {}!
 blockReturn
 
 	[ 'hello' ] value.
@@ -11425,6 +12549,7 @@ blockReturn
 	^10! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 17/Jul/2019, 1:54:10 am (UTC)'!
+!methodProperties: {}!
 blockWithParameter: parameter1
 
 	[ :blockParameter | blockParameter size ] value: 'hello'.
@@ -11432,6 +12557,7 @@ blockWithParameter: parameter1
 	^parameter1 ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 10:00:59 pm (UTC)'!
+!methodProperties: {}!
 parameter1: parameter1 parameter2: parameter2
 
 	| localTemp |
@@ -11441,16 +12567,19 @@ parameter1: parameter1 parameter2: parameter2
 	^localTemp + parameter1 + parameter2 size! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 10:33:01 pm (UTC)'!
+!methodProperties: {}!
 returnConstant
 
 	^'Hello'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 10:38:43 pm (UTC)'!
+!methodProperties: {}!
 returnFromClosure: aValue
 
 	[ ^aValue ] value! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 10:34:58 pm (UTC)'!
+!methodProperties: {}!
 returnReceiver
 
 	"It does not have to be a quick self return - Hernan"
@@ -11460,6 +12589,7 @@ returnReceiver
 	^self! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 10:30:50 pm (UTC)'!
+!methodProperties: {}!
 returnTop: aValue
 
 	1 + 1.
@@ -11467,17 +12597,20 @@ returnTop: aValue
 	^aValue! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 11:02:18 pm (UTC)'!
+!methodProperties: {}!
 returnUnwind: aValue
 
 	[ self valueParameter: [ ^aValue] ] ensure: [ 'hello' ] ! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'test support' stamp: 'HAW 16/Jul/2019, 10:58:52 pm (UTC)'!
+!methodProperties: {}!
 valueParameter: aBlock
 
 	aBlock value.
 	! !
 
 !MethodNotAnnotatingTypesTest methodsFor: 'tests' stamp: 'HAW 27/Mar/2019, 2:00:09 pm (UTC)'!
+!methodProperties: {}!
 test01CanSignalItWithAMethod
 
 	self
@@ -11488,6 +12621,7 @@ test01CanSignalItWithAMethod
 			self deny: (anError messageText indexOfSubCollection: (self class >> thisContext selector) classAndSelector startingAt: 1) = 0 ]! !
 
 !MethodNotAnnotatingTypesTest methodsFor: 'tests' stamp: 'HAW 27/Mar/2019, 2:01:29 pm (UTC)'!
+!methodProperties: {}!
 test02IsResumable
 
 	| result |
@@ -11499,16 +12633,19 @@ test02IsResumable
 	self assert: 3 equals: result! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:08:39 am (UTC)'!
+!methodProperties: {}!
 test01ActualSendersIsEmpty
 
 	self assert: ((NotImplementedMethod class: self class selector: #none) actualSendersOf: self class>>thisContext selector) isEmpty! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:10:52 am (UTC)'!
+!methodProperties: {}!
 test02CategoryIsNil
 
 	self assert: (NotImplementedMethod class: self class selector: #none) category isNil! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 22/Jan/2024, 11:58:13 pm (UTC)'!
+!methodProperties: {}!
 test03CompiledMethodSignalsError
 
 	| notImplementedMethod |
@@ -11520,6 +12657,7 @@ test03CompiledMethodSignalsError
 		withMessageText: (Dictionary keyNotFoundErrorDescriptionFor: notImplementedMethod selector)! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:20:50 am (UTC)'!
+!methodProperties: {}!
 test04CompiledMethodIfAbsentEvaluatesIfAbsentBlock
 
 	| notImplementedMethod |
@@ -11529,33 +12667,39 @@ test04CompiledMethodIfAbsentEvaluatesIfAbsentBlock
 	! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:21:57 am (UTC)'!
+!methodProperties: {}!
 test05doesOnlySurelySendReturnsFalse
 
 	self deny: ((NotImplementedMethod class: self class selector: #none) doesOnlySurelySend: self class>>thisContext selector)
 	! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:33:25 am (UTC)'!
+!methodProperties: {}!
 test06dynamicTypingAutoCompleterDocumentationReturnsEmptyText
 
 	self assert: (NotImplementedMethod class: self class selector: #none) dynamicTypingAutoCompleterDocumentation isEmpty! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:29:39 am (UTC)'!
+!methodProperties: {}!
 test07IsNotValid
 
 	self deny: (NotImplementedMethod class: self class selector: #none) isValid! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:33:03 am (UTC)'!
+!methodProperties: {}!
 test08liveTypingAutoCompleterDocumentationReturnsEmptyText
 
 	self assert: (NotImplementedMethod class: self class selector: #none) liveTypingAutoCompleterDocumentation isEmpty! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 4/Apr/2019, 11:34:50 am (UTC)'!
+!methodProperties: {}!
 test09rangesOASentSelectorWhenSendToReceiverTypesIsEmpty
 
 	self assert: ((NotImplementedMethod class: self class selector: #none) rangesOf: #size whenSendTo: { OrderedCollection })
  isEmpty! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 22/Jan/2024, 11:58:57 pm (UTC)'!
+!methodProperties: {}!
 test10FailsWhenAsItsSourceCode
 
 	| notImplementedMethod |
@@ -11567,12 +12711,14 @@ test10FailsWhenAsItsSourceCode
 		withMessageText: (Dictionary keyNotFoundErrorDescriptionFor: notImplementedMethod selector)! !
 
 !NotImplementedMethodTest methodsFor: 'tests' stamp: 'HAW 19/Aug/2021, 6:45:29 pm (UTC)'!
+!methodProperties: {}!
 test11StringVersionStartsWithNotImplemented
 
 	self assert: ((NotImplementedMethod class: self class selector: #none) stringVersion beginsWith: '[', NotImplementedMethod notImplementedStringVersionHeader)
 	! !
 
 !PossibleSenderTest methodsFor: 'tests' stamp: 'HAW 19/Aug/2021, 6:45:51 pm (UTC)'!
+!methodProperties: {}!
 test01StringVersionBeginsWithPossible
 
 	self assert:
@@ -11580,6 +12726,7 @@ test01StringVersionBeginsWithPossible
 		beginsWith: '[', PossibleSender possibleSenderStringVersionHeader)! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 1:48:38 am (UTC)'!
+!methodProperties: {}!
 test01IsEmptyWhenAllTypesAreNil
 
 	| variableTypeInfo |
@@ -11590,6 +12737,7 @@ test01IsEmptyWhenAllTypesAreNil
 	self assert: variableTypeInfo isTypesEmpty ! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 1:48:38 am (UTC)'!
+!methodProperties: {}!
 test02StoresAddedTypes
 
 	| variableTypeInfo |
@@ -11603,6 +12751,7 @@ test02StoresAddedTypes
 	self assert: (variableTypeInfo typesIncludes: self class).! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 1:45:15 am (UTC)'!
+!methodProperties: {}!
 test03StoresSameTypeOnce
 
 	| variableTypeInfo |
@@ -11616,6 +12765,7 @@ test03StoresSameTypeOnce
 	self assert: (variableTypeInfo typesIncludes: self class).! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 1:45:15 am (UTC)'!
+!methodProperties: {}!
 test04StoresMoreThanOneTypeCorrectly
 
 	| variableTypeInfo |
@@ -11630,6 +12780,7 @@ test04StoresMoreThanOneTypeCorrectly
 	self assert: (variableTypeInfo typesIncludes: 1 class).! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:23:21 pm (UTC)'!
+!methodProperties: {}!
 test05DoesNotStoreTypesWhenContainerIsNil
 
 	| variableTypeInfo |
@@ -11643,6 +12794,7 @@ test05DoesNotStoreTypesWhenContainerIsNil
 	self deny: (variableTypeInfo typesIncludes: self class)! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test06CommonSupertypeOfSiblingsClassesReturnsRightSuperclass
 
 	| variableTypeInfo |
@@ -11655,6 +12807,7 @@ test06CommonSupertypeOfSiblingsClassesReturnsRightSuperclass
 	self assert: Number equals: variableTypeInfo commonSupertype.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test07CommonSupertypeOnSameHierarchyIsMostTopClass
 
 	| variableTypeInfo |
@@ -11667,6 +12820,7 @@ test07CommonSupertypeOnSameHierarchyIsMostTopClass
 	self assert: String equals: variableTypeInfo commonSupertype.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test08CommonSupertypeOnSameHierarchyIsNotAffectedByAddingOrder
 
 	| variableTypeInfo |
@@ -11679,6 +12833,7 @@ test08CommonSupertypeOnSameHierarchyIsNotAffectedByAddingOrder
 	self assert: String equals: variableTypeInfo commonSupertype.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test09ObjectIsCommonSupertypeWhenClassesAreNotSiblings
 
 	| variableTypeInfo |
@@ -11691,6 +12846,7 @@ test09ObjectIsCommonSupertypeWhenClassesAreNotSiblings
 	self assert: Object equals: variableTypeInfo commonSupertype.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 8:40:57 pm (UTC)'!
+!methodProperties: {}!
 test10ProtoObjectIsCommonSupertypeWhenThereAreNoTypesStored
 
 	| variableTypeInfo |
@@ -11700,6 +12856,7 @@ test10ProtoObjectIsCommonSupertypeWhenThereAreNoTypesStored
 	self assert: ProtoObject equals: variableTypeInfo commonSupertype.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 8:40:57 pm (UTC)'!
+!methodProperties: {}!
 test11ProtoObjectIsCommonSupertypeWhenCointainerIsNil
 
 	| variableTypeInfo |
@@ -11709,6 +12866,7 @@ test11ProtoObjectIsCommonSupertypeWhenCointainerIsNil
 	self assert: ProtoObject equals: variableTypeInfo commonSupertype.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 8:40:57 pm (UTC)'!
+!methodProperties: {}!
 test12CommonSupertypeIfNoTypesReturnsAlternativeClosureValueWhenIsEmpty
 
 	| variableTypeInfo |
@@ -11718,6 +12876,7 @@ test12CommonSupertypeIfNoTypesReturnsAlternativeClosureValueWhenIsEmpty
 	self assert: Array equals: (variableTypeInfo commonSupertypeIfNoTypes: [ Array ]).! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 8:40:57 pm (UTC)'!
+!methodProperties: {}!
 test13CommonSupertypeIfNoTypesReturnsAlternativeClosureValueWhenContainerIsNil
 
 	| variableTypeInfo |
@@ -11727,6 +12886,7 @@ test13CommonSupertypeIfNoTypesReturnsAlternativeClosureValueWhenContainerIsNil
 	self assert: Array equals: (variableTypeInfo commonSupertypeIfNoTypes: [ Array ]).! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 1:45:15 am (UTC)'!
+!methodProperties: {}!
 test14UndefinedObjectIsNotConsideredWhenLookingForCommonSupertype
 
 	| variableTypeInfo |
@@ -11740,6 +12900,7 @@ test14UndefinedObjectIsNotConsideredWhenLookingForCommonSupertype
 	self assert: (variableTypeInfo typesIncludes: nil class)! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 20/Oct/2018, 11:36:57 pm (UTC)'!
+!methodProperties: {}!
 test15StoresTypesIsTrueWhenContainerIsNotNil
 
 	| variableTypeInfo |
@@ -11749,6 +12910,7 @@ test15StoresTypesIsTrueWhenContainerIsNotNil
 	self assert: variableTypeInfo doesStoreTypes ! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 20/Oct/2018, 11:36:57 pm (UTC)'!
+!methodProperties: {}!
 test16StoresTypesIsFalseWhenContainerIsNil
 
 	| variableTypeInfo |
@@ -11758,6 +12920,7 @@ test16StoresTypesIsFalseWhenContainerIsNil
 	self deny: variableTypeInfo doesStoreTypes ! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:24:07 pm (UTC)'!
+!methodProperties: {}!
 test17IsMegamorphicWhenContainerIsFull
 
 	| variableTypeInfo |
@@ -11770,6 +12933,7 @@ test17IsMegamorphicWhenContainerIsFull
 	self assert: variableTypeInfo isMegamorphic ! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 8:40:57 pm (UTC)'!
+!methodProperties: {}!
 test18IsNotMegamorphicWhenContainerIsNotFull
 
 	| variableTypeInfo |
@@ -11779,6 +12943,7 @@ test18IsNotMegamorphicWhenContainerIsNotFull
 	self deny: variableTypeInfo isMegamorphic ! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test19CommonSelectorsPreviousToSameOnlyTypeIsEmpty
 
 	| variableTypeInfo commonSelectors |
@@ -11792,6 +12957,7 @@ test19CommonSelectorsPreviousToSameOnlyTypeIsEmpty
 	self assert: commonSelectors isEmpty! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 16/Oct/2018, 1:45:42 am (UTC)'!
+!methodProperties: {}!
 test20CommonSelectorsPreviousToSuperclassOfOnlyAddedTypeAreAddedTypeSelectors
 
 	| variableTypeInfo commonSelectors expectedSelectors |
@@ -11807,6 +12973,7 @@ test20CommonSelectorsPreviousToSuperclassOfOnlyAddedTypeAreAddedTypeSelectors
 	self assert: (commonSelectors allSatisfy: [ :aSelector | expectedSelectors includes: aSelector])! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test21CommonSelectorsPreviousToSuperclassSuperclassOfOnlyAddedTypeAreAddedTypeUpToSuperclassSelectors
 
 	| variableTypeInfo commonSelectors expectedSelectors |
@@ -11822,6 +12989,7 @@ test21CommonSelectorsPreviousToSuperclassSuperclassOfOnlyAddedTypeAreAddedTypeUp
 	self assert: (commonSelectors allSatisfy: [ :aSelector | expectedSelectors includes: aSelector])! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test22CommonSelectorsPreviousToInvalidSuperclassRaisesError
 
 	| variableTypeInfo |
@@ -11836,6 +13004,7 @@ test22CommonSelectorsPreviousToInvalidSuperclassRaisesError
 		withMessageText: (VariableTypeInfo errorDescriptionFor: Collection isNotInSuperclassesOf: Magnitude) ! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test23CommonSelectorsPreviousToSuperclassOfSiblingTypesAreSiblingsCommonSelectors
 
 	| variableTypeInfo commonSelectors expectedSelectors |
@@ -11852,6 +13021,7 @@ test23CommonSelectorsPreviousToSuperclassOfSiblingTypesAreSiblingsCommonSelector
 	self assert: (commonSelectors allSatisfy: [ :aSelector | expectedSelectors includes: aSelector])! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test24CommonSelectorsPreviousToOnSameHierarchyReturnsCommonSuperclassesSelectors
 
 	| variableTypeInfo commonSelectors expectedSelectors |
@@ -11868,6 +13038,7 @@ test24CommonSelectorsPreviousToOnSameHierarchyReturnsCommonSuperclassesSelectors
 	self assert: (commonSelectors allSatisfy: [ :aSelector | expectedSelectors includes: aSelector])! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test25CommonSelectorsPreviousToAddedSSupertypeOnSameHierarchyIsEmpty
 
 	| variableTypeInfo |
@@ -11880,6 +13051,7 @@ test25CommonSelectorsPreviousToAddedSSupertypeOnSameHierarchyIsEmpty
 	self assert: (variableTypeInfo commonSelectorsPreviousTo: String) isEmpty! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 8:40:57 pm (UTC)'!
+!methodProperties: {}!
 test26CommonSelectorsPreviousToWhenNotStoringTypesIsEmpty
 
 	| variableTypeInfo |
@@ -11889,6 +13061,7 @@ test26CommonSelectorsPreviousToWhenNotStoringTypesIsEmpty
 	self assert: (variableTypeInfo commonSelectorsPreviousTo: String) isEmpty! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test27CommonSelectorsPreviousToIfInvalidSupertypeEvaluatesInvalidBlock
 
 	| variableTypeInfo |
@@ -11901,6 +13074,7 @@ test27CommonSelectorsPreviousToIfInvalidSupertypeEvaluatesInvalidBlock
 		! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test28CommonSelectorsPreviousToIfInvalidSupertypeWithManyTypesEvaluatesInvalidBlock
 
 	| variableTypeInfo |
@@ -11915,6 +13089,7 @@ test28CommonSelectorsPreviousToIfInvalidSupertypeWithManyTypesEvaluatesInvalidBl
 		! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 15/Oct/2018, 9:35:33 pm (UTC)'!
+!methodProperties: {}!
 test29CommonSelectosGoesUpToIncludingProtoObject
 
 	| variableTypeInfo commonSelectors expectedSelectors |
@@ -11931,6 +13106,7 @@ test29CommonSelectosGoesUpToIncludingProtoObject
 	self assert: (commonSelectors allSatisfy: [ :aSelector | expectedSelectors includes: aSelector])! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Dec/2018, 3:47:14 pm (UTC)'!
+!methodProperties: {}!
 test30CommonSupertypeIfGenericEvaluatesIfGenericBlockForObject
 
 	| variableTypeInfo |
@@ -11944,6 +13120,7 @@ test30CommonSupertypeIfGenericEvaluatesIfGenericBlockForObject
 	self fail.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Dec/2018, 3:49:03 pm (UTC)'!
+!methodProperties: {}!
 test31CommonSupertypeIfGenericEvaluatesIfGenericBlockForProtoObject
 
 	| variableTypeInfo |
@@ -11957,6 +13134,7 @@ test31CommonSupertypeIfGenericEvaluatesIfGenericBlockForProtoObject
 	self fail.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Dec/2018, 3:55:14 pm (UTC)'!
+!methodProperties: {}!
 test32WithCommonSupertypeDoIfGenericEvaluatesDoBlockWhenNoGenericSupertype
 
 	| variableTypeInfo |
@@ -11971,6 +13149,7 @@ test32WithCommonSupertypeDoIfGenericEvaluatesDoBlockWhenNoGenericSupertype
 		ifGeneric: [ :aGenericSupertype | self fail ]! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 3/Dec/2018, 3:55:10 pm (UTC)'!
+!methodProperties: {}!
 test33WithCommonSupertypeDoIfGenericEvaluatesGenericBlockWhenGenericSupertype
 
 	| variableTypeInfo |
@@ -11985,6 +13164,7 @@ test33WithCommonSupertypeDoIfGenericEvaluatesGenericBlockWhenGenericSupertype
 		ifGeneric: [ :aGenericSupertype | self assert: aGenericSupertype equals: Object ]! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:25:48 pm (UTC)'!
+!methodProperties: {}!
 test34AddingATypeWhenNoMoreSpaceEvaluatesIsFullBlock
 
 	| variableTypeInfo full |
@@ -11999,6 +13179,7 @@ test34AddingATypeWhenNoMoreSpaceEvaluatesIsFullBlock
 	self assert: full! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:27:57 pm (UTC)'!
+!methodProperties: {}!
 test35TypeIsNotMoreInTypesWhenRemoved
 
 	| variableTypeInfo  |
@@ -12016,6 +13197,7 @@ test35TypeIsNotMoreInTypesWhenRemoved
 	! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:28:58 pm (UTC)'!
+!methodProperties: {}!
 test36RemovingTypeWhenTypesIsEmptyEvaluatesIfAbsent
 
 	| variableTypeInfo  |
@@ -12027,6 +13209,7 @@ test36RemovingTypeWhenTypesIsEmptyEvaluatesIfAbsent
 	self fail.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:29:56 pm (UTC)'!
+!methodProperties: {}!
 test37RemovingNotIncludedTypeEvaluatesIfAbsent
 
 	| variableTypeInfo  |
@@ -12039,6 +13222,7 @@ test37RemovingNotIncludedTypeEvaluatesIfAbsent
 	self fail.! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:31:51 pm (UTC)'!
+!methodProperties: {}!
 test38RemovingLastAddedTypeWorksAsExpected
 
 	| variableTypeInfo  |
@@ -12058,6 +13242,7 @@ test38RemovingLastAddedTypeWorksAsExpected
 	! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:33:47 pm (UTC)'!
+!methodProperties: {}!
 test39RemoveTypeSignalExceptionWhenTypeNotFound
 
 	| variableTypeInfo  |
@@ -12077,6 +13262,7 @@ test39RemoveTypeSignalExceptionWhenTypeNotFound
 	! !
 
 !VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 6/Dec/2018, 11:35:29 pm (UTC)'!
+!methodProperties: {}!
 test40TypesDoEvaluatesBlockOnEachType
 
 	| variableTypeInfo types |
@@ -12094,6 +13280,7 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: (types includes: 1.0 class)! !
 
 !VariableTypeInfoTest class methodsFor: 'as yet unclassified' stamp: 'HAW 16/Oct/2018, 3:07:49 am (UTC)'!
+!methodProperties: {}!
 createInstanceVariableRawTypesFor: anInstVarName
 
 	anInstVarName = 'instVar3' ifTrue: [ ^ Array new: 1 ].
@@ -12102,6 +13289,7 @@ createInstanceVariableRawTypesFor: anInstVarName
 	^super createInstanceVariableRawTypesFor: anInstVarName! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 12:56:12 am (UTC)'!
+!methodProperties: {}!
 test01ManyMethodsCanBeTypeChecked
 
 	| methodWithManyTypeErrorsTypeChecker methodWithTypeErrorTypeChecker typeChecker |
@@ -12118,6 +13306,7 @@ test01ManyMethodsCanBeTypeChecked
 ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 12:56:30 am (UTC)'!
+!methodProperties: {}!
 test02ClassesCanBeTypeChecked
 
 	| typeChecker typeCheckers |
@@ -12134,6 +13323,7 @@ test02ClassesCanBeTypeChecked
 ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 12:57:20 am (UTC)'!
+!methodProperties: {}!
 test03MethodsWithoutTypeAnnotationsLogsAProblem
 
 	| typeChecker methodToCheck  |
@@ -12150,6 +13340,7 @@ test03MethodsWithoutTypeAnnotationsLogsAProblem
 ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 1:41:57 am (UTC)'!
+!methodProperties: {}!
 test04ProblemsDetectIfNone
 
 	| typeCheckProblem typeChecker |
@@ -12165,6 +13356,7 @@ test04ProblemsDetectIfNone
 ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 1:45:37 am (UTC)'!
+!methodProperties: {}!
 test05ProblemsDetectIfNoneValuesIfNoneWhenNoProblemFound
 
 	| typeChecker |
@@ -12177,6 +13369,7 @@ test05ProblemsDetectIfNoneValuesIfNoneWhenNoProblemFound
 	self fail! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 1:47:48 am (UTC)'!
+!methodProperties: {}!
 test06WarningsCollectsAllTypeCheckersWarnings
 
 	| typeChecker |
@@ -12187,6 +13380,7 @@ test06WarningsCollectsAllTypeCheckersWarnings
 	self assert: typeChecker warnings notEmpty! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 1:56:07 am (UTC)'!
+!methodProperties: {}!
 test07ErrorsDetectIfNone
 
 	| typeChecker error |
@@ -12198,6 +13392,7 @@ test07ErrorsDetectIfNone
 	self assert: #date equals: error selector key ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 1:56:47 am (UTC)'!
+!methodProperties: {}!
 test08ErrorsDetectIfNoneValuesIfNoneWhenNoProblemFound
 
 	| typeChecker |
@@ -12212,6 +13407,7 @@ test08ErrorsDetectIfNoneValuesIfNoneWhenNoProblemFound
 	! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 2:01:04 am (UTC)'!
+!methodProperties: {}!
 test09ProblemsCollectsTypeCheckersProblems
 
 	| typeChecker |
@@ -12223,6 +13419,7 @@ test09ProblemsCollectsTypeCheckersProblems
 ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 2:05:32 am (UTC)'!
+!methodProperties: {}!
 test10WarningsDetectIfNone
 
 	| typeChecker typeWarning |
@@ -12236,6 +13433,7 @@ test10WarningsDetectIfNone
 ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 2:06:37 am (UTC)'!
+!methodProperties: {}!
 test11WarningsDetectIfNoneValuesIfNoneWhenNoProblemFound
 
 	| typeChecker |
@@ -12250,6 +13448,7 @@ test11WarningsDetectIfNoneValuesIfNoneWhenNoProblemFound
 	! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 2:08:37 am (UTC)'!
+!methodProperties: {}!
 test12HasErrorsReturnsTrueIfATypeCheckerHasErrors
 
 	| typeChecker |
@@ -12260,6 +13459,7 @@ test12HasErrorsReturnsTrueIfATypeCheckerHasErrors
 	self assert: typeChecker hasErrors ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 2:09:53 am (UTC)'!
+!methodProperties: {}!
 test13HasErrorsReturnsFalseWhenNoErrorFound
 
 	| typeChecker |
@@ -12270,6 +13470,7 @@ test13HasErrorsReturnsFalseWhenNoErrorFound
 	self deny: typeChecker hasErrors ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 2:12:26 am (UTC)'!
+!methodProperties: {}!
 test14ErrorsCollectsAllTypeCheckersErrors
 
 	| typeChecker |
@@ -12280,6 +13481,7 @@ test14ErrorsCollectsAllTypeCheckersErrors
 	self assert: typeChecker errors notEmpty ! !
 
 !ManyMethodsTypeCheckerTest methodsFor: 'tests' stamp: 'HAW 12/Aug/2019, 2:15:01 am (UTC)'!
+!methodProperties: {}!
 test15HasErrorsOrWarnings
 
 	| typeChecker |
@@ -12290,12 +13492,14 @@ test15HasErrorsOrWarnings
 	self assert: typeChecker hasErrorsOrWarnings ! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:42:49 pm (UTC)'!
+!methodProperties: {}!
 test11IfNotNilFiltersUndefinedObjectType
 
 	self assertHasNoTypeErrorsAndWarnings: #ifNotNilCheck.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:41:15 pm (UTC)'!
+!methodProperties: {}!
 test12IfNotNilDoesNotFiltersUndefinedObjectTypeForNotCheckedObject
 
 	self
@@ -12307,18 +13511,21 @@ test12IfNotNilDoesNotFiltersUndefinedObjectTypeForNotCheckedObject
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:44:05 pm (UTC)'!
+!methodProperties: {}!
 test13ComparingForNilWithIfTrueIfFalse
 
 	self assertHasNoTypeErrorsAndWarnings: #comparingForNilWithIfTrueIfFalse.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:44:15 pm (UTC)'!
+!methodProperties: {}!
 test14ComparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes
 
 	self assertHasNoTypeErrorsAndWarnings: #comparingForNilWithIfTrueIfFalseWhenNilFiltersOtherTypes.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:45:28 pm (UTC)'!
+!methodProperties: {}!
 test15ComparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
 
 	| error |
@@ -12334,12 +13541,14 @@ test15ComparingForNilWithIfTrueIfFalseWhenNilKeepsUndefinedObject
 			self assert: (error selector isNamed: #*) ]! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:45:40 pm (UTC)'!
+!methodProperties: {}!
 test16NestedIfNotNilFiltersUndefinedObjectType
 
 	self assertHasNoTypeErrorsAndWarnings: #nestedIfNotNilCheck.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:46:16 pm (UTC)'!
+!methodProperties: {}!
 test17NestedIfNotNilDoesNotFilterUndefinedObjectWhenOutsideRightIfNotNil
 
 	| error |
@@ -12355,18 +13564,21 @@ test17NestedIfNotNilDoesNotFilterUndefinedObjectWhenOutsideRightIfNotNil
 			self assert: (error selector isNamed: #*) ]! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:46:26 pm (UTC)'!
+!methodProperties: {}!
 test18IfNilAssumesUndefinedObjectAsType
 
 	self assertHasNoTypeErrorsAndWarnings: #ifNilCheck.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:46:38 pm (UTC)'!
+!methodProperties: {}!
 test19NestedIfNilAssumesUndefinedObjectAsType
 
 	self assertHasNoTypeErrorsAndWarnings: #nestedIfNilCheck.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:47:11 pm (UTC)'!
+!methodProperties: {}!
 test20NestedIfNilDoesUseUndefinedObjectWhenOutsideRightIfNil
 
 	| error |
@@ -12382,131 +13594,155 @@ test20NestedIfNilDoesUseUndefinedObjectWhenOutsideRightIfNil
 			self assert: (error selector isNamed: #subclasses) ]! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:47:29 pm (UTC)'!
+!methodProperties: {}!
 test21IfNilIfNotNilWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #ifNilIfNotNil.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:48:59 pm (UTC)'!
+!methodProperties: {}!
 test22IfNotNilIfNilWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #ifNotNilIfNil.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:50:43 pm (UTC)'!
+!methodProperties: {}!
 test23EqualsNilIfTrueIfFalseWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfTrueIfFalse.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:53:26 pm (UTC)'!
+!methodProperties: {}!
 test24EqualsNilIfTrueWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfTrue
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:55:10 pm (UTC)'!
+!methodProperties: {}!
 test25IdenticalToNilIfTrueWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfTrue
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 6:56:48 pm (UTC)'!
+!methodProperties: {}!
 test26EqualsNilIfFalseWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfFalse.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:02:24 pm (UTC)'!
+!methodProperties: {}!
 test27IdenticalToNilIfFalseWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfFalse.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:04:48 pm (UTC)'!
+!methodProperties: {}!
 test28EqualsToNilIfFalseIfTrueWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #equalsNilIfFalseIfTrue.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:05:26 pm (UTC)'!
+!methodProperties: {}!
 test29IdenticalToNilIfFalseIfTrueWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #identicalToNilIfFalseIfTrue.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:13:08 pm (UTC)'!
+!methodProperties: {}!
 test30nilEqualsToIfTrueIfFalseOrIfFalseIfTrueWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #nilEqualsToIfTrueIfFalseOrIfFalseIfTrue.
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:14:08 pm (UTC)'!
+!methodProperties: {}!
 test31nilEqualsToIfTrueOrIfFalseWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #nilEqualsToIfTrueOrIfFalse! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 21/Aug/2019, 2:13:39 am (UTC)'!
+!methodProperties: {}!
 test32_01_nilNotIdenticalOrEqualToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #nilNotEqualOrIdenticalIdenticalTo! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:17:53 pm (UTC)'!
+!methodProperties: {}!
 test32nilIdenticalToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #nilIdenticalTo! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:26:51 pm (UTC)'!
+!methodProperties: {}!
 test33NotEqualToNilWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #notEqualToNil! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:28:25 pm (UTC)'!
+!methodProperties: {}!
 test34NotIdenticalToNilWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #notIdenticalToNil! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 7:32:22 pm (UTC)'!
+!methodProperties: {}!
 test35isNilWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #isNilCondition! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 8:03:19 pm (UTC)'!
+!methodProperties: {}!
 test36notNilWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #notNilCondition! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 9:52:24 pm (UTC)'!
+!methodProperties: {}!
 test37TypeCastWithEqualOrIdenticalToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCastWithEqualOrIdenticalTo! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 9:52:31 pm (UTC)'!
+!methodProperties: {}!
 test38TypeCastWithNotEqualOrNotIdenticalToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCastWithNotEqualOrNotIdenticalTo! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 9:52:37 pm (UTC)'!
+!methodProperties: {}!
 test39TypeCastToUsingEqualOrIdenticalToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCastToWithEqualOrIdenticalTo! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 2/Aug/2019, 9:54:39 pm (UTC)'!
+!methodProperties: {}!
 test40TypeCastToUsingNotEqualOrNotIdenticalToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCastToWithNotEqualOrNotIdenticalTo! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 3/Aug/2019, 1:06:46 pm (UTC)'!
+!methodProperties: {}!
 test41TypeCastUsingIsKindOfToWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCastUsingIsKindOf! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 3/Aug/2019, 1:27:45 pm (UTC)'!
+!methodProperties: {}!
 test42TypeCheckMessageWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessage! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 3/Aug/2019, 1:53:54 pm (UTC)'!
+!methodProperties: {}!
 test43TypeCheckMessageSentToSelfWorksAsExpected
 
 	| typeChecker |
@@ -12517,31 +13753,37 @@ test43TypeCheckMessageSentToSelfWorksAsExpected
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 3/Aug/2019, 6:49:19 pm (UTC)'!
+!methodProperties: {}!
 test44TypeCheckMessageWorksAsExpected
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageNestedInsideIfNotNil! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 6/Aug/2019, 5:50:18 pm (UTC)'!
+!methodProperties: {}!
 test46TypeCastRejectsCanBeNested
 
 	self assertHasNoTypeErrorsAndWarnings: #nestedRejects! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 6/Aug/2019, 5:50:40 pm (UTC)'!
+!methodProperties: {}!
 test47IsKindOfCastingAllowsSubtypes
 
 	self assertHasNoTypeErrorsAndWarnings: #isKindOfKeepsSubtypes! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 9/Aug/2019, 2:19:55 pm (UTC)'!
+!methodProperties: {}!
 test48IfNotNilWithBlockArgumentFiltersUndefinedObject
 
 	self assertHasNoTypeErrorsAndWarnings: #ifNotNilCheckWithArgument! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 9/Aug/2019, 6:06:39 pm (UTC)'!
+!methodProperties: {}!
 test49TypeCastWithBlockInRejectBlockKeepsCastingStrategy
 
 	self assertHasNoTypeErrorsAndWarnings: #castWithBlockInRejectBlock! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 9/Aug/2019, 6:53:19 pm (UTC)'!
+!methodProperties: {}!
 test50TypeCastWithoutBlockShouldFail
 
 	self
@@ -12550,12 +13792,14 @@ test50TypeCastWithoutBlockShouldFail
  ! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 9/Aug/2019, 11:12:22 pm (UTC)'!
+!methodProperties: {}!
 test51NotNilAndFiltersUndefinedObject
 
 	self assertHasNoTypeErrorsAndWarnings: #notNilAnd
 		! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 10/Aug/2019, 4:23:58 pm (UTC)'!
+!methodProperties: {}!
 test52CascasdeMessageSendAreTypeChecked
 
 	| methodToCheck typeChecker |
@@ -12568,24 +13812,28 @@ test52CascasdeMessageSendAreTypeChecked
 	self assert: #odd equals: typeChecker errors anyOne notImplemented first selector! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 10/Aug/2019, 4:28:24 pm (UTC)'!
+!methodProperties: {}!
 test53TypeCastWorksOnCascadeMessageSends
 
 	self assertHasNoTypeErrorsAndWarnings: #cascadeMessageSendWithTypeCast
 		! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 19/Aug/2019, 5:21:00 pm (UTC)'!
+!methodProperties: {}!
 test54IfNilWithReturnRejectsNilInNextColaborations
 
 	self assertHasNoTypeErrorsAndWarnings: #ifNilWithReturn
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 21/Aug/2019, 8:47:46 pm (UTC)'!
+!methodProperties: {}!
 test55TypeCheckMessageWithSubclassesReturningFalse
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageWithFalseInSubclass
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 21/Aug/2019, 8:48:09 pm (UTC)'!
+!methodProperties: {}!
 test56Float_store_on_hasNoTypeErrors
 
 	| methodToCheck typeChecker |
@@ -12598,6 +13846,7 @@ test56Float_store_on_hasNoTypeErrors
 	self deny: typeChecker hasProblems ! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 21/Aug/2019, 8:48:42 pm (UTC)'!
+!methodProperties: {}!
 test57TypeCheckMessageWithFalse_True_False_InSubclassesCastCorrectly
 
 
@@ -12605,30 +13854,35 @@ test57TypeCheckMessageWithFalse_True_False_InSubclassesCastCorrectly
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 20/Aug/2019, 9:46:40 pm (UTC)'!
+!methodProperties: {}!
 test58TypeCheckMessageWithReturnOnIfTrueRejectsTypeInNextColaborations
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageWithReturnOnIfTrue
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 20/Aug/2019, 9:46:51 pm (UTC)'!
+!methodProperties: {}!
 test59TypeCheckMessageWithReturnOnIfFalseRejectsTypeInNextColaborations
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCheckMessageWithReturnOnIfFalse
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 20/Aug/2019, 10:31:38 pm (UTC)'!
+!methodProperties: {}!
 test60TypeCastWithReturnOnIfTrueRejectsTypeInNextColaborations
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCastWithReturnOnIfTrue
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 20/Aug/2019, 10:32:49 pm (UTC)'!
+!methodProperties: {}!
 test61TypeCastWithReturnOnIfFalseRejectsTypeInNextColaborations
 
 	self assertHasNoTypeErrorsAndWarnings: #typeCastWithReturnOnIfFalse
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 12:29:08 am (UTC)'!
+!methodProperties: {}!
 test62ifNotNilifNotNilWithMoreThanAMessageSendAndNilAsValue
 
 	| methodToCheck testMethods typeChecker |
@@ -12645,24 +13899,28 @@ test62ifNotNilifNotNilWithMoreThanAMessageSendAndNilAsValue
 	self assert: typeChecker hasNoErrorsAndWarnings 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 1:55:31 am (UTC)'!
+!methodProperties: {}!
 test63orCheck
 
 	self assertHasNoTypeErrorsAndWarnings: #orCheck
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 2:15:15 am (UTC)'!
+!methodProperties: {}!
 test64notNilAndIfTrue
 
 	self assertHasNoTypeErrorsAndWarnings: #notNilAndIfTrue
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 2:18:50 am (UTC)'!
+!methodProperties: {}!
 test65isNilOr
 
 	self assertHasNoTypeErrorsAndWarnings: #isNilOr
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 9:52:59 pm (UTC)'!
+!methodProperties: {}!
 test66DoesNotFailsWithMessageSendAsConditionOfIfTrueWithCascadeSend
 
 	self
@@ -12670,6 +13928,7 @@ test66DoesNotFailsWithMessageSendAsConditionOfIfTrueWithCascadeSend
 		raise: Error! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 2:36:35 am (UTC)'!
+!methodProperties: {}!
 test66orWithoutMessageAsReceiverShouldNotError
 
 	self
@@ -12677,6 +13936,7 @@ test66orWithoutMessageAsReceiverShouldNotError
 		raise: Error! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 2:36:05 am (UTC)'!
+!methodProperties: {}!
 test67andWithoutMessageAsReceiverShouldNotError
 
 	self
@@ -12684,6 +13944,7 @@ test67andWithoutMessageAsReceiverShouldNotError
 		raise: Error! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - casting' stamp: 'HAW 22/Aug/2019, 7:45:43 pm (UTC)'!
+!methodProperties: {}!
 test68DoesNotFailsWithIfTrueSendInCascadeMode
 
 	self
@@ -12691,6 +13952,7 @@ test68DoesNotFailsWithIfTrueSendInCascadeMode
 		raise: Error! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 9/Aug/2019, 12:33:17 pm (UTC)'!
+!methodProperties: {}!
 test01MethodNotAnnotatingTypesGeneratesWarning
 
 	| methodToCkeck typeChecker |
@@ -12704,6 +13966,7 @@ test01MethodNotAnnotatingTypesGeneratesWarning
 	self assert: (typeChecker problems anyOne isKindOf: MethodNotAnnotatingTypesProblem)! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 6/Aug/2019, 2:42:24 pm (UTC)'!
+!methodProperties: {}!
 test02EmptyMethodDoesNotGenerateWarningsOrErrors
 
 	| methodToCkeck typeChecker |
@@ -12716,6 +13979,7 @@ test02EmptyMethodDoesNotGenerateWarningsOrErrors
 	self assert: typeChecker warningsIsEmpty! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 6/Aug/2019, 2:43:00 pm (UTC)'!
+!methodProperties: {}!
 test03MessageSendNotUnderstoodByReceiverGeneratesError
 
 	| methodToCheck typeChecker typeError notImplemented |
@@ -12739,6 +14003,7 @@ test03MessageSendNotUnderstoodByReceiverGeneratesError
 	self assert: #date equals: notImplemented first selector.! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 6/Aug/2019, 2:43:23 pm (UTC)'!
+!methodProperties: {}!
 test04MessageUnderstooodByReceiverDoesNotGenerateErrors
 
 	| methodToCkeck typeChecker |
@@ -12751,6 +14016,7 @@ test04MessageUnderstooodByReceiverDoesNotGenerateErrors
 	self assert: typeChecker warningsIsEmpty ! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 6/Aug/2019, 2:46:01 pm (UTC)'!
+!methodProperties: {}!
 test05ErrorsWhenNoTypeImplementMessageSent
 
 	| typeError notImplemented typesNotImplementingSelector |
@@ -12776,6 +14042,7 @@ test05ErrorsWhenNoTypeImplementMessageSent
 			self assert: (typesNotImplementingSelector includes: String) ]! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 6/Aug/2019, 2:47:40 pm (UTC)'!
+!methodProperties: {}!
 test06DifferentErrorsAreReported
 
 	| methodToCheck typeChecker typeError |
@@ -12801,6 +14068,7 @@ test06DifferentErrorsAreReported
 ! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 12/Aug/2019, 2:29:46 am (UTC)'!
+!methodProperties: {}!
 test07ReceiverWithoutTypesGeneratesWarning
 
 	| typeCheckProblem |
@@ -12818,6 +14086,7 @@ test07ReceiverWithoutTypesGeneratesWarning
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 12/Aug/2019, 2:29:46 am (UTC)'!
+!methodProperties: {}!
 test08GivesAWarningWhenReceiversTypeHasAnError
 
 	| methodToCheck typeChecker typeWarning |
@@ -12839,6 +14108,7 @@ test08GivesAWarningWhenReceiversTypeHasAnError
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 12/Aug/2019, 2:29:38 am (UTC)'!
+!methodProperties: {}!
 test09WhenMethodHasNoReturnTypesAProblemIsAdded
 
 	| methodToCheck typeChecker typeCheckProblem |
@@ -12862,6 +14132,7 @@ test09WhenMethodHasNoReturnTypesAProblemIsAdded
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'tests - type checking' stamp: 'HAW 19/Jul/2019, 8:39:47 pm (UTC)'!
+!methodProperties: {}!
 test10PrimitiveMethodsAreNotTypedChecked
 
 	| methodToCheck typeChecker |
@@ -12874,6 +14145,7 @@ test10PrimitiveMethodsAreNotTypedChecked
 	! !
 
 !MethodTypeCheckerTest methodsFor: 'assertions' stamp: 'HAW 2/Aug/2019, 6:43:43 pm (UTC)'!
+!methodProperties: {}!
 assertHasNoTypeErrorsAndWarnings: aSelector
 
 	self
@@ -12882,6 +14154,7 @@ assertHasNoTypeErrorsAndWarnings: aSelector
 ! !
 
 !MethodTypeCheckerTest methodsFor: 'assertions' stamp: 'HAW 2/Aug/2019, 6:42:05 pm (UTC)'!
+!methodProperties: {}!
 typeCheck: aSelector andAssert: assertionsBlock
 
 	| methodToCheck typeChecker |
@@ -12896,6 +14169,7 @@ typeCheck: aSelector andAssert: assertionsBlock
 	! !
 
 !ProtoObject class methodsFor: '*LiveTyping-private' stamp: 'HAW 19/Jul/2019, 8:22:29 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnRawTypesOf: aCompiledMethod
 
 	^aCompiledMethod selector = #==
@@ -12903,6 +14177,7 @@ createMethodReturnRawTypesOf: aCompiledMethod
 		ifFalse: [ super createMethodReturnRawTypesOf: aCompiledMethod ]! !
 
 !ProtoObject class methodsFor: '*LiveTyping-private' stamp: 'HAW 19/Jul/2019, 8:24:11 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnTypeInfoOf: aMethod
 
 	^aMethod selector = #==
@@ -12910,6 +14185,7 @@ createMethodReturnTypeInfoOf: aMethod
 		ifFalse: [ super createMethodReturnTypeInfoOf: aMethod ]! !
 
 !Object class methodsFor: '*LiveTyping' stamp: 'HAW 19/Jul/2019, 9:09:06 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnRawTypesOf: aMethod
 
 	^ (#(class at: copy shallowCopy) includes: aMethod selector)
@@ -12918,6 +14194,7 @@ createMethodReturnRawTypesOf: aMethod
 ! !
 
 !Object class methodsFor: '*LiveTyping' stamp: 'HAW 19/Jul/2019, 9:08:53 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnTypeInfoOf: aMethod
 
 	aMethod selector = #class ifTrue: [ ^ReturnTypeInfo of: aMethod are: `{ ClassType new }` ].
@@ -12928,16 +14205,19 @@ createMethodReturnTypeInfoOf: aMethod
 ! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 27/Nov/2018, 8:56:18 am (UTC)'!
+!methodProperties: {}!
 identifierPrintString
 
 	^String streamContents: [ :stream | self printOn: stream indent: 0 ]! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 9/Aug/2019, 11:27:21 pm (UTC)'!
+!methodProperties: {}!
 isNotNil
 
 	^false! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 8:27:04 pm (UTC)'!
+!methodProperties: {}!
 isSameAs: aParseNode
 
 	"I had to create this message because originalReceiver is MessageNode is a copy of the receiver (I don't
@@ -12947,6 +14227,7 @@ isSameAs: aParseNode
 	^self = aParseNode ! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 14/Dec/2018, 9:35:25 am (UTC)'!
+!methodProperties: {}!
 nodeTypeAndIdentifierPrintString
 
 	^String streamContents: [ :stream |
@@ -12956,21 +14237,25 @@ nodeTypeAndIdentifierPrintString
 			nextPutAll: self identifierPrintString ]! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 14/Dec/2018, 9:33:40 am (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^''! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 3/Dec/2018, 2:41:46 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	self subclassResponsibility ! !
 
 !ParseNode methodsFor: '*LiveTyping' stamp: 'HAW 21/Aug/2019, 5:20:02 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier
 
 	^aTypeCastApplier applyTo: self with: (self typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons)! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 3:22:35 pm (UTC)'!
+!methodProperties: {}!
 actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods
 		at: aParameterIndex
 		of: aSelector
@@ -12987,6 +14272,7 @@ actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods
 		using: aMethodNode ! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 2:12:39 am (UTC)'!
+!methodProperties: {}!
 actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
 
 	^self
@@ -12999,6 +14285,7 @@ actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbse
 ! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 2:19:13 am (UTC)'!
+!methodProperties: {}!
 actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
 
 	^self
@@ -13010,6 +14297,7 @@ actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withP
 		using: aMethodNode ! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 2:17:05 am (UTC)'!
+!methodProperties: {}!
 actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
 
 	^self
@@ -13022,6 +14310,7 @@ actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: absentBlock 
 ! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 19/Dec/2018, 4:34:58 pm (UTC)'!
+!methodProperties: {}!
 topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
 
 	| biggestRangeSize nodeWithRangeAtPosition |
@@ -13040,6 +14329,7 @@ topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
 			! !
 
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 3:22:46 pm (UTC)'!
+!methodProperties: {}!
 withActualMessageSendsOfAll: compiledMethods
 	do: aMessageSendNodeBlock
 	ifAbsent: absentBlock
@@ -13063,17 +14353,20 @@ withActualMessageSendsOfAll: compiledMethods
 	^sortedRanges ! !
 
 !AssignmentNode methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 5:58:21 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^value typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ! !
 
 !AssignmentNode methodsFor: '*LiveTyping' stamp: 'HAW 22/Aug/2019, 12:29:58 am (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier
 
 	^value typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier
 ! !
 
 !BacktickNode methodsFor: '*LiveTyping' stamp: 'HAW 22/Jun/2020, 6:45:04 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	"This for sure will compile the source code... it would be better to get the literal from the compiled method
@@ -13085,6 +14378,7 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 ! !
 
 !BraceNode methodsFor: '*LiveTyping' stamp: 'HAW 18/Jul/2019, 10:05:49 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^{ Array }
@@ -13093,6 +14387,7 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 		addingAll: [ :aParseNode | aParseNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons ]"! !
 
 !CascadeNode methodsFor: '*LiveTyping' stamp: 'HAW 3/Apr/2019, 1:22:19 am (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	| lastMessage |
@@ -13105,11 +14400,13 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	! !
 
 !BlockNode methodsFor: '*LiveTyping' stamp: 'HAW 4/May/2020, 3:00:12 am (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^`{ BlockClosure }`! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 3:17:22 pm (UTC)'!
+!methodProperties: {}!
 actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParameterIndex of: aSelector ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
 
 	^encoder
@@ -13123,6 +14420,7 @@ actualMessageSendKeywordAndParameterPositionsOfAll: compiledMethods at: aParamet
 	! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 1/Jan/2020, 10:54:42 pm (UTC)'!
+!methodProperties: {}!
 actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
 
 	^encoder
@@ -13134,6 +14432,7 @@ actualMessageSendKeywordPositionsOfAll: compiledMethods at: aKeywordIndex ifAbse
 ! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 1/Jan/2020, 10:54:52 pm (UTC)'!
+!methodProperties: {}!
 actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
 
 	^encoder
@@ -13144,6 +14443,7 @@ actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withP
 ! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 31/Dec/2019, 7:46:26 pm (UTC)'!
+!methodProperties: {}!
 actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends
 
 	^encoder
@@ -13154,17 +14454,20 @@ actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withP
 ! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 4/Dec/2018, 5:20:06 pm (UTC)'!
+!methodProperties: {}!
 identifierPrintString
 
 	^self selectorNode identifierPrintString .
 	! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 19/Dec/2018, 9:31:08 pm (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^'method'! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 6:50:17 pm (UTC)'!
+!methodProperties: {}!
 topBlockTempsMap
 
 	self blockExtentsToTempsMap associationsDo: [ :anAssociation | anAssociation key first = 0 ifTrue: [ ^anAssociation value ]].
@@ -13172,18 +14475,21 @@ topBlockTempsMap
 	self error: 'Should not happen, there is always a topContext'! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 19/Dec/2018, 4:35:04 pm (UTC)'!
+!methodProperties: {}!
 topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
 
 	^encoder topParseNodeIncluding: aPosition ifAbsent: anAbsentBlock
 ! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 4/Dec/2018, 5:15:37 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	"I assume that if somebody wants the types of a method it is looking for the return types - Hernan"
 	^aCompiledMethod returnTypes ! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 4/May/2020, 7:14:44 pm (UTC)'!
+!methodProperties: {}!
 withTopParseNodeIncluding: aPosition do: aBlock ifAbsent: anAbsentBlock
 
 	| nodeAndPosition |
@@ -13194,37 +14500,44 @@ withTopParseNodeIncluding: aPosition do: aBlock ifAbsent: anAbsentBlock
 	! !
 
 !LeafNode methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 8:24:10 pm (UTC)'!
+!methodProperties: {}!
 isSameAs: aParseNode
 
 	^(super isSameAs: aParseNode)
 		or: [ (aParseNode isKindOf: self class) and: [ key = aParseNode key ]]! !
 
 !LeafNode methodsFor: '*LiveTyping' stamp: 'HAW 11/Jul/2019, 8:16:31 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^#()! !
 
 !LiteralNode methodsFor: '*LiveTyping' stamp: 'HAW 17/Dec/2018, 7:42:45 pm (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^'literal'! !
 
 !LiteralNode methodsFor: '*LiveTyping' stamp: 'HAW 3/Dec/2018, 2:40:40 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^Array with: self literalValue class! !
 
 !SelectorNode methodsFor: '*LiveTyping' stamp: 'HAW 19/Dec/2018, 9:34:16 pm (UTC)'!
+!methodProperties: {}!
 identifierPrintString
 
 	^key printString ! !
 
 !VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 16/Jan/2019, 11:05:06 pm (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^'pseudo var'! !
 
 !VariableNode methodsFor: '*LiveTyping' stamp: 'HAW 6/Nov/2020, 7:25:13 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	"This is other possible implementation... the problem is that self can be referenced in a method that
@@ -13260,26 +14573,31 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	self error: 'Unsupported variable node'! !
 
 !InstanceVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 16/Jan/2019, 11:03:18 pm (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^'inst var'! !
 
 !InstanceVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 3/Dec/2018, 2:40:40 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^ aCompiledMethod typesOfInstanceVariableNamed: name ifAbsent: [ #() ]! !
 
 !LiteralVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 16/Jan/2019, 11:03:23 pm (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^'literal var'! !
 
 !LiteralVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 3/Dec/2018, 2:40:40 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^ Array with: key value class! !
 
 !TempVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 14/Dec/2018, 9:38:26 am (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^self isArg
@@ -13287,26 +14605,31 @@ nodeTypePrintString
 		ifFalse: [ 'temporary' ]! !
 
 !TempVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 3/Dec/2018, 2:40:40 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^aCompiledMethod typesOfVariableNamed: name ifAbsent: [ #() ]! !
 
 !UndeclaredVariableNode methodsFor: '*LiveTyping' stamp: 'HAW 18/Dec/2018, 11:25:42 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: aSet
 
 	^#()! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 19/Dec/2018, 9:36:48 pm (UTC)'!
+!methodProperties: {}!
 identifierPrintString
 
 	^selector identifierPrintString ! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 9/Aug/2019, 10:46:40 pm (UTC)'!
+!methodProperties: {}!
 isAnd
 
 	^self selectorSymbol = #and:! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:14:38 pm (UTC)'!
+!methodProperties: {}!
 isAnyKindOfIf
 
 	| selectorSymbol |
@@ -13320,97 +14643,116 @@ isAnyKindOfIf
 		! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:30:58 pm (UTC)'!
+!methodProperties: {}!
 isClassEqualOrIdenticalToObjectClass
 
 	^self isEqualOrIdentical and: [ self isReceiverLiteralBehavior and: [ self isFirstArgumentClassMessageSend ]]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:27:35 pm (UTC)'!
+!methodProperties: {}!
 isClassMessageSend
 
 	^self selectorSymbol = #class! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:43:43 pm (UTC)'!
+!methodProperties: {}!
 isClassNotEqualOrNotIdenticalToObjectClass
 
 	^self isNotEqualOrNotIdentical and: [ self isReceiverLiteralBehavior and: [ self isFirstArgumentClassMessageSend ]]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:21:22 pm (UTC)'!
+!methodProperties: {}!
 isEqualOrIdentical
 
 	^self selectorSymbol = #== or: [ self selectorSymbol = #= ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:20:48 pm (UTC)'!
+!methodProperties: {}!
 isEqualOrIdenticalToNil
 
 	^self isEqualOrIdentical and: [ self isFirstArgumentNil ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:33:56 pm (UTC)'!
+!methodProperties: {}!
 isFirstArgumentClassMessageSend
 
 	^ arguments first isMessageNode and: [ arguments first isClassMessageSend ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:30:24 pm (UTC)'!
+!methodProperties: {}!
 isFirstArgumentLiteralBehavior
 
 	^arguments first isLiteralVariableNode and: [ arguments first isReferencingBehavior ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:21:46 pm (UTC)'!
+!methodProperties: {}!
 isFirstArgumentNil
 
 	^ arguments first isNilPseudoVariable ! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:11:43 pm (UTC)'!
+!methodProperties: {}!
 isIfNil
 
 	^self selectorSymbol = #ifNil:! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 4:36:16 pm (UTC)'!
+!methodProperties: {}!
 isIfNotNil
 
 	^self selectorSymbol = #ifNotNil:! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 22/Aug/2019, 7:44:03 pm (UTC)'!
+!methodProperties: {}!
 isIfWithMessageNodeAsCondition
 
 	^self isAnyKindOfIf and: [ self receiverOrCascadeReceiver isMessageNode ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 3/Aug/2019, 1:17:06 pm (UTC)'!
+!methodProperties: {}!
 isIsKindOfWithLiteralBehavior
 
 	^self selectorSymbol = #isKindOf: and: [ self isFirstArgumentLiteralBehavior ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:16:09 pm (UTC)'!
+!methodProperties: {}!
 isIsNil
 
 	^self selectorSymbol = #isNil! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:23:21 pm (UTC)'!
+!methodProperties: {}!
 isNilEqualOrIdenticalTo
 
 	^self isEqualOrIdentical and: [ self isReceiverNil ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:39:30 pm (UTC)'!
+!methodProperties: {}!
 isNilNotEqualOrNotIdenticalTo
 
 	^self isNotEqualOrNotIdentical and: [ self isReceiverNil ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:37:53 pm (UTC)'!
+!methodProperties: {}!
 isNotEqualOrNotIdentical
 
 	^self selectorSymbol = #~~ or: [ self selectorSymbol = #~= ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:37:10 pm (UTC)'!
+!methodProperties: {}!
 isNotEqualOrNotIdenticalToNil
 
 	^self isNotEqualOrNotIdentical and: [ self isFirstArgumentNil ]
 	! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:18:20 pm (UTC)'!
+!methodProperties: {}!
 isNotNil
 
 	^self selectorSymbol = #notNil! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:30:24 pm (UTC)'!
+!methodProperties: {}!
 isObjectClassEqualOrIdenticalToClass
 
 	^self isEqualOrIdentical and: [ self isReceiverClassMessageSend and: [ self isFirstArgumentLiteralBehavior ]]
@@ -13418,6 +14760,7 @@ isObjectClassEqualOrIdenticalToClass
 	! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:42:04 pm (UTC)'!
+!methodProperties: {}!
 isObjectClassNotEqualOrNotIdenticalToClass
 
 	^self isNotEqualOrNotIdentical and: [ self isReceiverClassMessageSend and: [ self isFirstArgumentLiteralBehavior ]]
@@ -13425,48 +14768,57 @@ isObjectClassNotEqualOrNotIdenticalToClass
 	! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 22/Aug/2019, 2:19:20 am (UTC)'!
+!methodProperties: {}!
 isOr
 
 	^self selectorSymbol = #or:! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:27:15 pm (UTC)'!
+!methodProperties: {}!
 isReceiverClassMessageSend
 
 	^receiver isMessageNode and: [ receiver isClassMessageSend ]
 ! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:31:23 pm (UTC)'!
+!methodProperties: {}!
 isReceiverLiteralBehavior
 
 	^receiver isLiteralVariableNode and: [ receiver isReferencingBehavior ]! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 2/Aug/2019, 10:23:38 pm (UTC)'!
+!methodProperties: {}!
 isReceiverNil
 
 	^receiver isNilPseudoVariable
 ! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 14/Dec/2018, 9:40:34 am (UTC)'!
+!methodProperties: {}!
 nodeTypePrintString
 
 	^'message'! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 21/Aug/2019, 5:19:01 pm (UTC)'!
+!methodProperties: {}!
 receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^self receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: NoTypeCastApplier new! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 22/Aug/2019, 1:29:41 am (UTC)'!
+!methodProperties: {}!
 receiverTypesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier
 
 	^self receiverOrCascadeReceiver typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier ! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 21/Aug/2019, 5:19:01 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^self typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: NoTypeCastApplier new! !
 
 !MessageNode methodsFor: '*LiveTyping' stamp: 'HAW 22/Aug/2019, 1:29:58 am (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons castingWith: aTypeCastApplier
 
 	| types sentSelector receiverTypes  |
@@ -13490,53 +14842,63 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons c
 	^types! !
 
 !ReturnNode methodsFor: '*LiveTyping' stamp: 'HAW 27/Nov/2018, 8:56:18 am (UTC)'!
+!methodProperties: {}!
 identifierPrintString
 
 	^'^'! !
 
 !ReturnNode methodsFor: '*LiveTyping' stamp: 'HAW 19/Dec/2018, 7:33:50 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^aCompiledMethod returnTypes
 ! !
 
 !TemporariesDeclarationNode methodsFor: '*LiveTyping' stamp: 'HAW 30/Apr/2020, 7:51:22 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^#()! !
 
 !TemporaryDeclarationNode methodsFor: '*LiveTyping' stamp: 'HAW 30/Apr/2020, 7:48:36 pm (UTC)'!
+!methodProperties: {}!
 typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^variableNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 ! !
 
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 5/Oct/2018, 12:07:29 am (UTC)'!
+!methodProperties: {}!
 indexOfInstanceVariable: anInstVarName ifAbsent: aBlock
 
 	^self allInstVarNames indexOf: anInstVarName ifAbsent: aBlock ! !
 
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 4/Oct/2018, 6:49:12 pm (UTC)'!
+!methodProperties: {}!
 initializeMethodsTypeInformation
 
 	self methodsDo: [ :aCompiledMethod | aCompiledMethod initializeTypeInformation ]! !
 
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 17/Oct/2018, 11:30:33 pm (UTC)'!
+!methodProperties: {}!
 isSubclassesEmpty
 
 	self subclassResponsibility ! !
 
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 20/Oct/2018, 9:36:25 pm (UTC)'!
+!methodProperties: {}!
 methodVariablesTypesOf: aMethod
 
 	^MethodVariablesTypes of: aMethod ! !
 
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 18/Jul/2019, 7:35:15 pm (UTC)'!
+!methodProperties: {}!
 typeCheck
 
 	^(ManyMethodsTypeChecker forClass: self) value! !
 
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 21/Aug/2019, 3:54:47 pm (UTC)'!
+!methodProperties: {}!
 withAllSubclassesImplementing: aSelector addTo: implementors
 
 	self withAllSubclassesDo: [ :aBehavior |
@@ -13545,6 +14907,7 @@ withAllSubclassesImplementing: aSelector addTo: implementors
 	^implementors! !
 
 !Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:31:14 pm (UTC)'!
+!methodProperties: {}!
 createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	(self isSuperclassInstVarName: anInstVarName) ifTrue: [^self createSuperclassTypeInfo].
@@ -13554,6 +14917,7 @@ createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
 	! !
 
 !Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:31:14 pm (UTC)'!
+!methodProperties: {}!
 createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	(self isSuperclassInstVarName: anInstVarName) ifTrue: [^self createSuperclassTypeInfo].
@@ -13563,6 +14927,7 @@ createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 	! !
 
 !Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:39:01 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnRawTypesOf: aMethod
 
 	((aMethod selector = #new or: [ aMethod selector = #new: ])
@@ -13573,6 +14938,7 @@ createMethodReturnRawTypesOf: aMethod
 	! !
 
 !Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 19/Jul/2019, 8:54:47 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnTypeInfoOf: aMethod
 
 	(aMethod methodClass = Behavior and: [ #(new new: basicNew basicNew:) includes: aMethod selector ])
@@ -13583,6 +14949,7 @@ createMethodReturnTypeInfoOf: aMethod
 	! !
 
 !Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:31:01 pm (UTC)'!
+!methodProperties: {}!
 createSuperclassTypeInfo
 
 	^ LocalInstanceVariableTypeInfo
@@ -13591,16 +14958,19 @@ createSuperclassTypeInfo
 		are: `{Class. Metaclass. UndefinedObject }`! !
 
 !Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:31:14 pm (UTC)'!
+!methodProperties: {}!
 isSuperclassInstVarName: anInstVarName
 
 	^ anInstVarName = self superclassInstVarName! !
 
 !Behavior class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:30:50 pm (UTC)'!
+!methodProperties: {}!
 superclassInstVarName
 
 	^ 'superclass'! !
 
 !ClassDescription methodsFor: '*LiveTyping-unload-private' stamp: 'HAW 23/Feb/2019, 2:09:13 am (UTC)'!
+!methodProperties: {}!
 allRawTypesUnload: aClassToUnload
 
 	self
@@ -13609,6 +14979,7 @@ allRawTypesUnload: aClassToUnload
 ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 21/Aug/2019, 12:17:00 pm (UTC)'!
+!methodProperties: {}!
 allSubclassesImplementationsReturnTypesOf: aCompiledMethod
 
 	^(self allSubclasses
@@ -13618,74 +14989,87 @@ allSubclassesImplementationsReturnTypesOf: aCompiledMethod
 			types ]) asArray! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 16/Jan/2019, 1:58:40 am (UTC)'!
+!methodProperties: {}!
 asTypeFor: aReceiverType
 
 	^self! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 1:34:28 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOfInstanceVariableNamed: anInstVarName
 
 	^(self instanceVariablesTypes typeInfoOf: anInstVarName) commonSelectors
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 1:37:08 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOfInstanceVariableNamed: anInstVarName previousTo: aSuperclassToExclude
 
 	^(self instanceVariablesTypes typeInfoOf: anInstVarName) commonSelectorsPreviousTo: aSuperclassToExclude
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 1:38:50 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOfInstanceVariableNamedPreviousToObject: anInstVarName
 
 	^(self instanceVariablesTypes typeInfoOf: anInstVarName) commonSelectorsPreviousToObject! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:13:07 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOfMethodVariableNamed: aVarName at: aSelector
 
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) commonSelectors
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:13:47 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOfMethodVariableNamed: aVarName at: aSelector previousTo: aSuperclassToExclude
 
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) commonSelectorsPreviousTo: aSuperclassToExclude
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:14:26 am (UTC)'!
+!methodProperties: {}!
 commonSelectorsOfMethodVariableNamedPreviousToObject: aVarName at: aSelector
 
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) commonSelectorsPreviousToObject! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 20/Oct/2018, 11:50:14 pm (UTC)'!
+!methodProperties: {}!
 commonSupertypeOfInstanceVariableNamed: anInstVarName
 
 	^(self instanceVariablesTypes typeInfoOf: anInstVarName) commonSupertype
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 1:39:42 am (UTC)'!
+!methodProperties: {}!
 commonSupertypeOfInstanceVariableNamed: anInstVarName ifNoTypes: aBlock
 
 	^(self instanceVariablesTypes typeInfoOf: anInstVarName) commonSupertypeIfNoTypes: aBlock
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:15:25 am (UTC)'!
+!methodProperties: {}!
 commonSupertypeOfMethodVariableNamed: aVarName at: aSelector
 
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) commonSupertype
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:15:50 am (UTC)'!
+!methodProperties: {}!
 commonSupertypeOfMethodVariableNamed: aVarName at: aSelector ifNoTypes: aBlock
 
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) commonSupertypeIfNoTypes: aBlock
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 17/Jan/2019, 4:00:35 pm (UTC)'!
+!methodProperties: {}!
 createHierarchyInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	^HierarchyInstanceVariableTypeInfo of: anInstVarName in: self are: types! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 21/Nov/2018, 10:53:13 pm (UTC)'!
+!methodProperties: {}!
 createInstanceVariableRawTypesFor: anInstVarName
 
 	^self createRawTypesOfSize: (self instanceVariableRawTypesSizeFor: anInstVarName).
@@ -13693,17 +15077,20 @@ createInstanceVariableRawTypesFor: anInstVarName
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 16/Oct/2018, 11:41:00 am (UTC)'!
+!methodProperties: {}!
 createInstanceVariablesRawTypes
 
 	^ Array new: self instSize.
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 17/Jan/2019, 3:50:46 pm (UTC)'!
+!methodProperties: {}!
 createLocalInstanceVariableTypeInfoOf: anInstVarName with: types
 
 	^LocalInstanceVariableTypeInfo of: anInstVarName in: self are: types! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 6/Mar/2019, 9:28:57 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnRawTypesOf: aMethod
 
 	aMethod isQuickReturnSelf ifTrue: [ ^nil ].
@@ -13712,6 +15099,7 @@ createMethodReturnRawTypesOf: aMethod
 	^self createRawTypesOfSize: (self methodReturnRawTypesSizeOf: aMethod) ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 21/Aug/2019, 3:24:01 am (UTC)'!
+!methodProperties: {}!
 createMethodReturnTypeInfoOf: aCompiledMethod
 
 	aCompiledMethod isReturnField ifTrue: [
@@ -13728,33 +15116,39 @@ createMethodReturnTypeInfoOf: aCompiledMethod
 	^ ReturnTypeInfo of: aCompiledMethod ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 21/Nov/2018, 10:53:13 pm (UTC)'!
+!methodProperties: {}!
 createMethodVariableRawTypesFor: varName in: method
 
 	^ self createRawTypesOfSize: (self methodVariableRawTypesSizeFor: varName in: method)
 ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 28/Feb/2019, 7:43:19 pm (UTC)'!
+!methodProperties: {}!
 createMethodVariableTypeInfoOf: aVarName in: method are: types
 
 	^ MethodVariableTypeInfo of: aVarName in: method are: types ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 21/Nov/2018, 10:53:13 pm (UTC)'!
+!methodProperties: {}!
 createRawTypesOfSize: aSize
 
 	^aSize = 0 ifTrue: [ nil ] ifFalse: [ Array new: aSize ]
 ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 20/Oct/2018, 9:19:19 pm (UTC)'!
+!methodProperties: {}!
 defaultRawTypesSize
 
 	^10! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 12/May/2025, 5:51:36 pm (UTC)'!
+!methodProperties: {}!
 disableLiveTyping
 
 	instanceVariablesRawTypes := nil! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 24/Apr/2023, 3:40:38 pm (UTC)'!
+!methodProperties: {}!
 disableLiveTypingForAll
 
 	"Disables collecting types for inst var and methods - Hernan"
@@ -13763,6 +15157,7 @@ disableLiveTypingForAll
 	self methodsDo: [ :aCompiledMethod | aCompiledMethod disableLiveTyping ].! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 3/Apr/2024, 6:39:12 pm (UTC)'!
+!methodProperties: {}!
 doNotCheckForUnload
 
 	self class
@@ -13770,11 +15165,13 @@ doNotCheckForUnload
 		classified: ClassOrganizer defaultMethodCategory ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 16/Oct/2018, 11:43:30 am (UTC)'!
+!methodProperties: {}!
 initializeEachInstanceVariableRawTypes
 
 	self instanceVariablesTypes initializeEachInstanceVariableRawTypes	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'Install-BaseImageTests 2/May/2020, 8:02:21 pm (UTC)'!
+!methodProperties: {}!
 initializeInstanceVariablesRawTypes
 
 	"
@@ -13785,6 +15182,7 @@ initializeInstanceVariablesRawTypes
 		self initializeEachInstanceVariableRawTypes ]! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 16/Oct/2018, 4:06:09 am (UTC)'!
+!methodProperties: {}!
 initializeInstanceVariablesRawTypesWithAllInstances
 
 	"
@@ -13796,6 +15194,7 @@ initializeInstanceVariablesRawTypesWithAllInstances
 		storeAllInstancesCurrentTypes! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:36:58 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInformation
 
 	self
@@ -13803,6 +15202,7 @@ initializeTypeInformation
 		initializeMethodsTypeInformation ! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 2:22:52 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInformationWithAllInstances
 
 	self
@@ -13810,27 +15210,32 @@ initializeTypeInformationWithAllInstances
 		storeAllInstancesCurrentTypes! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 20/Oct/2018, 9:20:19 pm (UTC)'!
+!methodProperties: {}!
 instanceVariableRawTypesSizeFor: anInstVarName
 
 	^self defaultRawTypesSize ! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 16/Oct/2018, 4:04:22 am (UTC)'!
+!methodProperties: {}!
 instanceVariablesRawTypes
 
 	^ instanceVariablesRawTypes ! !
 
 !ClassDescription methodsFor: '*LiveTyping-unload-private' stamp: 'HAW 23/Feb/2019, 2:01:56 am (UTC)'!
+!methodProperties: {}!
 instanceVariablesRawTypesUnload: aClassToUnload
 
 	InstanceVariablesTypes unload: aClassToUnload fromAllRawTypesOf: instanceVariablesRawTypes
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 4/Oct/2018, 11:06:00 pm (UTC)'!
+!methodProperties: {}!
 instanceVariablesTypes
 
 	^InstanceVariablesTypes of: self! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 27/Feb/2019, 10:53:33 pm (UTC)'!
+!methodProperties: {}!
 methodReturnRawTypesSizeOf: aMethod
 
 	^ aMethod isReturnField
@@ -13838,6 +15243,7 @@ methodReturnRawTypesSizeOf: aMethod
 		ifFalse: [ self defaultRawTypesSize ]! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 20/Oct/2018, 9:20:05 pm (UTC)'!
+!methodProperties: {}!
 methodVariableRawTypesSizeFor: varName in: method
 
 	^self defaultRawTypesSize
@@ -13845,22 +15251,26 @@ methodVariableRawTypesSizeFor: varName in: method
 ! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:04:39 am (UTC)'!
+!methodProperties: {}!
 methodVariablesTypesAt: aSelector
 
 	^(self compiledMethodAt: aSelector) methodVariablesTypes ! !
 
 !ClassDescription methodsFor: '*LiveTyping-unload-private' stamp: 'HAW 23/Feb/2019, 2:10:03 am (UTC)'!
+!methodProperties: {}!
 methodsAllRawTypesUnload: aClassToUnload
 
 	self methodsDo: [ :aCompiledMethod | aCompiledMethod allRawTypesUnload: aClassToUnload ]! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 23/Oct/2018, 3:25:45 pm (UTC)'!
+!methodProperties: {}!
 printInstanceVariablesTypesOn: aStream
 
 	^ self instanceVariablesTypes printVariablesTypesOn: aStream
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:03 am (UTC)'!
+!methodProperties: {}!
 returnCommonSelectorsAt: aSelector
 
 	^(self returnTypeInfoAt: aSelector) commonSelectors
@@ -13868,6 +15278,7 @@ returnCommonSelectorsAt: aSelector
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:03 am (UTC)'!
+!methodProperties: {}!
 returnCommonSelectorsAt: aSelector previousTo: aSuperclassToExclude
 
 	^(self returnTypeInfoAt: aSelector) commonSelectorsPreviousTo: aSuperclassToExclude
@@ -13875,6 +15286,7 @@ returnCommonSelectorsAt: aSelector previousTo: aSuperclassToExclude
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:03 am (UTC)'!
+!methodProperties: {}!
 returnCommonSelectorsPreviousToObjectAt: aSelector
 
 	^(self returnTypeInfoAt: aSelector) commonSelectorsPreviousToObject
@@ -13882,6 +15294,7 @@ returnCommonSelectorsPreviousToObjectAt: aSelector
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:03 am (UTC)'!
+!methodProperties: {}!
 returnCommonSupertypeAt: aSelector
 
 	^(self returnTypeInfoAt: aSelector) commonSupertype
@@ -13889,17 +15302,20 @@ returnCommonSupertypeAt: aSelector
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:03 am (UTC)'!
+!methodProperties: {}!
 returnCommonSupertypeAt: aSelector ifNoTypes: aBlock
 
 	^(self returnTypeInfoAt: aSelector) commonSupertypeIfNoTypes: aBlock
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:03 am (UTC)'!
+!methodProperties: {}!
 returnTypeInfoAt: aSelector
 
 	^(self compiledMethodAt: aSelector) returnTypeInfo ! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 3:55:26 pm (UTC)'!
+!methodProperties: {}!
 returnTypeInfoAt: aSelector ifAbsent: anAbsentBlock
 
 	^self
@@ -13908,6 +15324,7 @@ returnTypeInfoAt: aSelector ifAbsent: anAbsentBlock
 		ifAbsent: anAbsentBlock ! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 4:00:50 pm (UTC)'!
+!methodProperties: {}!
 returnTypeInfoAt: aSelector ifPresent: aPresentBlock ifAbsent: anAbsentBlock
 
 	^self
@@ -13916,6 +15333,7 @@ returnTypeInfoAt: aSelector ifPresent: aPresentBlock ifAbsent: anAbsentBlock
 		ifAbsent: anAbsentBlock ! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:14 am (UTC)'!
+!methodProperties: {}!
 returnTypesAt: aSelector
 
 	^(self returnTypeInfoAt: aSelector) types
@@ -13923,6 +15341,7 @@ returnTypesAt: aSelector
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 4:01:21 pm (UTC)'!
+!methodProperties: {}!
 returnTypesAt: aSelector ifAbsent: anAbsentBlock
 
 	^self
@@ -13931,31 +15350,37 @@ returnTypesAt: aSelector ifAbsent: anAbsentBlock
 		ifAbsent: anAbsentBlock! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 24/Apr/2023, 3:31:38 pm (UTC)'!
+!methodProperties: {}!
 shouldLiveTypingBeDisabled
 
 	^#('Morphic' 'Graphics') anySatisfy: [ :aCategoryPrefix | self category beginsWith: aCategoryPrefix ]! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 5/Oct/2018, 6:13:39 pm (UTC)'!
+!methodProperties: {}!
 storeAllInstancesCurrentTypes
 
 	self instanceVariablesTypes storeAllInstancesCurrentTypes! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 20/Oct/2018, 11:48:30 pm (UTC)'!
+!methodProperties: {}!
 typeInfoOfInstanceVariableNamed: anInstVarName
 
 	^self instanceVariablesTypes typeInfoOf: anInstVarName ! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 23/Oct/2018, 6:57:58 pm (UTC)'!
+!methodProperties: {}!
 typeInfoOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^self instanceVariablesTypes typeInfoOf: anInstVarName ifAbsent: aBlock! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:08:50 am (UTC)'!
+!methodProperties: {}!
 typeInfoOfMethodVariableNamed: aVarName at: aSelector
 
 	^(self methodVariablesTypesAt: aSelector) typeInfoOf: aVarName! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 17/Dec/2018, 10:03:20 pm (UTC)'!
+!methodProperties: {}!
 typedDefinition
 
 	^String streamContents: [ :stream |
@@ -13963,45 +15388,53 @@ typedDefinition
 		self printInstanceVariablesTypesOn: stream]! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 30/Oct/2018, 1:10:39 am (UTC)'!
+!methodProperties: {}!
 typesOfInstanceVariableAt: anIndex
 
 	^self typesOfInstanceVariableNamed: (self allInstVarNames at: anIndex)! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 20/Oct/2018, 11:49:14 pm (UTC)'!
+!methodProperties: {}!
 typesOfInstanceVariableNamed: anInstVarName
 
 	^(self instanceVariablesTypes typeInfoOf: anInstVarName) types
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 24/Oct/2018, 11:11:50 pm (UTC)'!
+!methodProperties: {}!
 typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^(self instanceVariablesTypes typeInfoOf: anInstVarName ifAbsent: [ ^aBlock value ]) types
 	! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:12:14 am (UTC)'!
+!methodProperties: {}!
 typesOfMethodVariableNamed: aVarName at: aSelector
 
 	^(self typeInfoOfMethodVariableNamed: aVarName at: aSelector) types
 	! !
 
 !Class methodsFor: '*LiveTyping' stamp: 'HAW 17/Oct/2018, 11:29:49 pm (UTC)'!
+!methodProperties: {}!
 isSubclassesEmpty
 
 	^subclasses isNil ! !
 
 !Class methodsFor: '*LiveTyping' stamp: 'HAW 23/Feb/2019, 1:58:55 am (UTC)'!
+!methodProperties: {}!
 unloadFromAllRawTypes
 
 	ProtoObject withAllSubclassesDo: [ :aClass | self unloadFromAllRawTypesOf: aClass ]
 ! !
 
 !Class methodsFor: '*LiveTyping' stamp: 'HAW 23/Feb/2019, 1:58:55 am (UTC)'!
+!methodProperties: {}!
 unloadFromAllRawTypesOf: aClass
 
 	aClass allRawTypesUnload: self! !
 
 !Class class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:31:50 pm (UTC)'!
+!methodProperties: {}!
 createSuperclassTypeInfo
 
 	^ LocalInstanceVariableTypeInfo
@@ -14012,12 +15445,14 @@ createSuperclassTypeInfo
 	! !
 
 !Metaclass methodsFor: '*LiveTyping' stamp: 'HAW 17/Oct/2018, 11:31:37 pm (UTC)'!
+!methodProperties: {}!
 isSubclassesEmpty
 
 	self subclassesDo: [ :aSubclass | ^false ].
 	^true ! !
 
 !Metaclass class methodsFor: '*LiveTyping' stamp: 'HAW 28/Jun/2020, 2:32:09 pm (UTC)'!
+!methodProperties: {}!
 createSuperclassTypeInfo
 
 	^ LocalInstanceVariableTypeInfo
@@ -14026,6 +15461,7 @@ createSuperclassTypeInfo
 		are: `{Class. Metaclass. }`! !
 
 !Collection methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 2:47:11 pm (UTC)'!
+!methodProperties: {}!
 inject: aCollector addingAll: aBlock
 
 	self do: [ :anObject | aCollector addAll: (aBlock value: anObject) ].
@@ -14033,11 +15469,13 @@ inject: aCollector addingAll: aBlock
 	^aCollector ! !
 
 !Collection methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 9:17:55 pm (UTC)'!
+!methodProperties: {}!
 reject: aRejectBlock thenCollect: aCollectBlock
 
 	^(self reject: aRejectBlock) collect: aCollectBlock ! !
 
 !ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:43:24 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnRawTypesOf: aCompiledMethod
 
 	aCompiledMethod selector == #size ifTrue: [ ^nil ].
@@ -14045,6 +15483,7 @@ createMethodReturnRawTypesOf: aCompiledMethod
 	^super createMethodReturnRawTypesOf: aCompiledMethod ! !
 
 !ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 13/Mar/2019, 12:22:09 am (UTC)'!
+!methodProperties: {}!
 createMethodReturnTypeInfoOf: aCompiledMethod
 
 	aCompiledMethod selector == #size ifTrue: [ ^ ReturnTypeInfo of: aCompiledMethod are: `{ Integer }`].
@@ -14052,6 +15491,7 @@ createMethodReturnTypeInfoOf: aCompiledMethod
 	^super createMethodReturnTypeInfoOf: aCompiledMethod ! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:25:39 pm (UTC)'!
+!methodProperties: {}!
 addType: aType ifFull: aFullBlock
 
 	self withIndexDo: [ :typeAtIndex :rawTypesIndex |
@@ -14061,6 +15501,7 @@ addType: aType ifFull: aFullBlock
 	^aFullBlock value.! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:35:11 am (UTC)'!
+!methodProperties: {}!
 annotateTypeOf: aValue at: anIndex
 
 	| rawTypes |
@@ -14069,32 +15510,38 @@ annotateTypeOf: aValue at: anIndex
 	rawTypes addType: aValue class ifFull: []! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:56:09 pm (UTC)'!
+!methodProperties: {}!
 doesStoreTypes
 
 	^true! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:53:52 pm (UTC)'!
+!methodProperties: {}!
 includesNil
 
 	^ self includes: UndefinedObject ! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:55:21 pm (UTC)'!
+!methodProperties: {}!
 isMegamorphic
 
 	^self last notNil
 		! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:33:30 pm (UTC)'!
+!methodProperties: {}!
 isTypesEmpty
 
 	^self isEmpty or: [self first isNil ]! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:34:30 pm (UTC)'!
+!methodProperties: {}!
 removeAllTypes
 
 	self atAllPut: nil! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:36:29 pm (UTC)'!
+!methodProperties: {}!
 removeType: aType ifAbsent: anAbsentBlock
 
 	| typeIndex |
@@ -14105,6 +15552,7 @@ removeType: aType ifAbsent: anAbsentBlock
 	self at: self size put: nil! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:50:57 pm (UTC)'!
+!methodProperties: {}!
 types
 
 	| firstEmptyIndex |
@@ -14115,6 +15563,7 @@ types
 	^self copyFrom: 1 to: firstEmptyIndex-1 	! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:51:36 pm (UTC)'!
+!methodProperties: {}!
 typesSize
 
 	| firstIndexOfNil |
@@ -14124,12 +15573,14 @@ typesSize
 	^firstIndexOfNil - 1! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 2:05:08 am (UTC)'!
+!methodProperties: {}!
 actualSendersOf: aCompiledMethod
 
 	^self actualSendersOf: aCompiledMethod using: self methodNode
 	! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 2:04:42 am (UTC)'!
+!methodProperties: {}!
 actualSendersOf: aCompiledMethod using: aCompiledMethodMethodNode
 
 	| sendersCollector |
@@ -14140,12 +15591,14 @@ actualSendersOf: aCompiledMethod using: aCompiledMethodMethodNode
 	^sendersCollector ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 23/Feb/2019, 2:10:48 am (UTC)'!
+!methodProperties: {}!
 allRawTypesUnload: aClassToUnload
 
 	self withPropertiesDo: [ :properties | properties allRawTypesUnload: aClassToUnload ]
 	! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:33:22 am (UTC)'!
+!methodProperties: {}!
 annotateRemoteTemporaryTypeOf: aValue at: anIndex
 
 	"See keepTemporaryTypeInfoAt:of: - Hernan"
@@ -14155,6 +15608,7 @@ annotateRemoteTemporaryTypeOf: aValue at: anIndex
 		ifSelector: [ :selector | ]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:30:52 am (UTC)'!
+!methodProperties: {}!
 annotateReturnTypeOf: aValue
 
 	"See keepTemporaryTypeInfoAt:of: - Hernan"
@@ -14164,6 +15618,7 @@ annotateReturnTypeOf: aValue
 		ifSelector: [ :selector | ]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:33:45 am (UTC)'!
+!methodProperties: {}!
 annotateTemporaryTypeOf: aValue at: aTemporaryIndex
 
 	"Used on code simulation.
@@ -14177,17 +15632,20 @@ annotateTemporaryTypeOf: aValue at: aTemporaryIndex
 		! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/Feb/2019, 9:32:23 pm (UTC)'!
+!methodProperties: {}!
 caretAutoCompleterDocumentation
 
 	^ Text string: String newLineString, '^ ' attributes: (SHTextStylerST80 attributesFor: #return)! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 2:29:11 pm (UTC)'!
+!methodProperties: {}!
 compiledMethod
 
 	"To be polimorphic with MethodReference - Hernan"
 	^self! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 10:42:14 pm (UTC)'!
+!methodProperties: {}!
 copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 
 	| properties |
@@ -14203,6 +15661,7 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 12/May/2025, 5:52:09 pm (UTC)'!
+!methodProperties: {}!
 disableLiveTyping
 
 	self
@@ -14210,6 +15669,7 @@ disableLiveTyping
 		ifSelector: [ :aSelector | ]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 5:21:27 pm (UTC)'!
+!methodProperties: {}!
 doesOnlySurelySend: aCompiledMethod
 
 	| actualMessageSendsCollector |
@@ -14219,11 +15679,13 @@ doesOnlySurelySend: aCompiledMethod
 	^actualMessageSendsCollector hasOnlySureMessageSends! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 6:25:51 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInformation
 
 	self initializeTypeInformationUsing: self methodNode! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 6:25:37 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInformationUsing: aMethodNode
 
 	| properties |
@@ -14234,31 +15696,37 @@ initializeTypeInformationUsing: aMethodNode
 	properties initializeTypeInformationUsing: aMethodNode ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 9:31:17 pm (UTC)'!
+!methodProperties: {}!
 isAnnotatingTypes
 
 	^self withPropertiesDo: [ :properties | true ] ifSelector: [ :selector | false ] ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 9/Aug/2019, 10:11:12 pm (UTC)'!
+!methodProperties: {}!
 isPrimitive
 
 	^ self primitive ~= 0! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 30/Oct/2018, 12:35:23 am (UTC)'!
+!methodProperties: {}!
 isQuickReturnSelf
 
 	^self primitive = 256! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 20/Aug/2019, 6:57:40 pm (UTC)'!
+!methodProperties: {}!
 isReturnSpecialFalse
 
 	^self primitive = 258! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 3/Aug/2019, 1:50:08 pm (UTC)'!
+!methodProperties: {}!
 isReturnSpecialTrue
 
 	^self primitive = 257! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/Feb/2019, 9:34:33 pm (UTC)'!
+!methodProperties: {}!
 liveTypingAutoCompleterDocumentation
 
 	| parametersTypeInfo |
@@ -14273,11 +15741,13 @@ liveTypingAutoCompleterDocumentation
 ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 20/Oct/2018, 9:36:01 pm (UTC)'!
+!methodProperties: {}!
 methodVariablesTypes
 
 	^self methodClass methodVariablesTypesOf: self! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/Feb/2019, 9:34:00 pm (UTC)'!
+!methodProperties: {}!
 parameterTypeAutoCompleterDocumentationOf: aParameterName using: parametersTypeInfo
 
 	^ Text
@@ -14285,6 +15755,7 @@ parameterTypeAutoCompleterDocumentationOf: aParameterName using: parametersTypeI
 		attributes: (SHTextStylerST80 attributesFor: #tempVar)! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 23/Oct/2018, 5:43:21 pm (UTC)'!
+!methodProperties: {}!
 printTypeInfoOn: aStream
 
 	| variablesTypes beforeVariablesTypesPosition |
@@ -14302,12 +15773,14 @@ printTypeInfoOn: aStream
 	variablesTypes printTypesInfoFooterOn: aStream! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:57:21 pm (UTC)'!
+!methodProperties: {}!
 returnRawTypes
 
 	^self typeAnnotationsHolder returnRawTypes
 	! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/Feb/2019, 9:34:47 pm (UTC)'!
+!methodProperties: {}!
 returnTypeAutoCompleterDocumentation
 
 	^ Text
@@ -14316,16 +15789,19 @@ returnTypeAutoCompleterDocumentation
 ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 18/Jan/2019, 9:59:19 pm (UTC)'!
+!methodProperties: {}!
 returnTypeInfo
 
 	^ self methodClass createMethodReturnTypeInfoOf: self ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 4:26:02 am (UTC)'!
+!methodProperties: {}!
 returnTypes
 
 	^self returnTypeInfo types! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 4/Jun/2019, 12:29:06 pm (UTC)'!
+!methodProperties: {}!
 sureMessageSendsRangesOf: aSentSelector whenSendTo: aReceiverTypes
 
 	| methodNode collector implementor ranges |
@@ -14344,6 +15820,7 @@ sureMessageSendsRangesOf: aSentSelector whenSendTo: aReceiverTypes
 	^ranges ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 27/Mar/2019, 2:03:42 pm (UTC)'!
+!methodProperties: {}!
 typeAnnotationsHolder
 
 	^self
@@ -14353,46 +15830,55 @@ typeAnnotationsHolder
 ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 18/Jul/2019, 8:44:11 pm (UTC)'!
+!methodProperties: {}!
 typeCheck
 
 	^(MethodTypeChecker for: self) value! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/Dec/2018, 9:08:13 pm (UTC)'!
+!methodProperties: {}!
 typeInfoOfVariableNamed: aVarName
 
 	^self methodVariablesTypes typeInfoOf: aVarName! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/Dec/2018, 9:08:31 pm (UTC)'!
+!methodProperties: {}!
 typeInfoOfVariableNamed: aVarName ifAbsent: aBlock
 
 	^self methodVariablesTypes typeInfoOf: aVarName ifAbsent: aBlock! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 3:08:07 am (UTC)'!
+!methodProperties: {}!
 typesOfInstanceVariableNamed: anInstVarName
 
 	^self methodClass typesOfInstanceVariableNamed: anInstVarName ! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 24/Oct/2018, 11:12:03 pm (UTC)'!
+!methodProperties: {}!
 typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^self methodClass typesOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 3:26:27 am (UTC)'!
+!methodProperties: {}!
 typesOfVariableNamed: aVarName
 
 	^self methodVariablesTypes typesOf: aVarName! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 23/Oct/2018, 7:03:59 pm (UTC)'!
+!methodProperties: {}!
 typesOfVariableNamed: aVarName ifAbsent: aBlock
 
 	^self methodVariablesTypes typesOf: aVarName ifAbsent: aBlock! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 11:18:17 pm (UTC)'!
+!methodProperties: {}!
 variablesRawTypes
 
 	^self typeAnnotationsHolder variablesRawTypes! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 21/Aug/2019, 3:54:21 pm (UTC)'!
+!methodProperties: {}!
 actualImplementorsOf: aSelector in: aClass
 
 	| highestImplementorClass implementors |
@@ -14408,11 +15894,13 @@ actualImplementorsOf: aSelector in: aClass
 	! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/Apr/2019, 12:39:05 pm (UTC)'!
+!methodProperties: {}!
 allActualImplementorsOf: aSelector forAll: types
 
 	^(AllActualImplementors of: aSelector forAll: types) value! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/Apr/2019, 12:56:28 pm (UTC)'!
+!methodProperties: {}!
 allActualLocalImplementorsOf: sentSelector forAll: types
 
 	^(AllActualLocalImplementors of: sentSelector forAll: types) value
@@ -14421,6 +15909,7 @@ allActualLocalImplementorsOf: sentSelector forAll: types
 ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 18/Mar/2019, 4:28:14 pm (UTC)'!
+!methodProperties: {}!
 allActualSendersOn: aSentCompiledMethod
 
 	| allSenders sureSenders possibleSenders actualMessageSendersCollector |
@@ -14439,6 +15928,7 @@ allActualSendersOn: aSentCompiledMethod
 	^Array with: sureSenders with: possibleSenders ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 27/Mar/2019, 5:57:55 pm (UTC)'!
+!methodProperties: {}!
 allActualSendersOn: sentSelector forAll: types whenSomeAreNotImplemented: someNotImplementedBlock whenNoImplementors: noImplementorsBlock
 
 	| collector |
@@ -14455,6 +15945,7 @@ allActualSendersOn: sentSelector forAll: types whenSomeAreNotImplemented: someNo
 	! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 1:31:43 pm (UTC)'!
+!methodProperties: {}!
 browseActualImplementorsFinder: anActualImplementorsFinder
 
 	| label |
@@ -14476,12 +15967,14 @@ browseActualImplementorsFinder: anActualImplementorsFinder
 ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 19/Feb/2019, 5:04:31 pm (UTC)'!
+!methodProperties: {}!
 browseAllActualImplementorsOf: aSelector for: aClass
 
 	self browseAllActualImplementorsOf: aSelector forAll: (Array with: aClass)
 ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/Apr/2019, 1:03:24 pm (UTC)'!
+!methodProperties: {}!
 browseAllActualImplementorsOf: aSelector forAll: types
 
 	| allActualImplementors |
@@ -14490,6 +15983,7 @@ browseAllActualImplementorsOf: aSelector forAll: types
 	self browseActualImplementorsFinder: allActualImplementors ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 4/Apr/2019, 1:04:17 pm (UTC)'!
+!methodProperties: {}!
 browseAllActualLocalImplementorsOf: sentSelector forAll: types
 
 	| allActualLocalImplementors |
@@ -14498,6 +15992,7 @@ browseAllActualLocalImplementorsOf: sentSelector forAll: types
 	self browseActualImplementorsFinder: allActualLocalImplementors ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 28/Mar/2019, 8:22:17 pm (UTC)'!
+!methodProperties: {}!
 browseAllActualSendersOn: aSentCompiledMethod
 
 	self browseAllActualSendersOn: aSentCompiledMethod selector forAll: { aSentCompiledMethod methodClass }.
@@ -14505,6 +16000,7 @@ browseAllActualSendersOn: aSentCompiledMethod
 ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 16/Apr/2024, 3:51:47 pm (UTC)'!
+!methodProperties: {}!
 browseAllActualSendersOn: aSentSelector forAll: aReceiverTypes
 	"
 	Smalltalk browseAllActualSendersOn: #digitLength forAll: (Array with: LargePositiveInteger with: SmallInteger)
@@ -14538,12 +16034,14 @@ browseAllActualSendersOn: aSentSelector forAll: aReceiverTypes
 		selector: aSentSelector ! !
 
 !SystemDictionary methodsFor: '*LiveTyping' stamp: 'HAW 19/Feb/2019, 5:03:55 pm (UTC)'!
+!methodProperties: {}!
 browseAllActualmplementorsOf: aMethod
 
 	self browseAllActualImplementorsOf: aMethod selector for: aMethod methodClass
 ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:31:04 pm (UTC)'!
+!methodProperties: {}!
 add: variableRawTypes to: anArrayOfRawTypes mapping: variableName to: variableTypeIndex in: variableNameToIndex
 
 	"I abuse of the #at:ifAbsentPut: of OrderedCollection because I know that indexes do not repeat
@@ -14553,6 +16051,7 @@ add: variableRawTypes to: anArrayOfRawTypes mapping: variableName to: variableTy
 	^variableNameToIndex at: variableName put: variableTypeIndex ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 23/Feb/2019, 2:11:56 am (UTC)'!
+!methodProperties: {}!
 allRawTypesUnload: aClassToUnload
 
 	self
@@ -14560,21 +16059,25 @@ allRawTypesUnload: aClassToUnload
 		returnRawTypesUnload: aClassToUnload ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:35:11 am (UTC)'!
+!methodProperties: {}!
 annotateRemoteTemporaryTypeOf: aValue at: anIndex
 
 	remoteVectorRawTypes annotateTypeOf: aValue at: anIndex ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:30:52 am (UTC)'!
+!methodProperties: {}!
 annotateReturnTypeOf: aValue
 
 	returnRawTypes addType: aValue class ifFull: []! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:35:11 am (UTC)'!
+!methodProperties: {}!
 annotateTemporaryTypeOf: aValue at: aTemporaryIndex
 
 	variablesRawTypes annotateTypeOf: aValue at: aTemporaryIndex ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 10:39:17 pm (UTC)'!
+!methodProperties: {}!
 copyTypeInformationFrom: anotherAdditionalMethodState
 
 	variablesRawTypes := anotherAdditionalMethodState variablesRawTypes.
@@ -14585,6 +16088,7 @@ copyTypeInformationFrom: anotherAdditionalMethodState
 	! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 24/Apr/2023, 3:49:35 pm (UTC)'!
+!methodProperties: {}!
 disableLiveTyping
 
 	self
@@ -14592,26 +16096,31 @@ disableLiveTyping
 		disableLiveTypingForReturnTypes ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 24/Apr/2023, 3:48:23 pm (UTC)'!
+!methodProperties: {}!
 disableLiveTypingForReturnTypes
 
 	returnRawTypes := nil ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:39:28 pm (UTC)'!
+!methodProperties: {}!
 doesPointToLocalSlot: variableIndexOrRemoteVectorInfo
 
 	^variableIndexOrRemoteVectorInfo isInteger ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:39:51 pm (UTC)'!
+!methodProperties: {}!
 doesPointToRemoteVector: variableIndexOrRemoteVectorInfo
 
 	^variableIndexOrRemoteVectorInfo isArray ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 7:40:55 pm (UTC)'!
+!methodProperties: {}!
 doesTheMethodHasVariables
 
 	^method notNil and: [ method numTemps > 0 ]! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:39:51 pm (UTC)'!
+!methodProperties: {}!
 initializeRawTypesOfVariableNamed: variableName at: variableIndexOrRemoteVectorInfo into: variablesTypes or: remoteVectorTypes with: argumentNames
 
 	 | variableRawTypes |
@@ -14625,6 +16134,7 @@ initializeRawTypesOfVariableNamed: variableName at: variableIndexOrRemoteVectorI
 	self error: 'variableIndexOrRemoteVectorInfo type not supported'! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Nov/2018, 5:34:14 pm (UTC)'!
+!methodProperties: {}!
 initializeReturnRawTypes
 
 	returnRawTypes := method
@@ -14632,6 +16142,7 @@ initializeReturnRawTypes
 		ifNotNil: [ method methodClass createMethodReturnRawTypesOf: method ]! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:41:49 pm (UTC)'!
+!methodProperties: {}!
 initializeTypeInformationUsing: aMethodNode
 
 	self initializeVariablesRawTypesUsing: aMethodNode.
@@ -14639,6 +16150,7 @@ initializeTypeInformationUsing: aMethodNode
 ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 7:42:05 pm (UTC)'!
+!methodProperties: {}!
 initializeVariablesRawTypesUsing: aMethodNode
 
 	self doesTheMethodHasVariables
@@ -14648,6 +16160,7 @@ initializeVariablesRawTypesUsing: aMethodNode
 ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:23:56 pm (UTC)'!
+!methodProperties: {}!
 initializeVariablesRawTypesWhenMethodHasNoVariables
 
 	"I use nil instead of emtpy array/dictionary to save memory space and VM speed. It is a tradeoff
@@ -14660,6 +16173,7 @@ initializeVariablesRawTypesWhenMethodHasNoVariables
 ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:25:24 pm (UTC)'!
+!methodProperties: {}!
 initializeVariablesRawTypesWhenMethodHasVariablesUsing: aMethodNode
 
 	| argumentNames remoteVectorTypes variablesTypes |
@@ -14694,6 +16208,7 @@ initializeVariablesRawTypesWhenMethodHasVariablesUsing: aMethodNode
 ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:33:49 pm (UTC)'!
+!methodProperties: {}!
 initializeWith: variableRawTypes variableNamed: variableName at: variableIndex into: variablesTypes with: argumentNames
 
 	| variableTypeIndex |
@@ -14707,6 +16222,7 @@ initializeWith: variableRawTypes variableNamed: variableName at: variableIndex i
 	self add: variableRawTypes to: variablesTypes mapping: variableName to: variableTypeIndex in: variableNameToTypeIndex! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:29:45 pm (UTC)'!
+!methodProperties: {}!
 initializeWith: variableRawTypes variableNamed: variableName atRemoteVectorIndex: removeVectorVariableInfo into: remoteVectorTypes
 
 	| variableTypeIndex |
@@ -14719,11 +16235,13 @@ initializeWith: variableRawTypes variableNamed: variableName atRemoteVectorIndex
 	! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Feb/2019, 8:03:27 pm (UTC)'!
+!methodProperties: {}!
 numberOfVariables
 
 	^(self sizeOf: variablesRawTypes) + (self sizeOf: remoteVectorRawTypes)! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:21:54 pm (UTC)'!
+!methodProperties: {}!
 rawTypesOf: aVariableName ifAbsent: anAbsentBlock
 
 	^ self
@@ -14739,6 +16257,7 @@ rawTypesOf: aVariableName ifAbsent: anAbsentBlock
 ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:20:13 pm (UTC)'!
+!methodProperties: {}!
 rawTypesOf: aVariableName mappingToIndexWith: variableNameToIndexMapping into: anArrayOfRawTypes ifAbsent: anAbsentBlock
 
 	| variableIndex |
@@ -14749,47 +16268,56 @@ rawTypesOf: aVariableName mappingToIndexWith: variableNameToIndexMapping into: a
 	^anArrayOfRawTypes at: variableIndex! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 9:09:38 pm (UTC)'!
+!methodProperties: {}!
 remoteVectorRawTypes
 
 	^remoteVectorRawTypes ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Nov/2018, 5:35:23 pm (UTC)'!
+!methodProperties: {}!
 returnRawTypes
 
 	^returnRawTypes ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 23/Feb/2019, 2:11:56 am (UTC)'!
+!methodProperties: {}!
 returnRawTypesUnload: aClassToUnload
 
 	ReturnTypeInfo unload: aClassToUnload from: returnRawTypes ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Feb/2019, 8:04:00 pm (UTC)'!
+!methodProperties: {}!
 sizeOf: anArrayOfRawTypesOrNil
 
  	^ anArrayOfRawTypesOrNil ifNil: [ 0 ] ifNotNil: [ anArrayOfRawTypesOrNil size ]
 ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Oct/2018, 11:31:31 pm (UTC)'!
+!methodProperties: {}!
 storeOn: aStream
 
 	"review this!!"! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 7/Mar/2019, 8:21:21 pm (UTC)'!
+!methodProperties: {}!
 variableNameToIndex: aVariableNameToTypeIndex do: aBlock
 
 	aVariableNameToTypeIndex ifNotNil: [ aVariableNameToTypeIndex keysDo: aBlock ]! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:14:39 pm (UTC)'!
+!methodProperties: {}!
 variableNameToRemoteVectorTypeIndex
 
 	^variableNameToRemoteVectorTypeIndex! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 27/Feb/2019, 10:12:32 pm (UTC)'!
+!methodProperties: {}!
 variableNameToTypeIndex
 
 	^variableNameToTypeIndex! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Feb/2019, 8:06:53 pm (UTC)'!
+!methodProperties: {}!
 variablesNames
 
 	| names |
@@ -14800,6 +16328,7 @@ variablesNames
 	^names! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Feb/2019, 8:06:22 pm (UTC)'!
+!methodProperties: {}!
 variablesNamesDo: aBlock
 
 	self variableNameToIndex: variableNameToTypeIndex do: aBlock.
@@ -14807,11 +16336,13 @@ variablesNamesDo: aBlock
 	! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Nov/2018, 5:35:36 pm (UTC)'!
+!methodProperties: {}!
 variablesRawTypes
 
 	^variablesRawTypes ! !
 
 !AdditionalMethodState methodsFor: '*LiveTyping' stamp: 'HAW 28/Feb/2019, 9:16:19 pm (UTC)'!
+!methodProperties: {}!
 variablesRawTypesUnload: aClassToUnload
 
 	MethodVariablesTypes
@@ -14820,6 +16351,7 @@ variablesRawTypesUnload: aClassToUnload
 		! !
 
 !MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 20/Mar/2025, 9:55:17 pm (UTC)'!
+!methodProperties: {}!
 popIntoTemporaryVariable: offset
 
 	| index value |
@@ -14832,6 +16364,7 @@ popIntoTemporaryVariable: offset
 	! !
 
 !MethodContext methodsFor: '*LiveTyping' stamp: 'Install-LiveTyping 25/Nov/2025, 10:18:33 pm (UTC)'!
+!methodProperties: {}!
 return: value from: aSender
 	"For simulation.  Roll back self to aSender and return value from it.  Execute any unwind blocks on the way.  ASSUMES aSender is a sender of self"
 
@@ -14856,6 +16389,7 @@ return: value from: aSender
 ! !
 
 !MethodContext methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:33:22 am (UTC)'!
+!methodProperties: {}!
 storeIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex
 
 	| index value |
@@ -14867,16 +16401,19 @@ storeIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex
 	method annotateRemoteTemporaryTypeOf: value at: index ! !
 
 !Workspace methodsFor: '*LiveTyping' stamp: 'HAW 29/Oct/2018, 12:24:07 am (UTC)'!
+!methodProperties: {}!
 selectedClassOrMetaClass
 
 	^UndefinedObject ! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:33:51 pm (UTC)'!
+!methodProperties: {}!
 browseActualSendersOf: aCompiledMethod
 
 	Smalltalk browseAllActualSendersOn: aCompiledMethod ! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:33:29 pm (UTC)'!
+!methodProperties: {}!
 confirmActualRemovalOf: aCompiledMethod
 
 	^ (self hasNoActualSendersOrIsItself: aCompiledMethod)
@@ -14885,6 +16422,7 @@ confirmActualRemovalOf: aCompiledMethod
 ! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:33:12 pm (UTC)'!
+!methodProperties: {}!
 confirmRemovalWhenHasSenders
 
 	| menu |
@@ -14899,11 +16437,13 @@ Forget it -- do nothing -- sorry I asked'
 	^menu startUpWithCaption: 'This message has real or posible sender(s)' ! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:32:29 pm (UTC)'!
+!methodProperties: {}!
 confirmRemovalWhenNoSenders
 
 	^ (self confirm: 'This message has no actual senders. Remove it anyway?') ifTrue: [1] ifFalse: [0]! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:32:07 pm (UTC)'!
+!methodProperties: {}!
 hasNoActualSendersOrIsItself: aCompiledMethod
 
 	| realSendersCount allSenders posibleSenders realSenders |
@@ -14920,6 +16460,7 @@ hasNoActualSendersOrIsItself: aCompiledMethod
 ! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:29:56 pm (UTC)'!
+!methodProperties: {}!
 removeMessageCheckingActualSenders
 
 	| confirmation |
@@ -14933,17 +16474,20 @@ removeMessageCheckingActualSenders
 	! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:42:40 pm (UTC)'!
+!methodProperties: {}!
 removeMethod: aMethod
 
 	self subclassResponsibility ! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 9:47:52 pm (UTC)'!
+!methodProperties: {}!
 resetMethodTypes
 
 	self currentCompiledMethod initializeTypeInformation.
 	! !
 
 !CodeProvider methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 9:47:46 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMethod
 
 	| typeChecker |
@@ -14953,6 +16497,7 @@ typeCheckMethod
 	! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 4/Dec/2019, 6:59:47 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesIn: anAutocompleter ofBlockArgNamed: aName
 
 	"This will change when type info for block arguments will be supported - Hernan"
@@ -14966,6 +16511,7 @@ computeMessageEntriesIn: anAutocompleter ofBlockArgNamed: aName
 	anAutocompleter computeMessageEntriesForTypeInfoOrNil: nil ! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 4/Dec/2019, 6:59:48 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesIn: anAutocompleter ofBlockTempVarNamed: aName
 
 	"This will change when type info for block arguments will be supported - Hernan"
@@ -14979,6 +16525,7 @@ computeMessageEntriesIn: anAutocompleter ofBlockTempVarNamed: aName
 	anAutocompleter computeMessageEntriesForTypeInfoOrNil: nil ! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 4/Dec/2019, 6:59:48 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesIn: anAutocompleter ofInstVarNamed: aName
 
 	| typeInfo |
@@ -14989,6 +16536,7 @@ computeMessageEntriesIn: anAutocompleter ofInstVarNamed: aName
 	anAutocompleter computeMessageEntriesForTypeInfoOrNil: typeInfo ! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 4/Dec/2019, 6:59:47 pm (UTC)'!
+!methodProperties: {}!
 computeMessageEntriesIn: anAutocompleter ofTempVarNamed: aName
 
 	| typeInfo |
@@ -15000,6 +16548,7 @@ computeMessageEntriesIn: anAutocompleter ofTempVarNamed: aName
 ! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:42:30 pm (UTC)'!
+!methodProperties: {}!
 removeMethod: aCompiledMethod
 
 	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
@@ -15010,6 +16559,7 @@ removeMethod: aCompiledMethod
 	! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 13/Aug/2022, 7:18:05 pm (UTC)'!
+!methodProperties: {}!
 resetCategoryTypes
 
 	| initializeWithInstances classes increment progressBar |
@@ -15031,6 +16581,7 @@ resetCategoryTypes
 		! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 9:52:24 pm (UTC)'!
+!methodProperties: {}!
 resetClassType
 
 	| initializeWithInstances |
@@ -15042,6 +16593,7 @@ resetClassType
 			ifFalse: [ aSelectedClass initializeTypeInformation ] ]! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 13/Aug/2022, 7:20:46 pm (UTC)'!
+!methodProperties: {}!
 typeCheckCategory
 
 	| typeChecker |
@@ -15054,6 +16606,7 @@ typeCheckCategory
 	! !
 
 !Browser methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 9:51:08 pm (UTC)'!
+!methodProperties: {}!
 typeCheckClass
 
 	| typeChecker |
@@ -15065,6 +16618,7 @@ typeCheckClass
 	! !
 
 !MethodSet methodsFor: '*LiveTyping' stamp: 'HAW 2/Nov/2024, 10:43:38 pm (UTC)'!
+!methodProperties: {}!
 removeMethod: aCompiledMethod
 
 	aCompiledMethod methodClass removeSelector: aCompiledMethod selector.
@@ -15073,6 +16627,7 @@ removeMethod: aCompiledMethod
 ! !
 
 !Boolean class methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:32:15 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnRawTypesOf: aMethod
 
 	(#(and: or: not eqv: xor: | &) includes: aMethod selector) ifTrue: [ ^nil ].
@@ -15080,6 +16635,7 @@ createMethodReturnRawTypesOf: aMethod
 	^super createMethodReturnRawTypesOf: aMethod ! !
 
 !Boolean class methodsFor: '*LiveTyping' stamp: 'HAW 18/Mar/2019, 5:52:09 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnTypeInfoOf: aMethod
 
 	(#(and: or: not eqv: xor: | &) includes: aMethod selector) ifTrue: [ ^ ReturnTypeInfo of: aMethod are:`{True. False.}` ].
@@ -15087,6 +16643,7 @@ createMethodReturnTypeInfoOf: aMethod
 	^super createMethodReturnTypeInfoOf: aMethod ! !
 
 !Number class methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:24:59 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnRawTypesOf: aMethod
 
 	^(aMethod selector = #@ and: [ aMethod methodClass = Number ])
@@ -15094,6 +16651,7 @@ createMethodReturnRawTypesOf: aMethod
 		ifFalse: [ super createMethodReturnRawTypesOf: aMethod ]! !
 
 !Number class methodsFor: '*LiveTyping' stamp: 'HAW 16/Mar/2019, 3:08:37 pm (UTC)'!
+!methodProperties: {}!
 createMethodReturnTypeInfoOf: aMethod
 
 	^(aMethod selector = #@ and: [ aMethod methodClass = Number ])
@@ -15101,88 +16659,105 @@ createMethodReturnTypeInfoOf: aMethod
 		ifFalse: [ super createMethodReturnTypeInfoOf: aMethod ]! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:26:03 pm (UTC)'!
+!methodProperties: {}!
 addType: aType ifFull: aFullBlock
 
 	^aFullBlock value.! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 2:35:11 am (UTC)'!
+!methodProperties: {}!
 annotateTypeOf: aValue at: anIndex ! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:56:15 pm (UTC)'!
+!methodProperties: {}!
 doesStoreTypes
 
 	^false! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:54:03 pm (UTC)'!
+!methodProperties: {}!
 includesNil
 
 	^false! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:55:29 pm (UTC)'!
+!methodProperties: {}!
 isMegamorphic
 
 	^false! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:34:05 pm (UTC)'!
+!methodProperties: {}!
 isTypesEmpty
 
 	^true! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:34:52 pm (UTC)'!
+!methodProperties: {}!
 removeAllTypes
 
 	! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:36:45 pm (UTC)'!
+!methodProperties: {}!
 removeType: aType ifAbsent: anAbsentBlock
 
 	^anAbsentBlock value ! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:51:07 pm (UTC)'!
+!methodProperties: {}!
 types
 
 	^#()! !
 
 !UndefinedObject methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:51:45 pm (UTC)'!
+!methodProperties: {}!
 typesSize
 
 	^0 ! !
 
 !Morph methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 8:22:14 pm (UTC)'!
+!methodProperties: {}!
 doNotShowBalloonHelp
 
 	self setProperty: #showBalloonHelp toValue: false! !
 
 !Morph methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 8:23:53 pm (UTC)'!
+!methodProperties: {}!
 shouldShowBalloonHelp
 
 	^self valueOfProperty: #showBalloonHelp ifAbsent: [ true ]
 	! !
 
 !Morph methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 8:22:27 pm (UTC)'!
+!methodProperties: {}!
 showBalloonHelp
 
 	self setProperty: #showBalloonHelp toValue: true! !
 
 !TextModelMorph methodsFor: '*LiveTyping' stamp: 'HAW 17/Jul/2019, 8:44:29 pm (UTC)'!
+!methodProperties: {}!
 doNotShowBalloonHelp
 
 	super doNotShowBalloonHelp.
 	scroller doNotShowBalloonHelp! !
 
 !CodeWindow methodsFor: '*LiveTyping' stamp: 'HAW 21/Feb/2019, 1:38:29 am (UTC)'!
+!methodProperties: {}!
 browseActualImplementorsOfSelectedMethod
 
 	self model currentCompiledMethod ifNotNil: [ :aSentCompileMethod |
 		Smalltalk browseAllActualmplementorsOf: aSentCompileMethod ]! !
 
 !CodeWindow methodsFor: '*LiveTyping' stamp: 'HAW 21/Feb/2019, 1:34:30 am (UTC)'!
+!methodProperties: {}!
 browseActualSendersOfSelectedMethod
 
 	self model currentCompiledMethod ifNotNil: [ :aSentCompileMethod |
 		Smalltalk browseAllActualSendersOn: aSentCompileMethod ]! !
 
 !MethodSetWindow class methodsFor: '*LiveTyping' stamp: 'HAW 16/Apr/2024, 3:55:39 pm (UTC)'!
+!methodProperties: {}!
 openMessageList: messageList label: labelString types: aReceiverTypes selector: aSentSelector
 
 	| messageSet |
@@ -15194,11 +16769,13 @@ openMessageList: messageList label: labelString types: aReceiverTypes selector: 
 ! !
 
 !ChangeSelectorSendersStepWindow methodsFor: '*LiveTyping' stamp: 'HAW 28/Mar/2019, 9:48:53 pm (UTC)'!
+!methodProperties: {}!
 codePane
 
 	^codePane ! !
 
 !ChangeSelectorSendersStepWindow methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2020, 1:50:15 am (UTC)'!
+!methodProperties: {}!
 remove
 
 	| selected |
@@ -15207,6 +16784,7 @@ remove
 	selected ifNotNil: [ selected isValid ifTrue: [ super remove ]]! !
 
 !ChangeSelectorSendersStepWindow class methodsFor: '*LiveTyping' stamp: 'HAW 17/Aug/2019, 2:19:04 pm (UTC)'!
+!methodProperties: {}!
 openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 
 	| window label |
@@ -15226,6 +16804,7 @@ openForActualScopeFrom: aChangeSelectorWithActualScopeApplier
 ! !
 
 !InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 9/Jan/2026, 7:03:41 pm (UTC)'!
+!methodProperties: {}!
 balloonText
 
 	^self activeHand 
@@ -15240,16 +16819,19 @@ balloonText
 ! !
 
 !InnerTextMorph methodsFor: '*LiveTyping' stamp: 'HAW 11/Jul/2022, 11:04:11 pm (UTC)'!
+!methodProperties: {}!
 wantsBalloon
 
 	^self shouldShowBalloonHelp and: [ Preferences at: #balloonHelpEnabled ]! !
 
 !TextEditor methodsFor: '*LiveTyping' stamp: 'HAW 11/Jul/2019, 7:18:54 pm (UTC)'!
+!methodProperties: {}!
 balloonTypeInfoAt: mouseInTextPosition
 
 	^''! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 2/Apr/2019, 1:09:16 pm (UTC)'!
+!methodProperties: {}!
 actualImplementorsOfIt
 	self
 		withMethodNodeAndClassDo: [ :methodNode :class |
@@ -15259,12 +16841,14 @@ actualImplementorsOfIt
 		! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 18/Feb/2019, 10:06:39 pm (UTC)'!
+!methodProperties: {}!
 actualImplementorsOfIt: aKeyboardEvent
 
 	self actualImplementorsOfIt.
 	^true! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:44:22 pm (UTC)'!
+!methodProperties: {}!
 actualLocalImplementorsOfIt
 
 	self
@@ -15275,12 +16859,14 @@ actualLocalImplementorsOfIt
 		! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 2/Apr/2019, 1:18:33 pm (UTC)'!
+!methodProperties: {}!
 actualLocalImplementorsOfIt: aKeyboardEvent
 
 	self actualLocalImplementorsOfIt.
 	^true! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 18/Feb/2019, 10:06:43 pm (UTC)'!
+!methodProperties: {}!
 actualSendersOfIt
 
 	self
@@ -15293,12 +16879,14 @@ actualSendersOfIt
 ! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 18/Feb/2019, 10:06:46 pm (UTC)'!
+!methodProperties: {}!
 actualSendersOfIt: aKeyboardEvent
 
 	self actualSendersOfIt.
 	^true! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 11/Jul/2019, 8:20:41 pm (UTC)'!
+!methodProperties: {}!
 balloonTypeInfoAt: mousePositionInText
 
 	^self isEditingClassDefinition
@@ -15306,6 +16894,7 @@ balloonTypeInfoAt: mousePositionInText
 		ifFalse: [ self balloonTypeInfoInMethodAt: mousePositionInText ]! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 9/Jan/2026, 7:02:44 pm (UTC)'!
+!methodProperties: {}!
 balloonTypeInfoInMethodAt: mousePositionInText
 
 	^self
@@ -15323,6 +16912,7 @@ balloonTypeInfoInMethodAt: mousePositionInText
 ! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 11/Jul/2019, 8:04:01 pm (UTC)'!
+!methodProperties: {}!
 balloonTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
 
 	^[ ((ParseNodeTypesDisplay of: aNodeUnderCursor in: methodNode definedAt: class)
@@ -15334,6 +16924,7 @@ balloonTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
 ! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 9/Jan/2026, 6:54:51 pm (UTC)'!
+!methodProperties: {}!
 balloonTypeInfoOfInstanceVariableAt: mousePositionInText
 
 	| instVarName typeInfo selectedClass |
@@ -15347,6 +16938,7 @@ balloonTypeInfoOfInstanceVariableAt: mousePositionInText
 	^typeInfo printTypesUpTo: 5! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 15/Apr/2019, 5:45:54 pm (UTC)'!
+!methodProperties: {}!
 showSelectionTypeInfo
 
 	self isEditingClassDefinition
@@ -15354,12 +16946,14 @@ showSelectionTypeInfo
 		ifFalse: [ self showSelectionTypeInfoInMethod ]! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 29/Nov/2018, 10:16:35 pm (UTC)'!
+!methodProperties: {}!
 showSelectionTypeInfo: aKeyboardEvent
 
 	self showSelectionTypeInfo.
 	^true! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 15/Apr/2019, 5:46:13 pm (UTC)'!
+!methodProperties: {}!
 showSelectionTypeInfoInMethod
 
 	self
@@ -15377,6 +16971,7 @@ showSelectionTypeInfoInMethod
 ! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 27/Mar/2019, 2:03:13 pm (UTC)'!
+!methodProperties: {}!
 showTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
 
 	[ (ParseNodeTypesDisplay of: aNodeUnderCursor in: methodNode definedAt: class) show ]
@@ -15385,6 +16980,7 @@ showTypeInfoOf: aNodeUnderCursor in: methodNode definedAt: class
 ! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 15/Apr/2019, 7:03:36 pm (UTC)'!
+!methodProperties: {}!
 showTypeInfoOfInstanceVariable
 
 	| instVarName typeInfo |
@@ -15396,6 +16992,7 @@ showTypeInfoOfInstanceVariable
 ! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 9:42:22 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMethod
 
 	self hasUnacceptedEdits ifTrue: [ ^self inform: 'The method can not be typed check because source code is not saved' ].
@@ -15404,57 +17001,68 @@ typeCheckMethod
 ! !
 
 !SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 10/Aug/2019, 9:42:30 pm (UTC)'!
+!methodProperties: {}!
 typeCheckMethod: aKeyboardEvent
 
 	self typeCheckMethod.
 	^true! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 11:10:57 pm (UTC)'!
+!methodProperties: {}!
 actualSendersOf: aCompiledMethod
 
 	^self compiledMethod actualSendersOf: aCompiledMethod ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 1/Dec/2018, 3:04:16 pm (UTC)'!
+!methodProperties: {}!
 classAndSelector
 
 	^String streamContents: [:stream | self printClassAndSelectorOn: stream ]! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 17/Jan/2019, 1:46:27 pm (UTC)'!
+!methodProperties: {}!
 doesOnlySurelySend: aCompiledMethod
 
 	^self compiledMethod doesOnlySurelySend: aCompiledMethod ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 18/Jul/2019, 8:50:22 pm (UTC)'!
+!methodProperties: {}!
 isAnnotatingTypes
 
 	^self compiledMethod isAnnotatingTypes ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 21/Aug/2019, 2:28:24 am (UTC)'!
+!methodProperties: {}!
 isPossibleSender
 
 	^false! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 9/Aug/2019, 10:10:51 pm (UTC)'!
+!methodProperties: {}!
 isPrimitive
 
 	^self compiledMethod isPrimitive ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 8/Feb/2019, 9:26:41 pm (UTC)'!
+!methodProperties: {}!
 liveTypingAutoCompleterDocumentation
 
 	^self compiledMethod liveTypingAutoCompleterDocumentation! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 13/Mar/2019, 11:16:33 pm (UTC)'!
+!methodProperties: {}!
 methodReference
 
 	^self! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 19/Jul/2019, 8:40:57 pm (UTC)'!
+!methodProperties: {}!
 primitive
 
 	^self compiledMethod primitive! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 28/Mar/2019, 8:55:15 pm (UTC)'!
+!methodProperties: {}!
 rangesOf: aSentSelector whenSendTo: aReceiverTypes
 
 	| compiledMethod |
@@ -15464,26 +17072,31 @@ rangesOf: aSentSelector whenSendTo: aReceiverTypes
 ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 18/Jul/2019, 8:10:59 pm (UTC)'!
+!methodProperties: {}!
 sourceCodeRange
 
 	^#()! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 13/Mar/2019, 7:50:41 pm (UTC)'!
+!methodProperties: {}!
 stringVersion: aString
 
 	stringVersion := aString ! !
 
 !MethodReference methodsFor: '*LiveTyping' stamp: 'HAW 18/Jul/2019, 8:56:39 pm (UTC)'!
+!methodProperties: {}!
 typeCheck
 
 	^self compiledMethod typeCheck ! !
 
 !PseudoClass methodsFor: '*LiveTyping' stamp: 'HAW 28/Oct/2019, 3:47:36 am (UTC)'!
+!methodProperties: {}!
 typeInfoOfInstanceVariableNamed: anInstVarName ifAbsent: aBlock
 
 	^aBlock value! !
 
 !MessageNodeReference methodsFor: '*LiveTyping-Refactoring' stamp: 'HAW 11/Jun/2022, 10:24:06 pm (UTC)'!
+!methodProperties: {}!
 asPossibleMessageNodeReference
 
 	^PossibleMessageNodeReference
@@ -15493,6 +17106,7 @@ asPossibleMessageNodeReference
 		completeSourceRange: completeSourceRange.! !
 
 !MessageNodeReference methodsFor: '*LiveTyping-Refactoring' stamp: 'FB 19/Mar/2022, 10:13:52 pm (UTC)'!
+!methodProperties: {}!
 isPossibleMessageSend
 
 	"Implements polymorphism with PossbileMessageNodeReference"
@@ -15500,6 +17114,7 @@ isPossibleMessageSend
 	^false! !
 
 !ChangeSelector class methodsFor: '*LiveTyping' stamp: 'HAW 30/Dec/2019, 8:50:57 pm (UTC)'!
+!methodProperties: {}!
 addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: aSystem
 
 	| actualImplementors actualSendersCollector |
@@ -15517,6 +17132,7 @@ addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors 
 	! !
 
 !ChangeSelector class methodsFor: '*LiveTyping' stamp: 'HAW 15/Mar/2019, 6:39:07 pm (UTC)'!
+!methodProperties: {}!
 addActualImplementorsOf: anOldSelector in: aPotentialClassToRefactor to: implementors andActualSendersTo: senders inSystem: aSystem
 
 	self
@@ -15527,6 +17143,7 @@ addActualImplementorsOf: anOldSelector in: aPotentialClassToRefactor to: impleme
 		inSystem: aSystem ! !
 
 !ChangeSelector class methodsFor: '*LiveTyping-pre-conditions' stamp: 'HAW 2/Jan/2020, 9:52:20 am (UTC)'!
+!methodProperties: {}!
 assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollectionOfImplementors
 
 	| messageSendsWithInvalidReceiverTypes |
@@ -15537,6 +17154,7 @@ assertReceiverTypesOfAll: aCollectionOfSenders areIncludedInAllTypesOf: aCollect
 		self signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes ].! !
 
 !ChangeSelector class methodsFor: '*LiveTyping-exceptions' stamp: 'HAW 17/Aug/2019, 6:33:33 pm (UTC)'!
+!methodProperties: {}!
 errorDescriptionForReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes
 
 	^String streamContents: [ :stream |
@@ -15552,17 +17170,20 @@ errorDescriptionForReceiverTypesNotIncludedInImplementorTypes: messageSendsWithI
 		 ! !
 
 !ChangeSelector class methodsFor: '*LiveTyping-exceptions' stamp: 'HAW 17/Aug/2019, 6:33:50 pm (UTC)'!
+!methodProperties: {}!
 signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceiverTypes
 
 	CanNotChangeSelectorWithNotIncludedTypes signalWith: messageSendsWithInvalidReceiverTypes
 		! !
 
 !ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 14/May/2025, 2:51:04 pm (UTC)'!
+!methodProperties: {}!
 actualScopeOptionLabels
 
 	^{ 'Actual/Possible Scope'. 'Actual Scope' } ! !
 
 !ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 14/May/2025, 2:53:24 pm (UTC)'!
+!methodProperties: {}!
 canNotRefactorWithIncompleteTypeInfo
 
 	self
@@ -15570,6 +17191,7 @@ canNotRefactorWithIncompleteTypeInfo
 		endRequest ! !
 
 !ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 14/May/2025, 2:53:46 pm (UTC)'!
+!methodProperties: {}!
 canNotRefactorWithoutTypeInfo
 
 	self
@@ -15577,11 +17199,13 @@ canNotRefactorWithoutTypeInfo
 		endRequest ! !
 
 !ScopedRefactoringApplier methodsFor: '*LiveTyping' stamp: 'HAW 14/May/2025, 2:52:23 pm (UTC)'!
+!methodProperties: {}!
 isActualScopeChoice
 
 	^scopeChoice isNil or: [ scopeChoice >= 6 ]! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 17/Aug/2019, 11:37:12 pm (UTC)'!
+!methodProperties: {}!
 actualImplementorsAndSenders
 
 	self isOnMessageSend
@@ -15590,6 +17214,7 @@ actualImplementorsAndSenders
 ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 2/Jan/2020, 12:52:02 am (UTC)'!
+!methodProperties: {}!
 actualImplementorsAndSendersWhenNotOnMessageSend
 
 	self refactoringClass
@@ -15600,6 +17225,7 @@ actualImplementorsAndSendersWhenNotOnMessageSend
 		inSystem: Smalltalk! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 2/Jan/2020, 10:10:53 am (UTC)'!
+!methodProperties: {}!
 actualImplementorsAndSendersWhenOnMessageSend
 
 	| incompleteTypeInfo receiverTypes |
@@ -15619,6 +17245,7 @@ actualImplementorsAndSendersWhenOnMessageSend
 		inSystem: Smalltalk ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 31/Dec/2019, 5:42:40 pm (UTC)'!
+!methodProperties: {}!
 filterSenders
 
 	senders := (senders
@@ -15626,6 +17253,7 @@ filterSenders
 		thenCollect: [ :aMethodReference | aMethodReference compiledMethod ]) asIdentitySet ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 16/Apr/2024, 3:52:07 pm (UTC)'!
+!methodProperties: {}!
 handleCanNotChangeSelectorWithNotIncludedTypes: anError
 
 	| errorIcon messageSendWithInvalidReceiverType selection selectionMenu |
@@ -15648,31 +17276,37 @@ handleCanNotChangeSelectorWithNotIncludedTypes: anError
 ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 1:15:20 am (UTC)'!
+!methodProperties: {}!
 isOnMessageSend
 
 	^self messageNode notNil! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 17/Aug/2019, 11:33:43 pm (UTC)'!
+!methodProperties: {}!
 isWithPossibleMessageSends
 
 	^scopeChoice = 6! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 17/Aug/2019, 11:39:02 pm (UTC)'!
+!methodProperties: {}!
 messageNode
 
 	self subclassResponsibility ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 1:15:54 am (UTC)'!
+!methodProperties: {}!
 receiverTypes
 
 	^implementors collect: [ :anImplementor | anImplementor methodClass ]! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 17/Aug/2019, 11:39:15 pm (UTC)'!
+!methodProperties: {}!
 selectedSelector
 
 	self subclassResponsibility ! !
 
 !ChangeSelectorApplier methodsFor: '*LiveTyping' stamp: 'HAW 31/Dec/2019, 5:42:30 pm (UTC)'!
+!methodProperties: {}!
 shouldKeepIfPossibleSender: aMethodReference
 
 	^ aMethodReference isPossibleSender not or: [ self isWithPossibleMessageSends ]! !
