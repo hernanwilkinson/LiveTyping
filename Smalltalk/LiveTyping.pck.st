@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:56:11 pm'!
-'Description Make the live type of one class print its name'!
-!provides: 'LiveTyping' 1 169!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:56:34 pm'!
+'Description Add failing test for the live type of classes with a common superclass printing it before them'!
+!provides: 'LiveTyping' 1 170!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10794,6 +10794,13 @@ test01LiveTypeOfNoClassesPrintsAsUnknown
 test02LiveTypeOfOneClassPrintsItsName
 
 	self assert: (LiveType for: {SmallInteger}) printString equals: '<SmallInteger>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 10:56:22 pm (UTC)'!
+test03LiveTypeOfClassesWithACommonSuperclassPrintsItBeforeThem
+
+	self
+		assert: (LiveType for: {SmallInteger. Float}) printString
+		equals: '<Number # SmallInteger | Float>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
