@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:08:23 pm'!
-'Description Add failing test for the live type of only nil printing nil'!
-!provides: 'LiveTyping' 1 183!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:08:57 pm'!
+'Description Make the live type of only nil print nil'!
+!provides: 'LiveTyping' 1 184!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2515,6 +2515,12 @@ printNameOn: aStream
 
 	self subclassResponsibility! !
 
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:08:48 pm (UTC)'!
+printNilableNameOn: aStream
+
+	self printNameOn: aStream.
+	aStream nextPutAll: '|nil'! !
+
 !LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 printOn: aStream
 
@@ -2573,6 +2579,11 @@ printNameOn: aStream
 
 	aStream nextPut: $?! !
 
+!EmptyLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:08:48 pm (UTC)'!
+printNilableNameOn: aStream
+
+	aStream nextPutAll: 'nil'! !
+
 !ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:03:16 pm (UTC)'!
 printClassesOn: aStream
 
@@ -2629,11 +2640,10 @@ printClassesOn: aStream
 
 	type printClassesOn: aStream! !
 
-!NilableLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
+!NilableLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:08:48 pm (UTC)'!
 printNameOn: aStream
 
-	type printNameOn: aStream.
-	aStream nextPutAll: '|nil'! !
+	type printNilableNameOn: aStream! !
 
 !NilableLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 of: aLiveType
