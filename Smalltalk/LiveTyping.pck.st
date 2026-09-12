@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:08:57 pm'!
-'Description Make the live type of only nil print nil'!
-!provides: 'LiveTyping' 1 184!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:09:42 pm'!
+'Description Add failing test for printing a listing of less classes than the type has ending with an ellipsis'!
+!provides: 'LiveTyping' 1 185!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10957,6 +10957,13 @@ test08LiveTypeOfOneClassAndNilPrintsNilNextToTheClass
 test09LiveTypeOfOnlyNilPrintsNil
 
 	self assert: (LiveType for: {UndefinedObject}) printString equals: '<nil>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 11:09:32 pm (UTC)'!
+test10PrintingAListingOfLessClassesThanTheTypeHasEndsWithAnEllipsis
+
+	self
+		assert: ((LiveType for: {SmallInteger. Float. Fraction}) printListingUpTo: 2)
+		equals: '<Number # SmallInteger | Float | ...>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
