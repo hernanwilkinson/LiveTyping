@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:00:31 pm'!
-'Description Add test for the live type of a class and its subclass printing the class before them'!
-!provides: 'LiveTyping' 1 173!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:01:09 pm'!
+'Description Add failing test for the live type of classes whose common superclass is Object printing any before them'!
+!provides: 'LiveTyping' 1 174!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10817,6 +10817,13 @@ test04LiveTypeOfAClassAndItsSubclassPrintsTheClassBeforeThem
 	self
 		assert: (LiveType for: {Symbol. String}) printString
 		equals: '<String # Symbol | String>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 11:00:58 pm (UTC)'!
+test05LiveTypeOfClassesWhoseCommonSuperclassIsObjectPrintsAnyBeforeThem
+
+	self
+		assert: (LiveType for: {SmallInteger. String}) printString
+		equals: '<any # SmallInteger | String>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
