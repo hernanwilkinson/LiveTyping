@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:09:42 pm'!
-'Description Add failing test for printing a listing of less classes than the type has ending with an ellipsis'!
-!provides: 'LiveTyping' 1 185!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:10:16 pm'!
+'Description Make printing a listing of less classes than the type has end with an ellipsis'!
+!provides: 'LiveTyping' 1 186!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2510,6 +2510,14 @@ noReturnTypesDescriptionOf: aMethodReference
 !LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 printClassesOn: aStream! !
 
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
+printClassesOn: aStream upTo: aNumberOfClasses! !
+
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
+printListingUpTo: aNumberOfClasses
+
+	^String streamContents: [ :aStream | self printOn: aStream listingUpTo: aNumberOfClasses ]! !
+
 !LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:01 pm (UTC)'!
 printNameOn: aStream
 
@@ -2527,6 +2535,14 @@ printOn: aStream
 	aStream nextPut: $<.
 	self printNameOn: aStream.
 	self printClassesOn: aStream.
+	aStream nextPut: $>! !
+
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
+printOn: aStream listingUpTo: aNumberOfClasses
+
+	aStream nextPut: $<.
+	self printNameOn: aStream.
+	self printClassesOn: aStream upTo: aNumberOfClasses.
 	aStream nextPut: $>! !
 
 !LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
@@ -2584,13 +2600,22 @@ printNilableNameOn: aStream
 
 	aStream nextPutAll: 'nil'! !
 
-!ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:03:16 pm (UTC)'!
+!ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
 printClassesOn: aStream
 
+	self printClassesOn: aStream upTo: classes size! !
+
+!ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
+printClassesOn: aStream upTo: aNumberOfClasses
+
+	| classesToList |
+
+	classesToList := classes first: (aNumberOfClasses min: classes size).
 	aStream nextPutAll: ' # '.
-	classes
+	classesToList
 		do: [ :aClass | aStream nextPutAll: aClass typeName ]
-		separatedBy: [ aStream nextPutAll: ' | ' ]! !
+		separatedBy: [ aStream nextPutAll: ' | ' ].
+	classesToList size < classes size ifTrue: [ aStream nextPutAll: ' | ...' ]! !
 
 !CommonSuperclassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 initializeOf: aCollectionOfClasses inheritingFrom: aCommonSuperclass
@@ -2639,6 +2664,11 @@ initializeOf: aLiveType
 printClassesOn: aStream
 
 	type printClassesOn: aStream! !
+
+!NilableLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
+printClassesOn: aStream upTo: aNumberOfClasses
+
+	type printClassesOn: aStream upTo: aNumberOfClasses! !
 
 !NilableLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:08:48 pm (UTC)'!
 printNameOn: aStream
