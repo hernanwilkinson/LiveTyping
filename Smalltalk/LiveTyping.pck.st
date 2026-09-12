@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:57:27 pm'!
-'Description Make the live type of classes with a common superclass print it before them'!
-!provides: 'LiveTyping' 1 171!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:59:46 pm'!
+'Description Compute the common supertype of a variable with the common superclass of its types'!
+!provides: 'LiveTyping' 1 172!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -3941,14 +3941,6 @@ addIfNoCommonSupertypeTo: allWithNoCommonSupertype
 
 	(commonSupertype = Object or: [ commonSupertype = ProtoObject ]) ifTrue: [  allWithNoCommonSupertype add: (self identifier->self types)]! !
 
-!VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 16/Oct/2018, 6:18:22 pm (UTC)'!
-allSupertypesOf: types
-
-	^ types
-		inject: types anyOne withAllSuperclasses
-		into: [ :temporaryCommonSupertypes :type | temporaryCommonSupertypes intersection: type withAllSuperclasses ].
-! !
-
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 10/Oct/2018, 10:07:30 am (UTC)'!
 commonSupertype
 
@@ -3959,21 +3951,14 @@ commonSupertypeIfGeneric: genericBlock
 
 	^self withCommonSupertypeDo: [ :aCommonSupertype | aCommonSupertype ] ifGeneric: genericBlock! !
 
-!VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 16/Oct/2018, 6:18:32 pm (UTC)'!
+!VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 12/Sep/2026, 10:58:11 pm (UTC)'!
 commonSupertypeIfNoTypes: aBlock
 
-	| types commonSupertypes commonSupertype |
+	| typesWithoutNil |
 
-	types := self types.
-	types := types reject: [ :aType | aType = UndefinedObject ].
-	types isEmpty ifTrue: [ ^aBlock value ].
-	types size = 1 ifTrue: [ ^types anyOne ].
+	typesWithoutNil := self types reject: [ :aType | aType = UndefinedObject ].
 
-	"I have to convert types to Array becuase inst var types can be a Set - Hernan"
-	commonSupertypes := self allSupertypesOf: types.
-	commonSupertype := self commonLowestTypeIn: commonSupertypes.
-
-	^commonSupertype ! !
+	^typesWithoutNil ifEmpty: aBlock ifNotEmpty: [ typesWithoutNil commonSuperclass ]! !
 
 !VariableTypeInfo methodsFor: 'common supertype' stamp: 'HAW 19/Dec/2018, 9:03:49 pm (UTC)'!
 commonSupertypeOrCommonSelectorsPreviousToObjectIfGeneric
@@ -3991,21 +3976,6 @@ withCommonSupertypeDo: doBlock ifGeneric: ifGenericBlock
 		ifFalse: [ doBlock  ].
 
 	^block value: commonSupertype ! !
-
-!VariableTypeInfo methodsFor: 'common supertype - private' stamp: 'HAW 15/Oct/2018, 8:37:34 pm (UTC)'!
-commonLowestTypeIn: commonSupertypes
-
-	| commonSupertype commonSupertypeSuperclassesSize |
-
-	commonSupertypeSuperclassesSize := 0.
-
-	commonSupertypes do: [ :currentType | | currentTypeSuperclassesSize |
-		currentTypeSuperclassesSize := currentType withAllSuperclasses size.
-		currentTypeSuperclassesSize > commonSupertypeSuperclassesSize ifTrue: [
-			commonSupertypeSuperclassesSize := currentTypeSuperclassesSize.
-			commonSupertype := currentType ]].
-
-	^ commonSupertype! !
 
 !VariableTypeInfo methodsFor: 'initialization' stamp: 'HAW 10/Oct/2018, 12:48:09 pm (UTC)'!
 initializeRawTypes: aRawTypes
