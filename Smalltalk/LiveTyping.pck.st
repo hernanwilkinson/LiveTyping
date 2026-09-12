@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:03:25 pm'!
-'Description Share the printing of the classes of a live type made of many classes'!
-!provides: 'LiveTyping' 1 176!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:04:10 pm'!
+'Description Add failing test for the selectors of a structural live type being the ones its classes share below Object'!
+!provides: 'LiveTyping' 1 177!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10870,6 +10870,15 @@ test05LiveTypeOfClassesWhoseCommonSuperclassIsObjectPrintsAnyBeforeThem
 	self
 		assert: (LiveType for: {SmallInteger. String}) printString
 		equals: '<any # SmallInteger | String>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 11:03:58 pm (UTC)'!
+test06SelectorsOfAStructuralLiveTypeAreTheOnesItsClassesShareBelowObject
+
+	| selectors |
+
+	selectors := (LiveType for: {Magnitude. Collection}) selectors.
+
+	self assert: selectors asSet equals: (Magnitude selectors intersection: Collection selectors) asSet! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
