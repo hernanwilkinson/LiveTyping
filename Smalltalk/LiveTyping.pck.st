@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:02:13 pm'!
-'Description Make the live type of classes whose common superclass is Object print any before them'!
-!provides: 'LiveTyping' 1 175!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:03:25 pm'!
+'Description Share the printing of the classes of a live type made of many classes'!
+!provides: 'LiveTyping' 1 176!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -252,16 +252,6 @@ LiveType subclass: #ClassLiveType
 ClassLiveType class
 	instanceVariableNames: ''!
 
-!classDefinition: #CommonSuperclassLiveType category: #LiveTyping!
-LiveType subclass: #CommonSuperclassLiveType
-	instanceVariableNames: 'classes commonSuperclass'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping'!
-!classDefinition: 'CommonSuperclassLiveType class' category: #LiveTyping!
-CommonSuperclassLiveType class
-	instanceVariableNames: ''!
-
 !classDefinition: #EmptyLiveType category: #LiveTyping!
 LiveType subclass: #EmptyLiveType
 	instanceVariableNames: ''
@@ -272,9 +262,29 @@ LiveType subclass: #EmptyLiveType
 EmptyLiveType class
 	instanceVariableNames: ''!
 
-!classDefinition: #StructuralLiveType category: #LiveTyping!
-LiveType subclass: #StructuralLiveType
+!classDefinition: #ManyClassesLiveType category: #LiveTyping!
+LiveType subclass: #ManyClassesLiveType
 	instanceVariableNames: 'classes'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'ManyClassesLiveType class' category: #LiveTyping!
+ManyClassesLiveType class
+	instanceVariableNames: ''!
+
+!classDefinition: #CommonSuperclassLiveType category: #LiveTyping!
+ManyClassesLiveType subclass: #CommonSuperclassLiveType
+	instanceVariableNames: 'commonSuperclass'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'CommonSuperclassLiveType class' category: #LiveTyping!
+CommonSuperclassLiveType class
+	instanceVariableNames: ''!
+
+!classDefinition: #StructuralLiveType category: #LiveTyping!
+ManyClassesLiveType subclass: #StructuralLiveType
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'LiveTyping'!
@@ -2503,13 +2513,18 @@ printOn: aStream
 	self printClassesOn: aStream.
 	aStream nextPut: $>! !
 
-!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:02:04 pm (UTC)'!
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:03:17 pm (UTC)'!
 for: aCollectionOfClasses
-
-	| commonSuperclass |
 
 	aCollectionOfClasses ifEmpty: [ ^EmptyLiveType new ].
 	aCollectionOfClasses size = 1 ifTrue: [ ^ClassLiveType of: aCollectionOfClasses anyOne ].
+
+	^self forManyClasses: aCollectionOfClasses! !
+
+!LiveType class methodsFor: 'instance creation - private' stamp: 'HAW 12/Sep/2026, 11:03:17 pm (UTC)'!
+forManyClasses: aCollectionOfClasses
+
+	| commonSuperclass |
 
 	commonSuperclass := aCollectionOfClasses commonSuperclass.
 
@@ -2532,19 +2547,24 @@ of: aClass
 
 	^self new initializeOf: aClass! !
 
-!CommonSuperclassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
-initializeOf: aCollectionOfClasses inheritingFrom: aCommonSuperclass
+!EmptyLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:06 pm (UTC)'!
+printNameOn: aStream
 
-	classes := aCollectionOfClasses.
-	commonSuperclass := aCommonSuperclass! !
+	aStream nextPut: $?! !
 
-!CommonSuperclassLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+!ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:03:16 pm (UTC)'!
 printClassesOn: aStream
 
 	aStream nextPutAll: ' # '.
 	classes
 		do: [ :aClass | aStream nextPutAll: aClass typeName ]
 		separatedBy: [ aStream nextPutAll: ' | ' ]! !
+
+!CommonSuperclassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+initializeOf: aCollectionOfClasses inheritingFrom: aCommonSuperclass
+
+	classes := aCollectionOfClasses.
+	commonSuperclass := aCommonSuperclass! !
 
 !CommonSuperclassLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 printNameOn: aStream
@@ -2556,23 +2576,10 @@ of: aCollectionOfClasses inheritingFrom: aCommonSuperclass
 
 	^self new initializeOf: aCollectionOfClasses asArray inheritingFrom: aCommonSuperclass! !
 
-!EmptyLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:06 pm (UTC)'!
-printNameOn: aStream
-
-	aStream nextPut: $?! !
-
 !StructuralLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 11:02:04 pm (UTC)'!
 initializeOf: aCollectionOfClasses
 
 	classes := aCollectionOfClasses! !
-
-!StructuralLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:02:04 pm (UTC)'!
-printClassesOn: aStream
-
-	aStream nextPutAll: ' # '.
-	classes
-		do: [ :aClass | aStream nextPutAll: aClass typeName ]
-		separatedBy: [ aStream nextPutAll: ' | ' ]! !
 
 !StructuralLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:02:04 pm (UTC)'!
 printNameOn: aStream
