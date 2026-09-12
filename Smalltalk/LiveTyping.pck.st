@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:56:34 pm'!
-'Description Add failing test for the live type of classes with a common superclass printing it before them'!
-!provides: 'LiveTyping' 1 170!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:57:27 pm'!
+'Description Make the live type of classes with a common superclass print it before them'!
+!provides: 'LiveTyping' 1 171!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -250,6 +250,16 @@ LiveType subclass: #ClassLiveType
 	category: 'LiveTyping'!
 !classDefinition: 'ClassLiveType class' category: #LiveTyping!
 ClassLiveType class
+	instanceVariableNames: ''!
+
+!classDefinition: #CommonSuperclassLiveType category: #LiveTyping!
+LiveType subclass: #CommonSuperclassLiveType
+	instanceVariableNames: 'classes commonSuperclass'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'CommonSuperclassLiveType class' category: #LiveTyping!
+CommonSuperclassLiveType class
 	instanceVariableNames: ''!
 
 !classDefinition: #EmptyLiveType category: #LiveTyping!
@@ -2467,24 +2477,29 @@ noReturnTypesDescriptionOf: aMethodReference
 
 	^'There is no return type info for ', aMethodReference classAndSelector! !
 
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+printClassesOn: aStream! !
+
 !LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:01 pm (UTC)'!
 printNameOn: aStream
 
 	self subclassResponsibility! !
 
-!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:01 pm (UTC)'!
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 printOn: aStream
 
 	aStream nextPut: $<.
 	self printNameOn: aStream.
+	self printClassesOn: aStream.
 	aStream nextPut: $>! !
 
-!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 for: aCollectionOfClasses
 
-	^aCollectionOfClasses
-		ifEmpty: [ EmptyLiveType new ]
-		ifNotEmpty: [ ClassLiveType of: aCollectionOfClasses anyOne ]! !
+	aCollectionOfClasses ifEmpty: [ ^EmptyLiveType new ].
+	aCollectionOfClasses size = 1 ifTrue: [ ^ClassLiveType of: aCollectionOfClasses anyOne ].
+
+	^CommonSuperclassLiveType of: aCollectionOfClasses inheritingFrom: aCollectionOfClasses commonSuperclass! !
 
 !ClassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
 initializeOf: aClass
@@ -2500,6 +2515,30 @@ printNameOn: aStream
 of: aClass
 
 	^self new initializeOf: aClass! !
+
+!CommonSuperclassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+initializeOf: aCollectionOfClasses inheritingFrom: aCommonSuperclass
+
+	classes := aCollectionOfClasses.
+	commonSuperclass := aCommonSuperclass! !
+
+!CommonSuperclassLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+printClassesOn: aStream
+
+	aStream nextPutAll: ' # '.
+	classes
+		do: [ :aClass | aStream nextPutAll: aClass typeName ]
+		separatedBy: [ aStream nextPutAll: ' | ' ]! !
+
+!CommonSuperclassLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+printNameOn: aStream
+
+	aStream nextPutAll: commonSuperclass typeName! !
+
+!CommonSuperclassLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+of: aCollectionOfClasses inheritingFrom: aCommonSuperclass
+
+	^self new initializeOf: aCollectionOfClasses asArray inheritingFrom: aCommonSuperclass! !
 
 !EmptyLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:06 pm (UTC)'!
 printNameOn: aStream
@@ -13606,6 +13645,11 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 	^variableNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 ! !
 
+!Behavior methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+commonSuperclassWith: aClass
+
+	^self withAllSuperclasses detect: [ :aSuperclass | aClass includesBehavior: aSuperclass ]! !
+
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 5/Oct/2018, 12:07:29 am (UTC)'!
 indexOfInstanceVariable: anInstVarName ifAbsent: aBlock
 
@@ -14103,6 +14147,11 @@ createSuperclassTypeInfo
 		of: self superclassInstVarName
 		in: self
 		are: `{Class. Metaclass. }`! !
+
+!Collection methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+commonSuperclass
+
+	^self inject: self anyOne into: [ :commonSuperclass :aClass | commonSuperclass commonSuperclassWith: aClass ]! !
 
 !Collection methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 2:47:11 pm (UTC)'!
 inject: aCollector addingAll: aBlock
