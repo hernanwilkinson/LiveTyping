@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:55:17 pm'!
-'Description Make the live type of no classes print as unknown'!
-!provides: 'LiveTyping' 1 167!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:55:42 pm'!
+'Description Add failing test for the live type of one class printing its name'!
+!provides: 'LiveTyping' 1 168!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10762,6 +10762,11 @@ instanceVariableRawTypesSizeFor: anInstVarName
 test01LiveTypeOfNoClassesPrintsAsUnknown
 
 	self assert: (LiveType for: #()) printString equals: '<?>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 10:55:32 pm (UTC)'!
+test02LiveTypeOfOneClassPrintsItsName
+
+	self assert: (LiveType for: {SmallInteger}) printString equals: '<SmallInteger>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
