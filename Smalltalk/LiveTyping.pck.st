@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:04:53 pm'!
-'Description Make the selectors of a structural live type the ones its classes share below Object'!
-!provides: 'LiveTyping' 1 178!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:05:35 pm'!
+'Description Add failing test for the live type of classes including nil printing nil next to their common superclass'!
+!provides: 'LiveTyping' 1 179!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10886,6 +10886,13 @@ test06SelectorsOfAStructuralLiveTypeAreTheOnesItsClassesShareBelowObject
 	selectors := (LiveType for: {Magnitude. Collection}) selectors.
 
 	self assert: selectors asSet equals: (Magnitude selectors intersection: Collection selectors) asSet! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 11:05:25 pm (UTC)'!
+test07LiveTypeOfClassesIncludingNilPrintsNilNextToTheirCommonSuperclass
+
+	self
+		assert: (LiveType for: {SmallInteger. UndefinedObject. Float}) printString
+		equals: '<Number|nil # SmallInteger | Float>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
