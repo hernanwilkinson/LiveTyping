@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:04:10 pm'!
-'Description Add failing test for the selectors of a structural live type being the ones its classes share below Object'!
-!provides: 'LiveTyping' 1 177!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:04:53 pm'!
+'Description Make the selectors of a structural live type the ones its classes share below Object'!
+!provides: 'LiveTyping' 1 178!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2585,6 +2585,13 @@ initializeOf: aCollectionOfClasses
 printNameOn: aStream
 
 	aStream nextPutAll: 'any'! !
+
+!StructuralLiveType methodsFor: 'accessing' stamp: 'HAW 12/Sep/2026, 11:04:43 pm (UTC)'!
+selectors
+
+	^classes
+		inject: classes anyOne allSelectorsBelowObject
+		into: [ :commonSelectors :aClass | commonSelectors intersection: aClass allSelectorsBelowObject ]! !
 
 !StructuralLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:02:04 pm (UTC)'!
 of: aCollectionOfClasses
@@ -13683,6 +13690,15 @@ typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 
 	^variableNode typesIn: aCompiledMethod addingIncompleteTypeInfoTo: incompleteTypeInfoReasons
 ! !
+
+!Behavior methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 11:04:43 pm (UTC)'!
+allSelectorsBelowObject
+
+	^self withAllSuperclasses
+		inject: IdentitySet new
+		into: [ :selectors :aClass |
+			(aClass inheritsFrom: Object) ifTrue: [ selectors addAll: aClass selectors ].
+			selectors ]! !
 
 !Behavior methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 commonSuperclassWith: aClass
