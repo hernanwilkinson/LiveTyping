@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:54:33 pm'!
-'Description Add failing test for the live type of no classes printing as unknown'!
-!provides: 'LiveTyping' 1 166!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:55:17 pm'!
+'Description Make the live type of no classes print as unknown'!
+!provides: 'LiveTyping' 1 167!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -240,6 +240,16 @@ Object subclass: #LiveType
 	category: 'LiveTyping'!
 !classDefinition: 'LiveType class' category: #LiveTyping!
 LiveType class
+	instanceVariableNames: ''!
+
+!classDefinition: #EmptyLiveType category: #LiveTyping!
+LiveType subclass: #EmptyLiveType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'EmptyLiveType class' category: #LiveTyping!
+EmptyLiveType class
 	instanceVariableNames: ''!
 
 !classDefinition: #LiveTyping category: #LiveTyping!
@@ -2446,6 +2456,28 @@ dueToNoReturnTypeOf: aMethodReference
 noReturnTypesDescriptionOf: aMethodReference
 
 	^'There is no return type info for ', aMethodReference classAndSelector! !
+
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:01 pm (UTC)'!
+printNameOn: aStream
+
+	self subclassResponsibility! !
+
+!LiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:01 pm (UTC)'!
+printOn: aStream
+
+	aStream nextPut: $<.
+	self printNameOn: aStream.
+	aStream nextPut: $>! !
+
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:55:06 pm (UTC)'!
+for: aCollectionOfClasses
+
+	^EmptyLiveType new! !
+
+!EmptyLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:06 pm (UTC)'!
+printNameOn: aStream
+
+	aStream nextPut: $?! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 8/Jan/2026, 10:21:07 pm (UTC)'!
 checkRedefinedMethodsDidNotChange
