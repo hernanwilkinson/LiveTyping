@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:06:28 pm'!
-'Description Make the live type of classes including nil print nil next to their common superclass'!
-!provides: 'LiveTyping' 1 180!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:07:13 pm'!
+'Description Let any collection tell whether it includes nil as a type'!
+!provides: 'LiveTyping' 1 181!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2523,14 +2523,14 @@ printOn: aStream
 	self printClassesOn: aStream.
 	aStream nextPut: $>! !
 
-!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
 for: aCollectionOfClasses
 
 	| nonNilType |
 
 	nonNilType := self forNonNilClasses: (aCollectionOfClasses copyWithout: UndefinedObject).
 
-	^(aCollectionOfClasses includes: UndefinedObject)
+	^aCollectionOfClasses includesNil
 		ifTrue: [ NilableLiveType of: nonNilType ]
 		ifFalse: [ nonNilType ]! !
 
@@ -14257,6 +14257,11 @@ commonSuperclass
 
 	^self inject: self anyOne into: [ :commonSuperclass :aClass | commonSuperclass commonSuperclassWith: aClass ]! !
 
+!Collection methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
+includesNil
+
+	^self includes: UndefinedObject! !
+
 !Collection methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 2:47:11 pm (UTC)'!
 inject: aCollector addingAll: aBlock
 
@@ -14304,11 +14309,6 @@ annotateTypeOf: aValue at: anIndex
 doesStoreTypes
 
 	^true! !
-
-!Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:53:52 pm (UTC)'!
-includesNil
-
-	^ self includes: UndefinedObject ! !
 
 !Array methodsFor: '*LiveTyping' stamp: 'HAW 16/Jul/2019, 8:55:21 pm (UTC)'!
 isMegamorphic
