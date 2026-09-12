@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:59:46 pm'!
-'Description Compute the common supertype of a variable with the common superclass of its types'!
-!provides: 'LiveTyping' 1 172!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:00:31 pm'!
+'Description Add test for the live type of a class and its subclass printing the class before them'!
+!provides: 'LiveTyping' 1 173!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10810,6 +10810,13 @@ test03LiveTypeOfClassesWithACommonSuperclassPrintsItBeforeThem
 	self
 		assert: (LiveType for: {SmallInteger. Float}) printString
 		equals: '<Number # SmallInteger | Float>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 11:00:20 pm (UTC)'!
+test04LiveTypeOfAClassAndItsSubclassPrintsTheClassBeforeThem
+
+	self
+		assert: (LiveType for: {Symbol. String}) printString
+		equals: '<String # Symbol | String>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
