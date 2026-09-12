@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:07:13 pm'!
-'Description Let any collection tell whether it includes nil as a type'!
-!provides: 'LiveTyping' 1 181!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:07:48 pm'!
+'Description Add test for the live type of one class and nil printing nil next to the class'!
+!provides: 'LiveTyping' 1 182!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10935,6 +10935,13 @@ test07LiveTypeOfClassesIncludingNilPrintsNilNextToTheirCommonSuperclass
 	self
 		assert: (LiveType for: {SmallInteger. UndefinedObject. Float}) printString
 		equals: '<Number|nil # SmallInteger | Float>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 11:07:38 pm (UTC)'!
+test08LiveTypeOfOneClassAndNilPrintsNilNextToTheClass
+
+	self
+		assert: (LiveType for: {SmallInteger. UndefinedObject}) printString
+		equals: '<SmallInteger|nil>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
