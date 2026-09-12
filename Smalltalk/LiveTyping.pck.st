@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:07:48 pm'!
-'Description Add test for the live type of one class and nil printing nil next to the class'!
-!provides: 'LiveTyping' 1 182!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:08:23 pm'!
+'Description Add failing test for the live type of only nil printing nil'!
+!provides: 'LiveTyping' 1 183!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -10942,6 +10942,11 @@ test08LiveTypeOfOneClassAndNilPrintsNilNextToTheClass
 	self
 		assert: (LiveType for: {SmallInteger. UndefinedObject}) printString
 		equals: '<SmallInteger|nil>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 11:08:13 pm (UTC)'!
+test09LiveTypeOfOnlyNilPrintsNil
+
+	self assert: (LiveType for: {UndefinedObject}) printString equals: '<nil>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
