@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:05:35 pm'!
-'Description Add failing test for the live type of classes including nil printing nil next to their common superclass'!
-!provides: 'LiveTyping' 1 179!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:06:28 pm'!
+'Description Make the live type of classes including nil print nil next to their common superclass'!
+!provides: 'LiveTyping' 1 180!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -290,6 +290,16 @@ ManyClassesLiveType subclass: #StructuralLiveType
 	category: 'LiveTyping'!
 !classDefinition: 'StructuralLiveType class' category: #LiveTyping!
 StructuralLiveType class
+	instanceVariableNames: ''!
+
+!classDefinition: #NilableLiveType category: #LiveTyping!
+LiveType subclass: #NilableLiveType
+	instanceVariableNames: 'type'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'NilableLiveType class' category: #LiveTyping!
+NilableLiveType class
 	instanceVariableNames: ''!
 
 !classDefinition: #LiveTyping category: #LiveTyping!
@@ -2513,13 +2523,16 @@ printOn: aStream
 	self printClassesOn: aStream.
 	aStream nextPut: $>! !
 
-!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:03:17 pm (UTC)'!
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 for: aCollectionOfClasses
 
-	aCollectionOfClasses ifEmpty: [ ^EmptyLiveType new ].
-	aCollectionOfClasses size = 1 ifTrue: [ ^ClassLiveType of: aCollectionOfClasses anyOne ].
+	| nonNilType |
 
-	^self forManyClasses: aCollectionOfClasses! !
+	nonNilType := self forNonNilClasses: (aCollectionOfClasses copyWithout: UndefinedObject).
+
+	^(aCollectionOfClasses includes: UndefinedObject)
+		ifTrue: [ NilableLiveType of: nonNilType ]
+		ifFalse: [ nonNilType ]! !
 
 !LiveType class methodsFor: 'instance creation - private' stamp: 'HAW 12/Sep/2026, 11:03:17 pm (UTC)'!
 forManyClasses: aCollectionOfClasses
@@ -2531,6 +2544,14 @@ forManyClasses: aCollectionOfClasses
 	^(commonSuperclass inheritsFrom: Object)
 		ifTrue: [ CommonSuperclassLiveType of: aCollectionOfClasses inheritingFrom: commonSuperclass ]
 		ifFalse: [ StructuralLiveType of: aCollectionOfClasses ]! !
+
+!LiveType class methodsFor: 'instance creation - private' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
+forNonNilClasses: aCollectionOfClasses
+
+	aCollectionOfClasses ifEmpty: [ ^EmptyLiveType new ].
+	aCollectionOfClasses size = 1 ifTrue: [ ^ClassLiveType of: aCollectionOfClasses anyOne ].
+
+	^self forManyClasses: aCollectionOfClasses! !
 
 !ClassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
 initializeOf: aClass
@@ -2597,6 +2618,27 @@ selectors
 of: aCollectionOfClasses
 
 	^self new initializeOf: aCollectionOfClasses asArray! !
+
+!NilableLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
+initializeOf: aLiveType
+
+	type := aLiveType! !
+
+!NilableLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
+printClassesOn: aStream
+
+	type printClassesOn: aStream! !
+
+!NilableLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
+printNameOn: aStream
+
+	type printNameOn: aStream.
+	aStream nextPutAll: '|nil'! !
+
+!NilableLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
+of: aLiveType
+
+	^self new initializeOf: aLiveType! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 8/Jan/2026, 10:21:07 pm (UTC)'!
 checkRedefinedMethodsDidNotChange
