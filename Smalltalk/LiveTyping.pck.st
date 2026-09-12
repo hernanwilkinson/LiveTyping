@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:55:42 pm'!
-'Description Add failing test for the live type of one class printing its name'!
-!provides: 'LiveTyping' 1 168!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:56:11 pm'!
+'Description Make the live type of one class print its name'!
+!provides: 'LiveTyping' 1 169!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -240,6 +240,16 @@ Object subclass: #LiveType
 	category: 'LiveTyping'!
 !classDefinition: 'LiveType class' category: #LiveTyping!
 LiveType class
+	instanceVariableNames: ''!
+
+!classDefinition: #ClassLiveType category: #LiveTyping!
+LiveType subclass: #ClassLiveType
+	instanceVariableNames: 'class'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'ClassLiveType class' category: #LiveTyping!
+ClassLiveType class
 	instanceVariableNames: ''!
 
 !classDefinition: #EmptyLiveType category: #LiveTyping!
@@ -2469,10 +2479,27 @@ printOn: aStream
 	self printNameOn: aStream.
 	aStream nextPut: $>! !
 
-!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:55:06 pm (UTC)'!
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
 for: aCollectionOfClasses
 
-	^EmptyLiveType new! !
+	^aCollectionOfClasses
+		ifEmpty: [ EmptyLiveType new ]
+		ifNotEmpty: [ ClassLiveType of: aCollectionOfClasses anyOne ]! !
+
+!ClassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
+initializeOf: aClass
+
+	class := aClass! !
+
+!ClassLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
+printNameOn: aStream
+
+	aStream nextPutAll: class typeName! !
+
+!ClassLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
+of: aClass
+
+	^self new initializeOf: aClass! !
 
 !EmptyLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 10:55:06 pm (UTC)'!
 printNameOn: aStream
