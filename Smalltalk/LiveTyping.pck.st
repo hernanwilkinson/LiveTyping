@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:10:16 pm'!
-'Description Make printing a listing of less classes than the type has end with an ellipsis'!
-!provides: 'LiveTyping' 1 186!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:18:07 pm'!
+'Description Keep the common superclass of a single type as the type itself'!
+!provides: 'LiveTyping' 1 187!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14311,10 +14311,16 @@ createSuperclassTypeInfo
 		in: self
 		are: `{Class. Metaclass. }`! !
 
-!Collection methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
+!Collection methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 11:11:48 pm (UTC)'!
 commonSuperclass
 
-	^self inject: self anyOne into: [ :commonSuperclass :aClass | commonSuperclass commonSuperclassWith: aClass ]! !
+	| aClass |
+
+	aClass := self anyOne.
+
+	^(self copyWithout: aClass)
+		inject: aClass
+		into: [ :commonSuperclass :anotherClass | commonSuperclass commonSuperclassWith: anotherClass ]! !
 
 !Collection methodsFor: '*LiveTyping' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
 includesNil
