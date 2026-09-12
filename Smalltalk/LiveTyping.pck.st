@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8149] on 1 September 2026 at 8:30:58 am'!
-'Description Take back the extensions that had been filed out of the package'!
-!provides: 'LiveTyping' 1 163!
+'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 7:54:33 pm'!
+'Description Add failing test for the live type of no classes printing as unknown'!
+!provides: 'LiveTyping' 1 166!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -230,6 +230,16 @@ IncompleteTypeInfo subclass: #IncompleteTypeInfoWarning
 	category: 'LiveTyping'!
 !classDefinition: 'IncompleteTypeInfoWarning class' category: #LiveTyping!
 IncompleteTypeInfoWarning class
+	instanceVariableNames: ''!
+
+!classDefinition: #LiveType category: #LiveTyping!
+Object subclass: #LiveType
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'LiveType class' category: #LiveTyping!
+LiveType class
 	instanceVariableNames: ''!
 
 !classDefinition: #LiveTyping category: #LiveTyping!
@@ -990,6 +1000,16 @@ TestCase subclass: #InstanceVariablesTypesTest
 	category: 'LiveTyping-Tests'!
 !classDefinition: 'InstanceVariablesTypesTest class' category: #'LiveTyping-Tests'!
 InstanceVariablesTypesTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #LiveTypeTest category: #'LiveTyping-Tests'!
+TestCase subclass: #LiveTypeTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'LiveTypeTest class' category: #'LiveTyping-Tests'!
+LiveTypeTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #LiveTypingCodeSimulationTest category: #'LiveTyping-Tests'!
@@ -10705,6 +10725,11 @@ instanceVariableRawTypesSizeFor: anInstVarName
 	anInstVarName = 'instVar4' ifTrue: [ ^ 0 ].
 
 	^super instanceVariableRawTypesSizeFor: anInstVarName! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 12/Sep/2026, 10:54:19 pm (UTC)'!
+test01LiveTypeOfNoClassesPrintsAsUnknown
+
+	self assert: (LiveType for: #()) printString equals: '<?>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
