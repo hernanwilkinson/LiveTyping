@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:50:33 pm'!
-'Description Add failing test for the union of two live types printing their names before all their classes'!
-!provides: 'LiveTyping' 1 212!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:51:26 pm'!
+'Description Make the union of two live types print their names before all their classes'!
+!provides: 'LiveTyping' 1 213!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -290,6 +290,16 @@ ManyClassesLiveType subclass: #StructuralLiveType
 	category: 'LiveTyping'!
 !classDefinition: 'StructuralLiveType class' category: #LiveTyping!
 StructuralLiveType class
+	instanceVariableNames: ''!
+
+!classDefinition: #UnionLiveType category: #LiveTyping!
+ManyClassesLiveType subclass: #UnionLiveType
+	instanceVariableNames: 'types'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping'!
+!classDefinition: 'UnionLiveType class' category: #LiveTyping!
+UnionLiveType class
 	instanceVariableNames: ''!
 
 !classDefinition: #NilableLiveType category: #LiveTyping!
@@ -2545,6 +2555,16 @@ printOn: aStream listingUpTo: aNumberOfClasses
 	self printClassesOn: aStream upTo: aNumberOfClasses.
 	aStream nextPut: $>! !
 
+!LiveType methodsFor: 'union' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+union: aLiveType
+
+	^UnionLiveType of: { self. aLiveType }! !
+
+!LiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+classes
+
+	self subclassResponsibility! !
+
 !LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
 for: aCollectionOfClasses
 
@@ -2585,6 +2605,11 @@ printNameOn: aStream
 
 	aStream nextPutAll: class typeName! !
 
+!ClassLiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+classes
+
+	^{ class }! !
+
 !ClassLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
 of: aClass
 
@@ -2599,6 +2624,11 @@ printNameOn: aStream
 printNilableNameOn: aStream
 
 	aStream nextPutAll: 'nil'! !
+
+!EmptyLiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+classes
+
+	^#()! !
 
 !ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
 printClassesOn: aStream
@@ -2616,6 +2646,11 @@ printClassesOn: aStream upTo: aNumberOfClasses
 		do: [ :aClass | aStream nextPutAll: aClass typeName ]
 		separatedBy: [ aStream nextPutAll: ' | ' ].
 	classesToList size < classes size ifTrue: [ aStream nextPutAll: ' | ...' ]! !
+
+!ManyClassesLiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+classes
+
+	^classes copy! !
 
 !CommonSuperclassLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 10:57:17 pm (UTC)'!
 initializeOf: aCollectionOfClasses inheritingFrom: aCommonSuperclass
@@ -2655,6 +2690,29 @@ of: aCollectionOfClasses
 
 	^self new initializeOf: aCollectionOfClasses asArray! !
 
+!UnionLiveType methodsFor: 'initialization' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+initializeOf: aCollectionOfLiveTypes withClasses: aCollectionOfClasses
+
+	types := aCollectionOfLiveTypes.
+	classes := aCollectionOfClasses! !
+
+!UnionLiveType methodsFor: 'printing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+printNameOn: aStream
+
+	types
+		do: [ :aLiveType | aLiveType printNameOn: aStream ]
+		separatedBy: [ aStream nextPutAll: ' | ' ]! !
+
+!UnionLiveType class methodsFor: 'instance creation' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+of: aCollectionOfLiveTypes
+
+	^self new initializeOf: aCollectionOfLiveTypes asArray withClasses: (self classesOfAll: aCollectionOfLiveTypes)! !
+
+!UnionLiveType class methodsFor: 'instance creation - private' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+classesOfAll: aCollectionOfLiveTypes
+
+	^Array streamContents: [ :aStream | aCollectionOfLiveTypes do: [ :aLiveType | aStream nextPutAll: aLiveType classes ]]! !
+
 !NilableLiveType methodsFor: 'initialization' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 initializeOf: aLiveType
 
@@ -2674,6 +2732,11 @@ printClassesOn: aStream upTo: aNumberOfClasses
 printNameOn: aStream
 
 	type printNilableNameOn: aStream! !
+
+!NilableLiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+classes
+
+	^type classes copyWith: UndefinedObject! !
 
 !NilableLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 of: aLiveType
