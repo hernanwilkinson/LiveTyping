@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:52:07 pm'!
-'Description Make the union of the empty live type with another be the other'!
-!provides: 'LiveTyping' 1 215!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:52:29 pm'!
+'Description Add failing test for the union of a live type with the empty one being the live type'!
+!provides: 'LiveTyping' 1 216!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11177,6 +11177,15 @@ test12UnionOfTheEmptyLiveTypeWithAnotherIsTheOther
 	| union |
 
 	union := (LiveType for: #()) union: (LiveType for: {SmallInteger}).
+
+	self assert: union printString equals: '<SmallInteger>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 11:52:17 pm (UTC)'!
+test13UnionOfALiveTypeWithTheEmptyOneIsTheLiveType
+
+	| union |
+
+	union := (LiveType for: {SmallInteger}) union: (LiveType for: #()).
 
 	self assert: union printString equals: '<SmallInteger>'! !
 
