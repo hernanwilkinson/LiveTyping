@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:35:58 pm'!
-'Description Add failing test for the live type of a method variable of a class at a selector being the one of its method'!
-!provides: 'LiveTyping' 1 204!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:36:35 pm'!
+'Description Make a class answer the live type of a method variable at a selector'!
+!provides: 'LiveTyping' 1 205!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14232,6 +14232,11 @@ liveTypeOfInstanceVariableNamed: anInstanceVariableName
 liveTypeOfInstanceVariableNamed: anInstanceVariableName ifAbsent: anAbsentBlock
 
 	^(self typeInfoOfInstanceVariableNamed: anInstanceVariableName ifAbsent: [ ^anAbsentBlock value ]) liveType! !
+
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 13/Sep/2026, 10:36:23 pm (UTC)'!
+liveTypeOfMethodVariableNamed: aVariableName at: aSelector
+
+	^(self typeInfoOfMethodVariableNamed: aVariableName at: aSelector) liveType! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 27/Feb/2019, 10:53:33 pm (UTC)'!
 methodReturnRawTypesSizeOf: aMethod
