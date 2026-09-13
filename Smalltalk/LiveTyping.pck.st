@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:27:38 pm'!
-'Description Add failing test for the return live type of a method being the one of its return types'!
-!provides: 'LiveTyping' 1 190!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:28:01 pm'!
+'Description Make a method answer the live type of its return types'!
+!provides: 'LiveTyping' 1 191!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14621,6 +14621,11 @@ printTypeInfoOn: aStream
 	self returnTypeInfo printOn: aStream.
 	aStream newLine.
 	variablesTypes printTypesInfoFooterOn: aStream! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 13/Sep/2026, 10:27:49 pm (UTC)'!
+returnLiveType
+
+	^self returnTypeInfo liveType! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:57:21 pm (UTC)'!
 returnRawTypes
