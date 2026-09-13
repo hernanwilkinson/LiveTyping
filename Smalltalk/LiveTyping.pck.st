@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:29:08 pm'!
-'Description Add failing test for the live type of an instance variable of a class being the one of its types'!
-!provides: 'LiveTyping' 1 194!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:29:31 pm'!
+'Description Make a class answer the live type of an instance variable'!
+!provides: 'LiveTyping' 1 195!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14161,6 +14161,11 @@ instanceVariablesRawTypesUnload: aClassToUnload
 instanceVariablesTypes
 
 	^InstanceVariablesTypes of: self! !
+
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 13/Sep/2026, 10:29:20 pm (UTC)'!
+liveTypeOfInstanceVariableNamed: anInstanceVariableName
+
+	^(self typeInfoOfInstanceVariableNamed: anInstanceVariableName) liveType! !
 
 !ClassDescription methodsFor: '*LiveTyping-private' stamp: 'HAW 27/Feb/2019, 10:53:33 pm (UTC)'!
 methodReturnRawTypesSizeOf: aMethod
