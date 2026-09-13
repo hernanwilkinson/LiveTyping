@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:34:40 pm'!
-'Description Add failing test for the live type of a variable a method does not define being the value of the absent block'!
-!provides: 'LiveTyping' 1 202!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:35:19 pm'!
+'Description Make a method answer the absent block value as the live type of a variable it does not define'!
+!provides: 'LiveTyping' 1 203!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14664,6 +14664,11 @@ liveTypeOfInstanceVariableNamed: anInstanceVariableName
 liveTypeOfVariableNamed: aVariableName
 
 	^(self typeInfoOfVariableNamed: aVariableName) liveType! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 13/Sep/2026, 10:35:06 pm (UTC)'!
+liveTypeOfVariableNamed: aVariableName ifAbsent: anAbsentBlock
+
+	^(self methodVariablesTypes typeInfoOf: aVariableName ifAbsent: [ ^anAbsentBlock value ]) liveType! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/Feb/2019, 9:34:33 pm (UTC)'!
 liveTypingAutoCompleterDocumentation
