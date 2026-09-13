@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:51:48 pm'!
-'Description Add failing test for the union of the empty live type with another being the other'!
-!provides: 'LiveTyping' 1 214!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:52:07 pm'!
+'Description Make the union of the empty live type with another be the other'!
+!provides: 'LiveTyping' 1 215!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2629,6 +2629,11 @@ printNilableNameOn: aStream
 classes
 
 	^#()! !
+
+!EmptyLiveType methodsFor: 'union' stamp: 'HAW 13/Sep/2026, 11:51:57 pm (UTC)'!
+union: aLiveType
+
+	^aLiveType! !
 
 !ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
 printClassesOn: aStream
