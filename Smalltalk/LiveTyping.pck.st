@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:54:35 pm'!
-'Description Make the selectors of a class live type the ones of the class below Object'!
-!provides: 'LiveTyping' 1 219!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:55:17 pm'!
+'Description Add failing test for the selectors of a common superclass live type being the ones its classes share below Object'!
+!provides: 'LiveTyping' 1 220!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11221,6 +11221,19 @@ test14SelectorsOfAClassLiveTypeAreTheOnesOfTheClassBelowObject
 		yourself.
 
 	self assert: (LiveType for: {Integer}) selectors asSet equals: expectedSelectors! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 11:55:06 pm (UTC)'!
+test15SelectorsOfACommonSuperclassLiveTypeAreTheOnesItsClassesShareBelowObject
+
+	| expectedSelectors |
+
+	expectedSelectors := Set new
+		addAll: Number selectors;
+		addAll: Magnitude selectors;
+		addAll: (Integer selectors intersection: Float selectors);
+		yourself.
+
+	self assert: (LiveType for: {Integer. Float}) selectors asSet equals: expectedSelectors! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
