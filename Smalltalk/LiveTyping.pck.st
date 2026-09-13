@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:49:27 pm'!
-'Description Resolve the marks among the return types of a method to build its return live type'!
-!provides: 'LiveTyping' 1 209!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:49:50 pm'!
+'Description Add failing test for the return live type at a selector of a method returning self being the live type of the class'!
+!provides: 'LiveTyping' 1 210!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -9021,6 +9021,11 @@ test18ReturnLiveTypeAtASelectorIsTheReturnLiveTypeOfTheMethodOfTheClass
 test19ReturnLiveTypeOfAMethodReturningSelfIsTheLiveTypeOfItsClass
 
 	self assert: (self class >> #quickReturnSelf) returnLiveType printString equals: '<ReturnTypeInfoTest>'! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 11:49:38 pm (UTC)'!
+test20ReturnLiveTypeAtASelectorOfAMethodReturningSelfIsTheLiveTypeOfTheClass
+
+	self assert: (self class returnLiveTypeAt: #quickReturnSelf) printString equals: '<ReturnTypeInfoTest>'! !
 
 !ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 17/Jan/2019, 2:46:48 pm (UTC)'!
 assertReturnTypeOf: aSelector are: types
