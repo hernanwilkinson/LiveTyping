@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:31:29 pm'!
-'Description Make a method answer the live type of an instance variable of its class'!
-!provides: 'LiveTyping' 1 199!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:32:57 pm'!
+'Description Add failing test for the live type of a variable of a method being the one of its types'!
+!provides: 'LiveTyping' 1 200!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -8797,6 +8797,27 @@ test03RemovingAClassRemovesItFromMethodVariablesRawTypes
 test04RemovingAClassRemovesItFromMethodVariableRemoteVectorRawTypes
 
 	self assertTypeIsRemovedFor: 'tempInRemoteVector'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:32:47 pm (UTC)'!
+test05LiveTypeOfAVariableOfAMethodIsTheLiveTypeOfItsTypes
+
+	| method |
+
+	method := self class >> #methodStoringItsParameter:.
+	method initializeTypeInformation.
+	self methodStoringItsParameter: 1.
+	self methodStoringItsParameter: 1/2.
+
+	self assert: (method liveTypeOfVariableNamed: 'aParameter') printString equals: '<Number # SmallInteger | Fraction>'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 13/Sep/2026, 10:32:47 pm (UTC)'!
+methodStoringItsParameter: aParameter
+
+	| storedParameter |
+
+	storedParameter := aParameter.
+
+	^storedParameter! !
 
 !MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 28/Feb/2019, 9:23:21 pm (UTC)'!
 methodWithParameterOfClassToRemove: p1
