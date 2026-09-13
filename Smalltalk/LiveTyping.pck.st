@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:54:00 pm'!
-'Description Add failing test for the selectors of a class live type being the ones of the class below Object'!
-!provides: 'LiveTyping' 1 218!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:54:35 pm'!
+'Description Make the selectors of a class live type the ones of the class below Object'!
+!provides: 'LiveTyping' 1 219!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2565,6 +2565,11 @@ classes
 
 	self subclassResponsibility! !
 
+!LiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:54:26 pm (UTC)'!
+selectors
+
+	self subclassResponsibility! !
+
 !LiveType methodsFor: 'union - private' stamp: 'HAW 13/Sep/2026, 11:52:58 pm (UTC)'!
 unionWithNotEmpty: aLiveType
 
@@ -2614,6 +2619,11 @@ printNameOn: aStream
 classes
 
 	^{ class }! !
+
+!ClassLiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:54:26 pm (UTC)'!
+selectors
+
+	^class allSelectorsBelowObject! !
 
 !ClassLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 10:56:01 pm (UTC)'!
 of: aClass
