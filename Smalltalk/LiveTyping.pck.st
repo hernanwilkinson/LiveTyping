@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:32:57 pm'!
-'Description Add failing test for the live type of a variable of a method being the one of its types'!
-!provides: 'LiveTyping' 1 200!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:34:04 pm'!
+'Description Make a method answer the live type of one of its variables'!
+!provides: 'LiveTyping' 1 201!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14650,6 +14650,11 @@ isReturnSpecialTrue
 liveTypeOfInstanceVariableNamed: anInstanceVariableName
 
 	^self methodClass liveTypeOfInstanceVariableNamed: anInstanceVariableName! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 13/Sep/2026, 10:33:51 pm (UTC)'!
+liveTypeOfVariableNamed: aVariableName
+
+	^(self typeInfoOfVariableNamed: aVariableName) liveType! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 8/Feb/2019, 9:34:33 pm (UTC)'!
 liveTypingAutoCompleterDocumentation
