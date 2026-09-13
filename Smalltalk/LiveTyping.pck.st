@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:28:44 pm'!
-'Description Make a class answer the return live type of its method at a selector'!
-!provides: 'LiveTyping' 1 193!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:29:08 pm'!
+'Description Add failing test for the live type of an instance variable of a class being the one of its types'!
+!provides: 'LiveTyping' 1 194!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -8713,6 +8713,14 @@ test14InstVarAtPutKeepTypeInfo
 
 	self assert: 1 equals: types size.
 	self assert: (types includes: SmallInteger)! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:28:57 pm (UTC)'!
+test15LiveTypeOfInstanceVariableNamedIsTheLiveTypeOfItsTypes
+
+	self class initializeInstanceVariablesRawTypes.
+	iv1 := 10.
+
+	self assert: (self class liveTypeOfInstanceVariableNamed: 'iv1') printString equals: '<SmallInteger>'! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 27/Nov/2018, 6:04:54 pm (UTC)'!
 initializeHierarchyForTestingInstanceVariablesTypes
