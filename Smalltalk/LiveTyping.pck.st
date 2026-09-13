@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:51:26 pm'!
-'Description Make the union of two live types print their names before all their classes'!
-!provides: 'LiveTyping' 1 213!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:51:48 pm'!
+'Description Add failing test for the union of the empty live type with another being the other'!
+!provides: 'LiveTyping' 1 214!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11165,6 +11165,15 @@ test11UnionOfTwoLiveTypesPrintsTheirNamesBeforeAllTheirClasses
 	union := (LiveType for: {SmallInteger. Float}) union: (LiveType for: {String. Symbol}).
 
 	self assert: union printString equals: '<Number | String # SmallInteger | Float | String | Symbol>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 11:51:37 pm (UTC)'!
+test12UnionOfTheEmptyLiveTypeWithAnotherIsTheOther
+
+	| union |
+
+	union := (LiveType for: #()) union: (LiveType for: {SmallInteger}).
+
+	self assert: union printString equals: '<SmallInteger>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
