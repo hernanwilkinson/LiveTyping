@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:34:04 pm'!
-'Description Make a method answer the live type of one of its variables'!
-!provides: 'LiveTyping' 1 201!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:34:40 pm'!
+'Description Add failing test for the live type of a variable a method does not define being the value of the absent block'!
+!provides: 'LiveTyping' 1 202!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -8809,6 +8809,15 @@ test05LiveTypeOfAVariableOfAMethodIsTheLiveTypeOfItsTypes
 	self methodStoringItsParameter: 1/2.
 
 	self assert: (method liveTypeOfVariableNamed: 'aParameter') printString equals: '<Number # SmallInteger | Fraction>'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:34:30 pm (UTC)'!
+test06LiveTypeOfAVariableAMethodDoesNotDefineIsTheValueOfTheAbsentBlock
+
+	| method |
+
+	method := self class >> #methodStoringItsParameter:.
+
+	self assert: (method liveTypeOfVariableNamed: 'notDefined' ifAbsent: [ 'absent' ]) equals: 'absent'! !
 
 !MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 13/Sep/2026, 10:32:47 pm (UTC)'!
 methodStoringItsParameter: aParameter
