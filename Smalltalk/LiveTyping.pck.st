@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:37:11 pm'!
-'Description Add failing test for the return live type of a not implemented method being the one of no classes'!
-!provides: 'LiveTyping' 1 206!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:40:02 pm'!
+'Description Make a not implemented method answer the live type of no classes as its return live type'!
+!provides: 'LiveTyping' 1 207!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -7410,6 +7410,11 @@ computeMessageEntriesWithBinaryMessageForTypeInfo: aVariableTypeInfo
 isForCurrentTypeSystem
 
 	^ Smalltalk isLiveTypingInstalled ! !
+
+!NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 13/Sep/2026, 10:37:39 pm (UTC)'!
+returnLiveType
+
+	^LiveType for: self returnTypes! !
 
 !NotImplementedMethod methodsFor: 'compiled method protocol' stamp: 'HAW 24/Oct/2018, 11:12:40 pm (UTC)'!
 returnTypes
