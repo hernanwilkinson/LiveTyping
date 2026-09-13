@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:27:16 pm'!
-'Description Make a variable type info answer the live type of its types'!
-!provides: 'LiveTyping' 1 189!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:27:38 pm'!
+'Description Add failing test for the return live type of a method being the one of its return types'!
+!provides: 'LiveTyping' 1 190!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -8932,6 +8932,11 @@ test16ReturnTypesOfAbstractMethodWorksWhenNotImplementedInAllSubclasses
 
 	self assert: 1 equals: returnTypes size.
 	self assert: (returnTypes includesAllOf: (TypeInfoSibling1TestClass returnTypesAt: #implementedOnSibling1Only)) ! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:27:27 pm (UTC)'!
+test17ReturnLiveTypeOfAMethodIsTheLiveTypeOfItsReturnTypes
+
+	self assert: (self class >> #quickReturnTrue) returnLiveType printString equals: '<True>'! !
 
 !ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 17/Jan/2019, 2:46:48 pm (UTC)'!
 assertReturnTypeOf: aSelector are: types
