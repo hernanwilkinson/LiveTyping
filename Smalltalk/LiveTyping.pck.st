@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:55:54 pm'!
-'Description Make the selectors of any live type made of many classes the ones they share below Object'!
-!provides: 'LiveTyping' 1 221!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:56:35 pm'!
+'Description Add test for the selectors of a union live type being the ones its types share'!
+!provides: 'LiveTyping' 1 222!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11234,6 +11234,15 @@ test15SelectorsOfACommonSuperclassLiveTypeAreTheOnesItsClassesShareBelowObject
 		yourself.
 
 	self assert: (LiveType for: {Integer. Float}) selectors asSet equals: expectedSelectors! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 11:56:21 pm (UTC)'!
+test16SelectorsOfAUnionLiveTypeAreTheOnesItsTypesShare
+
+	| union |
+
+	union := (LiveType for: {Magnitude}) union: (LiveType for: {Collection}).
+
+	self assert: union selectors asSet equals: (Magnitude selectors intersection: Collection selectors) asSet! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
