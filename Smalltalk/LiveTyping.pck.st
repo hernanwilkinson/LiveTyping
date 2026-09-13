@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:53:08 pm'!
-'Description Make the union of a live type with the empty one be the live type'!
-!provides: 'LiveTyping' 1 217!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:54:00 pm'!
+'Description Add failing test for the selectors of a class live type being the ones of the class below Object'!
+!provides: 'LiveTyping' 1 218!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11198,6 +11198,19 @@ test13UnionOfALiveTypeWithTheEmptyOneIsTheLiveType
 	union := (LiveType for: {SmallInteger}) union: (LiveType for: #()).
 
 	self assert: union printString equals: '<SmallInteger>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 11:53:50 pm (UTC)'!
+test14SelectorsOfAClassLiveTypeAreTheOnesOfTheClassBelowObject
+
+	| expectedSelectors |
+
+	expectedSelectors := Set new
+		addAll: Integer selectors;
+		addAll: Number selectors;
+		addAll: Magnitude selectors;
+		yourself.
+
+	self assert: (LiveType for: {Integer}) selectors asSet equals: expectedSelectors! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
