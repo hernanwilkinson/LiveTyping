@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 12 September 2026 at 8:18:07 pm'!
-'Description Keep the common superclass of a single type as the type itself'!
-!provides: 'LiveTyping' 1 187!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:26:32 pm'!
+'Description Add failing test for the live type of a variable type info being the one of its types'!
+!provides: 'LiveTyping' 1 188!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11910,6 +11910,18 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: types size equals: 2.
 	self assert: (types includes: 1 class).
 	self assert: (types includes: 1.0 class)! !
+
+!VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:26:22 pm (UTC)'!
+test41LiveTypeIsTheLiveTypeOfTheStoredTypes
+
+	| variableTypeInfo |
+
+	variableTypeInfo := VariableTypeInfo new initializeRawTypes: (Array new: 2).
+
+	variableTypeInfo addType: 1 class.
+	variableTypeInfo addType: 1.0 class.
+
+	self assert: variableTypeInfo liveType printString equals: '<Number # SmallInteger | Float>'! !
 
 !VariableTypeInfoTest class methodsFor: 'as yet unclassified' stamp: 'HAW 16/Oct/2018, 3:07:49 am (UTC)'!
 createInstanceVariableRawTypesFor: anInstVarName
