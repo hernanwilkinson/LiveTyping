@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:49:50 pm'!
-'Description Add failing test for the return live type at a selector of a method returning self being the live type of the class'!
-!provides: 'LiveTyping' 1 210!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:50:10 pm'!
+'Description Ask the method for the return live type of a class at a selector so marks get resolved'!
+!provides: 'LiveTyping' 1 211!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -14322,10 +14322,10 @@ returnCommonSupertypeAt: aSelector ifNoTypes: aBlock
 	^(self returnTypeInfoAt: aSelector) commonSupertypeIfNoTypes: aBlock
 	! !
 
-!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 13/Sep/2026, 10:28:34 pm (UTC)'!
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 13/Sep/2026, 11:50:01 pm (UTC)'!
 returnLiveTypeAt: aSelector
 
-	^(self returnTypeInfoAt: aSelector) liveType! !
+	^(self compiledMethodAt: aSelector) returnLiveType! !
 
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 21/Oct/2018, 2:02:03 am (UTC)'!
 returnTypeInfoAt: aSelector
