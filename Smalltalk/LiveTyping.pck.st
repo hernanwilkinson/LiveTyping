@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:29:31 pm'!
-'Description Make a class answer the live type of an instance variable'!
-!provides: 'LiveTyping' 1 195!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:29:53 pm'!
+'Description Add failing test for the live type of an instance variable a class does not define being the value of the absent block'!
+!provides: 'LiveTyping' 1 196!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -8721,6 +8721,13 @@ test15LiveTypeOfInstanceVariableNamedIsTheLiveTypeOfItsTypes
 	iv1 := 10.
 
 	self assert: (self class liveTypeOfInstanceVariableNamed: 'iv1') printString equals: '<SmallInteger>'! !
+
+!InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:29:43 pm (UTC)'!
+test16LiveTypeOfAnInstanceVariableTheClassDoesNotDefineIsTheValueOfTheAbsentBlock
+
+	self
+		assert: (self class liveTypeOfInstanceVariableNamed: 'notDefined' ifAbsent: [ 'absent' ])
+		equals: 'absent'! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'set up' stamp: 'HAW 27/Nov/2018, 6:04:54 pm (UTC)'!
 initializeHierarchyForTestingInstanceVariablesTypes
