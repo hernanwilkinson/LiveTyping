@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:40:02 pm'!
-'Description Make a not implemented method answer the live type of no classes as its return live type'!
-!provides: 'LiveTyping' 1 207!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:49:03 pm'!
+'Description Add failing test for the return live type of a method returning self being the live type of its class'!
+!provides: 'LiveTyping' 1 208!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -9016,6 +9016,11 @@ test17ReturnLiveTypeOfAMethodIsTheLiveTypeOfItsReturnTypes
 test18ReturnLiveTypeAtASelectorIsTheReturnLiveTypeOfTheMethodOfTheClass
 
 	self assert: (self class returnLiveTypeAt: #quickReturnTrue) printString equals: '<True>'! !
+
+!ReturnTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 11:48:45 pm (UTC)'!
+test19ReturnLiveTypeOfAMethodReturningSelfIsTheLiveTypeOfItsClass
+
+	self assert: (self class >> #quickReturnSelf) returnLiveType printString equals: '<ReturnTypeInfoTest>'! !
 
 !ReturnTypeInfoTest methodsFor: 'assertions' stamp: 'HAW 17/Jan/2019, 2:46:48 pm (UTC)'!
 assertReturnTypeOf: aSelector are: types
