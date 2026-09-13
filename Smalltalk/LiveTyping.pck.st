@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:26:32 pm'!
-'Description Add failing test for the live type of a variable type info being the one of its types'!
-!provides: 'LiveTyping' 1 188!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:27:16 pm'!
+'Description Make a variable type info answer the live type of its types'!
+!provides: 'LiveTyping' 1 189!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -3931,6 +3931,11 @@ addType: aType ifFull: aFullBlock
 isTypesEmpty
 
 	^rawTypes isTypesEmpty! !
+
+!VariableTypeInfo methodsFor: 'types' stamp: 'HAW 13/Sep/2026, 10:26:43 pm (UTC)'!
+liveType
+
+	^LiveType for: self types! !
 
 !VariableTypeInfo methodsFor: 'types' stamp: 'HAW 16/Jul/2019, 8:35:00 pm (UTC)'!
 removeAllTypes
@@ -11911,15 +11916,15 @@ test40TypesDoEvaluatesBlockOnEachType
 	self assert: (types includes: 1 class).
 	self assert: (types includes: 1.0 class)! !
 
-!VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:26:22 pm (UTC)'!
+!VariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:27:07 pm (UTC)'!
 test41LiveTypeIsTheLiveTypeOfTheStoredTypes
 
 	| variableTypeInfo |
 
 	variableTypeInfo := VariableTypeInfo new initializeRawTypes: (Array new: 2).
 
-	variableTypeInfo addType: 1 class.
-	variableTypeInfo addType: 1.0 class.
+	variableTypeInfo addType: SmallInteger.
+	variableTypeInfo addType: Float.
 
 	self assert: variableTypeInfo liveType printString equals: '<Number # SmallInteger | Float>'! !
 
