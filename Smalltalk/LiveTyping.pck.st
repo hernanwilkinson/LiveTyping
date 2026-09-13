@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:52:29 pm'!
-'Description Add failing test for the union of a live type with the empty one being the live type'!
-!provides: 'LiveTyping' 1 216!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:53:08 pm'!
+'Description Make the union of a live type with the empty one be the live type'!
+!provides: 'LiveTyping' 1 217!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2555,15 +2555,20 @@ printOn: aStream listingUpTo: aNumberOfClasses
 	self printClassesOn: aStream upTo: aNumberOfClasses.
 	aStream nextPut: $>! !
 
-!LiveType methodsFor: 'union' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
+!LiveType methodsFor: 'union' stamp: 'HAW 13/Sep/2026, 11:52:58 pm (UTC)'!
 union: aLiveType
 
-	^UnionLiveType of: { self. aLiveType }! !
+	^aLiveType unionWithNotEmpty: self! !
 
 !LiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
 classes
 
 	self subclassResponsibility! !
+
+!LiveType methodsFor: 'union - private' stamp: 'HAW 13/Sep/2026, 11:52:58 pm (UTC)'!
+unionWithNotEmpty: aLiveType
+
+	^UnionLiveType of: { aLiveType. self }! !
 
 !LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
 for: aCollectionOfClasses
@@ -2632,6 +2637,11 @@ classes
 
 !EmptyLiveType methodsFor: 'union' stamp: 'HAW 13/Sep/2026, 11:51:57 pm (UTC)'!
 union: aLiveType
+
+	^aLiveType! !
+
+!EmptyLiveType methodsFor: 'union - private' stamp: 'HAW 13/Sep/2026, 11:52:58 pm (UTC)'!
+unionWithNotEmpty: aLiveType
 
 	^aLiveType! !
 
