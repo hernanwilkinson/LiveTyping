@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:35:19 pm'!
-'Description Make a method answer the absent block value as the live type of a variable it does not define'!
-!provides: 'LiveTyping' 1 203!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 7:35:58 pm'!
+'Description Add failing test for the live type of a method variable of a class at a selector being the one of its method'!
+!provides: 'LiveTyping' 1 204!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -8818,6 +8818,19 @@ test06LiveTypeOfAVariableAMethodDoesNotDefineIsTheValueOfTheAbsentBlock
 	method := self class >> #methodStoringItsParameter:.
 
 	self assert: (method liveTypeOfVariableNamed: 'notDefined' ifAbsent: [ 'absent' ]) equals: 'absent'! !
+
+!MethodVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 13/Sep/2026, 10:35:47 pm (UTC)'!
+test07LiveTypeOfAMethodVariableOfAClassAtASelectorIsTheOneOfItsMethod
+
+	| method |
+
+	method := self class >> #methodStoringItsParameter:.
+	method initializeTypeInformation.
+	self methodStoringItsParameter: 1.
+
+	self
+		assert: (self class liveTypeOfMethodVariableNamed: 'aParameter' at: #methodStoringItsParameter:) printString
+		equals: '<SmallInteger>'! !
 
 !MethodVariableTypeInfoTest methodsFor: 'test data' stamp: 'HAW 13/Sep/2026, 10:32:47 pm (UTC)'!
 methodStoringItsParameter: aParameter
