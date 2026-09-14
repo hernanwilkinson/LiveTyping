@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 9:04:21 pm'!
-'Description Make the selectors of a nilable live type the ones of the type without nil'!
-!provides: 'LiveTyping' 1 224!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 9:09:32 pm'!
+'Description Add failing test for the union of a nilable live type with another being the nilable union of both'!
+!provides: 'LiveTyping' 1 225!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11255,6 +11255,15 @@ test17SelectorsOfANilableLiveTypeAreTheOnesOfTheTypeWithoutNil
 	self
 		assert: (LiveType for: {Integer. UndefinedObject}) selectors asSet
 		equals: (LiveType for: {Integer}) selectors asSet! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 14/Sep/2026, 12:09:21 am (UTC)'!
+test18UnionOfANilableLiveTypeWithAnotherIsTheNilableUnionOfBoth
+
+	| union |
+
+	union := (LiveType for: {SmallInteger. UndefinedObject}) union: (LiveType for: {String}).
+
+	self assert: union printString equals: '<SmallInteger | String|nil # SmallInteger | String>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
