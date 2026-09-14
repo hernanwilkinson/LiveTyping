@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 8:57:10 pm'!
-'Description Add failing test for the selectors of a nilable live type being the ones of the type without nil'!
-!provides: 'LiveTyping' 1 223!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 9:04:21 pm'!
+'Description Make the selectors of a nilable live type the ones of the type without nil'!
+!provides: 'LiveTyping' 1 224!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2762,6 +2762,11 @@ printNameOn: aStream
 classes
 
 	^type classes copyWith: UndefinedObject! !
+
+!NilableLiveType methodsFor: 'accessing' stamp: 'HAW 14/Sep/2026, 12:04:11 am (UTC)'!
+selectors
+
+	^type selectors! !
 
 !NilableLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 of: aLiveType
