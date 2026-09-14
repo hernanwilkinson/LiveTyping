@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 9:09:32 pm'!
-'Description Add failing test for the union of a nilable live type with another being the nilable union of both'!
-!provides: 'LiveTyping' 1 225!
+'From Cuis7.9 [latest update: #8170] on 13 September 2026 at 9:13:34 pm'!
+'Description Make the union of a nilable live type with another the nilable union of both'!
+!provides: 'LiveTyping' 1 226!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2767,6 +2767,11 @@ classes
 selectors
 
 	^type selectors! !
+
+!NilableLiveType methodsFor: 'union' stamp: 'HAW 14/Sep/2026, 12:13:11 am (UTC)'!
+union: aLiveType
+
+	^self class of: (type union: aLiveType)! !
 
 !NilableLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 of: aLiveType
