@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8184] on 14 September 2026 at 9:08:14 pm'!
-'Description Re-parenthesize only the sends in the actual scope'!
-!provides: 'LiveTyping' 1 165!
+'From Cuis7.9 [latest update: #8184] on 14 September 2026 at 9:36:08 pm'!
+'Description Re-parenthesize only the sends in the actual scope when renaming too'!
+!provides: 'LiveTyping' 1 166!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -910,6 +910,26 @@ RefactoringTest subclass: #AddParameterWithActualScopeTest
 	category: 'LiveTyping-Tests'!
 !classDefinition: 'AddParameterWithActualScopeTest class' category: #'LiveTyping-Tests'!
 AddParameterWithActualScopeTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #ExtractAsParameterWithActualScopeTest category: #'LiveTyping-Tests'!
+RefactoringTest subclass: #ExtractAsParameterWithActualScopeTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'ExtractAsParameterWithActualScopeTest class' category: #'LiveTyping-Tests'!
+ExtractAsParameterWithActualScopeTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #InlineMethodWithActualScopeTest category: #'LiveTyping-Tests'!
+RefactoringTest subclass: #InlineMethodWithActualScopeTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'InlineMethodWithActualScopeTest class' category: #'LiveTyping-Tests'!
+InlineMethodWithActualScopeTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #RemoveParameterWithActualScopeTest category: #'LiveTyping-Tests'!
@@ -7389,6 +7409,14 @@ messageSendSelectorKeywordPositionsIn: aMethodNode
 
 ! !
 
+!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
+sendRangesToReparenthesizeIn: aMethodNode
+
+	^aMethodNode
+		actualMessageSendRangesOfAll: implementors
+		ifAbsent: [ #() ]
+		withPossibleMessageSends: shouldChangePossibleMessageSends! !
+
 !RenameSelectorWithActualScope methodsFor: 'initialization' stamp: 'HAW 1/Jan/2020, 10:50:27 pm (UTC)'!
 initilaizeWithPossibleMessageSends: aShouldRenamePossibleMessageSends
 
@@ -9256,6 +9284,85 @@ classToRefactorName
 
 	^#ClassToAddParameter! !
 
+!ExtractAsParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
+classOfOtherImplementorName
+
+	^#ClassOfSender! !
+
+!ExtractAsParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
+classToRefactorName
+
+	^#ClassToExtractFrom! !
+
+!ExtractAsParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 15/Sep/2026, 12:18:17 am (UTC)'!
+test01ExtractingAsAParameterInTheActualScopeAddsTheParenthesesTheSendNeedsAndLeavesTheOthers
+
+	| classToRefactor classOfOtherImplementor refactoring |
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self
+		createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1 ^42'.
+	classOfOtherImplementor compile: 'm1 ^42'.
+	classToRefactor compile: 'm3 ^{ self m1 yourself. ', self classOfOtherImplementorName, ' new m1 yourself }'.
+	classToRefactor new m3.
+
+	refactoring := ExtractAsParameterWithActualScope
+		named: 'aNumber'
+		extractedFromAll: { 5 to: 6 }
+		at: classToRefactor >> #m1
+		implementors: { classToRefactor >> #m1 }
+		senders: { classToRefactor >> #m3 }
+		withPossibleMessageSends: false.
+	refactoring apply.
+
+	self
+		assert: (classToRefactor sourceCodeAt: #m3)
+		equals: 'm3 ^{ (self m1: 42) yourself. ', self classOfOtherImplementorName, ' new m1 yourself }'! !
+
+!InlineMethodWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
+classOfOtherImplementorName
+
+	^#ClassOfSender! !
+
+!InlineMethodWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
+classToRefactorName
+
+	^#ClassToInline! !
+
+!InlineMethodWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 15/Sep/2026, 12:18:17 am (UTC)'!
+test01InliningInTheActualScopeDropsTheParenthesesTheInlinedExpressionDoesNotNeedAndKeepsTheOthers
+
+	| classToRefactor classOfOtherImplementor implementors messageSends sureMessageSends refactoring |
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self
+		createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1 ^3 factorial'.
+	classOfOtherImplementor compile: 'm1 ^3 factorial'.
+	classToRefactor compile: 'm2 ^{ (self m1) printString. (', self classOfOtherImplementorName, ' new m1) printString }'.
+	classToRefactor new m2.
+
+	implementors := OrderedCollection new.
+	messageSends := OrderedCollection new.
+	InlineMethodWithActualScope
+		addActualImplementorsOf: #m1
+		in: classToRefactor
+		to: implementors
+		andActualMessageSendsTo: messageSends
+		inSystem: Smalltalk.
+	sureMessageSends := messageSends select: [ :each |
+		each methodReference isValid and: [ each isPossibleMessageSend not ] ].
+	refactoring := InlineMethodWithActualScope
+		from: classToRefactor >> #m1
+		intoSendersAndUsages: sureMessageSends
+		removeMethod: true.
+	refactoring apply.
+
+	self
+		assert: (classToRefactor sourceCodeAt: #m2)
+		equals: 'm2 ^{ 3 factorial printString. (', self classOfOtherImplementorName, ' new m1) printString }'! !
+
 !RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 2/Jan/2020, 9:33:01 am (UTC)'!
 test01DoesNotChangePossibleMessageSendWhenInstructedToDoSo
 
@@ -9987,6 +10094,34 @@ test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 	(ChangeSelectorKeepingParameters class organization listAtCategoryNamed: Categorizer instanceCreation) do: [ :anInstanceCreationSelector |
 		instanceCreationMethod := RenameSelectorWithActualScope class compiledMethodAt: anInstanceCreationSelector ifAbsent: [ self fail ].
 		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
+
+!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 15/Sep/2026, 12:18:17 am (UTC)'!
+test13TheParenthesesOfASendOutsideTheScopeAreKept
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor rename |
+
+	oldSelector := #abc:.
+	senderToChange := #m3.
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self
+		createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'abc: aParameter ^aParameter'.
+	classOfOtherImplementor compile: 'abc: aParameter ^aParameter'.
+	classToRefactor compile: senderToChange, ' ^{ (self abc: 1). (', self classOfOtherImplementorName, ' new abc: 1) }'.
+	classToRefactor new perform: senderToChange.
+
+	rename := RenameSelectorWithActualScope
+		from: oldSelector
+		to: #&&
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+	rename apply.
+
+	self
+		assert: (classToRefactor>>senderToChange) sourceCode
+		equals: senderToChange, ' ^{ self && 1. (', self classOfOtherImplementorName, ' new abc: 1) }'! !
 
 !RenameSelectorWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 14/Mar/2019, 12:40:22 pm (UTC)'!
 classOfOtherImplementorName
