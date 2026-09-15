@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8149] on 1 September 2026 at 8:30:58 am'!
-'Description Take back the extensions that had been filed out of the package'!
-!provides: 'LiveTyping' 1 163!
+'From Cuis7.9 [latest update: #8184] on 14 September 2026 at 9:08:14 pm'!
+'Description Re-parenthesize only the sends in the actual scope'!
+!provides: 'LiveTyping' 1 165!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -7449,6 +7449,14 @@ messageSendLastPositionIn: aMethodNode
 	^aMethodNode actualMessageSendLastPositionsOfAll: implementors ifAbsent: [ #() ] withPossibleMessageSends: shouldChangePossibleMessageSends.
 			! !
 
+!AddParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
+sendRangesToReparenthesizeIn: aMethodNode
+
+	^aMethodNode
+		actualMessageSendRangesOfAll: implementors
+		ifAbsent: [ #() ]
+		withPossibleMessageSends: shouldChangePossibleMessageSends! !
+
 !AddParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 17/Aug/2019, 7:25:24 pm (UTC)'!
 named: aNewParameter
 	at: anIndex
@@ -7552,6 +7560,14 @@ keywordAndParameterPositionsIn: aMethodNode
 		ifAbsent: [ #() ]
 		withPossibleMessageSends: shouldChangePossibleMessageSends.
 	! !
+
+!RemoveParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
+sendRangesToReparenthesizeIn: aMethodNode
+
+	^aMethodNode
+		actualMessageSendRangesOfAll: implementors
+		ifAbsent: [ #() ]
+		withPossibleMessageSends: shouldChangePossibleMessageSends! !
 
 !RemoveParameterWithActualScope class methodsFor: 'instance creation' stamp: 'HAW 2/Jan/2020, 3:11:32 am (UTC)'!
 atIndex: aParameterIndex named: aParameterToRemove from: oldSelector implementors: implementorsCollection senders: sendersCollection withPossibleMessageSends: aShouldChangePossibleMessageSends
@@ -9202,6 +9218,34 @@ test13AddLastParameterCorrectly
 
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m1: 1 m2: 2'.! !
 
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 14/Sep/2026, 9:06:01 pm (UTC)'!
+test14TheParenthesesOfASendOutsideTheScopeAreLeftAsTheyAre
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor refactoring |
+
+	oldSelector := #m1.
+	senderToChange := #m3.
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: oldSelector asString.
+	classOfOtherImplementor compile: oldSelector asString.
+	classToRefactor compile: senderToChange, ' self m1 yourself. ', self classOfOtherImplementorName, ' new m1 yourself'.
+	classToRefactor new perform: senderToChange.
+
+	refactoring := AddParameterWithActualScope
+		named: 'p1'
+		initializedWith: '1'
+		toUnarySelector: oldSelector
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+	refactoring apply.
+
+	self
+		assert: (classToRefactor>>senderToChange) sourceCode
+		equals: senderToChange, ' (self m1: 1) yourself. ', self classOfOtherImplementorName, ' new m1 yourself'! !
+
 !AddParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 17/Aug/2019, 2:40:33 pm (UTC)'!
 classOfOtherImplementorName
 
@@ -9571,6 +9615,34 @@ test13RemovesOtherThanLastParameterCorrectly
 	refactor apply.
 
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m2: 2'.! !
+
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 14/Sep/2026, 9:06:01 pm (UTC)'!
+test14TheParenthesesOfASendOutsideTheScopeAreKept
+
+	| classToRefactor oldSelector senderToChange classOfOtherImplementor refactoring |
+
+	oldSelector := #m1:.
+	senderToChange := #m3.
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1: p1'.
+	classOfOtherImplementor compile: 'm1: p1'.
+	classToRefactor compile: senderToChange, ' self m1: (self m1: 1). ', self classOfOtherImplementorName, ' new m1: (', self classOfOtherImplementorName, ' new m1: 1)'.
+	classToRefactor new perform: senderToChange.
+
+	refactoring := RemoveParameterWithActualScope
+		atIndex: 1
+		named: 'p1'
+		from: oldSelector
+		implementors: { classToRefactor>>oldSelector }
+		senders: { classToRefactor>>senderToChange }
+		withPossibleMessageSends: false.
+	refactoring apply.
+
+	self
+		assert: (classToRefactor>>senderToChange) sourceCode
+		equals: senderToChange, ' self m1. ', self classOfOtherImplementorName, ' new m1: (', self classOfOtherImplementorName, ' new m1: 1)'! !
 
 !RemoveParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 18/Aug/2019, 3:02:24 pm (UTC)'!
 classOfOtherImplementorName
@@ -13008,6 +13080,17 @@ actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withP
 		sortingWith: [ :left :right | left <= right ]
 		using: aMethodNode ! !
 
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
+actualMessageSendRangesOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
+
+	^self
+		withActualMessageSendsOfAll: compiledMethods
+		do: [ :aMessageSendNode | (completeSourceRanges at: aMessageSendNode) anyOne ]
+		ifAbsent: absentBlock
+		withPossibleMessageSends: shouldAddPossibleMessageSends
+		sortingWith: [ :left :right | left first <= right first ]
+		using: aMethodNode! !
+
 !Encoder methodsFor: '*LiveTyping' stamp: 'HAW 18/Aug/2019, 2:17:05 am (UTC)'!
 actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
 
@@ -13141,6 +13224,17 @@ actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withP
 		withPossibleMessageSends: shouldAddPossibleMessageSends
 		using: self
 ! !
+
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
+actualMessageSendRangesOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
+
+	self completeSourceRanges.
+
+	^encoder
+		actualMessageSendRangesOfAll: compiledMethods
+		ifAbsent: absentBlock
+		withPossibleMessageSends: shouldAddPossibleMessageSends
+		using: self! !
 
 !MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 31/Dec/2019, 7:46:26 pm (UTC)'!
 actualMessageSendsSelectorPositionsOfAll: compiledMethods ifAbsent: aBlock withPossibleMessageSends: shouldAddPossibleMessageSends
