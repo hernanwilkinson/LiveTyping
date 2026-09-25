@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8184] on 16 September 2026 at 10:24:20 am'!
-'Description Redirect the senders LiveTyping saw when moving a method between sides'!
-!provides: 'LiveTyping' 1 167!
+'From Cuis7.9 [latest update: #8184] on 25 September 2026 at 5:01:27 pm'!
+'Description Take the actual scope when inlining a method from the browser'!
+!provides: 'LiveTyping' 1 168!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -930,6 +930,16 @@ RefactoringTest subclass: #ExtractAsParameterWithActualScopeTest
 	category: 'LiveTyping-Tests'!
 !classDefinition: 'ExtractAsParameterWithActualScopeTest class' category: #'LiveTyping-Tests'!
 ExtractAsParameterWithActualScopeTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #InlineMethodWithActualScopeApplierTest category: #'LiveTyping-Tests'!
+RefactoringTest subclass: #InlineMethodWithActualScopeApplierTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Tests'!
+!classDefinition: 'InlineMethodWithActualScopeApplierTest class' category: #'LiveTyping-Tests'!
+InlineMethodWithActualScopeApplierTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #InlineMethodWithActualScopeTest category: #'LiveTyping-Tests'!
@@ -8310,21 +8320,39 @@ valueHandlingRefactoringExceptions: aBlock
 			on: CanNotChangeSelectorWithNotIncludedTypes
 			do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 25/Sep/2026, 7:43:37 pm (UTC)'!
+actualImplementorsAndMessageSends
+
+	self refactoringClass
+		addActualImplementorsOf: selectorToInline
+		in: selectedClass
+		to: self collectionToAddimplementorsTo
+		andActualMessageSendsTo: self collectionToAddSendersTo
+		inSystem: Smalltalk.
+	self filterSenders! !
+
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 25/Sep/2026, 7:42:49 pm (UTC)'!
+calculateImplementorsAndSenders
+
+	self isActualScopeChoice
+		ifTrue: [ self actualImplementorsAndMessageSends ]
+		ifFalse: [ super calculateImplementorsAndSenders ]! !
+
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'FB 19/Mar/2022, 10:45:55 pm (UTC)'!
 createAndApplyRefactoring
 
 	self filterSenders.
 	super createAndApplyRefactoring.! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 14/May/2025, 2:55:16 pm (UTC)'!
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 25/Sep/2026, 7:43:37 pm (UTC)'!
 filterSenders
 
-	"Removes possible senders if user selected Actual scope"
+	"A send in a method that is no longer there names nothing to change, and one LiveTyping could
+	only guess at is kept only when the actual and possible scope was chosen"
 
-	self isActualAndPossibleScopeChoice ifFalse: [
-		messageSends := messageSends select: [:aMessageNodeReference | aMessageNodeReference isPossibleMessageSend not]
-	].
-	! !
+	messageSends := messageSends select: [ :aMessageSend |
+		aMessageSend methodReference isValid
+			and: [ self isActualAndPossibleScopeChoice or: [ aMessageSend isPossibleMessageSend not ]]]! !
 
 !InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 14/May/2025, 2:55:16 pm (UTC)'!
 isActualAndPossibleScopeChoice
@@ -9390,6 +9418,81 @@ test01ExtractingAsAParameterInTheActualScopeAddsTheParenthesesTheSendNeedsAndLea
 	self
 		assert: (classToRefactor sourceCodeAt: #m3)
 		equals: 'm3 ^{ (self m1: 42) yourself. ', self classOfOtherImplementorName, ' new m1 yourself }'! !
+
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
+applierInActualScopeInlining: aSelector of: aClass
+
+	| applier |
+
+	applier := InlineMethodWithActualScopeApplier on: nil forMethod: (aClass >> aSelector) asMethodReference.
+	applier instVarNamed: 'scopeChoice' put: (applier scopeOptionLabels indexOf: 'Actual Scope').
+	applier
+		initializeImplementorsAndMessageSends;
+		calculateImplementorsAndSenders.
+
+	^applier! !
+
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:44:03 pm (UTC)'!
+applierInActualScopeInliningTheSendOf: aSelector in: aSendingSelector of: aClass
+
+	| applier sendReference |
+
+	sendReference := (InlineMethod findReferencesToSelector: aSelector in: (MethodReference class: aClass selector: aSendingSelector)) anyOne.
+	applier := InlineMethodWithActualScopeApplier on: nil forMessageSend: sendReference.
+	applier instVarNamed: 'scopeChoice' put: (applier scopeOptionLabels indexOf: 'Actual Scope').
+	applier instVarNamed: 'shouldInlineTriggeringMessageSendOnly' put: false.
+	applier
+		initializeImplementorsAndMessageSends;
+		calculateImplementorsAndSenders.
+
+	^applier! !
+
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
+classOfOtherImplementorName
+
+	^#ClassOfOtherImplementor! !
+
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
+classToRefactorName
+
+	^#ClassToInline! !
+
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
+compileClassesSendingTheSelectorToInline
+
+	| classToRefactor classOfOtherImplementor |
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classOfOtherImplementor := self createClassNamed: self classOfOtherImplementorName.
+	classToRefactor compile: 'm1 ^3 factorial'.
+	classOfOtherImplementor compile: 'm1 ^3 factorial'.
+	classToRefactor compile: 'm2 ^{ self m1. ' , self classOfOtherImplementorName , ' new m1 }'.
+	classToRefactor new m2.
+
+	^classToRefactor! !
+
+!InlineMethodWithActualScopeApplierTest methodsFor: 'tests' stamp: 'HAW 25/Sep/2026, 7:43:37 pm (UTC)'!
+test01TheImplementorsInTheActualScopeAreTheOnesTheSendsReallyReached
+
+	| classToRefactor applier |
+
+	classToRefactor := self compileClassesSendingTheSelectorToInline.
+
+	applier := self applierInActualScopeInliningTheSendOf: #m1 in: #m2 of: classToRefactor.
+
+	self assert: (applier implementors collect: [ :anImplementor | anImplementor methodClass ]) asArray equals: { classToRefactor }! !
+
+!InlineMethodWithActualScopeApplierTest methodsFor: 'tests' stamp: 'HAW 25/Sep/2026, 7:44:03 pm (UTC)'!
+test02TheSendsInTheActualScopeAreTheOnesThatReallyReachedTheClass
+
+	| classToRefactor applier |
+
+	classToRefactor := self compileClassesSendingTheSelectorToInline.
+
+	applier := self applierInActualScopeInlining: #m1 of: classToRefactor.
+
+	self assert: applier messageSendsToInline size equals: 1.
+	self assert: applier messageSendsToInline anyOne messageNode receiver referencesSelf! !
 
 !InlineMethodWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
 classOfOtherImplementorName
