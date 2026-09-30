@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:38:08 pm'!
-'Description Make the union of a live type with an equal one the live type'!
-!provides: 'LiveTyping' 1 244!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:38:28 pm'!
+'Description Add failing test for the union of a union with a live type it already unites being the same union'!
+!provides: 'LiveTyping' 1 245!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11947,6 +11947,15 @@ test27UnionOfALiveTypeWithAnEqualOneIsTheLiveType
 	union := (LiveType for: {SmallInteger}) union: (LiveType for: {SmallInteger}).
 
 	self assert: union equals: (LiveType for: {SmallInteger})! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:38:19 pm (UTC)'!
+test28UnionOfAUnionWithALiveTypeItAlreadyUnitesIsTheSameUnion
+
+	| union |
+
+	union := (LiveType for: {SmallInteger}) union: (LiveType for: {String}).
+
+	self assert: (union union: (LiveType for: {String})) equals: union! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
