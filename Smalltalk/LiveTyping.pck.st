@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:37:49 pm'!
-'Description Add failing test for the union of a live type with an equal one being the live type'!
-!provides: 'LiveTyping' 1 243!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:38:08 pm'!
+'Description Make the union of a live type with an equal one the live type'!
+!provides: 'LiveTyping' 1 244!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2626,10 +2626,12 @@ selectors
 
 	self subclassResponsibility! !
 
-!LiveType methodsFor: 'union - private' stamp: 'HAW 13/Sep/2026, 11:52:58 pm (UTC)'!
+!LiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:37:59 pm (UTC)'!
 unionWithNotEmpty: aLiveType
 
-	^UnionLiveType of: { aLiveType. self }! !
+	^aLiveType = self
+		ifTrue: [ self ]
+		ifFalse: [ UnionLiveType of: { aLiveType. self } ]! !
 
 !LiveType methodsFor: 'nil' stamp: 'HAW 30/Sep/2026, 4:33:29 pm (UTC)'!
 orNil
