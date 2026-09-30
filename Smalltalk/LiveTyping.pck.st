@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:36:01 pm'!
-'Description Add failing test for unions of different live types over the same classes not being equal'!
-!provides: 'LiveTyping' 1 239!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:36:21 pm'!
+'Description Make unions equal only when they unite the same live types'!
+!provides: 'LiveTyping' 1 240!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2798,6 +2798,16 @@ printNameOn: aStream
 	types
 		do: [ :aLiveType | aLiveType printNameOn: aStream ]
 		separatedBy: [ aStream nextPutAll: ' | ' ]! !
+
+!UnionLiveType methodsFor: 'accessing' stamp: 'HAW 30/Sep/2026, 4:36:13 pm (UTC)'!
+types
+
+	^types copy! !
+
+!UnionLiveType methodsFor: 'comparing' stamp: 'HAW 30/Sep/2026, 4:36:13 pm (UTC)'!
+= anObject
+
+	^self class = anObject class and: [ types asSet = anObject types asSet ]! !
 
 !UnionLiveType class methodsFor: 'instance creation' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
 of: aCollectionOfLiveTypes
