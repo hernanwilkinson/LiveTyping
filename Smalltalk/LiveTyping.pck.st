@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:32:53 pm'!
-'Description Make the union of a live type with a nilable one the nilable union of both'!
-!provides: 'LiveTyping' 1 230!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:33:11 pm'!
+'Description Add failing test for the union of two nilable live types printing nil once'!
+!provides: 'LiveTyping' 1 231!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11842,6 +11842,15 @@ test19UnionOfALiveTypeWithANilableOneIsTheNilableUnionOfBoth
 	union := (LiveType for: {String}) union: (LiveType for: {SmallInteger. UndefinedObject}).
 
 	self assert: union printString equals: '<String | SmallInteger|nil # String | SmallInteger>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:33:03 pm (UTC)'!
+test20UnionOfTwoNilableLiveTypesPrintsNilOnce
+
+	| union |
+
+	union := (LiveType for: {SmallInteger. UndefinedObject}) union: (LiveType for: {String. UndefinedObject}).
+
+	self assert: union printString equals: '<SmallInteger | String|nil # SmallInteger | String>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
