@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 12:15:55 pm'!
-'Description Restore the method stamps lost when merging master'!
-!provides: 'LiveTyping' 1 228!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:32:35 pm'!
+'Description Add failing test for the union of a live type with a nilable one being the nilable union of both'!
+!provides: 'LiveTyping' 1 229!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11828,6 +11828,15 @@ test18UnionOfANilableLiveTypeWithAnotherIsTheNilableUnionOfBoth
 	union := (LiveType for: {SmallInteger. UndefinedObject}) union: (LiveType for: {String}).
 
 	self assert: union printString equals: '<SmallInteger | String|nil # SmallInteger | String>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:32:27 pm (UTC)'!
+test19UnionOfALiveTypeWithANilableOneIsTheNilableUnionOfBoth
+
+	| union |
+
+	union := (LiveType for: {String}) union: (LiveType for: {SmallInteger. UndefinedObject}).
+
+	self assert: union printString equals: '<String | SmallInteger|nil # String | SmallInteger>'! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
