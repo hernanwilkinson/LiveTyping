@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:39:42 pm'!
-'Description Make a union unite each live type once, whatever unions it is built from'!
-!provides: 'LiveTyping' 1 246!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:40:37 pm'!
+'Description Let the empty live type unite no types instead of answering the union itself'!
+!provides: 'LiveTyping' 1 247!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2611,10 +2611,10 @@ printOn: aStream listingUpTo: aNumberOfClasses
 	self printClassesOn: aStream upTo: aNumberOfClasses.
 	aStream nextPut: $>! !
 
-!LiveType methodsFor: 'union' stamp: 'HAW 13/Sep/2026, 11:52:58 pm (UTC)'!
+!LiveType methodsFor: 'union' stamp: 'HAW 30/Sep/2026, 4:39:53 pm (UTC)'!
 union: aLiveType
 
-	^aLiveType unionWithNotEmpty: self! !
+	^aLiveType unionPrecededBy: self! !
 
 !LiveType methodsFor: 'union' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
 unitedTypes
@@ -2631,8 +2631,8 @@ selectors
 
 	self subclassResponsibility! !
 
-!LiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
-unionWithNotEmpty: aLiveType
+!LiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:39:53 pm (UTC)'!
+unionPrecededBy: aLiveType
 
 	^self class unionOf: aLiveType unitedTypes , self unitedTypes! !
 
@@ -2667,12 +2667,13 @@ for: aCollectionOfClasses
 		ifTrue: [ nonNilType orNil ]
 		ifFalse: [ nonNilType ]! !
 
-!LiveType class methodsFor: 'instance creation' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 30/Sep/2026, 4:39:53 pm (UTC)'!
 unionOf: aCollectionOfLiveTypes
 
 	| distinctTypes |
 
 	distinctTypes := aCollectionOfLiveTypes withoutDuplicates.
+	distinctTypes ifEmpty: [ ^EmptyLiveType new ].
 
 	^distinctTypes size = 1
 		ifTrue: [ distinctTypes anyOne ]
@@ -2737,15 +2738,10 @@ classes
 
 	^#()! !
 
-!EmptyLiveType methodsFor: 'union' stamp: 'HAW 13/Sep/2026, 11:51:57 pm (UTC)'!
-union: aLiveType
+!EmptyLiveType methodsFor: 'union' stamp: 'HAW 30/Sep/2026, 4:39:53 pm (UTC)'!
+unitedTypes
 
-	^aLiveType! !
-
-!EmptyLiveType methodsFor: 'union - private' stamp: 'HAW 13/Sep/2026, 11:52:58 pm (UTC)'!
-unionWithNotEmpty: aLiveType
-
-	^aLiveType! !
+	^#()! !
 
 !ManyClassesLiveType methodsFor: 'printing' stamp: 'HAW 12/Sep/2026, 11:10:05 pm (UTC)'!
 printClassesOn: aStream
@@ -2875,8 +2871,8 @@ union: aLiveType
 
 	^(type union: aLiveType) orNil! !
 
-!NilableLiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:33:29 pm (UTC)'!
-unionWithNotEmpty: aLiveType
+!NilableLiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:39:53 pm (UTC)'!
+unionPrecededBy: aLiveType
 
 	^(aLiveType union: type) orNil! !
 
