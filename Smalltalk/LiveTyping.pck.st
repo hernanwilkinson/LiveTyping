@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:35:04 pm'!
-'Description Add test for live types of different classes not being equal'!
-!provides: 'LiveTyping' 1 236!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:35:22 pm'!
+'Description Add test for live types of the same classes collected in different order being equal'!
+!provides: 'LiveTyping' 1 237!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11881,6 +11881,11 @@ test21LiveTypesOfTheSameClassAreEqual
 test22LiveTypesOfDifferentClassesAreNotEqual
 
 	self deny: (LiveType for: {SmallInteger}) = (LiveType for: {String})! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:35:14 pm (UTC)'!
+test23LiveTypesOfTheSameClassesCollectedInDifferentOrderAreEqual
+
+	self assert: (LiveType for: {SmallInteger. Float}) equals: (LiveType for: {Float. SmallInteger})! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
