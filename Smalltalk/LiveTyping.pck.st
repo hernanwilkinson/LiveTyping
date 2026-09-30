@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:33:37 pm'!
-'Description Make the union of two nilable live types print nil once'!
-!provides: 'LiveTyping' 1 232!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:33:59 pm'!
+'Description Ask a live type for itself or nil wherever a nilable one is needed'!
+!provides: 'LiveTyping' 1 233!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2636,7 +2636,7 @@ orNil
 
 	^NilableLiveType of: self! !
 
-!LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 30/Sep/2026, 4:33:48 pm (UTC)'!
 for: aCollectionOfClasses
 
 	| nonNilType |
@@ -2644,7 +2644,7 @@ for: aCollectionOfClasses
 	nonNilType := self forNonNilClasses: (aCollectionOfClasses copyWithout: UndefinedObject).
 
 	^aCollectionOfClasses includesNil
-		ifTrue: [ NilableLiveType of: nonNilType ]
+		ifTrue: [ nonNilType orNil ]
 		ifFalse: [ nonNilType ]! !
 
 !LiveType class methodsFor: 'instance creation - private' stamp: 'HAW 12/Sep/2026, 11:03:17 pm (UTC)'!
