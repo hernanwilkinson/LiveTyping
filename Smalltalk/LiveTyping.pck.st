@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:35:40 pm'!
-'Description Add test for equal live types having the same hash'!
-!provides: 'LiveTyping' 1 238!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:36:01 pm'!
+'Description Add failing test for unions of different live types over the same classes not being equal'!
+!provides: 'LiveTyping' 1 239!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11891,6 +11891,16 @@ test23LiveTypesOfTheSameClassesCollectedInDifferentOrderAreEqual
 test24EqualLiveTypesHaveTheSameHash
 
 	self assert: (LiveType for: {SmallInteger. Float}) hash equals: (LiveType for: {Float. SmallInteger}) hash! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:35:53 pm (UTC)'!
+test25UnionsOfDifferentLiveTypesOverTheSameClassesAreNotEqual
+
+	| unionOfNumbersAndString unionOfEachClass |
+
+	unionOfNumbersAndString := (LiveType for: {SmallInteger. Float}) union: (LiveType for: {String}).
+	unionOfEachClass := ((LiveType for: {SmallInteger}) union: (LiveType for: {Float})) union: (LiveType for: {String}).
+
+	self deny: unionOfNumbersAndString = unionOfEachClass! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
