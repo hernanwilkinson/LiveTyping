@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:34:38 pm'!
-'Description Make live types of the same kind and classes equal'!
-!provides: 'LiveTyping' 1 235!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:35:04 pm'!
+'Description Add test for live types of different classes not being equal'!
+!provides: 'LiveTyping' 1 236!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11876,6 +11876,11 @@ test20UnionOfTwoNilableLiveTypesPrintsNilOnce
 test21LiveTypesOfTheSameClassAreEqual
 
 	self assert: (LiveType for: {SmallInteger}) equals: (LiveType for: {SmallInteger})! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:34:56 pm (UTC)'!
+test22LiveTypesOfDifferentClassesAreNotEqual
+
+	self deny: (LiveType for: {SmallInteger}) = (LiveType for: {String})! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
