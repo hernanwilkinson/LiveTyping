@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:37:30 pm'!
-'Description Make nilable live types equal only when their types without nil are equal'!
-!provides: 'LiveTyping' 1 242!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:37:49 pm'!
+'Description Add failing test for the union of a live type with an equal one being the live type'!
+!provides: 'LiveTyping' 1 243!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11936,6 +11936,15 @@ test26NilableLiveTypesOfDifferentTypesOverTheSameClassesAreNotEqual
 	nilableStructuralType := LiveType for: {SmallInteger. String. UndefinedObject}.
 
 	self deny: nilableUnion = nilableStructuralType! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:37:41 pm (UTC)'!
+test27UnionOfALiveTypeWithAnEqualOneIsTheLiveType
+
+	| union |
+
+	union := (LiveType for: {SmallInteger}) union: (LiveType for: {SmallInteger}).
+
+	self assert: union equals: (LiveType for: {SmallInteger})! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
