@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:38:28 pm'!
-'Description Add failing test for the union of a union with a live type it already unites being the same union'!
-!provides: 'LiveTyping' 1 245!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:39:42 pm'!
+'Description Make a union unite each live type once, whatever unions it is built from'!
+!provides: 'LiveTyping' 1 246!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2616,6 +2616,11 @@ union: aLiveType
 
 	^aLiveType unionWithNotEmpty: self! !
 
+!LiveType methodsFor: 'union' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
+unitedTypes
+
+	^{ self }! !
+
 !LiveType methodsFor: 'accessing' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
 classes
 
@@ -2626,12 +2631,10 @@ selectors
 
 	self subclassResponsibility! !
 
-!LiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:37:59 pm (UTC)'!
+!LiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
 unionWithNotEmpty: aLiveType
 
-	^aLiveType = self
-		ifTrue: [ self ]
-		ifFalse: [ UnionLiveType of: { aLiveType. self } ]! !
+	^self class unionOf: aLiveType unitedTypes , self unitedTypes! !
 
 !LiveType methodsFor: 'nil' stamp: 'HAW 30/Sep/2026, 4:33:29 pm (UTC)'!
 orNil
@@ -2663,6 +2666,17 @@ for: aCollectionOfClasses
 	^aCollectionOfClasses includesNil
 		ifTrue: [ nonNilType orNil ]
 		ifFalse: [ nonNilType ]! !
+
+!LiveType class methodsFor: 'instance creation' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
+unionOf: aCollectionOfLiveTypes
+
+	| distinctTypes |
+
+	distinctTypes := aCollectionOfLiveTypes withoutDuplicates.
+
+	^distinctTypes size = 1
+		ifTrue: [ distinctTypes anyOne ]
+		ifFalse: [ UnionLiveType of: distinctTypes ]! !
 
 !LiveType class methodsFor: 'instance creation - private' stamp: 'HAW 12/Sep/2026, 11:03:17 pm (UTC)'!
 forManyClasses: aCollectionOfClasses
@@ -2806,15 +2820,15 @@ printNameOn: aStream
 		do: [ :aLiveType | aLiveType printNameOn: aStream ]
 		separatedBy: [ aStream nextPutAll: ' | ' ]! !
 
-!UnionLiveType methodsFor: 'accessing' stamp: 'HAW 30/Sep/2026, 4:36:13 pm (UTC)'!
-types
-
-	^types copy! !
-
-!UnionLiveType methodsFor: 'comparing' stamp: 'HAW 30/Sep/2026, 4:36:13 pm (UTC)'!
+!UnionLiveType methodsFor: 'comparing' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
 = anObject
 
-	^self class = anObject class and: [ types asSet = anObject types asSet ]! !
+	^self class = anObject class and: [ types asSet = anObject unitedTypes asSet ]! !
+
+!UnionLiveType methodsFor: 'union' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
+unitedTypes
+
+	^types copy! !
 
 !UnionLiveType class methodsFor: 'instance creation' stamp: 'HAW 13/Sep/2026, 11:51:18 pm (UTC)'!
 of: aCollectionOfLiveTypes
@@ -15382,6 +15396,15 @@ inject: aCollector addingAll: aBlock
 reject: aRejectBlock thenCollect: aCollectBlock
 
 	^(self reject: aRejectBlock) collect: aCollectBlock ! !
+
+!SequenceableCollection methodsFor: '*LiveTyping' stamp: 'HAW 30/Sep/2026, 4:39:16 pm (UTC)'!
+withoutDuplicates
+
+	^self
+		inject: OrderedCollection new
+		into: [ :distinctElements :anElement |
+			(distinctElements includes: anElement) ifFalse: [ distinctElements add: anElement ].
+			distinctElements ]! !
 
 !ArrayedCollection class methodsFor: '*LiveTyping' stamp: 'HAW 6/Mar/2019, 9:43:24 pm (UTC)'!
 createMethodReturnRawTypesOf: aCompiledMethod
