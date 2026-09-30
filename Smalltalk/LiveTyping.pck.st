@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:36:39 pm'!
-'Description Add failing test for nilable live types of different types over the same classes not being equal'!
-!provides: 'LiveTyping' 1 241!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:37:30 pm'!
+'Description Make nilable live types equal only when their types without nil are equal'!
+!provides: 'LiveTyping' 1 242!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2636,6 +2636,11 @@ orNil
 
 	^NilableLiveType of: self! !
 
+!LiveType methodsFor: 'nil' stamp: 'HAW 30/Sep/2026, 4:36:51 pm (UTC)'!
+withoutNil
+
+	^self! !
+
 !LiveType methodsFor: 'comparing' stamp: 'HAW 30/Sep/2026, 4:34:29 pm (UTC)'!
 = anObject
 
@@ -2863,6 +2868,16 @@ unionWithNotEmpty: aLiveType
 orNil
 
 	^self! !
+
+!NilableLiveType methodsFor: 'nil' stamp: 'HAW 30/Sep/2026, 4:36:51 pm (UTC)'!
+withoutNil
+
+	^type! !
+
+!NilableLiveType methodsFor: 'comparing' stamp: 'HAW 30/Sep/2026, 4:36:51 pm (UTC)'!
+= anObject
+
+	^self class = anObject class and: [ type = anObject withoutNil ]! !
 
 !NilableLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 of: aLiveType
