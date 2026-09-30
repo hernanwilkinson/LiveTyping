@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:33:59 pm'!
-'Description Ask a live type for itself or nil wherever a nilable one is needed'!
-!provides: 'LiveTyping' 1 233!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:34:17 pm'!
+'Description Add failing test for live types of the same class being equal'!
+!provides: 'LiveTyping' 1 234!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -11861,6 +11861,11 @@ test20UnionOfTwoNilableLiveTypesPrintsNilOnce
 	union := (LiveType for: {SmallInteger. UndefinedObject}) union: (LiveType for: {String. UndefinedObject}).
 
 	self assert: union printString equals: '<SmallInteger | String|nil # SmallInteger | String>'! !
+
+!LiveTypeTest methodsFor: 'tests' stamp: 'HAW 30/Sep/2026, 4:34:09 pm (UTC)'!
+test21LiveTypesOfTheSameClassAreEqual
+
+	self assert: (LiveType for: {SmallInteger}) equals: (LiveType for: {SmallInteger})! !
 
 !LiveTypingCodeSimulationTest methodsFor: 'tests' stamp: 'HAW 16/Jul/2019, 9:42:27 pm (UTC)'!
 test01KeepTypesOfLocalTemporariesI
