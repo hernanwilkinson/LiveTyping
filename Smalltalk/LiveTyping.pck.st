@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:33:11 pm'!
-'Description Add failing test for the union of two nilable live types printing nil once'!
-!provides: 'LiveTyping' 1 231!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:33:37 pm'!
+'Description Make the union of two nilable live types print nil once'!
+!provides: 'LiveTyping' 1 232!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2631,6 +2631,11 @@ unionWithNotEmpty: aLiveType
 
 	^UnionLiveType of: { aLiveType. self }! !
 
+!LiveType methodsFor: 'nil' stamp: 'HAW 30/Sep/2026, 4:33:29 pm (UTC)'!
+orNil
+
+	^NilableLiveType of: self! !
+
 !LiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:58 pm (UTC)'!
 for: aCollectionOfClasses
 
@@ -2824,15 +2829,20 @@ selectors
 
 	^type selectors! !
 
-!NilableLiveType methodsFor: 'union' stamp: 'HAW 14/Sep/2026, 12:13:11 am (UTC)'!
+!NilableLiveType methodsFor: 'union' stamp: 'HAW 30/Sep/2026, 4:33:29 pm (UTC)'!
 union: aLiveType
 
-	^self class of: (type union: aLiveType)! !
+	^(type union: aLiveType) orNil! !
 
-!NilableLiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:32:45 pm (UTC)'!
+!NilableLiveType methodsFor: 'union - private' stamp: 'HAW 30/Sep/2026, 4:33:29 pm (UTC)'!
 unionWithNotEmpty: aLiveType
 
-	^self class of: (aLiveType union: type)! !
+	^(aLiveType union: type) orNil! !
+
+!NilableLiveType methodsFor: 'nil' stamp: 'HAW 30/Sep/2026, 4:33:29 pm (UTC)'!
+orNil
+
+	^self! !
 
 !NilableLiveType class methodsFor: 'instance creation' stamp: 'HAW 12/Sep/2026, 11:06:18 pm (UTC)'!
 of: aLiveType
