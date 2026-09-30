@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:34:17 pm'!
-'Description Add failing test for live types of the same class being equal'!
-!provides: 'LiveTyping' 1 234!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 1:34:38 pm'!
+'Description Make live types of the same kind and classes equal'!
+!provides: 'LiveTyping' 1 235!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -2635,6 +2635,16 @@ unionWithNotEmpty: aLiveType
 orNil
 
 	^NilableLiveType of: self! !
+
+!LiveType methodsFor: 'comparing' stamp: 'HAW 30/Sep/2026, 4:34:29 pm (UTC)'!
+= anObject
+
+	^self class = anObject class and: [ self classes asSet = anObject classes asSet ]! !
+
+!LiveType methodsFor: 'comparing' stamp: 'HAW 30/Sep/2026, 4:34:29 pm (UTC)'!
+hash
+
+	^self classes inject: self class hash into: [ :combinedHash :aClass | combinedHash bitXor: aClass hash ]! !
 
 !LiveType class methodsFor: 'instance creation' stamp: 'HAW 30/Sep/2026, 4:33:48 pm (UTC)'!
 for: aCollectionOfClasses
