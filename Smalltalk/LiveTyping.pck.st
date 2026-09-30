@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8170] on 30 September 2026 at 11:13:50 am'!
-'Description Merge master into LiveTyping-2.0'!
-!provides: 'LiveTyping' 1 227!
+'From Cuis7.9 [latest update: #8239] on 30 September 2026 at 12:15:55 pm'!
+'Description Restore the method stamps lost when merging master'!
+!provides: 'LiveTyping' 1 228!
 !requires: '__LiveTyping-TestData__' 1 0 nil!
 !requires: 'BaseImageTests' 1 450 nil!
 !requires: 'StreamExtensionsTests' 1 0 nil!
@@ -932,6 +932,16 @@ RenameSelectorApplier subclass: #RenameSelectorWithActualScopeApplier
 RenameSelectorWithActualScopeApplier class
 	instanceVariableNames: ''!
 
+!classDefinition: #MoveToInstanceOrClassMethodWithActualScopeApplier category: #'LiveTyping-Refactoring'!
+MoveToInstanceOrClassMethodApplier subclass: #MoveToInstanceOrClassMethodWithActualScopeApplier
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'LiveTyping-Refactoring'!
+!classDefinition: 'MoveToInstanceOrClassMethodWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
+MoveToInstanceOrClassMethodWithActualScopeApplier class
+	instanceVariableNames: ''!
+
 !classDefinition: #RemoveParameterWithActualScopeApplier category: #'LiveTyping-Refactoring'!
 RemoveParameterApplier subclass: #RemoveParameterWithActualScopeApplier
 	instanceVariableNames: 'messageNode selectedSelector'
@@ -950,16 +960,6 @@ InlineMethodApplier subclass: #InlineMethodWithActualScopeApplier
 	category: 'LiveTyping-Refactoring'!
 !classDefinition: 'InlineMethodWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
 InlineMethodWithActualScopeApplier class
-	instanceVariableNames: ''!
-
-!classDefinition: #MoveToInstanceOrClassMethodWithActualScopeApplier category: #'LiveTyping-Refactoring'!
-MoveToInstanceOrClassMethodApplier subclass: #MoveToInstanceOrClassMethodWithActualScopeApplier
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'LiveTyping-Refactoring'!
-!classDefinition: 'MoveToInstanceOrClassMethodWithActualScopeApplier class' category: #'LiveTyping-Refactoring'!
-MoveToInstanceOrClassMethodWithActualScopeApplier class
 	instanceVariableNames: ''!
 
 !classDefinition: #InstanceVariableTypeInfoTest category: #'LiveTyping-Tests'!
@@ -2916,7 +2916,7 @@ modifyClassDescriptionShape
 		on: Error do: [ :anError | anError return: nil ]
 ! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: ''!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 16/Sep/2026, 12:03:24 am (UTC)'!
 registerRefactoringAppliers
 
 	RefactoringApplier
@@ -7777,7 +7777,7 @@ messageSendSelectorKeywordPositionsIn: aMethodNode
 
 ! !
 
-!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: ''!
+!RenameSelectorWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
 sendRangesToReparenthesizeIn: aMethodNode
 
 	^aMethodNode
@@ -7845,7 +7845,7 @@ messageSendLastPositionIn: aMethodNode
 	^aMethodNode actualMessageSendLastPositionsOfAll: implementors ifAbsent: [ #() ] withPossibleMessageSends: shouldChangePossibleMessageSends.
 			! !
 
-!AddParameterWithActualScope methodsFor: 'rename senders - private' stamp: ''!
+!AddParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
 sendRangesToReparenthesizeIn: aMethodNode
 
 	^aMethodNode
@@ -7957,7 +7957,7 @@ keywordAndParameterPositionsIn: aMethodNode
 		withPossibleMessageSends: shouldChangePossibleMessageSends.
 	! !
 
-!RemoveParameterWithActualScope methodsFor: 'rename senders - private' stamp: ''!
+!RemoveParameterWithActualScope methodsFor: 'rename senders - private' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
 sendRangesToReparenthesizeIn: aMethodNode
 
 	^aMethodNode
@@ -8489,6 +8489,61 @@ on: aModel of: aMessageNode in: aSelectedClass at: aSelectedSelector
 
 	^(self on: aModel for: aMessageNode selector key in: aSelectedClass) initializeOf: aMessageNode at: aSelectedSelector ! !
 
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+calculateImplementorsAndSenders
+
+	self isActualScopeChoice
+		ifTrue: [ self actualImplementorsAndSenders ]
+		ifFalse: [ super calculateImplementorsAndSenders ]! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+messageNode
+
+	^nil! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+openChangeSelectorSendersStepWindow
+
+	self isActualScopeChoice
+		ifTrue: [ ChangeSelectorSendersStepWindow openForActualScopeFrom: self ]
+		ifFalse: [ super openChangeSelectorSendersStepWindow ]! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 16/Sep/2026, 12:02:22 am (UTC)'!
+scopeOptionLabels
+
+	^super scopeOptionLabels , self actualScopeOptionLabels! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+selectedSelector
+
+	^oldSelector! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+convertSendersToCompiledMethods
+
+	self filterSenders! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+createRefactoring
+
+	^self isActualScopeChoice
+		ifTrue: [ self createRefactoringWithActualScope ]
+		ifFalse: [ super createRefactoring ]! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+createRefactoringWithActualScope
+
+	^self refactoringClass
+		for: self methodToMove
+		implementors: implementors
+		senders: senders
+		withPossibleMessageSends: self isWithPossibleMessageSends! !
+
+!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'initialization' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
+createSenders
+
+	^OrderedCollection new! !
+
 !RemoveParameterWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: 'HAW 6/Mar/2020, 1:04:07 am (UTC)'!
 convertSendersToCompiledMethods
 
@@ -8596,7 +8651,7 @@ valueHandlingRefactoringExceptions: aBlock
 			on: CanNotChangeSelectorWithNotIncludedTypes
 			do: [ :anError | self handleCanNotChangeSelectorWithNotIncludedTypes: anError ]]! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 25/Sep/2026, 7:43:37 pm (UTC)'!
 actualImplementorsAndMessageSends
 
 	self refactoringClass
@@ -8607,7 +8662,7 @@ actualImplementorsAndMessageSends
 		inSystem: Smalltalk.
 	self filterSenders! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 25/Sep/2026, 7:42:49 pm (UTC)'!
 calculateImplementorsAndSenders
 
 	self isActualScopeChoice
@@ -8620,7 +8675,7 @@ createAndApplyRefactoring
 	self filterSenders.
 	super createAndApplyRefactoring.! !
 
-!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
+!InlineMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: 'HAW 25/Sep/2026, 7:43:37 pm (UTC)'!
 filterSenders
 
 	"A send in a method that is no longer there names nothing to change, and one LiveTyping could
@@ -8646,61 +8701,6 @@ initialize
 
 	RefactoringApplier
 		registerInlineMethodApplier: InlineMethodWithActualScopeApplier.! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
-calculateImplementorsAndSenders
-
-	self isActualScopeChoice
-		ifTrue: [ self actualImplementorsAndSenders ]
-		ifFalse: [ super calculateImplementorsAndSenders ]! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
-messageNode
-
-	^nil! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
-openChangeSelectorSendersStepWindow
-
-	self isActualScopeChoice
-		ifTrue: [ ChangeSelectorSendersStepWindow openForActualScopeFrom: self ]
-		ifFalse: [ super openChangeSelectorSendersStepWindow ]! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
-scopeOptionLabels
-
-	^super scopeOptionLabels , self actualScopeOptionLabels! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - parameters request' stamp: ''!
-selectedSelector
-
-	^oldSelector! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: ''!
-convertSendersToCompiledMethods
-
-	self filterSenders! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: ''!
-createRefactoring
-
-	^self isActualScopeChoice
-		ifTrue: [ self createRefactoringWithActualScope ]
-		ifFalse: [ super createRefactoring ]! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'refactoring - creation' stamp: ''!
-createRefactoringWithActualScope
-
-	^self refactoringClass
-		for: self methodToMove
-		implementors: implementors
-		senders: senders
-		withPossibleMessageSends: self isWithPossibleMessageSends! !
-
-!MoveToInstanceOrClassMethodWithActualScopeApplier methodsFor: 'initialization' stamp: ''!
-createSenders
-
-	^OrderedCollection new! !
 
 !InstanceVariableTypeInfoTest methodsFor: 'tests' stamp: 'HAW 17/Jan/2019, 3:27:10 pm (UTC)'!
 assertTypesAreCollectedCorrectlyFor: anInstVarTypeInfoCreator
@@ -9765,7 +9765,7 @@ test13AddLastParameterCorrectly
 
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m1: 1 m2: 2'.! !
 
-!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: ''!
+!AddParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 14/Sep/2026, 9:06:01 pm (UTC)'!
 test14TheParenthesesOfASendOutsideTheScopeAreLeftAsTheyAre
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor refactoring |
@@ -9803,17 +9803,17 @@ classToRefactorName
 
 	^#ClassToAddParameter! !
 
-!ExtractAsParameterWithActualScopeTest methodsFor: 'class factory' stamp: ''!
+!ExtractAsParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
 classOfOtherImplementorName
 
 	^#ClassOfSender! !
 
-!ExtractAsParameterWithActualScopeTest methodsFor: 'class factory' stamp: ''!
+!ExtractAsParameterWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
 classToRefactorName
 
 	^#ClassToExtractFrom! !
 
-!ExtractAsParameterWithActualScopeTest methodsFor: 'tests' stamp: ''!
+!ExtractAsParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 15/Sep/2026, 12:18:17 am (UTC)'!
 test01ExtractingAsAParameterInTheActualScopeAddsTheParenthesesTheSendNeedsAndLeavesTheOthers
 
 	| classToRefactor classOfOtherImplementor refactoring |
@@ -9839,7 +9839,7 @@ test01ExtractingAsAParameterInTheActualScopeAddsTheParenthesesTheSendNeedsAndLea
 		assert: (classToRefactor sourceCodeAt: #m3)
 		equals: 'm3 ^{ (self m1: 42) yourself. ', self classOfOtherImplementorName, ' new m1 yourself }'! !
 
-!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: ''!
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
 applierInActualScopeInlining: aSelector of: aClass
 
 	| applier |
@@ -9852,7 +9852,7 @@ applierInActualScopeInlining: aSelector of: aClass
 
 	^applier! !
 
-!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: ''!
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:44:03 pm (UTC)'!
 applierInActualScopeInliningTheSendOf: aSelector in: aSendingSelector of: aClass
 
 	| applier sendReference |
@@ -9867,17 +9867,17 @@ applierInActualScopeInliningTheSendOf: aSelector in: aSendingSelector of: aClass
 
 	^applier! !
 
-!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: ''!
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
 classOfOtherImplementorName
 
 	^#ClassOfOtherImplementor! !
 
-!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: ''!
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
 classToRefactorName
 
 	^#ClassToInline! !
 
-!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: ''!
+!InlineMethodWithActualScopeApplierTest methodsFor: 'test support' stamp: 'HAW 25/Sep/2026, 7:42:48 pm (UTC)'!
 compileClassesSendingTheSelectorToInline
 
 	| classToRefactor classOfOtherImplementor |
@@ -9891,7 +9891,7 @@ compileClassesSendingTheSelectorToInline
 
 	^classToRefactor! !
 
-!InlineMethodWithActualScopeApplierTest methodsFor: 'tests' stamp: ''!
+!InlineMethodWithActualScopeApplierTest methodsFor: 'tests' stamp: 'HAW 25/Sep/2026, 7:43:37 pm (UTC)'!
 test01TheImplementorsInTheActualScopeAreTheOnesTheSendsReallyReached
 
 	| classToRefactor applier |
@@ -9902,7 +9902,7 @@ test01TheImplementorsInTheActualScopeAreTheOnesTheSendsReallyReached
 
 	self assert: (applier implementors collect: [ :anImplementor | anImplementor methodClass ]) asArray equals: { classToRefactor }! !
 
-!InlineMethodWithActualScopeApplierTest methodsFor: 'tests' stamp: ''!
+!InlineMethodWithActualScopeApplierTest methodsFor: 'tests' stamp: 'HAW 25/Sep/2026, 7:44:03 pm (UTC)'!
 test02TheSendsInTheActualScopeAreTheOnesThatReallyReachedTheClass
 
 	| classToRefactor applier |
@@ -9914,17 +9914,17 @@ test02TheSendsInTheActualScopeAreTheOnesThatReallyReachedTheClass
 	self assert: applier messageSendsToInline size equals: 1.
 	self assert: applier messageSendsToInline anyOne messageNode receiver referencesSelf! !
 
-!InlineMethodWithActualScopeTest methodsFor: 'class factory' stamp: ''!
+!InlineMethodWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
 classOfOtherImplementorName
 
 	^#ClassOfSender! !
 
-!InlineMethodWithActualScopeTest methodsFor: 'class factory' stamp: ''!
+!InlineMethodWithActualScopeTest methodsFor: 'class factory' stamp: 'HAW 15/Sep/2026, 12:13:35 am (UTC)'!
 classToRefactorName
 
 	^#ClassToInline! !
 
-!InlineMethodWithActualScopeTest methodsFor: 'tests' stamp: ''!
+!InlineMethodWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 15/Sep/2026, 12:18:17 am (UTC)'!
 test01InliningInTheActualScopeDropsTheParenthesesTheInlinedExpressionDoesNotNeedAndKeepsTheOthers
 
 	| classToRefactor classOfOtherImplementor implementors messageSends sureMessageSends refactoring |
@@ -9957,17 +9957,17 @@ test01InliningInTheActualScopeDropsTheParenthesesTheInlinedExpressionDoesNotNeed
 		assert: (classToRefactor sourceCodeAt: #m2)
 		equals: 'm2 ^{ 3 factorial printString. (', self classOfOtherImplementorName, ' new m1) printString }'! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'class factory' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'class factory' stamp: 'HAW 16/Sep/2026, 12:02:51 am (UTC)'!
 classOfOtherImplementorName
 
 	^#ClassOfOtherImplementor! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'class factory' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'class factory' stamp: 'HAW 16/Sep/2026, 12:02:51 am (UTC)'!
 classToRefactorName
 
 	^#ClassToMoveMethod! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: 'HAW 16/Sep/2026, 12:16:13 am (UTC)'!
 actualSendersOf: aSelector in: aClass
 
 	| implementors senders |
@@ -9985,7 +9985,7 @@ actualSendersOf: aSelector in: aClass
 		select: [ :aSender | aSender isValid and: [ aSender isPossibleSender not ] ]
 		thenCollect: [ :aSender | aSender compiledMethod ]) asArray! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 createClassImplementingClassMethodSending: aSenderSource
 
 	| createdClass |
@@ -9997,7 +9997,7 @@ createClassImplementingClassMethodSending: aSenderSource
 
 	^createdClass! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 createClassNamed: aName implementing: aMethodSource sending: aSenderSource
 
 	| createdClass |
@@ -10009,7 +10009,7 @@ createClassNamed: aName implementing: aMethodSource sending: aSenderSource
 
 	^createdClass! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: 'HAW 16/Sep/2026, 12:22:29 am (UTC)'!
 createClassWithMethodAndSenderRunNamed: aName
 
 	| createdClass |
@@ -10021,7 +10021,7 @@ createClassWithMethodAndSenderRunNamed: aName
 
 	^createdClass! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 move: aMethod redirecting: someSenders
 
 	^(MoveToInstanceOrClassMethod
@@ -10030,7 +10030,7 @@ move: aMethod redirecting: someSenders
 		senders: someSenders
 		withPossibleMessageSends: false) apply! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'test support' stamp: 'HAW 16/Sep/2026, 11:28:38 am (UTC)'!
 moveInActualScope: aMethod
 
 	| senders |
@@ -10039,7 +10039,7 @@ moveInActualScope: aMethod
 
 	^self move: aMethod redirecting: senders! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 test01ActualSendersAreRedirectedAndOthersLeftAlone
 
 	| classToRefactor classOfOtherImplementor senders |
@@ -10056,7 +10056,7 @@ test01ActualSendersAreRedirectedAndOthersLeftAlone
 	self assert: (classToRefactor sourceCodeAt: #m3) equals: 'm3 ^self class m1'.
 	self assert: (classOfOtherImplementor sourceCodeAt: #m3) equals: 'm3 ^self m1'! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 test02VariableOfImplementorTypeSendsToItsClass
 
 	| classToRefactor |
@@ -10071,7 +10071,7 @@ test02VariableOfImplementorTypeSendsToItsClass
 	self assert: (classToRefactor sourceCodeAt: #m3) equals: 'm3 | x | x := self. ^x class m1'.
 	self assert: classToRefactor new m3 equals: 42! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 test03UnaryReceiverOfImplementorTypeSendsToItsClass
 
 	| classToRefactor |
@@ -10085,7 +10085,7 @@ test03UnaryReceiverOfImplementorTypeSendsToItsClass
 
 	self assert: (classToRefactor sourceCodeAt: #m3) equals: 'm3 ^self yourself class m1'! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: 'HAW 16/Sep/2026, 11:26:56 am (UTC)'!
 test04KeywordReceiverOfImplementorTypeIsParenthesized
 
 	| classToRefactor |
@@ -10100,7 +10100,7 @@ test04KeywordReceiverOfImplementorTypeIsParenthesized
 
 	self assert: (classToRefactor sourceCodeAt: #m3) equals: 'm3 ^(self m4: 1) class m1'! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 test05VariableHoldingClassSendsToNewInstance
 
 	| classToRefactor |
@@ -10112,7 +10112,7 @@ test05VariableHoldingClassSendsToNewInstance
 	self assert: (classToRefactor sourceCodeAt: #m3) equals: 'm3 | x | x := self class. ^x new m1'.
 	self assert: classToRefactor new m3 equals: 42! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 test06SelfClassSenderSendsToSelf
 
 	| classToRefactor |
@@ -10123,7 +10123,7 @@ test06SelfClassSenderSendsToSelf
 
 	self assert: (classToRefactor sourceCodeAt: #m3) equals: 'm3 ^self m1'! !
 
-!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: ''!
+!MoveToInstanceOrClassMethodInActualScopeTest methodsFor: 'tests' stamp: 'HAW 16/Sep/2026, 11:23:54 am (UTC)'!
 test07LiteralClassSenderInKindOfClassSendsToSelf
 
 	| classToRefactor |
@@ -10495,7 +10495,7 @@ test13RemovesOtherThanLastParameterCorrectly
 
 	self assert: (classToRefactor>>senderToChange) sourceCode equals: senderToChange, ' self m2: 2'.! !
 
-!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: ''!
+!RemoveParameterWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 14/Sep/2026, 9:06:01 pm (UTC)'!
 test14TheParenthesesOfASendOutsideTheScopeAreKept
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor refactoring |
@@ -10867,7 +10867,7 @@ test12SuperclassInstanceCreationMessagesShouldNotBeUsed
 		instanceCreationMethod := RenameSelectorWithActualScope class compiledMethodAt: anInstanceCreationSelector ifAbsent: [ self fail ].
 		self assert: (instanceCreationMethod sendsSelector: #shouldNotImplement) ]! !
 
-!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: ''!
+!RenameSelectorWithActualScopeTest methodsFor: 'tests' stamp: 'HAW 15/Sep/2026, 12:18:17 am (UTC)'!
 test13TheParenthesesOfASendOutsideTheScopeAreKept
 
 	| classToRefactor oldSelector senderToChange classOfOtherImplementor rename |
@@ -14148,7 +14148,7 @@ actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withP
 		sortingWith: [ :left :right | left <= right ]
 		using: aMethodNode ! !
 
-!Encoder methodsFor: '*LiveTyping' stamp: ''!
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
 actualMessageSendNodesOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
 
 	^self
@@ -14160,7 +14160,7 @@ actualMessageSendNodesOfAll: compiledMethods ifAbsent: absentBlock withPossibleM
 			(completeSourceRanges at: left) anyOne first <= (completeSourceRanges at: right) anyOne first ]
 		using: aMethodNode! !
 
-!Encoder methodsFor: '*LiveTyping' stamp: ''!
+!Encoder methodsFor: '*LiveTyping' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
 actualMessageSendRangesOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends using: aMethodNode
 
 	^self
@@ -14305,7 +14305,7 @@ actualMessageSendLastPositionsOfAll: compiledMethods ifAbsent: absentBlock withP
 		using: self
 ! !
 
-!MethodNode methodsFor: '*LiveTyping' stamp: ''!
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 16/Sep/2026, 11:25:12 am (UTC)'!
 actualMessageSendNodesOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
 
 	self completeSourceRanges.
@@ -14316,7 +14316,7 @@ actualMessageSendNodesOfAll: compiledMethods ifAbsent: absentBlock withPossibleM
 		withPossibleMessageSends: shouldAddPossibleMessageSends
 		using: self! !
 
-!MethodNode methodsFor: '*LiveTyping' stamp: ''!
+!MethodNode methodsFor: '*LiveTyping' stamp: 'HAW 14/Sep/2026, 9:06:31 pm (UTC)'!
 actualMessageSendRangesOfAll: compiledMethods ifAbsent: absentBlock withPossibleMessageSends: shouldAddPossibleMessageSends
 
 	self completeSourceRanges.
@@ -16734,7 +16734,7 @@ isPossibleMessageSend
 
 	^false! !
 
-!ScopedRefactoring class methodsFor: '*LiveTyping' stamp: ''!
+!ScopedRefactoring class methodsFor: '*LiveTyping' stamp: 'HAW 16/Sep/2026, 12:00:08 am (UTC)'!
 addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors andActualSendersTo: senders inSystem: aSystem
 
 	| actualImplementors actualSendersCollector |
@@ -16751,7 +16751,7 @@ addActualImplementorsOf: anOldSelector forTypes: receiverTypes to: implementors 
 
 	! !
 
-!ScopedRefactoring class methodsFor: '*LiveTyping' stamp: ''!
+!ScopedRefactoring class methodsFor: '*LiveTyping' stamp: 'HAW 15/Sep/2026, 11:59:54 pm (UTC)'!
 addActualImplementorsOf: anOldSelector in: aPotentialClassToRefactor to: implementors andActualSendersTo: senders inSystem: aSystem
 
 	self
@@ -16792,7 +16792,7 @@ signalReceiverTypesNotIncludedInImplementorTypes: messageSendsWithInvalidReceive
 	CanNotChangeSelectorWithNotIncludedTypes signalWith: messageSendsWithInvalidReceiverTypes
 		! !
 
-!MoveToInstanceOrClassMethod methodsFor: '*LiveTyping' stamp: ''!
+!MoveToInstanceOrClassMethod methodsFor: '*LiveTyping' stamp: 'HAW 16/Sep/2026, 12:50:09 pm (UTC)'!
 actualSendsIn: aMethodNode withPossibleMessageSends: aBoolean
 
 	| actualSends |
@@ -16804,7 +16804,7 @@ actualSendsIn: aMethodNode withPossibleMessageSends: aBoolean
 
 	^actualSends reject: [ :aSend | aSend isCascade ]! !
 
-!MoveToInstanceOrClassMethod class methodsFor: '*LiveTyping' stamp: ''!
+!MoveToInstanceOrClassMethod class methodsFor: '*LiveTyping' stamp: 'HAW 16/Sep/2026, 12:50:09 pm (UTC)'!
 for: aMethodToMove implementors: someImplementors senders: someSenders withPossibleMessageSends: aBoolean
 
 	^self
