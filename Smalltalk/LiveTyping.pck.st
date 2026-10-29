@@ -1,9 +1,9 @@
 'From Cuis7.9 [latest update: #8184] on 25 September 2026 at 5:01:27 pm'!
 'Description Take the actual scope when inlining a method from the browser'!
-!provides: 'LiveTyping' 1 168!
-!requires: '__LiveTyping-TestData__' 1 0 nil!
-!requires: 'BaseImageTests' 1 450 nil!
-!requires: 'StreamExtensionsTests' 1 0 nil!
+!provides: 'LiveTyping' '1.168.0'!
+!requires: '__LiveTyping-TestData__' '1.0.0' '1.*.*'!
+!requires: 'BaseImageTests' '1.450.0' '1.*.*'!
+!requires: 'StreamExtensionsTests' '1.0.0' '1.*.*'!
 SystemOrganization addCategory: #LiveTyping!
 SystemOrganization addCategory: #'LiveTyping-Playground'!
 SystemOrganization addCategory: #'LiveTyping-Refactoring'!

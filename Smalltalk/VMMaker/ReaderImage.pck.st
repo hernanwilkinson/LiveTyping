@@ -1,6 +1,6 @@
 'From Cuis 5.0 [latest update: #3826] on 16 July 2019 at 2:28:39 pm'!
 'Description '!
-!provides: 'ReaderImage' 1 0!
+!provides: 'ReaderImage' '1.0.0'!
 SystemOrganization addCategory: #ReaderImage!
 
 
