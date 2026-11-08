@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8184] on 25 September 2026 at 5:01:27 pm'!
-'Description Take the actual scope when inlining a method from the browser'!
-!provides: 'LiveTyping' '1.168.0'!
+'From Cuis7.9 [latest update: #8276] on 8 November 2026 at 8:20:14 pm'!
+'Description does not show ballon text when mouse is not at a ast node'!
+!provides: 'LiveTyping' '1.168.1'!
 !requires: '__LiveTyping-TestData__' '1.0.0' '1.*.*'!
 !requires: 'BaseImageTests' '1.450.0' '1.*.*'!
 !requires: 'StreamExtensionsTests' '1.0.0' '1.*.*'!
@@ -14347,11 +14347,6 @@ defaultRawTypesSize
 
 	^10! !
 
-!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 30/May/2023, 2:39:59 am (UTC)'!
-disableLiveTyping
-
-	Smalltalk isLiveTypingInstalled ifTrue: [ instanceVariablesRawTypes := nil ]! !
-
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 24/Apr/2023, 3:40:38 pm (UTC)'!
 disableLiveTypingForAll
 
@@ -14788,15 +14783,6 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 	aMethodForSameSelectorAndClass
 		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
-
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 30/May/2023, 2:22:17 am (UTC)'!
-disableLiveTyping
-
-	Smalltalk isLiveTypingInstalled
-		ifTrue: [
-			self
-				withPropertiesDo: [:additionalMethodState | additionalMethodState disableLiveTyping ]
-				ifSelector: [ :aSelector | ]]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 5:21:27 pm (UTC)'!
 doesOnlySurelySend: aCompiledMethod
@@ -15894,7 +15880,7 @@ balloonTypeInfoAt: mousePositionInText
 		ifTrue: [ self balloonTypeInfoOfInstanceVariableAt: mousePositionInText ]
 		ifFalse: [ self balloonTypeInfoInMethodAt: mousePositionInText ]! !
 
-!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 9/Jan/2026, 7:02:44 pm (UTC)'!
+!SmalltalkEditor methodsFor: '*LiveTyping' stamp: 'HAW 8/Nov/2026, 11:18:53 pm (UTC)'!
 balloonTypeInfoInMethodAt: mousePositionInText
 
 	^self
@@ -15905,7 +15891,7 @@ balloonTypeInfoInMethodAt: mousePositionInText
 				ifAbsent: [
 					mousePositionInText <= methodNode selectorLastPosition
 						ifTrue: [ self balloonTypeInfoOf: methodNode in: methodNode definedAt: class ]
-						ifFalse: [ 'Put the mouse over a code element to see its type' ]]]
+						ifFalse: [ nil ]]]
 		ifErrorsParsing: [ :anError | 'Cannot show types becuase it cannot parse the code' ]
 
 
