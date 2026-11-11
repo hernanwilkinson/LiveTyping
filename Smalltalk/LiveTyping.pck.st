@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8276] on 8 November 2026 at 8:20:14 pm'!
-'Description does not show ballon text when mouse is not at a ast node'!
-!provides: 'LiveTyping' '1.168.1'!
+'From Cuis7.9 [latest update: #8276] on 11 November 2026 at 9:49:23 am'!
+'Description Restore #disableLiveTyping removed by PackageSnapshot'!
+!provides: 'LiveTyping' '1.168.2'!
 !requires: '__LiveTyping-TestData__' '1.0.0' '1.*.*'!
 !requires: 'BaseImageTests' '1.450.0' '1.*.*'!
 !requires: 'StreamExtensionsTests' '1.0.0' '1.*.*'!
@@ -14347,6 +14347,11 @@ defaultRawTypesSize
 
 	^10! !
 
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 11/Nov/2026, 12:45:09 pm (UTC)'!
+disableLiveTyping
+
+	Smalltalk isLiveTypingInstalled ifTrue: [ instanceVariablesRawTypes := nil ]! !
+
 !ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 24/Apr/2023, 3:40:38 pm (UTC)'!
 disableLiveTypingForAll
 
@@ -14783,6 +14788,15 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 	aMethodForSameSelectorAndClass
 		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
+
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 11/Nov/2026, 12:44:49 pm (UTC)'!
+disableLiveTyping
+
+	Smalltalk isLiveTypingInstalled
+		ifTrue: [
+			self
+				withPropertiesDo: [:additionalMethodState | additionalMethodState disableLiveTyping ]
+				ifSelector: [ :aSelector | ]]! !
 
 !CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 14/Mar/2019, 5:21:27 pm (UTC)'!
 doesOnlySurelySend: aCompiledMethod
