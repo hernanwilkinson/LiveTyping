@@ -1,6 +1,6 @@
-'From Cuis7.9 [latest update: #8276] on 11 November 2026 at 9:49:23 am'!
-'Description Restore #disableLiveTyping removed by PackageSnapshot'!
-!provides: 'LiveTyping' '1.168.2'!
+'From Cuis7.9 [latest update: #8340] on 23 November 2026 at 6:41:56 pm'!
+'Description Install on Cuis 8395 after the CodeHistory changes'!
+!provides: 'LiveTyping' '1.168.3'!
 !requires: '__LiveTyping-TestData__' '1.0.0' '1.*.*'!
 !requires: 'BaseImageTests' '1.450.0' '1.*.*'!
 !requires: 'StreamExtensionsTests' '1.0.0' '1.*.*'!
@@ -1123,13 +1123,13 @@ LiveTypingSmalltalkCompleterTest class
 	instanceVariableNames: ''!
 
 
-!TypeCheckingResultWindow commentStamp: '<historical>' prior: 0!
+!TypeCheckingResultWindow commentStamp: '<historical>'!
 Morphic view for MessageSet models. See category 'GUI building'.!
 
-!MoveToInstanceOrClassMethodWithActualScopeApplier commentStamp: '<historical>' prior: 0!
+!MoveToInstanceOrClassMethodWithActualScopeApplier commentStamp: '<historical>'!
 I add the scopes LiveTyping saw to the ones MoveToInstanceOrClassMethodApplier asks: the senders that really sent the selector to an object of the class of the method, with or without the ones it could only guess at.!
 
-!MoveToInstanceOrClassMethodInActualScopeTest commentStamp: '<historical>' prior: 0!
+!MoveToInstanceOrClassMethodInActualScopeTest commentStamp: '<historical>'!
 I am the tests of moving a method between sides over the senders LiveTyping saw.!
 
 !ActualMessageSendsCollector methodsFor: 'accessing' stamp: 'HAW 14/Mar/2019, 12:54:19 pm (UTC)'!
@@ -2496,7 +2496,7 @@ checkTimeStampOf: aMethod is: expectedTimeStamp
 
 	aMethod authorAndStampAsSaved = expectedTimeStamp ifFalse: [ self error: aMethod classAndSelector, ' has changed' ].! !
 
-!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 21/Feb/2019, 2:07:37 am (UTC)'!
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 23/Nov/2026, 5:12:56 pm (UTC)'!
 compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 
 	| newSourceCodeMethodNode originalSourceMethodNode |
@@ -2507,7 +2507,7 @@ compile: aNewSourceCode in: aClass ifOriginalSourceCodeIs: anOriginalSourceCode
 	newSourceCodeMethodNode selector = originalSourceMethodNode selector ifFalse: [ self error: 'New source code selector is not equal to original source code selector' ].
 	(aClass sourceCodeAt: originalSourceMethodNode selector) = anOriginalSourceCode ifFalse: [ self error: 'Current source code of ', aClass name, '>>', originalSourceMethodNode selector, ' is not equal to the expected one' ].
 
-	aClass compile: aNewSourceCode ! !
+	self compileFlushingChangesFile: aNewSourceCode in: aClass! !
 
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 9/Jan/2026, 7:04:38 pm (UTC)'!
 compileAfterInstallMethods
@@ -2546,6 +2546,13 @@ compileAfterInstallMethods
 		ifOriginalSourceCodeIs: self blockReturnTopOriginalSourceCode
 ! !
 
+!LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 23/Nov/2026, 5:17:24 pm (UTC)'!
+compileFlushingChangesFile: aNewSourceCode in: aClass
+
+	^[ aClass compile: aNewSourceCode ]
+		on: InMidstOfFileinNotification
+		do: [ :aNotification | aNotification resume: false ]! !
+
 !LiveTyping class methodsFor: 'initialization-methods' stamp: 'HAW 28/Nov/2018, 4:24:26 pm (UTC)'!
 defineInstVarNamed: anInstVarName in: aClass
 
@@ -2576,7 +2583,7 @@ registerRefactoringAppliers
 		registerChangeKeywordsSelectorOrderApplier: ChangeKeywordsSelectorOrderWithActualScopeApplier;
 		registerMoveToInstanceOrClassMethodApplier: MoveToInstanceOrClassMethodWithActualScopeApplier! !
 
-!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 28/Aug/2025, 6:42:33 pm (UTC)'!
+!LiveTyping class methodsFor: 'initialization' stamp: 'HAW 23/Nov/2026, 5:17:07 pm (UTC)'!
 initialize
 
 	Utilities informUser: 'Initializing live typing' during: [ self initializeLiveTyping ].! !
@@ -2721,10 +2728,12 @@ systemCatListMenuSpecSend
 
 	^ MessageSend receiver: self selector: #systemCatListMenuSpec! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 26/Jun/2026, 3:23:00 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Nov/2026, 5:09:12 pm (UTC)'!
 addAndClassifySelectorOriginalSourceCode
 
 	^'addAndClassifySelector: selector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString
+	"Code was just saved and compiled. Regular interactive use in a browser, FileIn, etc."
+
 	| priorMethodOrNil priorCategoryOrNil |
 	priorMethodOrNil := self compiledMethodAt: selector ifAbsent: nil.
 	priorCategoryOrNil := self whichCategoryIncludesSelector: selector.
@@ -2787,19 +2796,20 @@ addAndClassifySelectorSourceCode
 					to: category
 					inClass: self ]]'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 26/Jun/2026, 3:25:00 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Nov/2026, 5:09:12 pm (UTC)'!
 addAndClassifySelectorStep1SourceCode
 
 	^'addAndClassifySelector: nodeOrSelector withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString
-	
+	"Code was just saved and compiled. Regular interactive use in a browser, FileIn, etc."
+
 	| priorMethodOrNil priorCategoryOrNil selector |
-	
+
 	selector := nodeOrSelector isSymbol ifTrue: [nodeOrSelector ] ifFalse: [ nodeOrSelector selector ].
 	priorMethodOrNil := self compiledMethodAt: selector ifAbsent: nil.
 	priorCategoryOrNil := self whichCategoryIncludesSelector: selector.
 	self addSelectorSilently: selector withMethod: compiledMethod.
 	compiledMethod initializeTypeInformation.
-	
+
 	SystemChangeNotifier uniqueInstance doSilently: [self organization classify: selector under: category].
 	priorMethodOrNil
 		ifNil: [
@@ -2822,10 +2832,12 @@ addAndClassifySelectorStep1SourceCode
 					to: category
 					inClass: self ]].'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 26/Jun/2026, 3:39:02 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Nov/2026, 5:09:12 pm (UTC)'!
 addAndClassifySelectorStep2SourceCode
 
 	^'addAndClassifySelector: node withMethod: compiledMethod inCategory: category methodTimeStamp: aTimeStampString
+	"Code was just saved and compiled. Regular interactive use in a browser, FileIn, etc."
+
 	| priorMethodOrNil priorCategoryOrNil selector |
 
 	selector := node selector.
@@ -2879,18 +2891,18 @@ blockReturnTopSourceCode
 	self assert: closureOrNil isClosure.
 	^super return: self pop from: self'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 13/Aug/2026, 2:14:28 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Nov/2026, 5:09:12 pm (UTC)'!
 compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp methodProperties: aCollectionOrNil notifying: requestor logSource: logSource
 	
-	| methodAndNode selector newMethod isExistingMethod updatedCode |
+	| methodAndNode selector newMethod priorMethod updatedCode |
 	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector := methodAndNode selector.
 	newMethod := methodAndNode method.
-	isExistingMethod := self includesSelector: selector.
-	isExistingMethod
+	priorMethod := self compiledMethodAt: selector ifAbsent: [].
+	priorMethod notNil
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method modification not allowed'']]
@@ -2903,32 +2915,31 @@ compileClassifiedWithStampNotifyingLogSourceOriginalSourceCode
 		ifNotNil: [ aCollectionOrNil do: [ :assoc | newMethod addPragmaOrProperty: assoc]]
 		ifNil: [
 			"If method properties are not provided, then keep those of the existing method, if any."
-			isExistingMethod ifTrue: [
-				(self compiledMethodAt: selector) withPropertiesDo: [ :additionalMethodState |
+			priorMethod ifNotNil: [
+				priorMethod withPropertiesDo: [ :additionalMethodState |
 					additionalMethodState propertiesDo: [ :assoc | newMethod addPragmaOrProperty: assoc ]] ifSelector: [ :s | ]]].
 
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
-		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
-			inCategory: category withStamp: changeStamp.
-	].
-	self addAndClassifySelector: selector withMethod: newMethod
-		inCategory: category methodTimeStamp: changeStamp.
+		updatedCode := requestor ifNil: [code] ifNotNil: [requestor text].
+		updatedCode := CodeProvider normalizeCodeForSaving: updatedCode in: self.
+		methodAndNode method
+			writeToChangesFile: updatedCode class: self category: category withStamp: changeStamp oldMethodOrNil: priorMethod ].
+	self addAndClassifySelector: selector withMethod: newMethod inCategory: category methodTimeStamp: changeStamp.
 	^ selector'! !
 
-!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'Install-LiveTyping 13/Aug/2026, 2:14:39 pm (UTC)'!
+!LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Nov/2026, 5:09:12 pm (UTC)'!
 compileClassifiedWithStampNotifyingLogSourceSourceCode
 
 	^'compile: code classified: category withStamp: changeStamp methodProperties: aCollectionOrNil notifying: requestor logSource: logSource
 	
-	| methodAndNode selector newMethod isExistingMethod updatedCode |
+	| methodAndNode selector newMethod priorMethod updatedCode |
 	methodAndNode := self basicCompile: code notifying: requestor 
 							trailer: self defaultMethodTrailer ifFail: [^nil].
 	selector := methodAndNode selector.
 	newMethod := methodAndNode method.
-	isExistingMethod := self includesSelector: selector.
-	isExistingMethod
+	priorMethod := self compiledMethodAt: selector ifAbsent: [].
+	priorMethod notNil
 		ifTrue: [
 			(self theNonMetaClass isOkToChangeMethod: selector isMeta: self isMeta)
 				ifFalse: [self error: ''Method modification not allowed'']]
@@ -2941,18 +2952,17 @@ compileClassifiedWithStampNotifyingLogSourceSourceCode
 		ifNotNil: [ aCollectionOrNil do: [ :assoc | newMethod addPragmaOrProperty: assoc]]
 		ifNil: [
 			"If method properties are not provided, then keep those of the existing method, if any."
-			isExistingMethod ifTrue: [
-				(self compiledMethodAt: selector) withPropertiesDo: [ :additionalMethodState |
+			priorMethod ifNotNil: [
+				priorMethod withPropertiesDo: [ :additionalMethodState |
 					additionalMethodState propertiesDo: [ :assoc | newMethod addPragmaOrProperty: assoc ]] ifSelector: [ :s | ]]].
 
 	logSource ifTrue: [
 		"Re-fetching source code may be needed if, for example, some variable declaration was corrected during compilation."
-		updatedCode := CodeProvider normalizeCodeForSaving: (requestor ifNil: [code] ifNotNil: [requestor text]) in: self.
-		self logMethodSource: updatedCode forMethodWithNode: methodAndNode 
-			inCategory: category withStamp: changeStamp.
-	].
-	self addAndClassifySelector: methodAndNode node withMethod: newMethod
-		inCategory: category methodTimeStamp: changeStamp.
+		updatedCode := requestor ifNil: [code] ifNotNil: [requestor text].
+		updatedCode := CodeProvider normalizeCodeForSaving: updatedCode in: self.
+		methodAndNode method
+			writeToChangesFile: updatedCode class: self category: category withStamp: changeStamp oldMethodOrNil: priorMethod ].
+	self addAndClassifySelector: methodAndNode node withMethod: newMethod inCategory: category methodTimeStamp: changeStamp.
 	^ selector'! !
 
 !LiveTyping class methodsFor: 'redefined methods source code' stamp: 'HAW 23/Feb/2019, 1:12:10 am (UTC)'!
@@ -14347,7 +14357,7 @@ defaultRawTypesSize
 
 	^10! !
 
-!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 11/Nov/2026, 12:45:09 pm (UTC)'!
+!ClassDescription methodsFor: '*LiveTyping' stamp: 'HAW 30/May/2023, 2:39:59 am (UTC)'!
 disableLiveTyping
 
 	Smalltalk isLiveTypingInstalled ifTrue: [ instanceVariablesRawTypes := nil ]! !
@@ -14789,7 +14799,7 @@ copyTypeInformationFrom: aMethodForSameSelectorAndClass using: aMethodNode
 		withPropertiesDo: [ :otherMethodProperties | properties copyTypeInformationFrom: otherMethodProperties ]
 		ifSelector: [ :selector | properties initializeTypeInformationUsing: aMethodNode ]! !
 
-!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 11/Nov/2026, 12:44:49 pm (UTC)'!
+!CompiledMethod methodsFor: '*LiveTyping' stamp: 'HAW 30/May/2023, 2:22:17 am (UTC)'!
 disableLiveTyping
 
 	Smalltalk isLiveTypingInstalled
